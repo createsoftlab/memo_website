@@ -1,7 +1,7 @@
 /* Custom Tribute Tabs Styling */
 .custom-tribute-tabs .nav-link {
     background-color: #f8f9fa;
-    color: #6c75d7;
+    color: #2c1e0c;
     border: 1px solid #dee2e6;
     transition: all 0.3s ease;
 }
@@ -198,3 +198,190 @@
     animation: burnFlame 1.2s infinite ease-in-out alternate;
     box-shadow: 0 0 10px #ff3366, 0 0 18px #ff9900;
 }
+
+
+
+/* type effect letters */
+
+.typewriter-text {
+  font-family: serif;
+  font-style: italic;
+  display: inline-block;
+  overflow: hidden;
+  border-right: none; /* Cursor එක සම්පූර්ණයෙන්ම ඉවත් කර ඇත */
+  white-space: nowrap;
+  animation: typing 3.5s steps(45, end) 1s 1 normal both;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+
+
+
+
+
+
+
+
+/* --- Global & Memorial Theme Colors --- */
+:root {
+    --memorial-color: #8B5A2B;
+    --memorial-hover: #6d4520;
+}
+
+.text-memorial { color: var(--memorial-color) !important; }
+.border-memorial { border-color: var(--memorial-color) !important; }
+.btn-memorial {
+    background-color: var(--memorial-color);
+    color: #fff;
+    border: none;
+    transition: background-color 0.2s ease-in-out;
+}
+.btn-memorial:hover { background-color: var(--memorial-hover); color: #fff; }
+
+html { scroll-behavior: smooth; }
+
+/* --- Pure CSS Scroll Animation Classes --- */
+.reveal-init {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    will-change: opacity, transform;
+}
+
+.reveal-init.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Different directions for smooth variety */
+.reveal-left {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.reveal-left.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.reveal-right {
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.reveal-right.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.reveal-zoom {
+    opacity: 0;
+    transform: scale(0.92);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.reveal-zoom.active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* --- Realistic Animated Candle CSS --- */
+.candle-wrapper {
+    width: 40px;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.candle-body {
+    width: 24px;
+    height: 70px;
+    background: linear-gradient(to right, #e6d5c3, #fff, #d4beaa);
+    border-radius: 4px 4px 2px 2px;
+    position: relative;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+}
+
+.wick {
+    width: 2px;
+    height: 10px;
+    background: #333;
+    margin-bottom: -2px;
+    z-index: 2;
+}
+
+.flame {
+    width: 14px;
+    height: 24px;
+    background: linear-gradient(to top, #ff9900, #ffcc00, #ffffff);
+    border-radius: 50% 50% 20% 20%;
+    position: relative;
+    animation: flicker 0.8s infinite alternate ease-in-out;
+    box-shadow: 0 0 15px #ff9900, 0 0 25px #ff3300;
+    z-index: 3;
+}
+
+.candle-plate {
+    width: 50px;
+    height: 6px;
+    background: #ccc;
+    border-radius: 50%;
+    margin-top: 2px;
+}
+
+@keyframes flicker {
+    0% { transform: scale(1) rotate(-2deg); opacity: 0.9; box-shadow: 0 0 10px #ff9900; }
+    50% { transform: scale(1.08) rotate(2deg); opacity: 1; box-shadow: 0 0 20px #ffcc00, 0 0 10px #ff9900; }
+    100% { transform: scale(0.95) rotate(-1deg); opacity: 0.85; box-shadow: 0 0 12px #ff9900; }
+}
+
+/* --- Mini Candle for Recent Tributes Stream --- */
+.user-candle-icon {
+    width: 20px;
+    height: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.mini-body { width: 12px; height: 25px; background: #e6d5c3; border-radius: 2px; }
+.mini-flame {
+    width: 8px;
+    height: 12px;
+    background: linear-gradient(to top, #ff9900, #ffcc00);
+    border-radius: 50%;
+    animation: flicker 0.8s infinite alternate ease-in-out;
+    box-shadow: 0 0 6px #ff9900;
+}
+
+/* --- Tribute Item Hover FX --- */
+.tribute-item {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.tribute-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.08) !important;
+}
+
+/* --- Custom Tabs Styling --- */
+.custom-tribute-tabs .nav-link {
+    color: #6c757d;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    transition: all 0.2s ease-in-out;
+}
+.custom-tribute-tabs .nav-link.active {
+    background-color: var(--memorial-color) !important;
+    color: #fff !important;
+    border-color: var(--memorial-color) !important;
+}
+.cursor-pointer { cursor: pointer; }
