@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow">
+  <title>Home  - Forever Missed Memorial Directory</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   <!-- <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS (Design එක සහ layout එක හැදීමට) -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+
+
+<!-- Three.js (3D Heart එක render කිරීමට ) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<!-- OrbitControls.js (මවුස් එකෙන් 3D හදවත හරවන්න සහ zoom කරන්න) -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="assets/css/index.css">
+  <link rel="stylesheet" href="assets/css/about.css">
+  <link rel="stylesheet" href="assets/css/memories.css">
+   <link rel="stylesheet" href="assets/css/main.css">
+   <link rel="stylesheet" href="assets/css/chatbot.css">
+      <link rel="stylesheet" href="assets/css/3dcard.css">
+
+
+
+</head>
+<body>
+
+  <!-- Floating Flowers -->
+<div class="flower-animation" aria-hidden="true">
+    <span><img src="assets/images/flower1.png"></span>
+    <span><img src="assets/images/flower2.png"></span>
+    <span>🌼</span>
+    <span>🌸</span>
+    <span>🌷</span>
+    <span>🌼</span>
+ 
+</div>
+
+  <!-- Navigation Bar with Mobile Offcanvas Slide Menu -->
+  <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand me-4" href="index.html">
+        <i class="bi bi-fire"></i> Forever Missed
+      </a>
+      
+      <!-- Offcanvas Mobile Trigger Button -->
+      <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+        <i class="bi bi-list text-white fs-2"></i>
+      </button>
+
+      <!-- Slide Drawer (Offcanvas) -->
+      <div class="offcanvas offcanvas-end offcanvas-memorial" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header border-bottom border-secondary pb-3">
+          <h5 class="offcanvas-title text-gold fw-bold" id="offcanvasNavbarLabel">
+            <i class="bi bi-fire me-1"></i> Forever Missed
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+
+        <div class="offcanvas-body d-flex flex-column flex-lg-row justify-content-between align-items-lg-center">
+          <ul class="navbar-nav me-auto mb-3 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html"><i class="bi bi-house-door"></i> HOME</a>
+            </li>
+            <!-- <li class="nav-item">
+              <a class="nav-link" href="all_memories.html"><i class="bi bi-heart-fill"></i> Memories</a>
+            </li> -->
+
+
+            <!-- Memories Dropdown Menu -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="all_memories.html" id="memoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-heart-fill me-1"></i> Memories
+                        </a>
+                        <ul class="dropdown-menu shadow-sm border-0 bg-white py-2" aria-labelledby="memoriesDropdown">
+                            <li>
+                                <a class="dropdown-item py-2 text-dark" href="all_memories.html">
+                                    <i class="bi bi-collection-fill me-2 text-warning"></i> All Memories
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider my-1"></li>
+                            <li>
+                                <a class="dropdown-item py-2 text-dark fw-bold" href="create_memory.html">
+                                    <i class="bi bi-plus-circle-fill me-2 text-warning"></i> Create Memory
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    
+            <li class="nav-item">
+              <a class="nav-link" href="about.html"><i class="bi bi-info-circle"></i> ABOUT US</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="contact.html"><i class="bi bi-envelope"></i> CONTACT US</a>
+            </li>
+          </ul>
+          
+          <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-2 mt-auto mt-lg-0 pt-3 pt-lg-0 border-top border-lg-0 border-secondary">
+            <a href="login.html" class="btn btn-nav-login text-center"><i class="bi bi-box-arrow-in-right"></i> LOGIN</a>
+            <a href="#" class="btn btn-nav-signup text-center"><i class="bi bi-person-plus"></i> SIGN UP</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==========================================================================
+       FULL BACKGROUND HERO HEADER WITH PLAY BUTTON & SLIDESHOW
+       ========================================================================== -->
+ <header class="main-hero position-relative d-flex align-items-center">
+  
+  <!-- Background Video Slideshow Layer -->
+  <div class="hero-media-wrapper">
+    <!-- Video Slideshow Slides -->
+    <div class="hero-slides">
+      <div class="slide slide-1 active">
+        <video class="hero-video" autoplay muted loop playsinline>
+          <source src="assets/videos/herro3.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="slide slide-2">
+        <video class="hero-video" autoplay muted loop playsinline>
+          <source src="assets/videos/herovideo2.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="slide slide-3">
+        <video class="hero-video" autoplay muted loop playsinline>
+          <source src="assets/videos/herro3.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+    <!-- Dark Gradient Overlay for High Text Readability -->
+    <div class="hero-dark-overlay"></div>
+  </div>
+
+  <!-- Foreground Content Container -->
+  <div class="container position-relative z-2 py-5">
+    <div class="row align-items-center min-vh-75 g-4">
+      
+      <!-- Left Side Text & Action Buttons -->
+      <div class="col-lg-7 text-center text-lg-start">
+        <!-- <h1 class="font-serif hero-title text-white fw-bold mb-3">
+          Preserving Legacies, Connecting Generations
+        </h1> -->
+<h1 class="font-serif hero-title text-white fw-bold mb-3 typewriter">
+  <span class="line-1">Preserving Legacies,</span><br>
+  <span class="line-2">Connecting Generations</span>
+</h1>
+
+        <p class="hero-subtitle text-light-tan mb-4 pe-lg-5">
+          A dignified digital haven for celebrating cherished lives, stories, and unforgettable memories across time.
+        </p>
+
+        <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start align-items-center">
+          <a href="create_memory.html" class="btn btn-create-memory py-3 px-4 fw-bold">
+            <i class="bi bi-plus-circle-fill text-gold me-2"></i>List Your Memory
+          </a>
+          
+          <button class="btn btn-hero-watch py-3 px-4 fw-bold d-inline-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#heroVideoModal">
+            <i class="bi bi-play-circle fs-5"></i>
+            <span>Watch Video</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Center / Right Large Play Button -->
+      <div class="col-lg-5 d-flex justify-content-center align-items-center mt-4 mt-lg-0">
+        <button class="center-play-trigger" data-bs-toggle="modal" data-bs-target="#heroVideoModal" aria-label="Play Full Video">
+          <div class="play-icon-circle">
+            <i class="bi bi-play-fill"></i>
+          </div>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+
+    <!-- Main Content -->
+  <main>
+
+<!-- Vertical Floating Theme Switcher -->
+<!-- <div id="theme-switcher">
+    <button class="theme-btn active" data-mode="light">LIGHT</button>
+    <button class="theme-btn" data-mode="dark">DARK</button>
+</div> -->
+
+    <!-- About Section with Images -->
+<!-- <section class="py-5 my-lg-5 scroll-animate position-relative overflow-hidden scroll-3d" id="aboutSection">
+    
+    <div class="ambient-glow" style="top: -50px; left: -50px;"></div>
+    <div class="ambient-glow" style="bottom: -50px; right: -50px; background: radial-gradient(circle, rgba(44,34,30,0.06) 0%, rgba(244,240,234,0) 70%);"></div>
+
+    <div class="container position-relative z-1">
+        <div class="row align-items-center g-5">
+            
+            
+            <div class="col-lg-6 animate-left">
+                <div class="pe-lg-3">
+                    <span class="text-memorial-accent fw-bold text-uppercase tracking-wide small">Who We Are</span>
+                    <h2 class="font-serif fw-bold text-brown display-5 mt-2 mb-3">Share your cherished memories with us</h2>
+                    <p class="text-secondary leading-relaxed fs-6">
+                        Forever Missed was created out of a deep respect for memory. We provide families and friends across the globe a peaceful online memorial space where legacies endure beyond boundaries and time.
+                    </p>
+                    <p class="text-secondary leading-relaxed mb-4 fs-6">
+                        Whether sharing vintage photographs, recounting heartfelt life stories, or lighting virtual tribute candles, our platform safeguards every memory with complete privacy control and enduring dignity.
+                    </p>
+                    
+                  
+                    <div class="row g-3 text-center">
+                        <div class="col-4">
+                            <div class="stat-card p-3 rounded-4">
+                                <h3 class="fw-bold text-memorial-accent mb-0 font-serif fs-2" data-target="15000" data-suffix="K+" data-divisor="1000">0</h3>
+                                <small class="text-muted fw-semibold">Tributes</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-card p-3 rounded-4">
+                                <h3 class="fw-bold text-memorial-accent mb-0 font-serif fs-2" data-target="50" data-suffix="+">0</h3>
+                                <small class="text-muted fw-semibold">Countries</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-card p-3 rounded-4">
+                                <h3 class="fw-bold text-memorial-accent mb-0 font-serif fs-2" data-target="100" data-suffix="%">0</h3>
+                                <small class="text-muted fw-semibold">Private & Safe</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="mt-4 text-center text-lg-start">
+                        <a href="#create" class="btn btn-create-memory py-3 px-4 fw-bold shadow-sm d-inline-flex align-items-center justify-content-center gap-2 magnetic-btn">
+                            <i class="bi bi-heart-fill text-gold fs-5"></i>
+                            <span>Create Your Memory With Your Loved One</span>
+                            <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+          
+            <div class="col-lg-6 animate-right position-relative">
+                <div class="relative w-full h-[420px] md:h-[500px] rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+           
+                    <div class="absolute inset-0 z-0">
+                        <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?fit=crop&w=800&h=600" alt="Family Memory" class="w-full h-full object-cover filter brightness-90">
+              
+                        <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
+                    </div>
+
+                    
+
+                    
+
+    
+                    <div id="section-canvas-container" class="absolute inset-0 z-1 w-full h-full pointer-events-auto"></div>
+
+             
+                    <div class="absolute bottom-4 left-4 right-4 z-10 flex flex-col sm:flex-row items-center justify-between gap-3 pointer-events-auto">
+                        
+            
+                        <div class="bg-black/50 backdrop-blur-md border border-white/10 shadow-lg px-3.5 py-2 rounded-2xl flex items-center gap-3 w-full sm:w-auto">
+                            <div class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shadow-sm">
+                                <i class="bi bi-shield-check fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold text-white mb-0 text-xs">Family-Controlled</h6>
+                                <small class="text-gray-300 text-[10px]">Password Protected Options</small>
+                            </div>
+                        </div>
+
+                   
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section> -->
+
+
+
+
+
+<!-- About Section with Image Slider & 3D Heart Model -->
+  <section class="py-5 my-lg-5 scroll-animate position-relative overflow-hidden scroll-3d about-section-wrapper" id="aboutSection">
+      
+      <!-- Ambient Background Glowing Orbs -->
+      <div class="ambient-glow position-absolute" style="top: -50px; left: -50px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, rgba(244,240,234,0) 70%); border-radius: 50%;"></div>
+      <div class="ambient-glow position-absolute" style="bottom: -50px; right: -50px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(44,34,30,0.06) 0%, rgba(244,240,234,0) 70%); border-radius: 50%;"></div>
+
+      <div class="container position-relative z-1">
+          <div class="row align-items-center g-5">
+              
+              <!-- Left Side Text & Animated Counter Stats -->
+              <div class="col-lg-6 animate-left">
+                  <div class="pe-lg-3">
+                      <span class="text-memorial-accent fw-bold text-uppercase tracking-wide small" style="color: #d4af37;">Who We Are</span>
+                      <h2 class="font-serif fw-bold text-brown display-5 mt-2 mb-3">Share your cherished memories with us</h2>
+                      <p class="text-secondary leading-relaxed fs-6">
+                          Forever Missed was created out of a deep respect for memory. We provide families and friends across the globe a peaceful online memorial space where legacies endure beyond boundaries and time.
+                      </p>
+                      <p class="text-secondary leading-relaxed mb-4 fs-6">
+                          Whether sharing vintage photographs, recounting heartfelt life stories, or lighting virtual tribute candles, our platform safeguards every memory with complete privacy control and enduring dignity.
+                      </p>
+                      
+                      <!-- Auto-Calculating Counter Statistics Grid -->
+                      <div class="row g-3 text-center">
+                          <div class="col-4">
+                              <div class="stat-card p-3 rounded-4 shadow-sm">
+                                  <h3 class="fw-bold text-memorial-accent mb-0 font-serif fs-2" style="color: #d4af37;" data-target="15000" data-suffix="K+" data-divisor="1000">15K+</h3>
+                                  <small class="text-muted fw-semibold">Tributes</small>
+                              </div>
+                          </div>
+                          <div class="col-4">
+                              <div class="stat-card p-3 rounded-4 shadow-sm">
+                                  <h3 class="fw-bold text-memorial-accent mb-0 font-serif fs-2" style="color: #d4af37;" data-target="50" data-suffix="+">50+</h3>
+                                  <small class="text-muted fw-semibold">Countries</small>
+                              </div>
+                          </div>
+                          <div class="col-4">
+                              <div class="stat-card p-3 rounded-4 shadow-sm">
+                                  <h3 class="fw-bold text-memorial-accent mb-0 font-serif fs-2" style="color: #d4af37;" data-target="100" data-suffix="%">100%</h3>
+                                  <small class="text-muted fw-semibold">Private & Safe</small>
+                              </div>
+                          </div>
+                      </div>
+
+                      <!-- Create Memory CTA Button -->
+                      <div class="mt-4 text-center text-lg-start">
+                          <a href="#create" class="btn btn-create-memory py-3 px-4 fw-bold shadow-sm d-inline-flex align-items-center justify-content-center gap-2 magnetic-btn">
+                              <i class="bi bi-heart-fill fs-5" style="color: #1a1a1a;"></i>
+                              <span>Create Your Memory With Your Loved One</span>
+                              <i class="bi bi-arrow-right ms-1"></i>
+                          </a>
+                      </div>
+
+                  </div>
+              </div>
+
+              <!-- Right Side: Image Slider Background + 3D Heart Model Canvas -->
+              <div class="col-lg-6 animate-right position-relative">
+                  <div class="about-image-card relative w-full rounded-3xl overflow-hidden shadow-2xl border border-white/10" style="height: 450px;">
+                      
+                      <!-- Image Slider Background (Automatic Slideshow) -->
+                      <div class="about-slider-container">
+                          <!-- Slide 1 -->
+                          <div class="slider-slide active">
+                              <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?fit=crop&w=800&h=600" alt="Memory Slide 1">
+                          </div>
+                          <!-- Slide 2 -->
+                          <div class="slider-slide">
+                              <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?fit=crop&w=800&h=600" alt="Memory Slide 2">
+                          </div>
+                          <!-- Slide 3 -->
+                          <div class="slider-slide">
+                              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?fit=crop&w=800&h=600" alt="Memory Slide 3">
+                          </div>
+                          <!-- Dark Overlay to make 3D Heart model and badges pop out clearly -->
+                          <div class="absolute inset-0 bg-dark opacity-40 position-absolute top-0 start-0 w-100 h-100" style="background: rgba(0,0,0,0.4); z-index: 1;"></div>
+                      </div>
+
+                      <!-- 3D Heart Model Canvas Target (Rendered right on top of the image slider) -->
+                      <div id="section-canvas-container" class="absolute inset-0 z-2 w-full h-full pointer-events-auto position-absolute top-0 start-0" style="z-index: 2;"></div>
+
+                      <!-- Bottom Floating Controls & Family-Controlled Badge Row -->
+                      <div class="absolute bottom-4 left-4 right-4 z-10 d-flex flex-column sm:flex-row align-items-center justify-between gap-3 pointer-events-auto position-absolute bottom-0 start-0 end-0 p-4" style="z-index: 3;">
+                          
+                          <!-- Family-Controlled Badge -->
+                          <div class="bg-dark bg-opacity-75 backdrop-blur-md border border-white/10 shadow-lg px-3.5 py-2 rounded-3 d-flex align-items-center gap-3">
+                              <div class="rounded-circle bg-warning bg-opacity-25 text-warning d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                                  <i class="bi bi-shield-check fs-5"></i>
+                              </div>
+                              <div>
+                                  <h6 class="fw-bold text-white mb-0 fs-6">Family-Controlled</h6>
+                                  <small class="text-white-50 fs-7">Password Protected Options</small>
+                              </div>
+                          </div>
+
+                      </div>
+
+                  </div>
+              </div>
+
+          </div>
+      </div>
+  </section>
+
+
+
+
+
+<!-- Interactive 3D Memory Sphere & Latest Listings Section -->
+<section class="latest-listings-section py-5 scroll-animate scroll-3d" id="latestListingsSection">
+  <div class="container-fluid px-md-4 px-2">
+    
+    <!-- 3D Interactive Memory Carousel Section -->
+    <div class="row justify-content-center mb-5">
+ 
+      <div class="col-12 position-relative">
+        <!-- 3D Canvas Container -->
+        <div id="memory-3d-container" class="w-full h-[420px] md:h-[480px] position-relative rounded-4 shadow-3d bg-gradient-to-b from-slate-900 to-slate-800 cursor-grab active:cursor-grabbing overflow-hidden border border-white/20" style="background: #111827;"></div>
+      </div>
+    </div>
+
+ 
+
+    <!-- Modals -->
+    <div class="modal fade" id="demoModal" tabindex="-1" aria-labelledby="demoModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header border-0 pb-0">
+            <h5 class="modal-title fw-bold text-dark" id="demoModalLabel">
+              <i class="bi bi-shield-lock text-warning me-2"></i>Private Access
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center py-4">
+            <div class="mb-3">
+              <i class="bi bi-lock text-warning display-4"></i>
+            </div>
+            <h6 class="fw-bold mb-1">David Arthur Smith</h6>
+            <p class="small text-muted mb-4">Do you have permission to view this memorial?</p>
+            <form onsubmit="event.preventDefault(); checkDemoPassword();">
+              <div class="mb-3 text-start">
+                <label class="form-label small fw-semibold text-secondary">Enter Passcode</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light"><i class="bi bi-key"></i></span>
+                  <input type="password" id="demoPassword" class="form-control border-end-0" placeholder="Enter password (Try: 1234)" required>
+                  <button class="btn btn-outline-secondary bg-white border-start-0 text-muted" type="button" onclick="togglePasswordVisibility()">
+                    <i class="bi bi-eye-slash" id="toggleIcon"></i>
+                  </button>
+                </div>
+                <div id="demoError" class="form-text text-danger d-none">Incorrect password. Try "1234" for demo.</div>
+              </div>
+              <button type="submit" class="btn btn-warning w-100 fw-bold py-2 mt-2">
+                Access Memorial <i class="bi bi-arrow-right-short"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Bottom Action Buttons -->
+    <div class="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-3 mt-5">
+      <a href="#" class="btn btn-outline-dark px-4 py-2 fw-bold text-uppercase rounded-3">
+        <i class="bi bi-grid-3x3-gap-fill me-2"></i>View All Memorials
+      </a>
+      <a href="#" class="btn btn-warning px-4 py-2 fw-bold text-uppercase rounded-3 shadow-sm">
+        <i class="bi bi-plus-circle-fill me-2"></i>Create a Memorial
+      </a>
+    </div>
+
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+    
+  <!-- ==========================================================================
+     SEARCH & DIRECTORY FILTER SECTION (WIDE CONTAINER)
+     ========================================================================== -->
+<section class="search-filter-section py-5 scroll-animate" id="searchsection" >
+  <div class="container-fluid px-md-5 px-3">
+    <div class="row justify-content-center">
+      
+      <div class="col-12 col-xl-12">
+        
+        <div class="filter-card shadow-lg p-3 p-sm-4 p-md-5 text-center">
+          
+          <h2 class="font-serif text-brown fw-bold display-5 mb-2">Search Memorial Directory</h2>
+          <p class="text-memorial-accent tracking-wide uppercase fw-bold mb-4">
+            PRESERVE AND SHARE MEMORIES OF YOUR LOVED ONE
+          </p>
+
+          <form action="#" method="GET">
+            <label class="form-label text-brown fw-semibold small mb-3 d-block text-center">
+              I want to search memories of:
+            </label>
+            
+            <div class="row g-2 g-md-3 align-items-center justify-content-center">
+              
+            
+              <div class="col-12 col-sm-6 col-lg-3">
+                <input type="text" class="form-control custom-filter-input" placeholder="First Name" name="firstname">
+              </div>
+
+              <div class="col-12 col-sm-6 col-lg-3">
+                <input type="text" class="form-control custom-filter-input" placeholder="Last Name" name="lastname">
+              </div>
+
+              <!-- <div class="col-12 col-sm-6 col-lg-2">
+                <select class="form-select custom-filter-input" name="category">
+                  <option value="" selected>Category</option>
+                  <option value="crime-victims">Crime Victims</option>
+                  <option value="family">Family & Relatives</option>
+                  <option value="friends">Friends</option>
+                  <option value="community">Community Leaders</option>
+                  <option value="veterans">Military & Veterans</option>
+                </select>
+              </div> -->
+
+              <div class="col-12 col-sm-6 col-lg-2">
+  <div class="dropdown w-100">
+    <button class="btn custom-filter-input text-start d-flex justify-content-between align-items-center w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <span>Category</span>
+      <i class="bi bi-chevron-down small text-brown"></i>
+    </button>
+    <ul class="dropdown-menu w-100 shadow-sm border-card bg-white">
+      <li><a class="dropdown-item" href="#">Crime Victims</a></li>
+      <li><a class="dropdown-item" href="#">Family & Relatives</a></li>
+      <li><a class="dropdown-item" href="#">Friends</a></li>
+      <li><a class="dropdown-item" href="#">Military & Veterans</a></li>
+    </ul>
+  </div>
+</div>
+
+              <!-- <div class="col-12 col-sm-6 col-lg-2">
+                <select class="form-select custom-filter-input" name="country">
+                  <option value="" selected>Country</option>
+                  <option value="sl">Sri Lanka</option>
+                  <option value="us">United States</option>
+                  <option value="uk">United Kingdom</option>
+                  <option value="au">Australia</option>
+                  <option value="ca">Canada</option>
+                </select>
+              </div> -->
+<!-- Country Custom Dropdown -->
+<div class="col-12 col-sm-6 col-lg-2">
+  <div class="dropdown custom-dropdown-wrapper w-100">
+    
+    <!-- Dropdown Button -->
+    <button class="btn custom-filter-input text-start d-flex justify-content-between align-items-center w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="countryDropdownBtn">
+      <span class="dropdown-selected-text">Country</span>
+      <i class="bi bi-chevron-down small text-brown ms-2"></i>
+    </button>
+    
+    <!-- Hidden input to hold the selected value for form submit -->
+    <input type="hidden" name="country" id="selectedCountryInput" value="">
+
+    <!-- Custom Dropdown Menu -->
+    <ul class="dropdown-menu custom-dropdown-menu w-100 shadow border-card">
+      <li><a class="dropdown-item custom-dropdown-item active" href="#" data-value="">Country</a></li>
+      <li><a class="dropdown-item custom-dropdown-item" href="#" data-value="sl">Sri Lanka</a></li>
+      <li><a class="dropdown-item custom-dropdown-item" href="#" data-value="us">United States</a></li>
+      <li><a class="dropdown-item custom-dropdown-item" href="#" data-value="uk">United Kingdom</a></li>
+      <li><a class="dropdown-item custom-dropdown-item" href="#" data-value="au">Australia</a></li>
+      <li><a class="dropdown-item custom-dropdown-item" href="#" data-value="ca">Canada</a></li>
+    </ul>
+
+  </div>
+</div>
+              <div class="col-12 col-lg-2">
+                <button type="submit" class="btn btn-filter-submit w-100 fw-bold uppercase">
+                  SEARCH
+                </button>
+              </div>
+
+            </div>
+          </form>
+
+          <div class="filter-divider mt-5 position-relative">
+            <hr class="border-secondary-subtle">
+            <a href="#" class="btn btn-pill-info position-absolute top-50 start-50 translate-middle">
+              About online memorials <i class="bi bi-chevron-right ms-1"></i>
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  
+</section>
+
+
+
+
+
+
+<!-- Featured Categories Section with Multiple 3D Floating Flowers Effect -->
+<section class="featured-categories-section py-5 my-lg-5 scroll-animate position-relative overflow-hidden" id="categoriesSection">
+  <!-- Ambient Background Glowing Orbs -->
+  <div class="ambient-glow" style="top: -50px; left: -50px;"></div>
+  <div class="ambient-glow" style="bottom: -50px; right: -50px; background: radial-gradient(circle, rgba(255,192,203,0.08) 0%, rgba(244,240,234,0) 70%);"></div>
+
+  <div class="container-fluid px-md-4 px-2 position-relative z-1">
+    <div class="row justify-content-center align-items-center g-5">
+      
+      <!-- Left Side: Categories Grid (Categories 9) -->
+      <div class="col-12 col-lg-7">
+        
+        <!-- Section Title -->
+        <div class="section-title text-center text-lg-start mb-4">
+          <span class="text-memorial-accent fw-bold text-uppercase tracking-wide small">Our Special Tributes</span>
+          <h2 class="font-serif text-dark fw-bold display-6 mb-2 text-uppercase">Featured Categories</h2>
+          <p class="text-muted small uppercase tracking-wide">Honoring and remembering through shared stories</p>
+        </div>
+
+        <!-- Categories Grid -->
+        <div class="row g-3">
+          
+          <!-- Category 1 -->
+          <div class="col-12 col-md-6 category-item" style="--i: 1;">
+            <a href="#" class="category-card d-flex align-items-center justify-content-between text-decoration-none p-3 rounded-4 shadow-sm bg-white border border-light">
+              <span class="category-title fw-semibold text-dark">COVID-19 victims</span>
+              <div class="category-icon-wrapper text-memorial-accent fs-5">
+                <i class="bi bi-heart-pulse"></i>
+              </div>
+            </a>
+          </div>
+
+          <!-- Category 2 -->
+          <div class="col-12 col-md-6 category-item" style="--i: 2;">
+            <a href="#" class="category-card d-flex align-items-center justify-content-between text-decoration-none p-3 rounded-4 shadow-sm bg-white border border-light">
+              <span class="category-title fw-semibold text-dark">Veterans</span>
+              <div class="category-icon-wrapper text-memorial-accent fs-5">
+                <i class="bi bi-award"></i>
+              </div>
+            </a>
+          </div>
+
+          <!-- Category 3 -->
+          <div class="col-12 col-md-6 category-item" style="--i: 3;">
+            <a href="#" class="category-card d-flex align-items-center justify-content-between text-decoration-none p-3 rounded-4 shadow-sm bg-white border border-light">
+              <span class="category-title fw-semibold text-dark">First responders</span>
+              <div class="category-icon-wrapper text-memorial-accent fs-5">
+                <i class="bi bi-shield-check"></i>
+              </div>
+            </a>
+          </div>
+
+          <!-- Category 4 -->
+          <div class="col-12 col-md-6 category-item" style="--i: 4;">
+            <a href="#" class="category-card d-flex align-items-center justify-content-between text-decoration-none p-3 rounded-4 shadow-sm bg-white border border-light">
+              <span class="category-title fw-semibold text-dark">Substance abuse victims</span>
+              <div class="category-icon-wrapper text-memorial-accent fs-5">
+                <i class="bi bi-flower1"></i>
+              </div>
+            </a>
+          </div>
+
+          <!-- Category 5 -->
+          <div class="col-12 col-md-6 category-item" style="--i: 5;">
+            <a href="#" class="category-card d-flex align-items-center justify-content-between text-decoration-none p-3 rounded-4 shadow-sm bg-white border border-light">
+              <span class="category-title fw-semibold text-dark">Cancer victims</span>
+              <div class="category-icon-wrapper text-memorial-accent fs-5">
+                <i class="bi bi-ribbon"></i>
+              </div>
+            </a>
+          </div>
+
+          <!-- Category 6 -->
+          <div class="col-12 col-md-6 category-item" style="--i: 6;">
+            <a href="#" class="category-card d-flex align-items-center justify-content-between text-decoration-none p-3 rounded-4 shadow-sm bg-white border border-light">
+              <span class="category-title fw-semibold text-dark">Victims of an accident</span>
+              <div class="category-icon-wrapper text-memorial-accent fs-5">
+                <i class="bi bi-brightness-high"></i>
+              </div>
+            </a>
+          </div>
+
+          <!-- Category 7 -->
+          <div class="col-12 col-md-6 category-item" style="--i: 7;">
+            <a href="#" class="category-card d-flex align-items-center justify-content-between text-decoration-none p-3 rounded-4 shadow-sm bg-white border border-light">
+              <span class="category-title fw-semibold text-dark">Crime victims</span>
+              <div class="category-icon-wrapper text-memorial-accent fs-5">
+                <i class="bi bi-peace"></i>
+              </div>
+            </a>
+          </div>
+
+          <!-- Category 8 -->
+          <div class="col-12 col-md-6 category-item" style="--i: 8;">
+            <a href="#" class="category-card d-flex align-items-center justify-content-between text-decoration-none p-3 rounded-4 shadow-sm bg-white border border-light">
+              <span class="category-title fw-semibold text-dark">Miscarriage, stillborn & infant</span>
+              <div class="category-icon-wrapper text-memorial-accent fs-5">
+                <i class="bi bi-feather"></i>
+              </div>
+            </a>
+          </div>
+
+          <!-- Category 9 -->
+          <div class="col-12 col-md-6 category-item" style="--i: 9;">
+            <a href="#" class="category-card d-flex align-items-center justify-content-between text-decoration-none p-3 rounded-4 shadow-sm bg-white border border-light">
+              <span class="category-title fw-semibold text-dark">Child loss</span>
+              <div class="category-icon-wrapper text-memorial-accent fs-5">
+                <i class="bi bi-heart"></i>
+              </div>
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+    <div class="col-12 col-lg-5 position-relative">
+        <div class="relative w-full h-[450px] md:h-[520px] rounded-3xl overflow-hidden border-0 shadow-none" style="background: url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=800&q=80') center/cover no-repeat;">
+            
+            <!-- Dark Overlay to make 3D Doves stand out clearly -->
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px] z-0"></div>
+
+            <!-- Top Status Badge -->
+            <div class="absolute top-2 left-2 z-10 flex items-center space-x-2 pointer-events-none">
+                <div class="px-3 py-1 rounded-xl flex items-center space-x-2 text-xs font-medium text-pink-300 bg-black/40 backdrop-blur-sm border border-white/10">
+                   
+                   
+                </div>
+            </div>
+
+            <!-- 3D Canvas Target -->
+            <div id="cat-multiflower-canvas-container" class="absolute inset-0 z-10 w-full h-full"></div>
+
+        </div>
+    </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Latest Listings Section (4 Cards per Row) -->
+<section class="latest-listings-section py-5">
+  <div class="container-fluid px-md-4 px-2">
+    <div class="row justify-content-center">
+      
+      <!-- Full Width Grid Wrapper -->
+      <div class="col-12 col-xl-12">
+
+        <!-- Section Header -->
+        <div class="section-title text-center mb-4">
+          <h2 class="font-serif text-dark fw-bold display-6 mb-1">Latest Listings</h2>
+          <p class="text-muted small uppercase tracking-wide">Explore recently added online memorials</p>
+        </div>
+
+        <!-- Cards Row -->
+        <div class="row g-4  memorial-cards-section">
+
+          <!-- Card 1 -->
+          <div class="col-lg-3 col-md-6">
+            <div class="card h-100 border-0 shadow-sm memorial-grid-card">
+              <div class="position-relative overflow-hidden rounded-top">
+                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?fit=crop&w=500&h=300" class="card-img-top memorial-grid-img" alt="Ivan E Ramirez">
+                <span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2">Crime Victims</span>
+              </div>
+              <div class="card-body p-3 d-flex flex-column">
+                <h6 class="fw-bold text-dark mb-1 text-truncate">Ivan E Ramirez</h6>
+                <p class="small text-muted mb-2">1952 - 2026 • United States</p>
+                <a href="#" class="small text-warning text-decoration-none text-truncate mb-2">
+                  <i class="bi bi-link-45deg"></i> ivan-e-ramirez.forevermissed.com
+                </a>
+                <p class="small text-secondary mb-3 text-truncate-3">
+                  Online memorial was created in memory of our loved one. Always cherished and remembered...
+                </p>
+                <a href="memories_index.html" class="btn btn-outline-memorial btn-sm mt-auto w-100 fw-semibold">View Memorial</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="col-lg-3 col-md-6">
+            <div class="card h-100 border-0 shadow-sm memorial-grid-card">
+              <div class="position-relative overflow-hidden rounded-top">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=500&h=300" class="card-img-top memorial-grid-img" alt="Joshua Brian">
+                <span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2">Military</span>
+              </div>
+              <div class="card-body p-3 d-flex flex-column">
+                <h6 class="fw-bold text-dark mb-1 text-truncate">Joshua Brian Griener</h6>
+                <p class="small text-muted mb-2">1999 - 2020 • United States</p>
+                <a href="#" class="small text-warning text-decoration-none text-truncate mb-2">
+                  <i class="bi bi-link-45deg"></i> joshua-brian.forevermissed.com
+                </a>
+                <p class="small text-secondary mb-3 text-truncate-3">
+                  Joshua passed away peacefully. Honoring his courage and service to the country...
+                </p>
+                <a href="#" class="btn btn-outline-memorial btn-sm mt-auto w-100 fw-semibold">View Memorial</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="col-lg-3 col-md-6">
+            <div class="card h-100 border-0 shadow-sm memorial-grid-card">
+              <div class="position-relative overflow-hidden rounded-top">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?fit=crop&w=500&h=300" class="card-img-top memorial-grid-img" alt="Tonya Lynn">
+                <span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2">Accidents</span>
+              </div>
+              <div class="card-body p-3 d-flex flex-column">
+                <h6 class="fw-bold text-dark mb-1 text-truncate">Tonya Lynn Swink</h6>
+                <p class="small text-muted mb-2">1985 - 2020 • Canada</p>
+                <a href="#" class="small text-warning text-decoration-none text-truncate mb-2">
+                  <i class="bi bi-link-45deg"></i> tonya-lynn.forevermissed.com
+                </a>
+                <p class="small text-secondary mb-3 text-truncate-3">
+                  A loving mother and sister whose kindness and larger-than-life personality touched everyone...
+                </p>
+                <a href="#" class="btn btn-outline-memorial btn-sm mt-auto w-100 fw-semibold">View Memorial</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 (Private Card) -->
+          <div class="col-lg-3 col-md-6">
+            <div class="card h-100 border-0 shadow-sm memorial-grid-card">
+              
+              <div class="position-relative overflow-hidden rounded-top bg-secondary bg-opacity-10 d-flex flex-column align-items-center justify-content-center border-bottom memorial-grid-img" style="height: 180px;">
+                <div class="bg-white rounded-circle p-3 shadow-sm mb-2">
+                  <i class="bi bi-lock-fill text-warning fs-3"></i>
+                </div>
+                <span class="badge bg-dark bg-opacity-75">Private Memorial</span>
+              </div>
+
+              <div class="card-body p-3 d-flex flex-column">
+                <h6 class="fw-bold text-dark mb-1 text-truncate">
+                  <i class="bi bi-shield-lock-fill me-1 text-warning"></i> David Arthur Smith
+                </h6>
+                <p class="small text-muted mb-2">Private Access • Restricted</p>
+                
+                <a href="#" class="small text-muted text-decoration-none text-truncate mb-2">
+                  <i class="bi bi-link-45deg"></i> david-smith.forevermissed.com
+                </a>
+                
+                <p class="small text-secondary mb-3 text-truncate-3 opacity-75">
+                  This memorial is password protected by the family. Please enter the passcode to view details.
+                </p>
+
+                <!-- Target corrected to #privateMemorialModal -->
+                <button type="button" class="btn btn-outline-memorial btn-sm mt-auto w-100 fw-semibold d-flex align-items-center justify-content-center gap-2" data-bs-toggle="modal" data-bs-target="#privateMemorialModal">
+                  <i class="bi bi-key-fill"></i> View Memorial
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Single Clean Password Access Modal -->
+  <div class="modal fade" id="privateMemorialModal" tabindex="-1" aria-labelledby="privateMemorialModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow">
+        
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold text-dark" id="privateMemorialModalLabel">
+            <i class="bi bi-shield-lock text-warning me-2"></i>Private Access Required
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body text-center py-4">
+          <div class="mb-3">
+            <i class="bi bi-lock text-warning display-4"></i>
+          </div>
+          <h6 class="fw-bold mb-1">David Arthur Smith</h6>
+          <p class="small text-muted mb-4">Do you have permission to view this memorial?</p>
+
+          <form id="privateAccessForm" onsubmit="event.preventDefault(); accessMemorial();">
+            <div class="mb-3 text-start">
+              <label for="memorialPassword" class="form-label small fw-semibold text-secondary">Enter Passcode</label>
+              
+              <div class="input-group">
+                <!-- Key Icon (Left) -->
+                <span class="input-group-text bg-light"><i class="bi bi-key"></i></span>
+                
+                <!-- Password Field -->
+                <input type="password" class="form-control border-end-0" id="memorialPassword" placeholder="Enter password (Try: 1234)" required>
+                
+                <!-- Eye Icon Button (Right) -->
+                <button class="btn btn-outline-secondary bg-white border-start-0 text-muted" type="button" onclick="togglePasswordVisibility()">
+                  <i class="bi bi-eye-slash" id="toggleIcon"></i>
+                </button>
+              </div>
+              
+              <div id="passwordError" class="form-text text-danger d-none">Incorrect password. Try "1234" for demo.</div>
+            </div>
+            
+            <button type="submit" class="btn btn-warning w-100 fw-bold py-2 mt-2">
+              Access Memorial <i class="bi bi-arrow-right-short"></i>
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Section Bottom Action Buttons -->
+  <div class="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-3 mt-5">
+    <a href="#" class="btn btn-outline-dark px-4 py-2 fw-bold text-uppercase rounded-3">
+      <i class="bi bi-grid-3x3-gap-fill me-2"></i>View All Memorials
+    </a>
+    <a href="#" class="btn btn-warning px-4 py-2 fw-bold text-uppercase rounded-3 shadow-sm">
+      <i class="bi bi-plus-circle-fill me-2"></i>Create a Memorial
+    </a>
+  </div>
+
+</section>
+
+ <!-- How It Works (Modern Process Steps with 3D Effect) -->
+<section class="py-5 bg-card-tan-light border-top border-bottom border-card mb-5 scroll-animate" id="howItWorksSection">
+  <div class="container">
+    <div class="text-center max-width-700 mx-auto mb-5">
+      <span class="text-memorial-accent fw-bold text-uppercase tracking-wide">Simple Process</span>
+      <h2 class="font-serif fw-bold text-brown display-6 mt-1">How It Works</h2>
+      <p class="text-muted">Create a lasting online tribute in three simple steps.</p>
+    </div>
+
+    <div class="row g-4">
+      
+      <!-- Step 01 -->
+      <div class="col-md-4 step-item" style="--i: 1;">
+        <div class="how-step-wrapper">
+          <div class="how-step-card p-4 rounded-4 h-100 text-center position-relative shadow-sm">
+            <div class="step-badge">01</div>
+            <div class="step-icon mb-3">
+              <i class="bi bi-journal-plus fs-2 text-memorial-accent"></i>
+            </div>
+            <h5 class="fw-bold text-brown mb-2">Build a Profile</h5>
+            <p class="small text-secondary mb-0">Upload photos, write biographies, add important life milestones, and set custom privacy options.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 02 -->
+      <div class="col-md-4 step-item" style="--i: 2;">
+        <div class="how-step-wrapper">
+          <div class="how-step-card p-4 rounded-4 h-100 text-center position-relative shadow-sm">
+            <div class="step-badge">02</div>
+            <div class="step-icon mb-3">
+              <i class="bi bi-people fs-2 text-memorial-accent"></i>
+            </div>
+            <h5 class="fw-bold text-brown mb-2">Invite Loved Ones</h5>
+            <p class="small text-secondary mb-0">Share your custom memorial link securely with family members and close friends near or far.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 03 -->
+      <div class="col-md-4 step-item" style="--i: 3;">
+        <div class="how-step-wrapper">
+          <div class="how-step-card p-4 rounded-4 h-100 text-center position-relative shadow-sm">
+            <div class="step-badge">03</div>
+            <div class="step-icon mb-3">
+              <i class="bi bi-lightbulb fs-2 text-memorial-accent"></i>
+            </div>
+            <h5 class="fw-bold text-brown mb-2">Share Stories & Candles</h5>
+            <p class="small text-secondary mb-0">Visitors leave sympathy notes, light digital candles, and contribute treasured memories.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+ <!-- rounded 3D Effect- images cards shwift ) -->
+<section id="nx3d" class="nx3d">
+
+
+<div class="scene"><div id="nxCarousel" class="carousel"></div></div>
+
+<div class="nav">
+  <button id="nxPrev" class="nbtn glass" type="button" aria-label="Previous">←</button>
+  <div id="nxDots" class="dots glass"></div>
+  <button id="nxNext" class="nbtn glass" type="button" aria-label="Next">→</button>
+</div>
+
+<!-- Detail modal -->
+<div id="nxDetail" class="nx3d-modal">
+  <div class="nx3d-box">
+    <div class="nx3d-hero">
+      <img id="nxMImg" src="" alt="">
+      <button class="nx3d-x" type="button" data-close="nxDetail">✕</button>
+      <span id="nxMBadge" class="badge"></span>
+    </div>
+    <div class="nx3d-body">
+      <span id="nxMSub" class="sub"></span>
+      <h2 id="nxMTitle"></h2>
+      <p id="nxMDesc"></p>
+      <div class="nx3d-foot">
+        <button class="nx3d-btn" type="button" data-close="nxDetail">Close</button>
+        <button class="nx3d-btn pri" type="button">Explore More</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Why Families Choose Us -->
+ <section class="py-4 mb-5 scroll-animate">
+  <div class="container">
+    <div class="text-center max-width-700 mx-auto mb-5">
+      <span class="text-memorial-accent fw-bold text-uppercase tracking-wide">Our Values</span>
+      <h2 class="font-serif fw-bold text-brown display-6 mt-1">Why Families Choose Us</h2>
+    </div>
+
+    <div class="row g-4">
+      
+      <!-- Card 1 -->
+      <div class="col-md-6 col-lg-3 value-item" style="--i: 1;">
+        <div class="value-card p-4 rounded-4 h-100 bg-card-tan border-card">
+          <i class="bi bi-lock-fill text-memorial-accent fs-1 mb-3 d-inline-block icon-hover-effect"></i>
+          <h6 class="fw-bold text-brown mb-2">Complete Privacy Control</h6>
+          <p class="small text-secondary mb-0">Choose between public pages or private family-only spaces secured with custom passcodes.</p>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="col-md-6 col-lg-3 value-item" style="--i: 2;">
+        <div class="value-card p-4 rounded-4 h-100 bg-card-tan border-card">
+          <i class="bi bi-infinity text-memorial-accent fs-1 mb-3 d-inline-block icon-hover-effect"></i>
+          <h6 class="fw-bold text-brown mb-2">Permanent Online Memorials</h6>
+          <p class="small text-secondary mb-0">Your tribute remains online indefinitely, ensuring memories are preserved across generations.</p>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="col-md-6 col-lg-3 value-item" style="--i: 3;">
+        <div class="value-card p-4 rounded-4 h-100 bg-card-tan border-card">
+          <i class="bi bi-heart-pulse text-memorial-accent fs-1 mb-3 d-inline-block icon-hover-effect"></i>
+          <h6 class="fw-bold text-brown mb-2">Grief Support Resources</h6>
+          <p class="small text-secondary mb-0">Access helpful materials, compassionate guides, and healing support during difficult times.</p>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="col-md-6 col-lg-3 value-item" style="--i: 4;">
+        <div class="value-card p-4 rounded-4 h-100 bg-card-tan border-card">
+          <i class="bi bi-shield-x text-memorial-accent fs-1 mb-3 d-inline-block icon-hover-effect"></i>
+          <h6 class="fw-bold text-brown mb-2">Ad-Free Dignified Space</h6>
+          <p class="small text-secondary mb-0">Enjoy a tranquil environment completely free of intrusive commercial advertisements.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+    <!-- Video Support System Section -->
+<section class="py-5 bg-memorial-dark text-white mb-5">
+  <div class="container py-3">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-5">
+        <span class="badge bg-gold text-dark fw-bold mb-3">Support System</span>
+        <h2 class="font-serif fw-bold text-white display-6 mb-3">We're Here to Assist You Step-by-Step</h2>
+        <p class="text-light-tan mb-4">
+          Building a tribute profile is simple. Watch our short walkthrough video to learn how to set up a page, customize privacy settings, and share with family.
+        </p>
+        
+        <ul class="list-unstyled d-flex flex-column gap-3 mb-4 text-light-tan">
+          <li class="d-flex align-items-center gap-3">
+            <i class="bi bi-check-circle-fill text-gold fs-5"></i>
+            <span>24/7 Dedicated Platform Assistance</span>
+          </li>
+          <li class="d-flex align-items-center gap-3">
+            <i class="bi bi-check-circle-fill text-gold fs-5"></i>
+            <span>Easy Step-by-Step Profile Creation</span>
+          </li>
+          <li class="d-flex align-items-center gap-3">
+            <i class="bi bi-check-circle-fill text-gold fs-5"></i>
+            <span>Instant Family Invitation Controls</span>
+          </li>
+        </ul>
+
+        <!-- Direct Contact Details & Action Button -->
+        <div class="support-contact-box p-3 rounded-3 mb-4 border border-secondary bg-dark bg-opacity-50">
+          <div class="row g-2 text-light-tan small">
+            <div class="col-sm-6 d-flex align-items-center gap-2">
+              <i class="bi bi-telephone-fill text-gold"></i>
+              <span>+1 (800) 555-0199</span>
+            </div>
+            <div class="col-sm-6 d-flex align-items-center gap-2">
+              <i class="bi bi-envelope-fill text-gold"></i>
+              <span>support@forevermissed.com</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex flex-wrap gap-3">
+          <a href="contact.html" class="btn btn-gold-action px-4 py-2 fw-bold text-dark d-inline-flex align-items-center gap-2">
+            <i class="bi bi-headset"></i> Contact Support
+          </a>
+        </div>
+      </div>
+
+      <div class="col-lg-7">
+        <div class="video-thumbnail-container position-relative rounded-4 overflow-hidden border-tan shadow-lg">
+          <img src="https://images.unsplash.com/photo-1516549655169-df83a0774514?fit=crop&w=800&h=450" class="w-100 object-fit-cover" alt="Video Support Tutorial">
+          <button class="play-btn" data-bs-toggle="modal" data-bs-target="#videoSupportModal" aria-label="Play Support Video">
+            <i class="bi bi-play-fill"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+    <!-- Video Modal -->
+    <div class="modal fade" id="videoSupportModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-dark border-0">
+          <div class="modal-header border-0 pb-0">
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-3">
+            <div class="ratio ratio-16x9">
+              <iframe id="supportVideoIframe" src="https://www.youtube.com/embed/d-qx1k2YfJg" title="Support Walkthrough" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Floating AI Chat Icon on Bottom-Right -->
+
+
+<!-- Modern Animated AI Chat Icon -->
+<!-- <div id="ai-chat-icon" title="Chat with AI Assistant">
+    <div class="chat-icon-content">
+        <span class="chat-text">Chat With Us</span>
+        <i class="fa-solid fa-headset"></i>
+       
+    </div>
+    <span class="pulse-ring"></span>
+</div> -->
+
+
+<div id="ai-chat-icon" title="Chat with AI Assistant">
+    <!-- Floating Badge for Text -->
+    <span class="chat-badge">Chat With Us</span>
+    
+    <div class="chat-icon-content">
+        <i class="fa-solid fa-headset"></i>
+    </div>
+    
+    <span class="pulse-ring"></span>
+</div>
+
+<!-- AI Chat Box Modal -->
+<div id="ai-chat-modal" class="chat-modal">
+    <div class="chat-header">
+        <h3>AI Assistant</h3>
+        <button id="chat-close-btn">&times;</button>
+    </div>
+    <div class="chat-body" id="chat-body">
+        <div class="chat-message bot-msg">
+            Hello! How can I help you today? Select a question below or type your message.
+        </div>
+        
+        <!-- Pre-set Questions/Options List -->
+        <div class="quick-questions">
+            <p style="font-size: 12px; margin: 8px 0 4px; color: var(--text-brown);">Frequently Asked Questions:</p>
+            <button class="faq-btn" data-answer="We offer full-stack web development, e-commerce solutions, and custom automated workflows using n8n and Laravel.">What services do you provide?</button>
+            <button class="faq-btn" data-answer="You can easily contact us via WhatsApp integration on our website or through our support email.">How can I contact support?</button>
+            <button class="faq-btn" data-answer="Yes! You can toggle between Light and Dark mode using the floating switch on the right side.">Does this site support Dark Mode?</button>
+        </div>
+    </div>
+    <div class="chat-footer">
+        <input type="text" id="chat-input" placeholder="Type a message..." />
+        <button id="chat-send-btn">Send</button>
+    </div>
+</div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-memorial-dark text-white pt-5 pb-3 border-top border-secondary">
+    <div class="container">
+      <div class="row g-4 mb-4">
+        <div class="col-lg-4 col-md-6">
+          <h5 class="text-gold fw-bold mb-3"><i class="bi bi-fire me-1"></i> Forever Missed</h5>
+          <p class="small text-light-tan leading-relaxed">
+            A dignified digital platform dedicated to preserving legacies, connecting families, and honoring cherished memories forever.
+          </p>
+        </div>
+
+        <div class="col-lg-2 col-md-6">
+          <h6 class="text-gold fw-bold mb-3">Quick Links</h6>
+          <ul class="list-unstyled small d-flex flex-column gap-2 text-light-tan">
+            <li><a href="index.html" class="text-light-tan text-decoration-none">Home</a></li>
+            <li><a href="all_memories.html" class="text-light-tan text-decoration-none">Memories</a></li>
+            <li><a href="about.html" class="text-light-tan text-decoration-none">About Us</a></li>
+            <li><a href="contact.html" class="text-light-tan text-decoration-none">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <h6 class="text-gold fw-bold mb-3">Contact Support</h6>
+          <ul class="list-unstyled small d-flex flex-column gap-2 text-light-tan">
+            <li><i class="bi bi-telephone-fill text-gold me-2"></i>+1 (800) 555-0199</li>
+            <li><i class="bi bi-envelope-fill text-gold me-2"></i>support@forevermissed.com</li>
+            <li><i class="bi bi-geo-alt-fill text-gold me-2"></i>Global Headquarters</li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <h6 class="text-gold fw-bold mb-3">Follow Us</h6>
+          <div class="d-flex gap-2">
+            <a href="#" class="btn btn-outline-light btn-sm rounded-circle"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="btn btn-outline-light btn-sm rounded-circle"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" class="btn btn-outline-light btn-sm rounded-circle"><i class="bi bi-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <hr class="border-secondary">
+
+      <div class="text-center small text-white-50 pt-2">
+        <p class="mb-0">&copy; 2026 Forever Missed Memorial Directory. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  
+  <!-- Video Popup Modal -->
+  <div class="modal fade" id="heroVideoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content bg-dark border-0 rounded-4 overflow-hidden">
+        <div class="modal-header border-0 pb-0">
+          <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-3">
+          <div class="ratio ratio-16x9">
+            <iframe id="heroVideoIframe" src="https://www.youtube.com/embed/d-qx1k2YfJg" title="Walkthrough" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JS File Link -->
+  <script src="assets/js/index.js"></script>
+  <script src="assets/js/swichmode.js"></script>
+    <script src="assets/js/chatbot.js"></script>
+    <script src="assets/js/3dcards.js"></script>
+  
+<!--password check script -->
+
+
+<script>
+  function checkDemoPassword() {
+    const pwd = document.getElementById('demoPassword').value;
+    const err = document.getElementById('demoError');
+    
+    // Demo Password
+    if(pwd === '1234') {
+      err.classList.add('d-none');
+      window.location.href = 'memories_index.html'; // Click move to page 
+    } else {
+      err.classList.remove('d-none');
+    }
+  }
+
+  function togglePasswordVisibility() {
+  const passwordInput = document.getElementById('demoPassword');
+  const toggleIcon = document.getElementById('toggleIcon');
+
+  if (passwordInput.type === 'password') {
+    passwordInput.type = 'text';
+    toggleIcon.classList.replace('bi-eye-slash', 'bi-eye');
+  } else {
+    passwordInput.type = 'password';
+    toggleIcon.classList.replace('bi-eye', 'bi-eye-slash');
+  }
+}
+</script>
+
+
+
+<script>
+  
+document.addEventListener("DOMContentLoaded", function() {
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.50 // 15% screen ekata aawama animation eka start wenawa
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("active");
+                observer.unobserve(entry.target); // Ekaparak animate unata passe eka nawaththanawa
+            }
+        });
+    }, observerOptions);
+
+    const animatedSections = document.querySelectorAll(".scroll-animate");
+    animatedSections.forEach(sec => observer.observe(sec));
+});
+</script>
+
+<!-- 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const slides = document.querySelectorAll('.hero-slides .slide');
+  let current = 0;
+  const interval = 6000; // change every 6s, adjust to your video length
+
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      const video = slide.querySelector('video');
+      if (i === index) {
+        slide.classList.add('active');
+        if (video) { video.currentTime = 0; video.play(); }
+      } else {
+        slide.classList.remove('active');
+        if (video) video.pause();
+      }
+    });
+  }
+
+  setInterval(() => {
+    current = (current + 1) % slides.length;
+    showSlide(current);
+  }, interval);
+});
+</script>
+ -->
+<script>
+document.querySelectorAll('.memorial-media').forEach(el => {
+  const img = el.querySelector('img');
+  if (img) el.style.setProperty('--card-bg', `url("${img.src}")`);
+});
+</script>
+
+
+  <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Intersection Observer for Scroll Entrance Animations
+            const observerOptions = {
+                threshold: 0.15,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        
+                        // Trigger count-up numbers animation
+                        if(entry.target.id === 'aboutSection' || entry.target.querySelector('.stat-card')) {
+                            startCounters();
+                        }
+                        
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.scroll-animate, .animate-left, .animate-right').forEach(el => {
+                observer.observe(el);
+            });
+
+            // 2. Auto-Calculating Count-Up Animation for Statistics
+            let countersStarted = false;
+            function startCounters() {
+                if (countersStarted) return;
+                countersStarted = true;
+
+                const counterElements = document.querySelectorAll('.stat-card h3');
+                counterElements.forEach(counter => {
+                    const target = +counter.getAttribute('data-target');
+                    const suffix = counter.getAttribute('data-suffix') || '';
+                    const divisor = +counter.getAttribute('data-divisor') || 1;
+                    
+                    const duration = 2000; // 2 seconds duration
+                    const startTime = performance.now();
+
+                    function updateCount(currentTime) {
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        
+                        // Smooth easing function
+                        const easeOutQuad = progress * (2 - progress);
+                        const currentVal = Math.floor(easeOutQuad * target);
+
+                        if (divisor === 1000) {
+                            counter.innerText = (currentVal / 1000).toFixed(currentVal % 1000 !== 0 ? 1 : 0) + suffix;
+                        } else {
+                            counter.innerText = currentVal + suffix;
+                        }
+
+                        if (progress < 1) {
+                            requestAnimationFrame(updateCount);
+                        } else {
+                            if (divisor === 1000) {
+                                counter.innerText = (target / 1000) + suffix;
+                            } else {
+                                counter.innerText = target + suffix;
+                            }
+                        }
+                    }
+
+                    requestAnimationFrame(updateCount);
+                });
+            }
+
+            // 3. 3D Tilt Effect & Gyroscope Support for Image Stack
+            const tiltCard = document.getElementById('tiltCard');
+            const container = tiltCard ? tiltCard.closest('.tilt-container') : null;
+
+            if (tiltCard && container) {
+                container.addEventListener('mousemove', (e) => {
+                    const rect = container.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = -((y - centerY) / centerY) * 12;
+                    const rotateY = ((x - centerX) / centerX) * 12;
+
+                    tiltCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                });
+
+                container.addEventListener('mouseleave', () => {
+                    tiltCard.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                    tiltCard.style.transition = 'transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1)';
+                });
+
+                container.addEventListener('mouseenter', () => {
+                    tiltCard.style.transition = 'transform 0.1s ease-out';
+                });
+
+                if (window.DeviceOrientationEvent) {
+                    window.addEventListener('deviceorientation', (e) => {
+                        if (e.beta && e.gamma) {
+                            const tiltX = Math.min(Math.max(e.beta, -20), 20) * 0.4;
+                            const tiltY = Math.min(Math.max(e.gamma, -20), 20) * 0.4;
+                            tiltCard.style.transform = `rotateX(${-tiltX}deg) rotateY(${tiltY}deg)`;
+                        }
+                    }, { passive: true });
+                }
+            }
+
+            // 4. Magnetic CTA Button Effect with Mouseleave Reset Fix
+            const magneticBtn = document.querySelector('.magnetic-btn');
+            if (magneticBtn) {
+                magneticBtn.addEventListener('mousemove', (e) => {
+                    const rect = magneticBtn.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    magneticBtn.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px)`;
+                });
+
+                magneticBtn.addEventListener('mouseleave', () => {
+                    magneticBtn.style.transform = 'translate(0px, 0px)';
+                });
+            }
+        });
+    </script>
+
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", function () {
+  const cards = document.querySelectorAll(".how-step-wrapper");
+
+  cards.forEach((wrapper) => {
+    const card = wrapper.querySelector(".how-step-card");
+
+    wrapper.addEventListener("mousemove", (e) => {
+      const rect = wrapper.getBoundingClientRect();
+      const x = e.clientX - rect.left; // x position within wrapper
+      const y = e.clientY - rect.top;  // y position within wrapper
+
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      // Calculate rotation angles (max 12 deg tilt)
+      const rotateX = -((y - centerY) / centerY) * 12;
+      const rotateY = ((x - centerX) / centerX) * 12;
+
+      card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+    });
+
+    wrapper.addEventListener("mouseleave", () => {
+      card.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+      card.style.transition = "transform 0.5s ease-in-out";
+    });
+
+    wrapper.addEventListener("mouseenter", () => {
+      card.style.transition = "none"; // Remove transition on move for instant tracking
+    });
+  });
+});
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const categorySection = document.querySelector("#categoriesSection");
+
+    if (!categorySection) return;
+
+    const observer = new IntersectionObserver(
+        function (entries, observer) {
+
+            entries.forEach(function (entry) {
+
+                if (entry.isIntersecting) {
+
+                    categorySection.classList.add("categories-visible");
+
+                    // Animate only once
+                    observer.unobserve(categorySection);
+                }
+
+            });
+
+        },
+        {
+            threshold: 0.2
+        }
+    );
+
+    observer.observe(categorySection);
+});
+</script>
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const sections = document.querySelectorAll(".scroll-3d");
+
+    const observer = new IntersectionObserver(
+        function (entries, observer) {
+
+            entries.forEach(function (entry) {
+
+                if (entry.isIntersecting) {
+
+                    entry.target.classList.add("show");
+
+                    // Animate only once
+                    observer.unobserve(entry.target);
+                }
+
+            });
+
+        },
+        {
+            threshold: 0.15,
+            rootMargin: "0px 0px -50px 0px"
+        }
+    );
+
+    sections.forEach(function (section) {
+        observer.observe(section);
+    });
+
+});
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const cardsSection = document.querySelector(".memorial-cards-section");
+
+    if (!cardsSection) return;
+
+    const observer = new IntersectionObserver(
+        function (entries, observer) {
+
+            entries.forEach(function (entry) {
+
+                if (entry.isIntersecting) {
+
+                    cardsSection.classList.add("cards-3d-visible");
+
+                    // Animate only once
+                    observer.unobserve(cardsSection);
+                }
+
+            });
+
+        },
+        {
+            threshold: 0.15,
+            rootMargin: "0px 0px -60px 0px"
+        }
+    );
+
+    observer.observe(cardsSection);
+
+});
+</script>
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const section = document.querySelector("#howItWorksSection");
+
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+        function (entries, observer) {
+
+            entries.forEach(function (entry) {
+
+                if (entry.isIntersecting) {
+
+                    section.classList.add("how-works-visible");
+
+                    observer.unobserve(section);
+                }
+
+            });
+
+        },
+        {
+            threshold: 0.20
+        }
+    );
+
+    observer.observe(section);
+
+});
+</script>
+
+
+<!-- JavaScript for Scroll Animation, Image Slider, & 3D Heart Model -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // 1. Scroll Intersection Observer for Pop & Slide Animation
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { root: null, threshold: 0.15 });
+
+      const aboutSection = document.getElementById('aboutSection');
+      if (aboutSection) {
+        observer.observe(aboutSection);
+      }
+
+      // 2. Image Slider Automatic Slideshow Logic
+      const slides = document.querySelectorAll('.slider-slide');
+      let currentSlide = 0;
+
+      if (slides.length > 0) {
+        setInterval(() => {
+          slides[currentSlide].classList.remove('active');
+          currentSlide = (currentSlide + 1) % slides.length;
+          slides[currentSlide].classList.add('active');
+        }, 4000); // Change image every 4 seconds
+      }
+
+      // 3. Three.js 3D Heart Model Rendering Script
+      const container = document.getElementById('section-canvas-container');
+      if (container) {
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+        camera.position.set(0, 0, 6.5);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        scene.add(ambientLight);
+
+        const pointLight = new THREE.PointLight(0xd4af37, 2, 50);
+        pointLight.position.set(5, 5, 5);
+        scene.add(pointLight);
+
+        // Create 3D Heart Shape Geometry
+        const x = 0, y = 0;
+        const heartShape = new THREE.Shape();
+        heartShape.moveTo(x + 5, y + 5);
+        heartShape.bezierCurveTo(x + 5, y + 5, x + 4, y, x, y);
+        heartShape.bezierCurveTo(x - 6, y, x - 6, y + 7, x - 6, y + 7);
+        heartShape.bezierCurveTo(x - 6, y + 11, x - 3, y + 15.4, x + 5, y + 19);
+        heartShape.bezierCurveTo(x + 13, y + 15.4, x + 16, y + 11, x + 16, y + 7);
+        heartShape.bezierCurveTo(x + 16, y + 7, x + 16, y, x + 10, y);
+        heartShape.bezierCurveTo(x + 6, y, x + 5, y + 5, x + 5, y + 5);
+
+        const extrudeSettings = {
+          depth: 2.5,
+          bevelEnabled: true,
+          bevelSegments: 5,
+          steps: 2,
+          bevelSize: 1,
+          bevelThickness: 1
+        };
+
+        const geometry = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
+        geometry.center();
+
+        const material = new THREE.MeshPhysicalMaterial({
+          color: 0xd4af37,
+          metalness: 0.8,
+          roughness: 0.2,
+          clearcoat: 0.5,
+          clearcoatRoughness: 0.1,
+          transmission: 0.1
+        });
+
+        const heartMesh = new THREE.Mesh(geometry, material);
+        heartMesh.scale.set(0.12, 0.12, 0.12);
+        scene.add(heartMesh);
+
+        // Animation Loop (Pulsing & Rotating)
+        let clock = new THREE.Clock();
+        function animate() {
+          requestAnimationFrame(animate);
+          const elapsedTime = clock.getElapsedTime();
+
+          heartMesh.rotation.y = elapsedTime * 0.5;
+          heartMesh.rotation.z = Math.sin(elapsedTime * 1.5) * 0.1;
+
+          const pulse = 1 + Math.sin(elapsedTime * 4) * 0.05;
+          heartMesh.scale.set(0.12 * pulse, 0.12 * pulse, 0.12 * pulse);
+
+          renderer.render(scene, camera);
+        }
+        animate();
+
+        // Responsive Window Resize Handler
+        window.addEventListener('resize', () => {
+          if (container) {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+          }
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

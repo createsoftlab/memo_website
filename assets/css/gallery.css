@@ -1,0 +1,131 @@
+/* Memorial Card Background & Border */
+.bg-memorial-card {
+  background-color: #f7ebe1;
+  border: 1px solid #ebd3c2 !important;
+}
+
+/* Gallery Sub-Tabs (PHOTO, MOVIE, AUDIO) */
+.sub-tab-link {
+  color: #7a4b31 !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 3px solid transparent !important;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  padding-bottom: 10px;
+  transition: all 0.2s ease-in-out;
+}
+
+.sub-tab-link.active {
+  border-bottom-color: #7a4b31 !important;
+  color: #533325 !important;
+}
+
+.sub-tab-link:hover {
+  color: #533325 !important;
+}
+
+/* Gallery Thumbnail Styling */
+.gallery-item-wrapper {
+  aspect-ratio: 1 / 1;
+  background-color: #e5d5c8;
+}
+
+.gallery-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.gallery-item-wrapper:hover .gallery-thumb {
+  transform: scale(1.05);
+}
+
+.uppercase-badge {
+  font-size: 0.65rem;
+  letter-spacing: 0.5px;
+}
+
+/* Dashed Border Container for Empty Tabs */
+.border-dashed {
+  border-style: dashed !important;
+  border-color: #d1b8a5 !important;
+}
+
+/* Upload Dropzone Box */
+.upgrade-banner {
+  background-color: #eddcd0;
+  border: 1px dashed #cbb19f;
+}
+
+.upload-dropzone {
+  border: 2px dashed #d1b8a5;
+  background-color: rgba(255, 255, 255, 0.4);
+  min-height: 140px;
+  transition: background-color 0.2s ease;
+}
+
+.upload-dropzone:hover {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+/* Sidebar Custom Styling */
+.sidebar-card {
+  background-color: #f7ebe1;
+  border: 1px solid #ebd3c2 !important;
+}
+
+/* Action & Social Buttons */
+.btn-invite {
+  background-color: #533325;
+  color: #ffffff;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.btn-invite:hover {
+  background-color: #3d2419;
+  color: #ffffff;
+}
+
+.btn-donate {
+  background-color: #d97706;
+  color: #ffffff;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.btn-donate:hover {
+  background-color: #b45309;
+  color: #ffffff;
+}
+
+.btn-facebook {
+  background-color: #edf3ff;
+  color: #1877f2;
+  border: 1px solid #d0e1fd;
+  font-weight: 600;
+}
+
+.btn-facebook:hover {
+  background-color: #e0ecff;
+  color: #0d6efd;
+}
+
+.btn-outline-memorial-dark {
+  border: 1px solid #bc9d89;
+  color: #533325;
+  background-color: transparent;
+}
+
+.btn-outline-memorial-dark:hover {
+  background-color: #ebd3c2;
+  color: #3d2419;
+}
+
+.text-memorial-accent {
+  color: #8c4c2d !important;
+}

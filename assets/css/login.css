@@ -1,0 +1,89 @@
+/* =================================================================
+   Login Page Custom CSS - Forever Missed Memorial Directory
+================================================================= */
+
+/* Main Body Background and Layout */
+body.bg-light, body.d-flex.flex-column.min-vh-100 {
+    background-color: #f7f4ed !important; /* Soft warm tan/light background */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #4a3b32;
+}
+
+/* Login Card Box Styling */
+.login-card {
+    background: #ffffff;
+    border: 1px solid #e3dbcc !important;
+    border-radius: 1rem !important;
+    box-shadow: 0 10px 30px rgba(115, 96, 59, 0.08) !important;
+}
+
+/* Typography Inside Login Card */
+.login-card h2 {
+    color: #3b2e25;
+    font-family: serif;
+}
+
+/* Form Controls (Inputs) Styling */
+.login-card .form-control {
+    border-color: #dcd2bc;
+    font-size: 0.95rem;
+    color: #495057;
+    background-color: #fdfcf9;
+}
+
+.login-card .form-control:focus {
+    border-color: #c5a059;
+    box-shadow: 0 0 0 0.25rem rgba(197, 160, 89, 0.15);
+    background-color: #ffffff;
+}
+
+/* Password Toggle Eye Button Styling */
+.login-card .input-group .btn-outline-secondary {
+    border-color: #dcd2bc;
+    color: #6c757d;
+    background-color: #fdfcf9;
+}
+
+.login-card .input-group .btn-outline-secondary:hover {
+    background-color: #f1ebd9;
+    color: #3b2e25;
+    border-color: #c5a059;
+}
+
+/* Custom Gold Action Button */
+.btn-gold-action {
+    background-color: #c5a059 !important;
+    color: #ffffff !important;
+    border: none !important;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+}
+
+.btn-gold-action:hover {
+    background-color: #b08d4b !important;
+    color: #ffffff !important;
+}
+
+.btn-gold-action:active {
+    transform: scale(0.99);
+}
+
+/* Accent Links (Forgot password, Sign up links) */
+.text-memorial-accent {
+    color: #c5a059 !important;
+}
+
+.text-memorial-accent:hover {
+    color: #9c7b3b !important;
+    text-decoration: underline !important;
+}
+
+/* Remember Me Checkbox Custom Focus */
+.login-card .form-check-input:checked {
+    background-color: #c5a059;
+    border-color: #c5a059;
+}
+
+.login-card .form-check-input:focus {
+    border-color: #c5a059;
+    box-shadow: 0 0 0 0.25rem rgba(197, 160, 89, 0.15);
+}

@@ -1,0 +1,51 @@
+/* Timeline Vertical Line Layout */
+.vertical-timeline {
+  border-left: 2px solid #decfc2;
+}
+
+.timeline-entry::before {
+  content: '';
+  position: absolute;
+  left: -25px;
+  top: 15px; 
+  width: 10px;
+  height: 2px;
+  background-color: #decfc2;
+}
+
+.timeline-icon {
+  width: 52px;       
+  height: 52px;         
+  font-size: 1.35rem;   
+  border-color: #8c4c2d !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.timeline-year {
+  font-size: 0.85rem;   
+  font-weight: 600;
+  padding: 0.3em 0.6em;
+}
+
+/* Timeline Text Sizes */
+.timeline-body h6 {
+  font-size: 1.15rem !important; 
+}
+
+.timeline-body p {
+  font-size: 0.95rem !important; 
+}
+
+.max-w-400 {
+  max-width: 400px;
+  width: 100%;
+}
+
+/* Sidebar Custom Styling */
+.sidebar-card {
+  border: 1px solid #ebd3c2 !important;
+}
+
+.text-memorial-accent {
+  color: #8c4c2d !important;
+}

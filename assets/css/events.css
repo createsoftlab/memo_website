@@ -1,0 +1,112 @@
+/* Memorial Background & Card Theme Matching */
+.bg-memorial-card {
+  background-color: #f7ebe1;
+  border: 1px solid #ebd3c2 !important;
+}
+
+.bg-memorial-accent {
+  background-color: #8c4c2d !important;
+}
+
+.text-memorial-accent {
+  color: #8c4c2d !important;
+}
+
+.border-memorial {
+  border-color: #dcd0c5 !important;
+}
+
+/* Live Stream Banner */
+.live-banner {
+  background: linear-gradient(135deg, #533325 0%, #8c4c2d 100%);
+}
+
+.live-badge {
+  background-color: rgba(220, 53, 69, 0.2);
+  color: #ff8b8b;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-size: 0.75rem;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #ff3b30;
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulse-animation 1.5s infinite;
+}
+
+@keyframes pulse-animation {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(255, 59, 48, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
+}
+
+/* RSVP Input Box */
+.rsvp-box {
+  border-color: #ebd3c2 !important;
+}
+
+/* Buttons */
+.btn-memorial-submit {
+  background-color: #533325;
+  border: none;
+  border-radius: 4px;
+}
+
+.btn-memorial-submit:hover {
+  background-color: #3d2419;
+}
+
+.btn-invite {
+  background-color: #533325;
+  color: #ffffff;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.btn-invite:hover {
+  background-color: #3d2419;
+  color: #ffffff;
+}
+
+.btn-facebook {
+  background-color: #edf3ff;
+  color: #1877f2;
+  border: 1px solid #d0e1fd;
+}
+
+.btn-facebook:hover {
+  background-color: #e0ecff;
+  color: #0d6efd;
+}
+
+.btn-whatsapp {
+  background-color: #e6f8f0;
+  color: #25d366;
+  border: 1px solid #c2f0d5;
+}
+
+.btn-whatsapp:hover {
+  background-color: #d2f5e3;
+  color: #1da851;
+}
+
+.btn-outline-memorial-dark {
+  border: 1px solid #bc9d89;
+  color: #533325;
+  background-color: transparent;
+}
+
+.btn-outline-memorial-dark:hover {
+  background-color: #ebd3c2;
+  color: #3d2419;
+}
+
+/* Sidebar Custom Styling */
+.sidebar-card {
+  background-color: #f7ebe1;
+  border: 1px solid #ebd3c2 !important;
+}

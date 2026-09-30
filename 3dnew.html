@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CreateSoft — Digital Experiences</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050d1d;--panel:#0d1a31;--blue:#1677ff;--cyan:#19c7ff;--text:#f4f7ff;--muted:#a8b7d2;--line:#1b3153}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{color:inherit;text-decoration:none}.wrap{width:min(1160px,90%);margin:auto}
+header{position:fixed;inset:0 0 auto;z-index:10;background:#050d1ddc;backdrop-filter:blur(14px);border-bottom:1px solid #ffffff0b}
+.nav{height:76px;display:flex;align-items:center;justify-content:space-between}.brand{font-weight:800;font-size:1.15rem;display:flex;align-items:center;gap:10px}.brand-mark{width:27px;height:27px;border-radius:8px;background:linear-gradient(135deg,#20d5ff,#1765ff);display:inline-block;transform:rotate(-10deg);box-shadow:0 0 25px #1677ff55}
+.links{display:flex;gap:28px;color:#c3cde0;font-size:.88rem}.links a:hover{color:#42baff}.btn{display:inline-flex;align-items:center;gap:10px;padding:12px 20px;border-radius:999px;background:linear-gradient(120deg,#1682ff,#1556dc);color:white;font-weight:600;font-size:.88rem;border:1px solid #51aaff55;box-shadow:0 8px 28px #076aff24;transition:.25s}.btn:hover{transform:translateY(-3px);box-shadow:0 12px 34px #076aff55}.btn.ghost{background:transparent;border-color:#2c5b91}
+.hero{min-height:720px;padding:140px 0 70px;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:30px;overflow:hidden;position:relative}.hero:before{content:"";position:absolute;width:550px;height:550px;border-radius:50%;background:#086aff20;filter:blur(90px);right:0;top:100px;pointer-events:none}
+.eyebrow{color:#70c9ff;font-size:.75rem;letter-spacing:.2em;font-weight:700;text-transform:uppercase;margin-bottom:18px}.hero h1{font-size:clamp(2.7rem,5vw,4.5rem);line-height:1.08;letter-spacing:-.05em;max-width:620px}.gradient{background:linear-gradient(90deg,#fff,#5abaff 75%);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{color:var(--muted);max-width:520px;margin:24px 0 28px}.actions{display:flex;gap:14px;flex-wrap:wrap}.stats{display:flex;gap:40px;margin-top:48px}.stat strong{display:block;color:#41baff;font-size:1.5rem}.stat span{font-size:.78rem;color:var(--muted)}
+.scene{height:470px;position:relative;min-width:0}.scene canvas{width:100%;height:100%;display:block}.scene-label{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-size:.75rem;color:#9cbce5;letter-spacing:.14em;white-space:nowrap}
+.section{padding:100px 0;border-top:1px solid #ffffff0b}.section-head{text-align:center;max-width:660px;margin:0 auto 45px}.section-head h2{font-size:clamp(2rem,3.5vw,3rem);line-height:1.15;letter-spacing:-.04em}.section-head p{color:var(--muted);margin-top:15px}
+.about{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}.orb-wrap{height:350px;position:relative;display:grid;place-items:center}.orb{width:210px;height:210px;border-radius:35%;background:linear-gradient(145deg,#20d5ff,#0754da 55%,#15236d);box-shadow:inset -25px -30px 65px #02081b,0 0 75px #087bff55;transform:rotate(-20deg);animation:float 6s ease-in-out infinite;position:relative}.orb:before,.orb:after{content:"";position:absolute;inset:-30px;border:1px solid #3a9eff70;border-radius:38%;transform:rotate(45deg)}.orb:after{inset:-60px;transform:rotate(-25deg);border-color:#3a9eff30}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-20deg)}50%{transform:translateY(-18px) rotate(-10deg)}}
+.about h2{font-size:2.35rem;line-height:1.2;letter-spacing:-.04em;margin-bottom:18px}.about p{color:var(--muted);margin-bottom:22px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{padding:28px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#101e36,#091326);transition:.25s}.card:hover{transform:translateY(-7px);border-color:#2878c7;box-shadow:0 18px 45px #0004}.icon{width:48px;height:48px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(135deg,#176fff,#133f9b);font-size:1.35rem;margin-bottom:20px}.card h3{font-size:1.12rem;margin-bottom:10px}.card p{font-size:.9rem;color:var(--muted)}
+.portfolio{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.project{height:230px;border-radius:18px;border:1px solid var(--line);overflow:hidden;position:relative;background:radial-gradient(circle at 50% 25%,#1a66bd,#101a38 55%,#080f20);display:grid;place-items:center}.project .mock{width:70%;height:65%;border:1px solid #6fc9ff70;border-radius:10px;background:linear-gradient(135deg,#102c55cc,#0a1429);box-shadow:0 20px 45px #0008;transform:perspective(700px) rotateY(-12deg) rotateX(5deg);padding:14px}.mock .bar{height:7px;width:40%;border-radius:8px;background:#42baff;margin-bottom:15px}.mock .block{height:65%;border-radius:7px;background:linear-gradient(135deg,#1263bb,#23c7e9 55%,#0b2252)}.project h3{position:absolute;bottom:14px;left:18px;font-size:.9rem}
+.testimonials{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.quote{padding:26px;border:1px solid var(--line);border-radius:16px;background:#0b172b}.quote p{color:#d3dced;font-size:.92rem}.quote strong{display:block;margin-top:20px}.quote small{color:var(--muted)}
+.cta{padding:42px;border-radius:22px;border:1px solid #2465b7;background:radial-gradient(ellipse at right,#174db1,#10265a 50%,#0c1a34);display:flex;align-items:center;justify-content:space-between;gap:25px}.cta h2{font-size:2rem;line-height:1.2}.cta p{color:#c1d1ec;margin-top:8px}
+footer{padding:32px 0;border-top:1px solid var(--line);color:var(--muted);font-size:.82rem}.footer-row{display:flex;justify-content:space-between;gap:20px;align-items:center}
+@media(max-width:850px){.links{gap:14px}.hero{grid-template-columns:1fr;padding-top:125px}.hero-copy{text-align:center}.hero-copy p{margin-inline:auto}.actions,.stats{justify-content:center}.scene{height:370px}.about{grid-template-columns:1fr;gap:25px}.orb-wrap{height:270px}.cards,.portfolio,.testimonials{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.links{display:none}.nav{height:66px}.hero{padding-top:115px}.hero h1{font-size:2.65rem}.scene{height:300px}.stats{gap:22px}.cards,.portfolio,.testimonials{grid-template-columns:1fr}.section{padding:70px 0}.cta,.footer-row{flex-direction:column;align-items:flex-start}.cta{padding:28px}.project{height:220px}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav"><a class="brand" href="#home"><span class="brand-mark"></span>CreateSoft</a><nav class="links"><a href="#home">Home</a><a href="#about">About</a><a href="#services">Services</a><a href="#work">Portfolio</a><a href="#testimonials">Testimonials</a><a href="#contact">Contact</a></nav><a class="btn" href="#contact">Get Started ↗</a></div></header>
+<main>
+<section class="hero wrap" id="home"><div class="hero-copy"><div class="eyebrow">Ideas → Reality</div><h1>We Build Digital Experiences That <span class="gradient">Matter.</span></h1><p>Modern websites, powerful applications and creative solutions to help your business grow in the digital world.</p><div class="actions"><a class="btn" href="#contact">Start Your Project →</a><a class="btn ghost" href="#work">Explore Our Work</a></div><div class="stats"><div class="stat"><strong>100+</strong><span>Happy Clients</span></div><div class="stat"><strong>150+</strong><span>Projects Completed</span></div><div class="stat"><strong>5+</strong><span>Years Experience</span></div></div></div><div class="scene"><canvas id="scene3d" aria-label="Interactive 3D floating geometric objects"></canvas><div class="scene-label">INTERACTIVE 3D EXPERIENCE · DRAG TO ROTATE</div></div></section>
+<section class="section" id="about"><div class="wrap about"><div class="orb-wrap"><div class="orb"></div></div><div><div class="eyebrow">About Us</div><h2>Turning Ideas into Powerful Digital Solutions</h2><p>We are a passionate team of developers, designers and creatives who love building innovative digital products. From websites to mobile apps, we deliver high-quality solutions that are fast, secure and scalable.</p><a class="btn" href="#services">Learn More →</a></div></div></section>
+<section class="section" id="services"><div class="wrap"><div class="section-head"><div class="eyebrow">Our Services</div><h2>What We Do</h2><p>We provide a wide range of digital services to help your business stand out and achieve its goals.</p></div><div class="cards">
+<article class="card"><div class="icon">◎</div><h3>Web Development</h3><p>Modern, responsive and SEO-friendly websites tailored to your needs.</p></article>
+<article class="card"><div class="icon">▣</div><h3>Mobile App Development</h3><p>Android and iOS apps with smooth performance and great user experience.</p></article>
+<article class="card"><div class="icon">▧</div><h3>UI/UX Design</h3><p>Beautiful and user-friendly designs that create lasting impressions.</p></article>
+<article class="card"><div class="icon">⌘</div><h3>Custom Software</h3><p>Scalable and secure software solutions built around your business.</p></article>
+<article class="card"><div class="icon">☁</div><h3>Cloud & API Integration</h3><p>Connect your systems with modern cloud and third-party services.</p></article>
+<article class="card"><div class="icon">↗</div><h3>Digital Marketing</h3><p>Grow your brand with strategic online marketing solutions.</p></article></div></div></section>
+<section class="section" id="work"><div class="wrap"><div class="section-head"><div class="eyebrow">Our Work</div><h2>Featured Projects</h2><p>Explore some of our recent work and see how we turn ideas into real-world digital experiences.</p></div><div class="portfolio">
+<div class="project"><div class="mock"><div class="bar"></div><div class="block"></div></div><h3>Business Website</h3></div><div class="project"><div class="mock"><div class="bar"></div><div class="block"></div></div><h3>Mobile Application</h3></div><div class="project"><div class="mock"><div class="bar"></div><div class="block"></div></div><h3>POS & Retail System</h3></div><div class="project"><div class="mock"><div class="bar"></div><div class="block"></div></div><h3>Analytics Dashboard</h3></div><div class="project"><div class="mock"><div class="bar"></div><div class="block"></div></div><h3>Social Media Platform</h3></div><div class="project"><div class="mock"><div class="bar"></div><div class="block"></div></div><h3>Travel App</h3></div></div></div></section>
+<section class="section" id="testimonials"><div class="wrap"><div class="section-head"><div class="eyebrow">Testimonials</div><h2>What Our Clients Say</h2><p>We're proud to have worked with amazing clients. Here's what they have to say about our work.</p></div><div class="testimonials"><article class="quote"><p>“The team delivered our website exactly as we wanted. Professional, creative and always responsive.”</p><strong>Ravindu Perera</strong><small>CEO, Bright Solutions</small></article><article class="quote"><p>“Excellent service! The app performance is amazing and the UI/UX is top-notch. Highly recommended!”</p><strong>Nimal Fernando</strong><small>Founder, FinTech</small></article><article class="quote"><p>“They understood our vision and turned it into a beautiful website. Great communication and support.”</p><strong>Kasun Wijesinghe</strong><small>Marketing Manager</small></article></div></div></section>
+<section class="section" id="contact"><div class="wrap"><div class="cta"><div><div class="eyebrow">Let's Work Together</div><h2>Have a Project in Mind?</h2><p>Let's turn your ideas into something amazing. Get in touch for a free consultation.</p></div><a class="btn" href="mailto:hello@createsoftlab.com">Get Started →</a></div></div></section>
+</main><footer><div class="wrap footer-row"><a class="brand" href="#home"><span class="brand-mark"></span>CreateSoft</a><span>Building digital solutions for a better tomorrow.</span><span>© 2026 CreateSoft. All rights reserved.</span></div></footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
+<script>
+(() => {
+ const canvas=document.getElementById('scene3d'); if(!window.THREE||!canvas)return;
+ const scene=new THREE.Scene(); scene.fog=new THREE.FogExp2(0x050d1d,.075);
+ const camera=new THREE.PerspectiveCamera(42,1,.1,100);camera.position.set(0,0,8);
+ const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+ scene.add(new THREE.AmbientLight(0x8dbdff,1.4));
+ const light=new THREE.PointLight(0x168bff,45);light.position.set(3,4,5);scene.add(light);
+ const group=new THREE.Group();scene.add(group);
+ const mat=new THREE.MeshStandardMaterial({color:0x176fff,metalness:.65,roughness:.22,emissive:0x052c88,emissiveIntensity:.6});
+ const cyan=new THREE.MeshStandardMaterial({color:0x24d6ff,metalness:.5,roughness:.18,emissive:0x0876ff,emissiveIntensity:.5});
+ const cube=new THREE.Mesh(new THREE.IcosahedronGeometry(1.15,1),mat);group.add(cube);
+ const ring=new THREE.Mesh(new THREE.TorusGeometry(1.75,.025,12,120),new THREE.MeshBasicMaterial({color:0x35aaff,transparent:true,opacity:.8}));ring.rotation.x=1.15;group.add(ring);
+ const ring2=new THREE.Mesh(new THREE.TorusGeometry(2.15,.012,8,120),new THREE.MeshBasicMaterial({color:0x176fff,transparent:true,opacity:.55}));ring2.rotation.y=.8;group.add(ring2);
+ const bits=[];for(let i=0;i<8;i++){const m=new THREE.Mesh(new THREE.BoxGeometry(.25,.25,.25),i%2?cyan:mat);m.position.set(Math.cos(i*Math.PI/4)*2.2,Math.sin(i*Math.PI/4)*1.8,(Math.random()-.5)*1.3);group.add(m);bits.push(m)}
+ let down=false,px=0,py=0,rx=0,ry=0;
+ canvas.addEventListener('pointerdown',e=>{down=true;px=e.clientX;py=e.clientY;canvas.setPointerCapture(e.pointerId)});
+ canvas.addEventListener('pointermove',e=>{if(!down)return;ry+=(e.clientX-px)*.008;rx+=(e.clientY-py)*.008;px=e.clientX;py=e.clientY});
+ canvas.addEventListener('pointerup',()=>down=false);canvas.addEventListener('pointercancel',()=>down=false);
+ function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
+ new ResizeObserver(resize).observe(canvas);resize();
+ const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const t=clock.getElapsedTime();group.rotation.y+=(ry-group.rotation.y)*.05;group.rotation.x+=(rx-group.rotation.x)*.05;if(!down){group.rotation.y+=.002;group.rotation.x=Math.sin(t*.3)*.08}cube.rotation.x=t*.22;cube.rotation.y=t*.3;ring.rotation.z=t*.18;ring2.rotation.x=t*.13;bits.forEach((b,i)=>{b.rotation.x=t*.4+i;b.rotation.y=t*.6+i;b.position.y=Math.sin(t+i)*.12+Math.sin(i*Math.PI/4)*1.8});renderer.render(scene,camera)}animate();
+})();
+</script>
+</body></html>

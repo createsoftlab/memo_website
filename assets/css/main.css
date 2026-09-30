@@ -1,0 +1,448 @@
+/* Color Palette */
+/* ==========================================================================
+   1. COLOR VARIABLES & THEME SETUP
+   ========================================================================== */
+
+   
+:root {
+
+  --nav-bg: #211208;
+  --nav-text: #cccccc;
+  --nav-hover: #ffffff;
+  --gold-accent: #ffb700;
+  --gold-hover: #e6a500;
+  
+  --bg-card: #f7ebe1;
+  --bg-card-tan-light: #fbf6f2;
+  --border-card: #ebd3c2;
+  --border-input: #dcd0c5;
+  --bg-editor-toolbar: #fbf6f2;
+  --border-dropzone: #cbb19f;
+  --btn-submit-bg: #533325;
+  --btn-submit-hover: #3d2419;
+  --text-accent: #8c4c2d;
+  --text-brown: #4a2818;
+  --border-dark-btn: #bc9d89;
+
+  --bg-dark-brown: #2d1a10;
+  --bg-medium-brown: #4d2d1d;
+  --bg-tan-light: #f5ebd9;
+  --bg-card-tan: #ebdcc9;
+  --bg-page: #f9f5ef;
+  --btn-brown: #5d331e;
+  --btn-brown-hover: #452414;
+}
+
+
+
+/* :root {
+ 
+  --nav-bg: #0f172a;
+  --nav-text: #cbd5e1;
+  --nav-hover: #ffffff;
+  --gold-accent: #3b82f6;
+  --gold-hover: #2563eb;
+  
+  --bg-card: #ffffff;
+  --bg-card-tan-light: #f8fafc;
+  --border-card: #e2e8f0;
+  --border-input: #cbd5e1;
+  --bg-editor-toolbar: #f8fafc;
+  --border-dropzone: #94a3b8;
+  --btn-submit-bg: #1e293b;
+  --btn-submit-hover: #0f172a;
+  --text-accent: #2563eb;
+  --text-brown: #1e293b;
+  --border-dark-btn: #94a3b8;
+
+  --bg-dark-brown: #1e293b;
+  --bg-medium-brown: #334155;
+  --bg-tan-light: #f1f5f9;
+  --bg-card-tan: #e2e8f0;
+  --bg-page: #f8fafc;
+  --btn-brown: #1e293b;
+  --btn-brown-hover: #0f172a;
+} */
+
+/* --- DARK MODE OVERRIDES (Text White) --- */
+body.dark-mode {
+  --nav-bg: #120a04;
+  --nav-text: #ffffff;         /* Navigation text pure white */
+  --nav-hover: #ffb700;
+  --gold-accent: #ffb700;
+  --gold-hover: #e6a500;
+  
+  --bg-card: #24160e;
+  --bg-card-tan-light: #1c110a;
+  --border-card: #3d2419;
+  --border-input: #4d2d1d;
+  --bg-editor-toolbar: #1c110a;
+  --border-dropzone: #533325;
+  --btn-submit-bg: #d19a3b;     /* Golden-amber button background for dark mode */
+  --btn-submit-hover: #ffb700;  /* Brighter hover effect */
+  --text-accent: #ffa726;
+  --text-brown: #ffffff;        /* Main text elements pure white */
+  --border-dark-btn: #6d422a;
+
+  --bg-dark-brown: #0d0603;
+  --bg-medium-brown: #1c110a;
+  --bg-tan-light: #1f120b;
+  --bg-card-tan: #2a1a12;
+  --bg-page: #120a04;           /* Deep dark page background */
+  --btn-brown: #8c4c2d;
+  --btn-brown-hover: #a85d38;
+}
+
+
+
+body {
+  background-color: #f8f6f0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333333;
+  overflow-x: hidden;
+}
+
+.font-serif {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.text-brown {
+  color: var(--text-brown) !important;
+}
+
+.text-memorial-accent {
+  color: var(--text-accent) !important;
+}
+
+.text-gold {
+  color: var(--gold-accent) !important;
+}
+
+.bg-gold {
+  background-color: var(--gold-accent) !important;
+}
+
+.text-light-tan {
+  color: #ebdcc9 !important;
+}
+
+.bg-memorial-dark {
+  background-color: var(--nav-bg) !important;
+}
+
+.bg-card-tan {
+  background-color: var(--bg-card) !important;
+}
+
+.bg-card-tan-light {
+  background-color: var(--bg-card-tan-light) !important;
+}
+
+.border-card {
+  border: 1px solid var(--border-card) !important;
+}
+
+.border-tan {
+  border: 3px solid var(--border-card) !important;
+}
+
+.tracking-wide {
+  letter-spacing: 1.5px;
+  font-size: 0.8rem;
+}
+
+.max-width-700 {
+  max-width: 700px;
+}
+
+/* ==========================================================================
+   2. NAVBAR & OFFCANVAS
+   ========================================================================== */
+.navbar-custom {
+  background-color: var(--nav-bg) !important;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-custom .navbar-brand {
+  color: var(--gold-accent) !important;
+  font-weight: 800;
+  font-size: 1.35rem;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar-custom .nav-link {
+  color: var(--nav-text) !important;
+  font-weight: 600;
+  font-size: 0.88rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s ease-in-out;
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link.active {
+  color: var(--nav-hover) !important;
+}
+
+.offcanvas-memorial {
+  background-color: var(--nav-bg) !important;
+  color: #ffffff;
+}
+
+.offcanvas-memorial .btn-close {
+  filter: invert(1);
+}
+
+.btn-nav-login {
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  background-color: transparent;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.4rem 1.1rem;
+  border-radius: 4px;
+}
+
+.btn-nav-login:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-nav-signup {
+  background-color: var(--gold-accent);
+  color: #000000 !important;
+  border: none;
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 0.45rem 1.2rem;
+  border-radius: 4px;
+}
+
+.btn-nav-signup:hover {
+  background-color: var(--gold-hover);
+}
+
+
+
+body {
+  background-color: var(--bg-page);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* Common Classes */
+.bg-memorial-dark { background-color: var(--bg-dark-brown) !important; }
+.bg-memorial-footer { background-color: #e6d8c8; border-top: 1px solid #d4c1ad; }
+.text-memorial { color: var(--text-brown) !important; }
+.font-serif { font-family: Georgia, 'Times New Roman', Times, serif; }
+
+/* Hero Banner */
+.memorial-hero {
+  background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.55)), 
+              url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?fit=crop&w=1500&h=500') center/cover no-repeat;
+  min-height: 220px;
+}
+.memorial-title { font-family: Georgia, serif; font-size: 2.3rem; }
+.memorial-avatar { width: 130px; height: 130px; object-fit: cover; border: 3px solid #fff; }
+
+/* Navigation Tabs */
+.memorial-tabs-bar {
+  background-color: var(--bg-dark-brown);
+  border-bottom: 2px solid var(--bg-medium-brown);
+}
+.memorial-tabs-bar .nav-link {
+  color: #d1bfae;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 8px 8px 0 0;
+  border: none;
+}
+.memorial-tabs-bar .nav-link:hover { color: #fff; }
+.memorial-tabs-bar .nav-link.active {
+  color: var(--text-brown);
+  background-color: var(--bg-page);
+}
+
+/* Sidebar & Cards */
+.tribute-card, .sidebar-card {
+  background-color: var(--bg-card-tan);
+  border: 1px solid #dfcfbc;
+}
+.btn-memorial { background-color: var(--btn-brown); color: #fff; border: none; }
+.btn-memorial:hover { background-color: var(--btn-brown-hover); color: #fff; }
+.btn-outline-memorial { color: var(--text-brown); border-color: #ba9e84; background-color: rgba(255,255,255,0.4); }
+.btn-outline-memorial:hover, .btn-outline-memorial.active { background-color: var(--btn-brown); color: #fff; }
+.btn-facebook { background-color: #1877f2; color: #fff; }
+
+/* Mobile Optimization */
+@media (max-width: 575.98px) {
+  .memorial-title { font-size: 1.6rem; }
+  .memorial-tabs-bar .nav-link { padding: 8px 10px; font-size: 0.75rem; }
+}
+
+/* Offcanvas Slide Drawer Settings for Mobile & Tablet only */
+@media (max-width: 991.98px) {
+  .offcanvas.bg-memorial-dark {
+    background-color: var(--bg-dark-brown) !important;
+    max-width: 280px;
+  }
+  .offcanvas .nav-link {
+    color: #d1bfae;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+  }
+  .offcanvas .nav-link:hover, 
+  .offcanvas .nav-link.active {
+    color: #ffffff;
+    padding-left: 8px;
+  }
+}
+
+/* Laptop/Desktop Styles Reset (Screen size >= 992px) */
+@media (min-width: 992px) {
+  .offcanvas {
+    position: static !important;
+    visibility: visible !important;
+    transform: none !important;
+    background-color: transparent !important;
+    width: auto !important;
+    border: none !important;
+  }
+}
+
+
+/* Sidebar Cards Specific Styling matching the provided image */
+.sidebar-card {
+  background-color: #f7ebe1; /* Soft warm beige background */
+  border: 1px solid #ebd3c2;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Facebook Button Styling */
+.btn-facebook {
+  background-color: #edf3ff;
+  color: #1877f2;
+  border: 1px solid #d0e1fd;
+  font-weight: 600;
+}
+.btn-facebook:hover {
+  background-color: #e0ecff;
+  color: #0d6efd;
+}
+
+/* Dark Brown Action Buttons */
+.btn-memorial-dark {
+  background-color: #533325;
+  color: #ffffff;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.btn-memorial-dark:hover {
+  background-color: #3d2419;
+  color: #ffffff;
+}
+
+/* Outline Buttons */
+.btn-outline-memorial-dark {
+  border: 1px solid #bc9d89;
+  color: #533325;
+  background-color: transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.btn-outline-memorial-dark:hover {
+  background-color: #ebd3c2;
+  color: #3d2419;
+}
+
+/* Accent Links and Text */
+.text-memorial-accent {
+  color: #8c4c2d;
+}
+
+/* Invite Button (Dark Brown Theme) */
+.btn-invite {
+  background-color: #533325;
+  color: #ffffff;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.btn-invite:hover {
+  background-color: #3d2419;
+  color: #ffffff;
+}
+
+/* Donate Button (Warm Golden/Amber Accent Theme) */
+.btn-donate {
+  background-color: #d97706;
+  color: #ffffff;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.btn-donate:hover {
+  background-color: #b45309;
+  color: #ffffff;
+}
+
+
+/* Base styles using variables */
+body {
+  background-color: var(--bg-page);
+  color: var(--text-brown);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  margin: 0;
+}
+/* Vertical Floating Pill Switcher CSS */
+#theme-switcher {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-card);
+    border: 2px solid var(--border-dark-btn);
+    border-right: none;
+    border-radius: 30px 0 0 30px;
+    padding: 6px;
+    box-shadow: -4px 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.theme-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-brown);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 10px 8px;
+    cursor: pointer;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.theme-btn.active {
+    background-color: var(--btn-submit-bg);
+    color: var(--nav-hover);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}

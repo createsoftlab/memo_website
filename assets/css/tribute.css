@@ -1,0 +1,200 @@
+/* Custom Tribute Tabs Styling */
+.custom-tribute-tabs .nav-link {
+    background-color: #f8f9fa;
+    color: #6c75d7;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.custom-tribute-tabs .nav-link.active {
+    background-color: #7b5b3a !important; /* Soft Warm Tan / Brown brand color */
+    color: #ffffff !important;
+    border-color: #7b5b3a !important;
+}
+
+/* Flower Selection Radio Styling */
+.flower-option input[type="radio"]:checked + .flower-icon {
+    background-color: #f5efe6;
+    border-color: #7b5b3a !important;
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(123, 91, 58, 0.2);
+}
+
+.flower-icon {
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.flower-icon:hover {
+    transform: scale(1.05);
+}
+
+
+/* Animated Candle Glow Effect */
+@keyframes flicker {
+    0% { opacity: 0.8; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.08); text-shadow: 0 0 15px #ffc107, 0 0 25px #ff5722; }
+    100% { opacity: 0.8; transform: scale(1); }
+}
+
+.animated-candle {
+    display: inline-block;
+    animation: flicker 1.8s infinite ease-in-out;
+}
+
+/* --- Tab Icons & Flower Hover & Colorful Floating Animation --- */
+@keyframes floatIcon {
+    0% { transform: translateY(0px) scale(1) rotate(0deg); }
+    50% { transform: translateY(-5px) scale(1.15) rotate(3deg); filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.8)); }
+    100% { transform: translateY(0px) scale(1) rotate(0deg); }
+}
+
+.animated-icon, .animated-flame-icon, .animated-flower-item {
+    display: inline-block;
+    animation: floatIcon 2.2s infinite ease-in-out;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* Flowers Hover effect (Pop & Colorful Glow) */
+.flower-option {
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.flower-option:hover {
+    transform: scale(1.35) translateY(-5px);
+    filter: drop-shadow(0 0 12px #ff4081) brightness(1.2);
+}
+
+.flower-option input:checked + .flower-icon {
+    background-color: #ffe4e6 !important;
+    border-color: #ff4081 !important;
+    box-shadow: 0 0 15px rgba(255, 64, 129, 0.6);
+    transform: scale(1.1);
+}
+
+/* --- Real Realistic Candle Animation & Hover Effect --- */
+.candle-wrapper {
+    width: 60px;
+    height: 110px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 0 auto;
+    transition: transform 0.4s ease;
+}
+
+/* Candle Container Hover Effect (Pop & Glow) */
+.candle-wrapper:hover {
+    transform: scale(1.15);
+}
+
+.candle-wrapper:hover .flame {
+    box-shadow: 0 0 25px #ff0055, 0 0 45px #ffcc00, 0 0 60px #00ffff;
+    filter: hue-rotate(15deg);
+}
+
+.candle-body {
+    width: 32px;
+    height: 65px;
+    background: linear-gradient(to right, #ffe6f0, #fffaf0, #ffd1dc);
+    border-radius: 4px 4px 2px 2px;
+    position: relative;
+    box-shadow: inset 0 -5px 10px rgba(0,0,0,0.1), 0 0 10px rgba(255, 192, 203, 0.5);
+    transition: box-shadow 0.3s ease;
+}
+
+.candle-wrapper:hover .candle-body {
+    box-shadow: inset 0 -5px 15px rgba(0,0,0,0.15), 0 0 20px rgba(255, 105, 180, 0.8);
+}
+
+.wick {
+    width: 3px;
+    height: 8px;
+    background-color: #333;
+    position: absolute;
+    bottom: 65px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 1px;
+}
+
+.flame {
+    width: 16px;
+    height: 28px;
+    background: linear-gradient(to top, #ff3366, #ffcc00, #ffffff);
+    border-radius: 50% 50% 20% 20%;
+    position: absolute;
+    bottom: 73px;
+    left: 50%;
+    transform-origin: bottom center;
+    transform: translateX(-50%);
+    animation: burnFlame 1.2s infinite ease-in-out alternate;
+    box-shadow: 0 0 15px #ff3366, 0 0 30px #ff9900;
+}
+
+@keyframes burnFlame {
+    0% {
+        transform: translateX(-50%) scale(1) rotate(-3deg);
+        opacity: 0.9;
+        box-shadow: 0 0 12px #ff3366, 0 0 20px #ff9900;
+    }
+    50% {
+        transform: translateX(-50%) scale(1.12) rotate(4deg);
+        opacity: 1;
+        box-shadow: 0 0 25px #00ffff, 0 0 40px #ff00ff, 0 0 50px #ffcc00;
+    }
+    100% {
+        transform: translateX(-50%) scale(0.95) rotate(-2deg);
+        opacity: 0.85;
+        box-shadow: 0 0 15px #ff3366, 0 0 25px #ff9900;
+    }
+}
+
+.candle-plate {
+    width: 50px;
+    height: 6px;
+    background-color: #d1b3c4;
+    border-radius: 50%;
+    margin-top: -1px;
+}
+
+/* --- User Tribute Mini Animated Candle for Stream --- */
+.user-candle-icon {
+    width: 20px;
+    height: 35px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.user-candle-icon:hover {
+    transform: scale(1.25);
+}
+
+.mini-body {
+    width: 14px;
+    height: 24px;
+    background: linear-gradient(to right, #e6ded3, #fffaf0, #d4c5b9);
+    border-radius: 2px;
+    position: relative;
+}
+
+.mini-flame {
+    width: 8px;
+    height: 14px;
+    background: linear-gradient(to top, #ff3366, #ffcc00, #ffffff);
+    border-radius: 50% 50% 20% 20%;
+    position: absolute;
+    bottom: 26px;
+    left: 50%;
+    transform-origin: bottom center;
+    transform: translateX(-50%);
+    animation: burnFlame 1.2s infinite ease-in-out alternate;
+    box-shadow: 0 0 10px #ff3366, 0 0 18px #ff9900;
+}

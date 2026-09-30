@@ -1,0 +1,1413 @@
+/* ==========================================================================
+   1. COLOR VARIABLES & THEME SETUP
+   ========================================================================== */
+/* :root {
+  --nav-bg: #211208;
+  --nav-text: #cccccc;
+  --nav-hover: #ffffff;
+  --gold-accent: #ffb700;
+  --gold-hover: #e6a500;
+  
+  --bg-card: #f7ebe1;
+  --bg-card-tan-light: #fbf6f2;
+  --border-card: #ebd3c2;
+  --border-input: #dcd0c5;
+  --bg-editor-toolbar: #fbf6f2;
+  --border-dropzone: #cbb19f;
+  --btn-submit-bg: #533325;
+  --btn-submit-hover: #3d2419;
+  --text-accent: #8c4c2d;
+  --text-brown: #4a2818;
+  --border-dark-btn: #bc9d89;
+} */
+
+body {
+  background-color: #f8f6f0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333333;
+  overflow-x: hidden;
+}
+
+.font-serif {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.text-brown {
+  color: var(--text-brown) !important;
+}
+
+.text-memorial-accent {
+  color: var(--text-accent) !important;
+}
+
+.text-gold {
+  color: var(--gold-accent) !important;
+}
+
+.bg-gold {
+  background-color: var(--gold-accent) !important;
+}
+
+.text-light-tan {
+  color: #ebdcc9 !important;
+}
+
+.bg-memorial-dark {
+  background-color: var(--nav-bg) !important;
+}
+
+.bg-card-tan {
+  background-color: var(--bg-card) !important;
+}
+
+.bg-card-tan-light {
+  background-color: var(--bg-card-tan-light) !important;
+}
+
+.border-card {
+  border: 1px solid var(--border-card) !important;
+}
+
+.border-tan {
+  border: 3px solid var(--border-card) !important;
+}
+
+.tracking-wide {
+  letter-spacing: 1.5px;
+  font-size: 0.8rem;
+}
+
+.max-width-700 {
+  max-width: 700px;
+}
+
+/* ==========================================================================
+   2. NAVBAR & OFFCANVAS
+   ========================================================================== */
+.navbar-custom {
+  background-color: var(--nav-bg) !important;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-custom .navbar-brand {
+  color: var(--gold-accent) !important;
+  font-weight: 800;
+  font-size: 1.35rem;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar-custom .nav-link {
+  color: var(--nav-text) !important;
+  font-weight: 600;
+  font-size: 0.88rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s ease-in-out;
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link.active {
+  color: var(--nav-hover) !important;
+}
+
+.offcanvas-memorial {
+  background-color: var(--nav-bg) !important;
+  color: #ffffff;
+}
+
+.offcanvas-memorial .btn-close {
+  filter: invert(1);
+}
+
+.btn-nav-login {
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  background-color: transparent;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.4rem 1.1rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-nav-login:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-nav-signup {
+  background-color: var(--gold-accent);
+  color: #000000 !important;
+  border: none;
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 0.45rem 1.2rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-nav-signup:hover {
+  background-color: var(--gold-hover);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   3. HERO SECTION & SLIDESHOW
+   ========================================================================== */
+.main-hero {
+  min-height: 85vh;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  background-color: var(--nav-bg);
+  display: flex;
+  align-items: center;
+}
+
+.min-vh-75 {
+  min-height: 75vh;
+}
+
+.hero-media-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.hero-slides {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.hero-slides .slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1.5s ease-in-out, visibility 1.5s ease-in-out;
+}
+
+.hero-slides .slide.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.slide-1 { background-image: url('https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?fit=crop&w=1600&h=900'); }
+.slide-2 { background-image: url('https://images.unsplash.com/photo-1423666639041-f56000c27a9a?fit=crop&w=1600&h=900'); }
+.slide-3 { background-image: url('https://images.unsplash.com/photo-1516549655169-df83a0774514?fit=crop&w=1600&h=900'); }
+
+.hero-dark-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(33, 18, 8, 0.95) 0%, rgba(33, 18, 8, 0.75) 55%, rgba(33, 18, 8, 0.45) 100%);
+  z-index: 2;
+}
+
+.hero-title {
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  font-weight: 700;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.hero-subtitle {
+  font-size: clamp(1.05rem, 1.5vw, 1.35rem);
+  color: var(--text-light-tan);
+  line-height: 1.5;
+}
+
+/* Hero Action Buttons */
+.btn-create-memory {
+  background-color: var(--btn-submit-bg);
+  color: #ffffff !important;
+  border: 1px solid var(--border-dark-btn);
+  border-radius: 6px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 0.85rem 2rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn-create-memory:hover {
+  background-color: var(--btn-submit-hover);
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.btn-hero-watch {
+  background-color: transparent;
+  color: #ffffff !important;
+  border: 2px solid var(--gold-accent);
+  border-radius: 6px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 0.8rem 2rem;
+  transition: all 0.3s ease;
+}
+
+.btn-hero-watch:hover {
+  background-color: var(--gold-accent);
+  color: #000000 !important;
+  transform: translateY(-2px);
+}
+
+/* Play Button Styling */
+.center-play-trigger {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+}
+
+.play-icon-circle {
+  width: 95px;
+  height: 95px;
+  border-radius: 50%;
+  background: rgba(255, 183, 0, 0.15);
+  border: 2px solid var(--gold-accent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-accent);
+  font-size: 3.2rem;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.play-icon-circle i {
+  margin-left: 5px;
+}
+
+.center-play-trigger:hover .play-icon-circle {
+  transform: scale(1.12);
+  background: var(--gold-accent);
+  color: #000000;
+  border-color: var(--gold-accent);
+  box-shadow: 0 0 35px rgba(255, 183, 0, 0.6);
+}
+
+/* ==========================================================================
+   4. FORMS & CONTACT ELEMENTS
+   ========================================================================== */
+.contact-form-card input,
+.contact-form-card textarea {
+  border-color: var(--border-input);
+  background-color: #ffffff;
+  border-radius: 6px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-form-card input:focus,
+.contact-form-card textarea:focus {
+  border-color: var(--gold-accent);
+  box-shadow: 0 0 0 0.25rem rgba(255, 183, 0, 0.25);
+}
+
+.btn-contact-send {
+  background-color: var(--btn-submit-bg);
+  color: #ffffff !important;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.btn-contact-send:hover {
+  background-color: var(--btn-submit-hover);
+  color: #ffffff !important;
+  transform: translateY(-2px);
+}
+
+.icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: rgba(255, 183, 0, 0.15);
+  color: var(--gold-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+  .hero-dark-overlay {
+    background: linear-gradient(180deg, rgba(33, 18, 8, 0.85) 0%, rgba(33, 18, 8, 0.95) 100%);
+  }
+
+  .play-icon-circle {
+    width: 75px;
+    height: 75px;
+    font-size: 2.5rem;
+  }
+}
+
+/* ==========================================================================
+   SEARCH & DIRECTORY FILTER SECTION STYLING (RESPONSIVE FIX)
+   ========================================================================== */
+.search-filter-section {
+  background-color: #f8f6f0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.filter-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 20px;
+  padding: 2.5rem 2rem !important;
+  box-shadow: 0 10px 30px rgba(33, 18, 8, 0.08) !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Strict Input & Select Field Sizing */
+.custom-filter-input {
+  width: 100% !important;
+  min-width: 0 !important; /* Grid item overflow වළක්වයි */
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  background-color: #ffffff !important;
+  border: 1px solid var(--border-input) !important;
+  color: var(--text-brown) !important;
+  border-radius: 8px !important;
+  padding: 0.75rem 0.85rem !important;
+  font-size: 0.95rem;
+  transition: all 0.25s ease;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-appearance: none; /* Native mobile arrow issues fix කිරීම */
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Custom Dropdown Arrow Icon restore කිරීම */
+select.custom-filter-input {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%204a2818' class='bi bi-chevron-down' viewBox='0 0 16 16'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.85rem center !important;
+  background-size: 14px !important;
+  padding-right: 2.2rem !important;
+}
+
+.custom-filter-input:focus {
+  border-color: var(--gold-accent) !important;
+  box-shadow: 0 0 0 0.25rem rgba(255, 183, 0, 0.25) !important;
+  outline: none;
+}
+
+.btn-filter-submit {
+  width: 100% !important;
+  background-color: var(--gold-accent);
+  color: #000000 !important;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 183, 0, 0.3);
+}
+
+.btn-filter-submit:hover {
+  background-color: var(--gold-hover);
+  color: #000000 !important;
+  transform: translateY(-2px);
+}
+
+.filter-divider {
+  margin-top: 3.5rem !important;
+}
+
+.filter-divider hr {
+  border-top: 1px solid var(--border-card);
+  opacity: 0.7;
+}
+
+.btn-pill-info {
+  background-color: var(--bg-card-tan-light);
+  color: var(--text-brown) !important;
+  border: 1px solid var(--border-card);
+  border-radius: 50px;
+  padding: 0.5rem 1.6rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.25s ease;
+}
+
+/* Mobile Screen Breakpoint Overrides */
+@media (max-width: 767.98px) {
+  .filter-card {
+    padding: 1.25rem 1rem !important;
+    border-radius: 14px;
+  }
+  
+  .custom-filter-input {
+    font-size: 0.88rem !important;
+    padding: 0.65rem 0.75rem !important;
+  }
+
+  .btn-pill-info {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.9rem;
+  }
+}/* ==========================================================================
+   SOLEMN & RESPECTFUL FEATURED CATEGORIES STYLING
+   ========================================================================== */
+
+.featured-categories-section {
+  background-color: #f7f5f0; /* Soft warm muted background */
+}
+
+/* Category Card Styling */
+.category-card {
+  position: relative;
+  background: linear-gradient(135deg, #ffffff 0%, #faf8f5 100%);
+  border: 1px solid #e3ded6;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 4px 15px rgba(45, 30, 20, 0.04);
+  min-height: 95px;
+  overflow: hidden;
+  transition: all 0.35s ease;
+}
+
+/* Elegant Soft Left Border Accent */
+.category-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, #d4af37, #997a15); /* Soft Gold Line */
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+/* Background Watermark Symbol (Adds Memory Feel) */
+.category-card::after {
+  content: '\F6B9'; /* Candle/Peace Watermark Icon */
+  font-family: 'bootstrap-icons';
+  position: absolute;
+  right: -8px;
+  bottom: -12px;
+  font-size: 4rem;
+  color: #2c1a0e;
+  opacity: 0.03; /* Very subtle watermark */
+  pointer-events: none;
+  transition: all 0.4s ease;
+}
+
+.category-title {
+  color: #3b281c; /* Deep warm brown */
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1.35;
+  padding-right: 0.5rem;
+  letter-spacing: -0.2px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Soft Icon Wrapper */
+.category-icon-wrapper {
+  position: relative;
+  z-index: 2;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  background-color: rgba(235, 229, 220, 0.6);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8c7355; /* Soft golden brown */
+  font-size: 1.25rem;
+  transition: all 0.35s ease;
+}
+
+/* Hover Effects - Warm Golden Candle Glow */
+.category-card:hover {
+  transform: translateY(-3px);
+  border-color: #d4af37;
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.15); /* Warm light glow */
+}
+
+.category-card:hover::before {
+  opacity: 1;
+}
+
+.category-card:hover::after {
+  opacity: 0.07;
+  transform: scale(1.1) rotate(-5deg);
+}
+
+.category-card:hover .category-title {
+  color: #1a0f08;
+}
+
+.category-card:hover .category-icon-wrapper {
+  background-color: #d4af37;
+  color: #ffffff;
+  border-color: #d4af37;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.4); /* Candle flame glow effect */
+}
+
+
+/* Navbar Dropdown Custom Styling to match Theme */
+.navbar .dropdown-menu {
+    background-color: #1a1a1a !important; /* Navbar*/
+    border: 1px solid rgba(212, 175, 55, 0.2) !important; 
+    border-radius: 8px;
+    padding: 8px 0;
+}
+
+/* Dropdown Item Styles */
+.navbar .dropdown-menu .dropdown-item {
+    color: #e2e8f0 !important;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Hover */
+.navbar .dropdown-menu .dropdown-item:hover,
+.navbar .dropdown-menu .dropdown-item:focus {
+    background-color: rgba(212, 175, 55, 0.15) !important; 
+    color: #ffc107 !important; 
+}
+
+
+.navbar .dropdown-menu .dropdown-divider {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+
+@media (min-width: 992px) {
+    .navbar .dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0;
+    }
+}
+
+
+/* Initial hidden state for animation */
+.animate-left, .animate-right {
+    opacity: 0;
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+
+/* Left side eka wam paththe indan enawa */
+.animate-left {
+    transform: translateX(-50px);
+}
+
+/* Right side eka dam paththe indan enawa */
+.animate-right {
+    transform: translateX(50px);
+}
+
+/* Intersection Observer eken 'active' class eka add unama wada karana widiha */
+.scroll-animate.active .animate-left,
+.scroll-animate.active .animate-right {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Stat cards hover karanakota podi 3D pop effect ekak */
+.stat-card {
+    background: #fff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+
+
+/* Initial Hidden State for Staggered Animation */
+.category-item {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    /* Delay eka index eka anuwata wenas wenawa */
+    transition-delay: calc(var(--i) * 0.08s); 
+}
+
+/* Section eka active unama animate wenna start wena state eka */
+.featured-categories-section.active .category-item {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Modern 3D Card Hover Effect */
+.category-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.category-card:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+    border-color: rgba(212, 160, 23, 0.4); /* Accent border on hover */
+}
+
+/* Icon wrapper smooth animation */
+.category-icon-wrapper {
+    width: 45px;
+    height: 45px;
+    background: #f8f9fa;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #6c757d;
+    transition: all 0.3s ease;
+}
+
+.category-card:hover .category-icon-wrapper {
+    background: var(--memorial-dark, #2c2c2c);
+    color: #ffc107; /* Gold touch */
+    transform: rotate(10deg) scale(1.1);
+}
+
+.category-title {
+    font-weight: 600;
+    color: #333;
+    font-size: 15px;
+    transition: color 0.3s ease;
+}
+
+.category-card:hover .category-title {
+    color: #000;
+}
+
+
+/* Initial Hidden State for Staggered Scroll Animation */
+.latest-listings-section .listing-item {
+    opacity: 0;
+    transform: translateY(35px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    transition-delay: calc(var(--i) * 0.1s);
+}
+
+/* When section becomes active on scroll */
+.latest-listings-section.active .listing-item {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 3D Modern Card Styling */
+.memorial-grid-card {
+    border-radius: 14px;
+    background: #ffffff;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+.memorial-grid-card:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.09) !important;
+}
+
+/* Image 3D Zoom & Smooth Motion Effect */
+.memorial-grid-img {
+    height: 190px;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.memorial-grid-card:hover .memorial-grid-img {
+    transform: scale(1.08) rotate(0.5deg);
+}
+
+/* Private lock icon animation inside private card */
+.memorial-grid-card:hover .icon-hover-effect {
+    transform: scale(1.1) rotate(5deg);
+    transition: transform 0.3s ease;
+}
+
+/* Initial Hidden State for Staggered Scroll Animation */
+.how-step-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.step-item {
+    opacity: 0;
+    transform: translateY(35px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    transition-delay: calc(var(--i) * 0.12s);
+}
+
+/* When section becomes active on scroll */
+.py-5.bg-card-tan-light.active .step-item {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 3D Modern Hover Effect for Step Cards */
+.how-step-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.08) !important;
+    border-color: rgba(212, 160, 23, 0.3);
+}
+
+/* Icon & Badge animations on hover */
+.how-step-card:hover .step-icon {
+    transform: scale(1.15) rotate(5deg);
+    transition: transform 0.3s ease;
+}
+
+.step-icon {
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
+/* Initial Hidden State for Staggered Scroll Animation */
+.scroll-animate .value-item {
+    opacity: 0;
+    transform: translateY(35px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    transition-delay: calc(var(--i) * 0.1s);
+}
+
+/* When the section becomes active on scroll */
+.scroll-animate.active .value-item {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 3D Modern Hover Effect for Value Cards */
+.value-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.value-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.08);
+    border-color: rgba(212, 160, 23, 0.3);
+}
+
+/* Icon floating animation on card hover */
+.value-card:hover .icon-hover-effect {
+    transform: scale(1.15) rotate(5deg);
+    transition: transform 0.3s ease;
+}
+
+.icon-hover-effect {
+    transition: transform 0.3s ease;
+}
+
+
+.hero-media-wrapper {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.hero-slides {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-slides .slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+}
+
+.hero-slides .slide.active {
+  opacity: 1;
+  z-index: 1;
+}
+
+.hero-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero-dark-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(0,0,0,0.65), rgba(0,0,0,0.35));
+  z-index: 1;
+}
+
+
+/* about section 3d*/
+
+/* :root {
+            --memorial-bg: #fdfbf7;
+            --memorial-surface: #ffffff;
+            --memorial-brown: #2c221e;
+            --memorial-accent: #c59b27;
+            --memorial-accent-hover: #b0871d;
+            --memorial-gold: #e2b742;
+            --memorial-secondary: #6e6560;
+            --card-tan: rgba(244, 240, 234, 0.9);
+            --border-tan: rgba(218, 208, 196, 0.45);
+            --shadow-subtle: 0 10px 30px -10px rgba(44, 34, 30, 0.08);
+            --shadow-hover: 0 20px 40px -15px rgba(197, 155, 39, 0.22);
+        } */
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--memorial-bg);
+            color: var(--memorial-brown);
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .text-memorial-accent {
+            color: var(--memorial-accent) !important;
+        }
+
+        .text-brown {
+            color: var(--memorial-brown) !important;
+        }
+
+        .text-gold {
+            color: var(--memorial-gold) !important;
+        }
+
+        .bg-card-tan {
+            background-color: var(--card-tan);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        .border-tan {
+            border: 1px solid var(--border-tan) !important;
+        }
+
+        .ambient-glow {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(197, 155, 39, 0.15) 0%, rgba(244, 240, 234, 0) 70%);
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+            filter: blur(40px);
+            animation: floatGlow 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 40px) scale(1.1); }
+        }
+
+        .stat-card {
+            background: var(--memorial-surface);
+            border: 1px solid var(--border-tan);
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+            border-color: rgba(197, 155, 39, 0.3);
+        }
+
+        .tilt-container {
+            perspective: 1200px;
+            transform-style: preserve-3d;
+        }
+
+        .about-image-stack {
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+        }
+
+        .main-img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            box-shadow: 0 25px 50px -12px rgba(44, 34, 30, 0.25);
+            transform: translateZ(30px);
+            transition: transform 0.5s ease;
+        }
+
+        .floating-stat-badge {
+            position: absolute;
+            bottom: -25px;
+            left: -25px;
+            z-index: 10;
+            transform: translateZ(60px) scale(0);
+            opacity: 0;
+            box-shadow: 0 20px 40px rgba(44, 34, 30, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s, opacity 0.8s ease 0.6s;
+        }
+
+        /* Active class triggered when section enters viewport */
+        .scroll-animate.active .floating-stat-badge {
+            transform: translateZ(60px) scale(1);
+            opacity: 1;
+            animation: badgePulseGlow 4s ease-in-out infinite alternate 1.4s;
+        }
+
+        @keyframes badgePulseGlow {
+            0% {
+                transform: translateZ(60px) scale(1) translateY(0px);
+                box-shadow: 0 15px 35px rgba(44, 34, 30, 0.12), 0 0 0 rgba(197, 155, 39, 0);
+            }
+            50% {
+                transform: translateZ(70px) scale(1.03) translateY(-6px);
+                box-shadow: 0 25px 45px rgba(44, 34, 30, 0.18), 0 0 20px rgba(197, 155, 39, 0.35);
+            }
+            100% {
+                transform: translateZ(65px) scale(1) translateY(-2px);
+                box-shadow: 0 20px 40px rgba(44, 34, 30, 0.15), 0 0 10px rgba(197, 155, 39, 0.15);
+            }
+        }
+
+        .icon-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--memorial-brown);
+            transition: transform 0.3s ease;
+        }
+
+        .floating-stat-badge:hover .icon-circle {
+            transform: rotate(10deg) scale(1.1);
+        }
+
+        .btn-create-memory {
+            background: linear-gradient(135deg, #2c221e 0%, #3d302b 100%);
+            color: #ffffff;
+            border-radius: 50rem;
+            border: 1px solid rgba(197, 155, 39, 0.3);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .btn-create-memory::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(226, 183, 66, 0.3), transparent);
+            transition: 0.6s;
+        }
+
+        .btn-create-memory:hover::before {
+            left: 100%;
+        }
+
+        .btn-create-memory:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(197, 155, 39, 0.25);
+            background: linear-gradient(135deg, #3d302b 0%, #2c221e 100%);
+            color: #ffffff;
+            border-color: var(--memorial-accent);
+        }
+
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .scroll-animate.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .animate-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity 0.9s ease 0.2s, transform 0.9s ease 0.2s;
+        }
+
+        .animate-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .animate-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 0.9s ease 0.4s, transform 0.9s ease 0.4s;
+        }
+
+        .animate-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        @media (max-width: 991.98px) {
+            .floating-stat-badge {
+                bottom: -15px;
+                left: 15px;
+            }
+        }
+
+
+
+        /*about section images slider */
+
+        .slider-card-wrapper {
+    position: relative;
+    width: 100%;
+    height: 400px; /* Adjust height based on your layout needs */
+    perspective: 1000px;
+}
+
+.slider-card {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    transform-origin: center bottom;
+}
+
+/* 3D Stack Effect for inactive cards behind */
+.slider-card:not(.active) {
+    transform: translateY(calc(var(--index) * -15px)) scale(calc(1 - var(--index) * 0.05));
+    opacity: calc(1 - var(--index) * 0.3);
+    z-index: calc(10 - var(--index));
+    pointer-events: none;
+}
+
+.slider-card.active {
+    transform: translateY(0) scale(1) rotateX(0deg);
+    opacity: 1;
+    z-index: 20;
+}
+
+.slider-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+   /*catogory  section 3d */
+
+  /* Section Background Setup */
+.featured-categories-section {
+  background: linear-gradient(135deg, var(--bg-page) 0%, var(--bg-tan-light) 100%);
+  perspective: 1000px;
+  overflow: hidden;
+}
+
+/* Base Card Styling with 3D Depth & Theme Colors */
+.category-card {
+  position: relative;
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 22px 24px;
+  color: var(--text-brown);
+  font-weight: 600;
+  border: 1px solid var(--border-card);
+  box-shadow: 
+    0 10px 25px -5px rgba(74, 40, 24, 0.06),
+    0 8px 10px -6px rgba(74, 40, 24, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  transform: translateY(0) translateZ(0);
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  will-change: transform, box-shadow;
+}
+
+/* Typography Inside Card */
+.category-title {
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  color: var(--text-brown);
+  transition: color 0.3s ease;
+}
+
+/* 3D Floating Icon Container */
+.category-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(145deg, var(--bg-card-tan-light), var(--bg-card));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: var(--text-accent);
+  box-shadow: 
+    4px 4px 10px rgba(74, 40, 24, 0.06),
+    -4px -4px 10px rgba(255, 255, 255, 0.8),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* 3D Hover Effects (Pop & Lift with Theme Accents) */
+.category-card:hover {
+  transform: translateY(-8px) scale(1.02) translateZ(20px);
+  background: linear-gradient(145deg, var(--bg-card-tan-light), var(--bg-card));
+  border-color: var(--border-dropzone);
+  box-shadow: 
+    0 20px 35px -10px rgba(74, 40, 24, 0.12),
+    0 12px 15px -5px rgba(140, 76, 45, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.category-card:hover .category-title {
+  color: var(--btn-submit-hover);
+}
+
+/* Icon Reaction on Hover using Gold/Brown Accents */
+.category-card:hover .category-icon-wrapper {
+  background: linear-gradient(135deg, var(--gold-accent), var(--gold-hover));
+  color: var(--bg-dark-brown);
+  transform: scale(1.1) rotate(6deg);
+  box-shadow: 
+    0 8px 20px rgba(255, 183, 0, 0.35),
+    inset 0 2px 3px rgba(255, 255, 255, 0.4);
+}
+
+/* Staggered Fade-in Animation on Scroll */
+.category-item {
+  opacity: 0;
+  animation: fadeInUp 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+  animation-delay: calc(var(--i) * 0.08s);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/*3d how its works */
+
+  .scene {
+            perspective: 1400px;
+            transform-style: preserve-3d;
+        }
+
+        .carousel-container {
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .carousel-card {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease, box-shadow 0.6s ease;
+            backface-visibility: hidden;
+        }
+
+        /* Custom glow & glassmorphism effects */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-shadow {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 
+                        0 0 30px rgba(99, 102, 241, 0.15);
+        }
+
+        /* Custom scrollbar for modals if needed */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.5);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.8);
+        }
+
+
+        /* ==========================================================
+       ABOUT SECTION SLIDER & 3D HEART POP/SLIDE STYLES
+       ========================================================== */
+    body {
+      background-color: #fcfbfa;
+      overflow-x: hidden;
+    }
+
+    .about-section-wrapper {
+      perspective: 1800px;
+      position: relative;
+    }
+
+    /* Initial hidden states for scroll animation */
+    .animate-left {
+      opacity: 0;
+      transform: translateX(-60px) rotateY(-10deg) scale(0.95);
+      transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .animate-right {
+      opacity: 0;
+      transform: translateX(60px) rotateY(10deg) scale(0.95);
+      transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transition-delay: 0.2s;
+    }
+
+    /* Active state when scrolled into view */
+    .about-section-wrapper.active .animate-left,
+    .about-section-wrapper.active .animate-right {
+      opacity: 1;
+      transform: translateX(0) rotateY(0deg) scale(1);
+    }
+
+    /* Right Side Card Pop & Slide Effect */
+    .about-image-card {
+      transform-style: preserve-3d;
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .about-section-wrapper.active .about-image-card {
+      animation: popAndSlideIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes popAndSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(50px) scale(0.9) rotateX(10deg);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotateX(0deg);
+      }
+    }
+
+    /* Image Slider Styles inside the Card */
+    .about-slider-container {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .slider-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transform: scale(1.08);
+      transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out;
+    }
+
+    .slider-slide.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .slider-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      transition: transform 0.3s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(212, 175, 55, 0.6);
+    }
+
+    .btn-create-memory {
+      background-color: #d4af37;
+      color: #1a1a1a;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      text-decoration: none !important;
+    }
+    .btn-create-memory:hover {
+      background-color: #1a1a1a;
+      color: #fff;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+    }

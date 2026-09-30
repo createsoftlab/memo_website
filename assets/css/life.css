@@ -1,0 +1,99 @@
+/* Life Page Specific Layout & Styles */
+
+/* Base Background */
+.bg-memorial-light {
+  background-color: #fdfbf7;
+}
+
+/* Timeline / Story Cards */
+.life-story-card {
+  background-color: #f7ebe1;
+  border: 1px solid #ebd3c2;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.life-story-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important; 
+}
+
+.bg-memorial-brown {
+  background-color: #7a4b31;
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+
+.story-content {
+  line-height: 1.6;
+}
+
+.share-story-btn {
+  font-size: 0.85rem;
+  transition: color 0.2s ease;
+}
+
+.share-story-btn:hover {
+  color: #8c4c2d !important;
+}
+
+/* Sidebar Custom Cards & Buttons */
+.sidebar-card {
+  background-color: #f7ebe1;
+  border: 1px solid #ebd3c2;
+}
+
+.btn-invite {
+  background-color: #533325;
+  color: #ffffff;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.btn-invite:hover {
+  background-color: #3d2419;
+  color: #ffffff;
+}
+
+.btn-donate {
+  background-color: #d97706;
+  color: #ffffff;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.btn-donate:hover {
+  background-color: #b45309;
+  color: #ffffff;
+}
+
+.btn-facebook {
+  background-color: #edf3ff;
+  color: #1877f2;
+  border: 1px solid #d0e1fd;
+  font-weight: 600;
+}
+
+.btn-facebook:hover {
+  background-color: #e0ecff;
+  color: #0d6efd;
+}
+
+.btn-outline-memorial-dark {
+  border: 1px solid #bc9d89;
+  color: #533325;
+  background-color: transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.btn-outline-memorial-dark:hover {
+  background-color: #ebd3c2;
+  color: #3d2419;
+}
+
+.text-memorial-accent {
+  color: #8c4c2d;
+}

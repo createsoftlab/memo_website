@@ -1,0 +1,406 @@
+/* ==========================================================================
+   1. COLOR VARIABLES & THEME SETUP
+   ========================================================================== */
+/* :root {
+  --nav-bg: #211208;
+  --nav-text: #cccccc;
+  --nav-hover: #ffffff;
+  --gold-accent: #ffb700;
+  --gold-hover: #e6a500;
+  
+  --bg-card: #f7ebe1;
+  --border-card: #ebd3c2;
+  --border-input: #dcd0c5;
+  --bg-editor-toolbar: #fbf6f2;
+  --border-dropzone: #cbb19f;
+  --btn-submit-bg: #533325;
+  --btn-submit-hover: #3d2419;
+  --text-accent: #8c4c2d;
+  --border-dark-btn: #bc9d89;
+} */
+
+body {
+  background-color: #f8f6f0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333333;
+}
+
+/* ==========================================================================
+   2. NAVBAR & SLIDE OFFCANVAS (MOBILE MENU)
+   ========================================================================== */
+.navbar-custom {
+  background-color: var(--nav-bg) !important;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-custom .navbar-brand {
+  color: var(--gold-accent) !important;
+  font-weight: 800;
+  font-size: 1.35rem;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar-custom .nav-link {
+  color: var(--nav-text) !important;
+  font-weight: 600;
+  font-size: 0.88rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s ease-in-out;
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link.active {
+  color: var(--nav-hover) !important;
+}
+
+/* Offcanvas Mobile Drawer Styling */
+.offcanvas-memorial {
+  background-color: var(--nav-bg) !important;
+  color: #ffffff;
+}
+
+.offcanvas-memorial .btn-close {
+  filter: invert(1);
+}
+
+.btn-nav-login {
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  background-color: transparent;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.4rem 1.1rem;
+  border-radius: 4px;
+}
+
+.btn-nav-login:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-nav-signup {
+  background-color: var(--gold-accent);
+  color: #000000 !important;
+  border: none;
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 0.45rem 1.2rem;
+  border-radius: 4px;
+}
+
+.btn-nav-signup:hover {
+  background-color: var(--gold-hover);
+}
+
+/* ==========================================================================
+   3. HERO & CARDS STYLING
+   ========================================================================== */
+.memorial-hero {
+  background: linear-gradient(180deg, rgba(33, 18, 8, 0.7) 0%, rgba(33, 18, 8, 0.95) 100%), 
+              url('https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?fit=crop&w=1200&h=400') center/cover no-repeat;
+  min-height: 180px;
+  border-bottom: 4px solid var(--btn-submit-bg);
+}
+
+.memorial-avatar {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border: 3px solid #ffffff;
+}
+
+.memorial-grid-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.memorial-grid-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.memorial-grid-img {
+  height: 190px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.btn-outline-memorial {
+  border: 1px solid var(--btn-submit-bg);
+  color: var(--btn-submit-bg);
+  font-weight: 600;
+}
+
+.btn-outline-memorial:hover {
+  background-color: var(--btn-submit-bg);
+  color: #ffffff;
+}
+
+.text-truncate-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   4. PAGINATION STYLING
+   ========================================================================== */
+.pagination .page-link {
+  color: var(--btn-submit-bg);
+  border-color: var(--border-input);
+}
+
+.pagination .page-item.active .page-link {
+  background-color: var(--btn-submit-bg);
+  border-color: var(--btn-submit-bg);
+  color: #ffffff;
+}
+
+.pagination .page-link:hover {
+  background-color: var(--bg-card);
+  color: var(--btn-submit-hover);
+}
+
+
+
+/* Prevent dropdown option menu overflow in mobile view */
+@media (max-width: 576px) {
+  .form-select {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: 0.85rem !important;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  /* Prevent container overflow */
+  .tab-content, 
+  .card {
+    overflow-x: hidden;
+  }
+}
+
+/* Falling Flowers Style */
+.falling-flower {
+  position: fixed;
+  top: -20px;
+  z-index: 9999;
+  pointer-events: none; /* Mouse clicks වලට බාධා නොවීම සඳහා */
+  user-select: none;
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Staggered Scroll Animation for Grid Items */
+.scroll-animate .grid-item {
+    opacity: 0;
+    transform: translateY(35px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    transition-delay: calc(var(--i) * 0.1s);
+}
+
+.scroll-animate.active .grid-item {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 3D Modern Hover Effect for Memorial Grid Cards */
+.memorial-grid-card {
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    background: #ffffff;
+}
+
+.memorial-grid-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.08) !important;
+    border-color: rgba(212, 160, 23, 0.3);
+}
+
+/* Image zoom on hover */
+.memorial-grid-card:hover .memorial-grid-img {
+    transform: scale(1.03);
+}
+
+.memorial-grid-img {
+    transition: transform 0.4s ease;
+}
+
+
+/* card 3d css * /
+
+.listing-item {
+  perspective: 1000px;
+}
+
+.memorial-grid-card {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  transform: perspective(1000px) rotateX(0) rotateY(0) translateZ(0);
+  transform-style: preserve-3d;
+  transition: transform .55s cubic-bezier(.22,.9,.3,1), box-shadow .55s ease;
+  will-change: transform;
+}
+
+.memorial-grid-card:hover {
+  transform: perspective(1000px) rotateX(6deg) rotateY(-4deg) translateY(-8px) translateZ(25px);
+  box-shadow: 0 30px 45px -15px rgba(0,0,0,.45);
+  z-index: 5;
+}
+
+.memorial-media {
+  transform-style: preserve-3d;
+}
+
+.memorial-grid-img {
+  transform: scale(1) translateZ(0);
+  filter: brightness(.95);
+  transition: transform .6s ease, filter .6s ease;
+}
+
+.memorial-grid-card:hover .memorial-grid-img {
+  transform: scale(1.12) translateZ(35px);
+  filter: brightness(.6);
+}
+
+/* dark gradient that rises up on hover, like the caption reveal in the reference */
+.memorial-media-glow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.8), rgba(0,0,0,0) 55%);
+  opacity: 0;
+  transform: translateZ(15px);
+  transition: opacity .5s ease;
+  pointer-events: none;
+}
+.memorial-grid-card:hover .memorial-media-glow { opacity: 1; }
+
+.memorial-grid-card .card-body {
+  transform: translateZ(10px);
+  transition: transform .55s ease;
+}
+.memorial-grid-card:hover .card-body { transform: translateZ(45px); }
+
+.memorial-grid-card .btn-outline-memorial {
+  transition: transform .4s ease, box-shadow .4s ease;
+}
+.memorial-grid-card:hover .btn-outline-memorial {
+  transform: translateZ(10px) scale(1.03);
+  box-shadow: 0 8px 18px rgba(0,0,0,.25);
+}
+.memorial-media {
+  transform-style: preserve-3d;
+  overflow: visible; /* allow image to pop out of the frame */
+}
+
+.memorial-grid-img {
+  transform: translateY(0) scale(1) translateZ(0);
+  filter: brightness(.95);
+  transition: transform .5s cubic-bezier(.22,.9,.3,1), filter .5s ease;
+  will-change: transform;
+}
+
+.memorial-grid-card:hover .memorial-grid-img {
+  transform: translateY(-18px) scale(1.15) translateZ(50px);
+  filter: brightness(.7);
+}
+
+
+
+.listing-item { perspective: 1000px; }
+
+.memorial-grid-card {
+  position: relative;
+  z-index: 1;
+  border-radius: 14px;
+  transition: box-shadow .5s ease;
+}
+.memorial-grid-card:hover {
+  z-index: 20; /* rise above neighboring grid cards */
+  box-shadow: 0 30px 45px -15px rgba(0,0,0,.4);
+}
+
+/* wrapper: needs to allow the image to escape upward */
+.memorial-media {
+  position: relative;
+  overflow: visible;
+  transform-style: preserve-3d;
+  aspect-ratio: 5 / 3;
+}
+
+/* duplicate darker background layer that tilts back, like figure:before */
+.memorial-media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--card-bg) top/cover;
+  border-radius: 8px 8px 0 0;
+  transform-origin: bottom;
+  filter: brightness(.9);
+  transition: transform .5s, filter .5s;
+}
+.memorial-grid-card:hover .memorial-media::before {
+  filter: brightness(.35);
+  transform: perspective(500px) rotateX(55deg);
+}
+
+/* the real photo: pops up and enlarges on hover */
+.memorial-grid-img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px 8px 0 0;
+  filter: contrast(.9) brightness(.85);
+  transition: transform .5s, filter .5s;
+  will-change: transform;
+}
+.memorial-grid-card:hover .memorial-grid-img {
+  transform: translateY(-22px) translateZ(60px) scale(1.18);
+  filter: contrast(1) brightness(1) drop-shadow(0 25px 20px rgba(0,0,0,.4));
+}
+
+/* flip-up caption, exact same rotateX(-90deg) -> rotateX(-30deg) trick */
+.memorial-flip-caption {
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 100%;
+  padding: 10px 0;
+  text-align: center;
+  color: #fff;
+  font-weight: 700;
+  background: rgba(0,0,0,.85);
+  transform: perspective(500px) translateY(100%) rotateX(-90deg);
+  transform-origin: top;
+  backface-visibility: hidden;
+  transition: transform .5s;
+  pointer-events: none;
+}
+.memorial-grid-card:hover .memorial-flip-caption {
+  transform: perspective(500px) translateY(100%) rotateX(-30deg);
+}
+

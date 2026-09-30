@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery - Lallan Writer Memorial</title>
+  
+  <!-- Bootstrap 5 CSS & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <!-- Custom Stylesheets -->
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/gallery.css">
+</head>
+<body class="bg-memorial-light">
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-memorial-dark px-3 py-2">
+    <div class="container-fluid">
+      <a class="navbar-brand text-warning fs-6 fw-bold" href="index.html">
+        <i class="bi bi-fire me-1"></i> Forever Missed
+      </a>
+      <button class="navbar-toggler border-0 d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="offcanvas offcanvas-end bg-memorial-dark text-white" tabindex="-1" id="offcanvasNavbar">
+        <div class="offcanvas-header border-bottom border-secondary d-lg-none">
+          <h5 class="offcanvas-title text-warning"><i class="bi bi-fire me-1"></i> Navigation</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column flex-lg-row align-items-lg-center justify-content-lg-between w-100">
+          <ul class="navbar-nav text-uppercase small gap-lg-3 me-lg-auto mb-3 mb-lg-0">
+            <li class="nav-item"><a class="nav-link py-2" href="index.html"><i class="bi bi-house-door me-1"></i> Home</a></li>
+                  <li class="nav-item">
+  <a class="nav-link" href="all_memories.html">
+    <i class="bi bi-heart-fill"></i> Memories
+  </a>
+            <li class="nav-item"><a class="nav-link py-2" href="index.html"><i class="bi bi-info-circle me-1"></i> About Us</a></li>
+            <li class="nav-item"><a class="nav-link py-2" href="#"><i class="bi bi-envelope me-1"></i> Contact Us</a></li>
+          </ul>
+          <div id="authButtons" class="d-flex flex-column flex-lg-row gap-2">
+            <a href="#" class="btn btn-outline-light btn-sm text-uppercase" id="loginBtn"><i class="bi bi-box-arrow-in-right me-1"></i> Login</a>
+            <a href="#" class="btn btn-warning btn-sm text-uppercase fw-semibold" id="signupBtn"><i class="bi bi-person-plus me-1"></i> Sign Up</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Header -->
+  <header class="memorial-hero d-flex align-items-end">
+    <div class="container py-4">
+      <div class="row align-items-center">
+        <div class="col-8">
+          <h1 class="memorial-title text-white mb-0">Lallan Writer</h1>
+          <p class="fs-4 text-white-50 font-serif mb-0">1945 - 2021</p>
+        </div>
+        <div class="col-4 text-end">
+          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?fit=crop&w=300&h=300" class="memorial-avatar rounded-3 shadow" alt="Lallan Writer">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs Bar -->
+  <div class="memorial-tabs-bar sticky-top">
+    <div class="container">
+      <ul class="nav nav-tabs border-0">
+        <li class="nav-item"><a class="nav-link" href="memories_index.html">ABOUT</a></li>
+        <li class="nav-item"><a class="nav-link" href="memories_life.html">LIFE</a></li>
+        <li class="nav-item"><a class="nav-link active" href="memories_gallery.html">GALLERY</a></li>
+        <li class="nav-item"><a class="nav-link" href="memories_stories.html">STORIES</a></li>
+        <li class="nav-item"><a class="nav-link" href="memories_timeline.html">TIMELINE</a></li>
+                <li class="nav-item"><a class="nav-link " href="memories_event.html">EVENTS</a></li>
+
+                                                <li class="nav-item"><a class="nav-link " href="memories_donation.html">DONATIONS</a></li>
+
+
+      </ul>
+    </div>
+  </div>
+
+  <!-- Main Content Layout -->
+  <main class="container my-4">
+    <div class="row g-4">
+      
+      <!-- Left Column: Gallery Tabs & Upload Section -->
+      <div class="col-lg-8 d-flex flex-column gap-4">
+
+        <!-- Main Gallery Container Card -->
+        <div class="sidebar-card p-4 rounded shadow-sm bg-memorial-card">
+          
+          <!-- Inner Sub-Tabs Header (PHOTO, MOVIE, AUDIO) -->
+          <ul class="nav nav-tabs border-bottom border-secondary-subtle mb-4 flex-nowrap justify-content-around text-uppercase fw-bold text-center" id="gallerySubTabs" role="tablist">
+            <li class="nav-item flex-fill" role="presentation">
+              <button class="nav-link active sub-tab-link w-100" id="photo-tab" data-bs-toggle="tab" data-bs-target="#photo-tab-pane" type="button" role="tab">PHOTO</button>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+              <button class="nav-link sub-tab-link w-100" id="movie-tab" data-bs-toggle="tab" data-bs-target="#movie-tab-pane" type="button" role="tab">MOVIE</button>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+              <button class="nav-link sub-tab-link w-100" id="audio-tab" data-bs-toggle="tab" data-bs-target="#audio-tab-pane" type="button" role="tab">AUDIO</button>
+            </li>
+          </ul>
+
+          <!-- Tab Content Area -->
+          <div class="tab-content" id="gallerySubTabContent">
+            
+            <!-- PHOTO TAB -->
+            <div class="tab-pane fade show active" id="photo-tab-pane" role="tabpanel" tabindex="0">
+              
+              <!-- Action Control Buttons -->
+              <div class="d-flex gap-2 mb-4">
+                <button class="btn btn-outline-memorial-dark btn-sm font-monospace fw-semibold" onclick="document.getElementById('upload-section').scrollIntoView({behavior: 'smooth'});">
+                  <i class="bi bi-plus-square me-1"></i> Add photos
+                </button>
+                <button class="btn btn-outline-memorial-dark btn-sm font-monospace fw-semibold">
+                  <i class="bi bi-play-circle me-1"></i> Start slideshow
+                </button>
+              </div>
+
+              <!-- Photos Grid (Responsive 3 Columns) -->
+              <div class="row g-3">
+                <div class="col-6 col-sm-4">
+                  <div class="gallery-item-wrapper rounded overflow-hidden shadow-sm position-relative">
+                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1 uppercase-badge">NEW</span>
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=400&h=400" class="img-fluid gallery-thumb" alt="Photo 1">
+                  </div>
+                </div>
+                <div class="col-6 col-sm-4">
+                  <div class="gallery-item-wrapper rounded overflow-hidden shadow-sm position-relative">
+                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1 uppercase-badge">NEW</span>
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?fit=crop&w=400&h=400" class="img-fluid gallery-thumb" alt="Photo 2">
+                  </div>
+                </div>
+                <div class="col-6 col-sm-4">
+                  <div class="gallery-item-wrapper rounded overflow-hidden shadow-sm position-relative">
+                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1 uppercase-badge">NEW</span>
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?fit=crop&w=400&h=400" class="img-fluid gallery-thumb" alt="Photo 3">
+                  </div>
+                </div>
+                <div class="col-6 col-sm-4">
+                  <div class="gallery-item-wrapper rounded overflow-hidden shadow-sm position-relative">
+                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1 uppercase-badge">NEW</span>
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?fit=crop&w=400&h=400" class="img-fluid gallery-thumb" alt="Photo 4">
+                  </div>
+                </div>
+                <div class="col-6 col-sm-4">
+                  <div class="gallery-item-wrapper rounded overflow-hidden shadow-sm position-relative">
+                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1 uppercase-badge">NEW</span>
+                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?fit=crop&w=400&h=400" class="img-fluid gallery-thumb" alt="Photo 5">
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- MOVIE TAB -->
+            <div class="tab-pane fade" id="movie-tab-pane" role="tabpanel" tabindex="0">
+              <div class="d-flex gap-2 mb-4">
+                <button class="btn btn-outline-memorial-dark btn-sm font-monospace fw-semibold" onclick="document.getElementById('upload-section').scrollIntoView({behavior: 'smooth'});">
+                  <i class="bi bi-plus-square me-1"></i> Add movies
+                </button>
+              </div>
+              <div class="text-center py-5 text-muted bg-white rounded border border-dashed">
+                <i class="bi bi-film fs-1 d-block mb-2 text-memorial-accent"></i>
+                <p class="mb-0 fw-semibold">No videos uploaded yet.</p>
+                <span class="small text-muted">Upload memorial movies using the section below.</span>
+              </div>
+            </div>
+
+            <!-- AUDIO TAB -->
+            <div class="tab-pane fade" id="audio-tab-pane" role="tabpanel" tabindex="0">
+              <div class="d-flex gap-2 mb-4">
+                <button class="btn btn-outline-memorial-dark btn-sm font-monospace fw-semibold" onclick="document.getElementById('upload-section').scrollIntoView({behavior: 'smooth'});">
+                  <i class="bi bi-plus-square me-1"></i> Add audio
+                </button>
+              </div>
+              <div class="text-center py-5 text-muted bg-white rounded border border-dashed">
+                <i class="bi bi-music-note-beamed fs-1 d-block mb-2 text-memorial-accent"></i>
+                <p class="mb-0 fw-semibold">No audio files uploaded yet.</p>
+                <span class="small text-muted">Upload voice recordings or music tracks below.</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Add Media Dynamic Upload Section Box -->
+        <div class="sidebar-card p-4 rounded shadow-sm bg-memorial-card" id="upload-section">
+          <h5 class="fw-bold text-dark mb-3" id="upload-section-title">Add Photos</h5>
+
+          <!-- Upgrade Banner Notice -->
+          <div class="upgrade-banner p-3 rounded mb-4 d-flex align-items-center gap-2">
+            <i class="bi bi-star-fill text-warning"></i>
+            <div class="small text-secondary">
+              Upgrade your website to enable unlimited gallery uploads. <a href="#" class="text-memorial-accent text-decoration-none fw-semibold">View benefits and pricing</a>
+            </div>
+          </div>
+
+          <!-- Drag and Drop Dropzone -->
+          <div class="upload-dropzone rounded p-4 text-center mb-3 d-flex flex-column align-items-center justify-content-center">
+            <i class="bi bi-cloud-arrow-up fs-2 text-muted mb-2"></i>
+            <p class="small text-muted mb-0">
+              <a href="#" class="text-memorial-accent fw-bold text-decoration-none" id="choose-files-link">Choose photo files</a> or drag and drop to upload
+            </p>
+          </div>
+
+          <!-- Third-party Import Buttons (Dynamic Based on Active Tab) -->
+          <div class="row g-2" id="import-buttons-wrapper">
+            <div class="col-sm-6">
+              <button class="btn btn-light border w-100 py-2 small fw-semibold text-secondary">
+                <i class="bi bi-google me-1"></i> Add from Google Photos
+              </button>
+            </div>
+            <div class="col-sm-6">
+              <button class="btn btn-primary w-100 py-2 small fw-semibold">
+                <i class="bi bi-facebook me-1"></i> Add from Facebook
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Right Column: Sidebar Panels -->
+      <div class="col-lg-4 d-flex flex-column gap-3">
+
+        <!-- Invite & Donate Card -->
+        <div class="sidebar-card p-3 rounded">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <h6 class="fw-bold mb-0 me-2 text-dark">Invite Lallan's family and friends</h6>
+            <i class="bi bi-person-add fs-4 text-muted"></i>
+          </div>
+          <button class="btn btn-invite w-100 py-2 mb-2">
+            <i class="bi bi-person-plus me-1"></i> Invite now
+          </button>
+          <button class="btn btn-donate w-100 py-2">
+            <i class="bi bi-heart-fill me-1"></i> Donate now
+          </button>
+        </div>
+
+        <!-- Share Button -->
+        <button class="btn btn-facebook w-100 py-2 d-flex align-items-center justify-content-center gap-2" id="shareFbBtn">
+          <i class="bi bi-facebook fs-5 text-primary"></i>
+          <span>Share on Facebook</span>
+        </button>
+
+        <!-- Notification Preferences Card -->
+        <div class="sidebar-card p-3 rounded">
+          <h6 class="fw-bold mb-1 text-dark">Notification preferences</h6>
+          <p class="small text-muted mb-3" id="subStatus">You are not subscribed</p>
+          <button class="btn btn-outline-memorial-dark w-100 py-2" id="subscribeBtn">Subscribe</button>
+        </div>
+
+        <!-- Photos Spotlight Card -->
+        <div class="sidebar-card p-3 rounded">
+          <h6 class="fw-bold mb-3 text-dark">5 Photos</h6>
+          <div class="mb-3 rounded overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=400&h=300" class="img-fluid rounded w-100" alt="Spotlight Photo">
+          </div>
+        </div>
+
+        <!-- Recent Updates Card -->
+        <div class="sidebar-card p-3 rounded">
+          <h6 class="fw-bold mb-2 text-dark">Recent updates</h6>
+          <p class="small text-muted mb-2">Friday, August 14</p>
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <i class="bi bi-journal-text fs-5 text-muted"></i>
+            <span class="small text-dark"><strong>Connor Graham</strong> added 4 life story chapters.</span>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-image fs-5 text-muted"></i>
+            <span class="small text-dark"><strong>Connor Graham</strong> added 5 photos.</span>
+          </div>
+        </div>
+
+        <!-- Page Views Info -->
+        <div class="sidebar-card p-3 rounded">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <i class="bi bi-eye fs-5 text-dark"></i>
+            <h6 class="fw-bold mb-0 text-dark">14 Views</h6>
+          </div>
+          <div class="d-flex align-items-center gap-2 small text-muted pt-2 border-top border-secondary-subtle">
+            <i class="bi bi-globe"></i>
+            <span>Open access</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- JavaScript Files -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/main.js"></script>
+  
+  <!-- Dynamic Sub-Tab Handler Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const tabLinks = document.querySelectorAll('#gallerySubTabs button[data-bs-toggle="tab"]');
+      const uploadTitle = document.getElementById('upload-section-title');
+      const chooseFilesLink = document.getElementById('choose-files-link');
+      const importButtons = document.getElementById('import-buttons-wrapper');
+
+      tabLinks.forEach(tab => {
+        tab.addEventListener('shown.bs.tab', function (e) {
+          const targetId = e.target.id;
+          
+          if (targetId === 'photo-tab') {
+            uploadTitle.textContent = 'Add Photos';
+            chooseFilesLink.textContent = 'Choose photo files';
+            importButtons.classList.remove('d-none');
+          } else if (targetId === 'movie-tab') {
+            uploadTitle.textContent = 'Add Movies / Videos';
+            chooseFilesLink.textContent = 'Choose video files';
+            importButtons.classList.add('d-none');
+          } else if (targetId === 'audio-tab') {
+            uploadTitle.textContent = 'Add Audio Tracks';
+            chooseFilesLink.textContent = 'Choose audio files';
+            importButtons.classList.add('d-none');
+          }
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

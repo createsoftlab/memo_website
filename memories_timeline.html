@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timeline - Lallan Writer Memorial</title>
+  
+  <!-- Bootstrap 5 CSS & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <!-- Custom Stylesheets -->
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/timeline.css">
+</head>
+<body class="bg-memorial-light">
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-memorial-dark px-3 py-2">
+    <div class="container-fluid">
+      <a class="navbar-brand text-warning fs-6 fw-bold" href="index.html">
+        <i class="bi bi-fire me-1"></i> Forever Missed
+      </a>
+      <button class="navbar-toggler border-0 d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="offcanvas offcanvas-end bg-memorial-dark text-white" tabindex="-1" id="offcanvasNavbar">
+        <div class="offcanvas-header border-bottom border-secondary d-lg-none">
+          <h5 class="offcanvas-title text-warning"><i class="bi bi-fire me-1"></i> Navigation</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column flex-lg-row align-items-lg-center justify-content-lg-between w-100">
+          <ul class="navbar-nav text-uppercase small gap-lg-3 me-lg-auto mb-3 mb-lg-0">
+            <li class="nav-item"><a class="nav-link py-2" href="index.html"><i class="bi bi-house-door me-1"></i> Home</a></li>
+                  <li class="nav-item">
+  <a class="nav-link" href="all_memories.html">
+    <i class="bi bi-heart-fill"></i> Memories
+  </a>
+            <li class="nav-item"><a class="nav-link py-2" href="index.html"><i class="bi bi-info-circle me-1"></i> About Us</a></li>
+            <li class="nav-item"><a class="nav-link py-2" href="#"><i class="bi bi-envelope me-1"></i> Contact Us</a></li>
+          </ul>
+          <div id="authButtons" class="d-flex flex-column flex-lg-row gap-2">
+            <a href="#" class="btn btn-outline-light btn-sm text-uppercase" id="loginBtn"><i class="bi bi-box-arrow-in-right me-1"></i> Login</a>
+            <a href="#" class="btn btn-warning btn-sm text-uppercase fw-semibold" id="signupBtn"><i class="bi bi-person-plus me-1"></i> Sign Up</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Header -->
+  <header class="memorial-hero d-flex align-items-end">
+    <div class="container py-4">
+      <div class="row align-items-center">
+        <div class="col-8">
+          <h1 class="memorial-title text-white mb-0">Lallan Writer</h1>
+          <p class="fs-4 text-white-50 font-serif mb-0">1945 - 2021</p>
+        </div>
+        <div class="col-4 text-end">
+          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?fit=crop&w=300&h=300" class="memorial-avatar rounded-3 shadow" alt="Lallan Writer">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs Bar -->
+  <div class="memorial-tabs-bar sticky-top">
+    <div class="container">
+      <ul class="nav nav-tabs border-0">
+        <li class="nav-item"><a class="nav-link" href="memories_index.html">ABOUT</a></li>
+        <li class="nav-item"><a class="nav-link" href="memories_life.html">LIFE</a></li>
+        <li class="nav-item"><a class="nav-link" href="memories_gallery.html">GALLERY</a></li>
+        <li class="nav-item"><a class="nav-link" href="memories_stories.html">STORIES</a></li>
+                <li class="nav-item"><a class="nav-link active" href="memories_timeline.html">TIMELINE</a></li>
+                        <li class="nav-item"><a class="nav-link " href="memories_event.html">EVENTS</a></li>
+
+                                                        <li class="nav-item"><a class="nav-link " href="memories_donation.html">DONATIONS</a></li>
+
+
+      </ul>
+    </div>
+  </div>
+
+  <!-- Main Content Layout -->
+  <main class="container my-4">
+    <div class="row g-4">
+      
+      <!-- Left Column: Vertical Timeline -->
+      <div class="col-lg-8">
+        <h4 class="fw-bold text-dark mb-4">Lallan's timeline</h4>
+
+        <div class="vertical-timeline position-relative ps-4">
+          
+          <!-- Timeline Item 1 -->
+          <div class="timeline-entry position-relative mb-4 pb-2">
+            <span class="timeline-year badge bg-light text-secondary border mb-2">1945</span>
+            <div class="d-flex align-items-start gap-3">
+              <div class="timeline-icon rounded-circle d-flex align-items-center justify-content-center text-memorial-accent bg-white border border-2">
+                <i class="bi bi-egg-fried fs-5"></i>
+              </div>
+              <div class="timeline-body">
+                <h6 class="fw-bold mb-1 text-dark">Born</h6>
+                <p class="small text-muted mb-0"><i class="bi bi-calendar3 me-1"></i> December 12th, 1945</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timeline Item 2 -->
+          <div class="timeline-entry position-relative mb-4 pb-2">
+            <span class="timeline-year badge bg-light text-secondary border mb-2">1961</span>
+            <div class="d-flex align-items-start gap-3">
+              <div class="timeline-icon rounded-circle d-flex align-items-center justify-content-center text-memorial-accent bg-white border border-2">
+                <i class="bi bi-mortarboard fs-5"></i>
+              </div>
+              <div class="timeline-body">
+                <h6 class="fw-bold mb-1 text-dark">Graduated from high school</h6>
+                <p class="small text-muted mb-1"><i class="bi bi-calendar3 me-1"></i> 1961</p>
+                <p class="small text-muted mb-0"><i class="bi bi-geo-alt me-1"></i> Central High School, City Campus</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timeline Item 3 -->
+          <div class="timeline-entry position-relative mb-4 pb-2">
+            <span class="timeline-year badge bg-light text-secondary border mb-2">1965</span>
+            <div class="d-flex align-items-start gap-3">
+              <div class="timeline-icon rounded-circle d-flex align-items-center justify-content-center text-memorial-accent bg-white border border-2">
+                <i class="bi bi-journal-bookmark fs-5"></i>
+              </div>
+              <div class="timeline-body">
+                <h6 class="fw-bold mb-1 text-dark">Graduated from college</h6>
+                <p class="small text-muted mb-1"><i class="bi bi-calendar3 me-1"></i> 1965</p>
+                <p class="small text-muted mb-1"><i class="bi bi-geo-alt me-1"></i> State University of Literature</p>
+                <p class="small text-secondary mb-0"><i class="bi bi-award me-1"></i> B.A. Humanities & Creative Writing</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timeline Item 4 -->
+          <div class="timeline-entry position-relative mb-4 pb-2">
+            <span class="timeline-year badge bg-light text-secondary border mb-2">1968</span>
+            <div class="d-flex align-items-start gap-3">
+              <div class="timeline-icon rounded-circle d-flex align-items-center justify-content-center text-memorial-accent bg-white border border-2">
+                <i class="bi bi-briefcase fs-5"></i>
+              </div>
+              <div class="timeline-body">
+                <h6 class="fw-bold mb-1 text-dark">Started career at National Press</h6>
+                <p class="small text-muted mb-0"><i class="bi bi-calendar3 me-1"></i> December 15th, 1968</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timeline Item 5 -->
+          <div class="timeline-entry position-relative mb-4 pb-2">
+            <span class="timeline-year badge bg-light text-secondary border mb-2">1970</span>
+            <div class="d-flex align-items-start gap-3">
+              <div class="timeline-icon rounded-circle d-flex align-items-center justify-content-center text-memorial-accent bg-white border border-2">
+                <i class="bi bi-people fs-5"></i>
+              </div>
+              <div class="timeline-body">
+                <h6 class="fw-bold mb-1 text-dark">Met Saraswati Devi</h6>
+                <p class="small text-muted mb-0"><i class="bi bi-calendar3 me-1"></i> 1970</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timeline Item 6 (With Photo) -->
+          <div class="timeline-entry position-relative mb-4 pb-2">
+            <span class="timeline-year badge bg-light text-secondary border mb-2">1972</span>
+            <div class="d-flex align-items-start gap-3">
+              <div class="timeline-icon rounded-circle d-flex align-items-center justify-content-center text-memorial-accent bg-white border border-2">
+                <i class="bi bi-heart fs-5"></i>
+              </div>
+              <div class="timeline-body">
+                <h6 class="fw-bold mb-1 text-dark">Got married to Saraswati Devi</h6>
+                <p class="small text-muted mb-0"><i class="bi bi-calendar3 me-1"></i> June 8th, 1972</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timeline Item 7 (With Photo Showcase) -->
+          <div class="timeline-entry position-relative mb-4 pb-2">
+            <span class="timeline-year badge bg-light text-secondary border mb-2">1975</span>
+            <div class="d-flex align-items-start gap-3 mb-3">
+              <div class="timeline-icon rounded-circle d-flex align-items-center justify-content-center text-memorial-accent bg-white border border-2">
+                <i class="bi bi-person-heart fs-5"></i>
+              </div>
+              <div class="timeline-body">
+                <h6 class="fw-bold mb-1 text-dark">Had a child, Vernon</h6>
+              </div>
+            </div>
+            <!-- Photo Frame Attached to Timeline Event -->
+            <div class="timeline-media ms-5 ps-2">
+              <img src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?fit=crop&w=600&h=400" class="img-fluid rounded border shadow-sm max-w-400" alt="Family Photo">
+            </div>
+          </div>
+
+           <div class="timeline-entry position-relative mb-4 pb-2">
+            <span class="timeline-year badge bg-light text-secondary border mb-2">1975</span>
+            <div class="d-flex align-items-start gap-3 mb-3">
+              <div class="timeline-icon rounded-circle d-flex align-items-center justify-content-center text-memorial-accent bg-white border border-2">
+                <i class="bi bi-person-heart fs-5"></i>
+              </div>
+              <div class="timeline-body">
+                <h6 class="fw-bold mb-1 text-dark">Had a child, jon</h6>
+              </div>
+            </div>
+            <!-- Photo Frame Attached to Timeline Event -->
+            <div class="timeline-media ms-5 ps-2">
+              <img src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?fit=crop&w=600&h=400" class="img-fluid rounded border shadow-sm max-w-400" alt="Family Photo">
+            </div>
+          </div>
+
+          <!-- Add Event Button -->
+          <!-- <div class="text-center my-4">
+            <button class="btn btn-outline-info rounded-circle p-3 shadow-sm" title="Add Event">
+              <i class="bi bi-plus-lg fs-5"></i>
+            </button>
+            <div class="small text-muted mt-1 fw-bold text-uppercase">Add Event</div>
+          </div> -->
+
+          <!-- Retired -->
+<div class="timeline-entry position-relative mb-4 pb-2">
+  <span class="timeline-year badge bg-light text-secondary border mb-2">2003</span>
+  <div class="d-flex align-items-start gap-3">
+    <div class="timeline-icon rounded-circle d-flex align-items-center justify-content-center text-memorial-accent bg-white border border-2">
+      <i class="bi bi-umbrella-fill fs-5"></i>
+    </div>
+    <div class="timeline-body">
+      <h6 class="fw-bold mb-1 text-dark">Retired</h6>
+      <p class="small text-muted mb-0"><i class="bi bi-calendar3 me-1"></i> 2003</p>
+    </div>
+  </div>
+</div>
+
+<!-- Had a grandchild -->
+<div class="timeline-entry position-relative mb-4 pb-2">
+  <div class="d-flex align-items-start gap-3">
+    <div class="timeline-icon rounded-circle d-flex align-items-center justify-content-center text-memorial-accent bg-white border border-2">
+      <i class="bi bi-person-hearts fs-5"></i>
+    </div>
+    <div class="timeline-body">
+      <h6 class="fw-bold mb-1 text-dark">Had a grandchild</h6>
+      <p class="small text-muted mb-0"><i class="bi bi-calendar3 me-1"></i> May 30th, 2003</p>
+    </div>
+  </div>
+</div>
+
+<!-- Moved -->
+<div class="timeline-entry position-relative mb-4 pb-2">
+  <span class="timeline-year badge bg-light text-secondary border mb-2">2004</span>
+  <div class="d-flex align-items-start gap-3">
+    <div class="timeline-icon rounded-circle d-flex align-items-center justify-content-center text-memorial-accent bg-white border border-2">
+      <i class="bi bi-house fs-5"></i>
+    </div>
+    <div class="timeline-body">
+      <h6 class="fw-bold mb-1 text-dark">Moved</h6>
+      <p class="small text-muted mb-1"><i class="bi bi-calendar3 me-1"></i> 2004</p>
+      <p class="small text-muted mb-0"><i class="bi bi-geo-alt me-1"></i> Athens, Greece</p>
+    </div>
+  </div>
+</div>
+
+<!-- Had a grandchild, Lulu Kim -->
+<div class="timeline-entry position-relative mb-4 pb-2">
+  <div class="d-flex align-items-start gap-3">
+    <div class="timeline-icon rounded-circle d-flex align-items-center justify-content-center text-memorial-accent bg-white border border-2">
+      <i class="bi bi-person-hearts fs-5"></i>
+    </div>
+    <div class="timeline-body">
+      <h6 class="fw-bold mb-1 text-dark">Had a grandchild, Lulu Kim</h6>
+      <p class="small text-muted mb-0"><i class="bi bi-calendar3 me-1"></i> August 16th, 2004</p>
+    </div>
+  </div>
+</div>
+
+<!-- Passed away -->
+<div class="timeline-entry position-relative mb-4 pb-2">
+  <span class="timeline-year badge bg-light text-secondary border mb-2">2020</span>
+  <div class="d-flex align-items-start gap-3">
+    <div class="timeline-icon rounded-circle d-flex align-items-center justify-content-center text-memorial-accent bg-white border border-2">
+      <i class="bi bi-flower1 fs-5"></i>
+    </div>
+    <div class="timeline-body">
+      <h6 class="fw-bold mb-1 text-dark">Passed away</h6>
+      <p class="small text-muted mb-1"><i class="bi bi-calendar3 me-1"></i> October 1st, 2020</p>
+      <p class="small text-muted mb-0"><i class="bi bi-geo-alt me-1"></i> Denver, CO, USA</p>
+    </div>
+  </div>
+</div>
+
+        </div>
+      </div>
+
+      <!-- Right Column: Donation & Contributions Sidebar -->
+      <div class="col-lg-4 d-flex flex-column gap-3">
+
+        <!-- In Lieu of Flowers Card -->
+        <div class="sidebar-card p-4 rounded shadow-sm border-0 bg-white">
+          <div class="d-flex align-items-center gap-2 text-memorial-accent mb-3">
+            <i class="bi bi-flower1 fs-3"></i>
+            <h6 class="fw-bold mb-0 text-dark">In lieu of flowers</h6>
+          </div>
+          <p class="small text-muted mb-3">
+            Please consider a gift to <strong>American Cancer Society</strong>.
+          </p>
+          <div class="text-center bg-light p-3 rounded mb-3 border">
+            <h3 class="fw-bold text-dark mb-0">$3,375.00</h3>
+            <span class="small text-muted">Raised by 10 people</span>
+          </div>
+          <a href="#" class="text-memorial-accent fw-bold small text-decoration-none d-block text-end">
+            Learn more & give &rarr;
+          </a>
+        </div>
+
+        <!-- Recent Contributions Card -->
+        <div class="sidebar-card p-4 rounded shadow-sm border-0 bg-white">
+          <h6 class="fw-bold text-dark mb-3">Recent contributions</h6>
+          
+          <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+            <span class="small fw-semibold text-dark">James Reynolds</span>
+            <span class="small fw-bold text-dark">$20.00</span>
+          </div>
+          <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+            <span class="small fw-semibold text-dark">Adam Green</span>
+            <span class="small fw-bold text-dark">$30.00</span>
+          </div>
+          <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+            <span class="small fw-semibold text-dark">Carlene Leonardo</span>
+            <span class="small fw-bold text-dark">$40.00</span>
+          </div>
+
+          <a href="#" class="text-memorial-accent fw-bold small text-decoration-none d-block mt-3 text-end">
+            See all contributions &rarr;
+          </a>
+        </div>
+
+        <!-- Share Buttons Bar -->
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary flex-fill"><i class="bi bi-facebook"></i></button>
+          <button class="btn btn-info text-white flex-fill"><i class="bi bi-twitter"></i></button>
+          <button class="btn btn-secondary flex-fill"><i class="bi bi-link-45deg"></i></button>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

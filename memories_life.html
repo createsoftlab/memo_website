@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Life - Lallan Writer Memorial</title>
+  
+  <!-- Bootstrap 5 CSS & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <!-- Custom Stylesheets -->
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/life.css">
+</head>
+<body class="bg-memorial-light">
+
+  <!-- Responsive Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-memorial-dark px-3 py-2">
+    <div class="container-fluid">
+      
+      <!-- Brand / Logo -->
+      <a class="navbar-brand text-warning fs-6 fw-bold" href="index.html">
+        <i class="bi bi-fire me-1"></i> Forever Missed
+      </a>
+
+      <!-- Mobile & Tablet Menu Button -->
+      <button class="navbar-toggler border-0 d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navigation Content Container -->
+      <div class="offcanvas offcanvas-end bg-memorial-dark text-white" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        
+        <!-- Slide Menu Header (Mobile/Tablet) -->
+        <div class="offcanvas-header border-bottom border-secondary d-lg-none">
+          <h5 class="offcanvas-title text-warning" id="offcanvasNavbarLabel">
+            <i class="bi bi-fire me-1"></i> Navigation
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+
+        <!-- Navigation Body -->
+        <div class="offcanvas-body d-flex flex-column flex-lg-row align-items-lg-center justify-content-lg-between w-100">
+          
+          <!-- Left Side Links -->
+          <ul class="navbar-nav text-uppercase small gap-lg-3 me-lg-auto mb-3 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link py-2 py-lg-1" href="index.html">
+                <i class="bi bi-house-door me-1"></i> Home
+              </a>
+            </li>
+                  <li class="nav-item">
+  <a class="nav-link" href="all_memories.html">
+    <i class="bi bi-heart-fill"></i> Memories
+  </a>
+            <li class="nav-item">
+              <a class="nav-link py-2 py-lg-1" href="index.html">
+                <i class="bi bi-info-circle me-1"></i> About Us
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link py-2 py-lg-1" href="#">
+                <i class="bi bi-envelope me-1"></i> Contact Us
+              </a>
+            </li>
+          </ul>
+
+          <!-- Right Side Auth / Action Buttons -->
+          <div class="mt-auto mt-lg-0 pt-3 pt-lg-0 border-top border-secondary border-lg-0">
+            
+            <!-- Before Login -->
+            <div id="authButtons" class="d-flex flex-column flex-lg-row gap-2">
+              <a href="#" class="btn btn-outline-light btn-sm text-uppercase" id="loginBtn">
+                <i class="bi bi-box-arrow-in-right me-1"></i> Login
+              </a>
+              <a href="#" class="btn btn-warning btn-sm text-uppercase fw-semibold" id="signupBtn">
+                <i class="bi bi-person-plus me-1"></i> Sign Up
+              </a>
+            </div>
+
+            <!-- After Login -->
+            <div id="userMenu" class="d-none flex-column flex-lg-row align-items-lg-center gap-2">
+              <a href="#" class="btn btn-warning btn-sm fw-bold text-uppercase shadow-sm">
+                <i class="bi bi-plus-circle-fill me-1"></i> Create Your Memorial
+              </a>
+              <button class="btn btn-outline-danger btn-sm" id="logoutBtn" title="Logout">
+                <i class="bi bi-box-arrow-right"></i>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- Hero Header -->
+  <header class="memorial-hero d-flex align-items-end">
+    <div class="container py-4">
+      <div class="row align-items-center">
+        <div class="col-8">
+          <h1 class="memorial-title text-white mb-0">Lallan Writer</h1>
+          <p class="fs-4 text-white-50 font-serif mb-0">1945 - 2021</p>
+        </div>
+        <div class="col-4 text-end">
+          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?fit=crop&w=300&h=300" class="memorial-avatar rounded-3 shadow" alt="Lallan Writer">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs Bar -->
+  <div class="memorial-tabs-bar sticky-top">
+    <div class="container">
+      <ul class="nav nav-tabs border-0">
+        <li class="nav-item"><a class="nav-link" href="memories_index.html">ABOUT</a></li>
+        <li class="nav-item"><a class="nav-link active" href="memories_life.html">LIFE</a></li>
+        <li class="nav-item"><a class="nav-link" href="memories_gallery.html">GALLERY</a></li>
+        <li class="nav-item"><a class="nav-link" href="memories_stories.html">STORIES</a></li>
+        <li class="nav-item"><a class="nav-link" href="memories_timeline.html">TIMELINE</a></li>
+                <li class="nav-item"><a class="nav-link " href="memories_event.html">EVENTS</a></li>
+
+                                                <li class="nav-item"><a class="nav-link " href="memories_donation.html">DONATIONS</a></li>
+
+
+      </ul>
+    </div>
+  </div>
+
+  <!-- Main Content Layout -->
+  <main class="container my-4">
+    <div class="row g-4">
+      
+      <!-- Left Column: Timeline Stories -->
+      <div class="col-lg-8 d-flex flex-column gap-3">
+
+        <!-- Story 1: Early Life -->
+        <div class="life-story-card p-4 rounded shadow-sm position-relative">
+          <span class="badge bg-memorial-brown mb-2">Early Life</span>
+          <h4 class="fw-bold text-dark mb-1">Birth & Childhood</h4>
+          <p class="small text-muted mb-3">Posted on August 14 &bull; By <span class="text-memorial-accent fw-semibold">Family Admin</span></p>
+          
+          <div class="story-content text-secondary mb-3">
+            <p class="mb-0">Born and brought up with a deep affection for literature and classical arts. From a very young age, Lallan spent endless hours reading classical literature and writing short stories that inspired his close friends and family.</p>
+          </div>
+
+          <button class="btn btn-sm btn-link text-muted text-decoration-none p-0 share-story-btn">
+            <i class="bi bi-share me-1"></i> Share
+          </button>
+        </div>
+
+        <!-- Story 2: Career & Achievements -->
+        <div class="life-story-card p-4 rounded shadow-sm position-relative">
+          <span class="badge bg-memorial-brown mb-2">Career</span>
+          <h4 class="fw-bold text-dark mb-1">Career & Achievements</h4>
+          <p class="small text-muted mb-3">Posted on August 14 &bull; By <span class="text-memorial-accent fw-semibold">Family Admin</span></p>
+          
+          <div class="story-content text-secondary mb-3">
+            <p class="mb-0">Published numerous poems, stories, and inspired thousands of students worldwide. Throughout his illustrious literary career, he mentored hundreds of budding poets and left a lasting imprint on contemporary prose.</p>
+          </div>
+
+          <button class="btn btn-sm btn-link text-muted text-decoration-none p-0 share-story-btn">
+            <i class="bi bi-share me-1"></i> Share
+          </button>
+        </div>
+
+        <!-- Contribution Notice Box -->
+        <div class="life-story-card p-4 rounded shadow-sm d-flex align-items-center gap-3">
+          <i class="bi bi-lock-fill fs-3 text-muted"></i>
+          <p class="small text-muted mb-0">
+            If you would like to contribute to Lallan's biography, please send your story over to the <a href="#" class="text-memorial-accent fw-bold text-decoration-none">memorial administrator</a>.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Sidebar Panels -->
+      <div class="col-lg-4 d-flex flex-column gap-3">
+
+        <!-- Invite & Donate Card -->
+        <div class="sidebar-card p-3 rounded">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <h6 class="fw-bold mb-0 me-2 text-dark">Invite Lallan's family and friends</h6>
+            <i class="bi bi-person-add fs-4 text-muted"></i>
+          </div>
+          <button class="btn btn-invite w-100 py-2 mb-2">
+            <i class="bi bi-person-plus me-1"></i> Invite now
+          </button>
+          <button class="btn btn-donate w-100 py-2">
+            <i class="bi bi-heart-fill me-1"></i> Donate now
+          </button>
+        </div>
+
+        <!-- Share Button -->
+        <button class="btn btn-facebook w-100 py-2 d-flex align-items-center justify-content-center gap-2" id="shareFbBtn">
+          <i class="bi bi-facebook fs-5 text-primary"></i>
+          <span>Share on Facebook</span>
+        </button>
+
+        <!-- Notification Preferences Card -->
+        <div class="sidebar-card p-3 rounded">
+          <h6 class="fw-bold mb-1 text-dark">Notification preferences</h6>
+          <p class="small text-muted mb-3" id="subStatus">You are not subscribed</p>
+          <button class="btn btn-outline-memorial-dark w-100 py-2" id="subscribeBtn">Subscribe</button>
+        </div>
+
+        <!-- Recent Updates -->
+        <div class="sidebar-card p-3 rounded">
+          <h6 class="fw-bold mb-2 text-dark">Recent updates</h6>
+          <p class="small text-muted mb-2">Friday, August 14</p>
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <i class="bi bi-journal-text fs-5 text-muted"></i>
+            <span class="small text-dark"><strong>Family Admin</strong> added 2 life story chapters.</span>
+          </div>
+        </div>
+
+        <!-- Page Views Info -->
+        <div class="sidebar-card p-3 rounded">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <i class="bi bi-eye fs-5 text-dark"></i>
+            <h6 class="fw-bold mb-0 text-dark">24 Views</h6>
+          </div>
+          <div class="d-flex align-items-center gap-2 small text-muted pt-2 border-top border-secondary-subtle">
+            <i class="bi bi-globe"></i>
+            <span>Open access</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- JavaScript Files (Standardized Order) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/main.js"></script>
+
+</body>
+</html>
