@@ -97,3 +97,43 @@
 .text-memorial-accent {
   color: #8c4c2d;
 }
+
+
+/* --- Card Scroll Reveal Animation Styles --- */
+.reveal-card {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+
+/* When intersection observer triggers */
+.reveal-card.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- Enhanced Highlight Badge Styles --- */
+.custom-badge {
+    border-radius: 50rem; /* pill shape */
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    background-color: var(--memorial-color, #8B5A2B) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 10px rgba(139, 90, 43, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(139, 90, 43, 0.3);
+}
+
+.custom-badge i {
+    font-size: 0.95rem;
+}
+
+.story-highlight-text {
+    font-weight: 700;
+    color: var(--memorial-color, #3d230a); /* Brown colour */
+}
