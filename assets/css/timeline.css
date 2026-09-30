@@ -49,3 +49,52 @@
 .text-memorial-accent {
   color: #8c4c2d !important;
 }
+
+/* --- Tea-Themed Timeline Year Badge --- */
+.timeline-year {
+    font-size: 1.1rem !important; /* Size eka tikak loku kala */
+    font-weight: 700 !important;
+    padding: 0.5rem 1rem !important; /* Padding wadi kala badge eka loku penna */
+    background-color: #f1e4c7 !important; /* Soft earthy tea-cream background */
+    color: #4a3525 !important; /* Rich deep tea-brown text color */
+    border: 1px solid #d3bdab !important; /* Subtle vintage border */
+    border-radius: 50rem !important; /* Pill shape ekata */
+    display: inline-block;
+    box-shadow: 0 2px 4px rgba(74, 53, 37, 0.08); /* Soft warm shadow */
+    letter-spacing: 0.5px;
+}
+
+/* --- Tea-Themed Brown Timeline Cards & 3D Animation --- */
+.timeline-item {
+    opacity: 0;
+    transform: translateY(50px) rotateX(15deg) scale(0.95);
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.4s ease,
+                border-color 0.4s ease,
+                box-shadow 0.4s ease;
+    will-change: opacity, transform;
+    
+    /* Tea Theme Brown & Cream Styling */
+    background-color: #ebd3c2; /* Soft warm cream-brown base */
+    border: 1px solid #18120d; /* Subtle earthy border */
+    border-radius: 12px;
+    padding: 1.5rem;
+    color: #4a3525; /* Rich deep tea-brown text color */
+}
+
+/* Scroll කරද්දී පෙන්වන reveal ක්ලාස් එක */
+.timeline-item.reveal {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg) scale(1);
+}
+
+/* Hover කරද්දී ලැබෙන 3D Lift සහ Rich Brown Highlight එක */
+.timeline-item.reveal:hover {
+    transform: translateY(-6px) rotateX(2deg) scale(1.01);
+    background-color: #f4eae1; /* Hover කරද්දී ටිකක් రిච් වුණු warm brown/cream පාටක් */
+    border-color: #c8b6a6; /* Border එකට තවත් ලස්සන බ්‍රවුන් ටෝන් එකක් */
+    box-shadow: 0 16px 32px rgba(74, 53, 37, 0.12); /* Deep tea-brown soft shadow */
+}
