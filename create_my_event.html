@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create My Events - Memorial Dashboard</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Custom External Dashboard CSS -->
+    <link rel="stylesheet" href="assets/css/dashboard-main.css">
+</head>
+<body>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="dashboard-wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-profile p-3 d-flex align-items-center gap-3">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?fit=crop&w=100&h=100" class="rounded-circle border border-warning" width="45" height="45" alt="Profile">
+                <div>
+                    <h6 class="m-0 text-white fw-bold profile-name">M.A.N. Lakshan</h6>
+                    <small class="text-gold profile-date">Joined 02 Jun 2026</small>
+                </div>
+            </div>
+
+            <ul class="nav flex-column py-2">
+                <li class="nav-item">
+                    <a href="dashbord_index.html" class="nav-link">
+                        <span><i class="bi bi-speedometer2 me-2"></i> My Dashboard</span>
+                    </a>
+                </li>
+
+                <!-- All Memories Dropdown -->
+                <li class="nav-item">
+                    <a href="#memoriesSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle d-flex justify-content-between align-items-center collapsed" aria-expanded="false">
+                        <span><i class="bi bi-collection me-2"></i> All Memories</span>
+                        <i class="bi bi-chevron-down small dropdown-arrow"></i>
+                    </a>
+                    <ul class="collapse list-unstyled submenu" id="memoriesSubmenu">
+                        <li>
+                            <a href="#" class="nav-link sub-link">My Memories</a>
+                        </li>
+                        <li>
+                            <a href="create-memory.html" class="nav-link sub-link">Create Memories</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- Events Dropdown -->
+                <li class="nav-item">
+                    <a href="#eventsSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle d-flex justify-content-between align-items-center" aria-expanded="true">
+                        <span><i class="bi bi-calendar-event me-2"></i> Events</span>
+                        <i class="bi bi-chevron-down small dropdown-arrow"></i>
+                    </a>
+                    <ul class="collapse show list-unstyled submenu" id="eventsSubmenu">
+                        <li>
+                            <a href="my_events.html" class="nav-link sub-link ">My Events</a>
+                        </li>
+                        <li>
+                            <a href="create_my_event.html" class="nav-link sub-link active">Create Events</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-heart me-2"></i> Leads & Enquiry</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-currency-dollar me-2"></i> Payment & Promo</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-person-badge me-2"></i> Profile Pages</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-activity me-2"></i> My Activities</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item mt-4">
+                    <a href="#" class="nav-link text-warning">
+                        <span><i class="bi bi-gear me-2"></i> Setting</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Navbar -->
+            <nav class="navbar navbar-dark top-navbar px-3 py-2">
+                <div class="container-fluid">
+                    <div class="d-flex align-items-center gap-2">
+                        <button class="btn btn-outline-light d-lg-none btn-sm" id="sidebarToggle">
+                            <i class="bi bi-list fs-5"></i>
+                        </button>
+                        <span class="navbar-brand mb-0 h6 text-gold font-serif ms-1">My Events</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="text-white small d-none d-sm-inline">M.A.N. Lakshan</span>
+                        <a href="#" class="btn btn-sm btn-warning fw-bold text-dark px-3">Logout</a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Page Body -->
+            <div class="container-fluid py-4">
+                
+                <!-- Edit Event Form Section -->
+                <div class="card border-0 shadow-sm bg-white p-4 mb-4">
+                    <form id="editEventForm">
+                        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                            <h5 class="fw-bold text-dark m-0"><i class="bi bi-pencil-square text-warning me-2"></i> Edit Event</h5>
+                            <span class="badge bg-secondary">Event ID #1</span>
+                        </div>
+                        <p class="text-muted small">Update your memorial service, annual remembrance, or streaming details below.</p>
+
+                        <div class="row g-3">
+                            <div class="col-12 col-md-7 mb-2">
+                                <label class="form-label small fw-bold">Event Name</label>
+                                <input type="text" class="form-control" value="Annual Memorial Alms Giving" placeholder="e.g., Annual Memorial Alms Giving" required>
+                            </div>
+
+                            <div class="col-12 col-md-5 mb-2">
+                                <label class="form-label small fw-bold">Event Status Type</label>
+                                <select class="form-select" name="event_type" required>
+                                    <option value="upcoming" selected>Upcoming Event</option>
+                                    <option value="live">Live Event (Streaming)</option>
+                                    <option value="past">Past Event</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Start Date & End Date -->
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6 mb-2">
+                                <label class="form-label small fw-bold">Start Date</label>
+                                <input type="date" class="form-control" name="start_date" required>
+                            </div>
+                            <div class="col-12 col-md-6 mb-2">
+                                <label class="form-label small fw-bold">End Date</label>
+                                <input type="date" class="form-control" name="end_date">
+                            </div>
+                        </div>
+
+                        <!-- Start Time & End Time -->
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6 mb-2">
+                                <label class="form-label small fw-bold">Start Time</label>
+                                <input type="time" class="form-control" name="start_time" required>
+                            </div>
+                            <div class="col-12 col-md-6 mb-2">
+                                <label class="form-label small fw-bold">End Time</label>
+                                <input type="time" class="form-control" name="end_time">
+                            </div>
+                        </div>
+
+                        <!-- Venue & Map -->
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6 mb-2">
+                                <label class="form-label small fw-bold">Venue Location</label>
+                                <input type="text" class="form-control" value="Memorial Hall" placeholder="e.g., Memorial Hall">
+                            </div>
+                            <div class="col-12 col-md-6 mb-2">
+                                <label class="form-label small fw-bold">Google Map Embed Link</label>
+                                <input type="text" class="form-control" placeholder="Paste embed link">
+                            </div>
+                        </div>
+
+                        <!-- Live Stream URL -->
+                        <div class="mb-3 live-stream-section">
+                            <label class="form-label small fw-bold"><i class="bi bi-camera-video text-danger"></i> Live Broadcast URL</label>
+                            <input type="url" class="form-control" placeholder="https://youtube.com/embed/...">
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Event Description</label>
+                            <textarea class="form-control" rows="3" placeholder="Write details...">Detailed description of the memorial event goes here...</textarea>
+                        </div>
+
+                        <!-- Featured Image -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Featured Event Image</label>
+                            <input type="file" class="form-control event-image-input" accept="image/*">
+                            <div class="event-img-preview-container mt-2 position-relative d-none">
+                                <img src="" class="img-thumbnail object-fit-cover w-100 preview-img" alt="Preview">
+                                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle remove-event-img-btn">
+                                    <i class="bi bi-x"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Checkboxes -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-12 col-md-6 mb-2">
+                                <div class="form-check p-2 bg-light rounded border d-flex align-items-center justify-content-between px-3 h-100">
+                                    <label class="form-check-label small fw-bold text-dark"><i class="bi bi-heart-fill text-danger me-1"></i> Allow Donations</label>
+                                    <input class="form-check-input fs-5 m-0" type="checkbox" name="allow_donation" value="1" checked>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 mb-2">
+                                <div class="form-check form-switch p-2 bg-light rounded border d-flex align-items-center justify-content-between px-3 h-100">
+                                    <label class="form-check-label small fw-bold text-dark"><i class="bi bi-lock-fill text-warning me-1"></i> Make Event Private</label>
+                                    <input class="form-check-input fs-5 m-0" type="checkbox" role="switch" name="is_private" value="1">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="d-flex gap-2 pt-2 border-top flex-wrap">
+                            <button type="submit" class="btn btn-warning fw-bold text-dark px-4 rounded-pill">
+                                <i class="bi bi-check2-circle me-1"></i> Create Event 
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary fw-bold px-4 rounded-pill">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS and Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

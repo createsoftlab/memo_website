@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Memory - Memorial Dashboard</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Custom External Dashboard CSS -->
+    <link rel="stylesheet" href="assets/css/dashboard-main.css">
+    
+    <style>
+        /* Fix for Tab Overlapping / Yatin load wena issue */
+        .tab-content > .tab-pane {
+            display: none !important;
+        }
+        .tab-content > .tab-pane.active {
+            display: block !important;
+        }
+        .tab-pane.fade {
+            opacity: 0;
+            transition: opacity 0.15s linear;
+        }
+        .tab-pane.fade.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="dashboard-wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-profile p-3 d-flex align-items-center gap-3">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?fit=crop&w=100&h=100" class="rounded-circle border border-warning" width="45" height="45" alt="Profile">
+                <div>
+                    <h6 class="m-0 text-white fw-bold" style="font-size: 0.9rem;">M.A.N. Lakshan</h6>
+                    <small class="text-gold" style="font-size: 0.75rem;">Joined 02 Jun 2026</small>
+                </div>
+            </div>
+
+            <ul class="nav flex-column py-2">
+                <li class="nav-item">
+                    <a href="dashbord_index.html" class="nav-link">
+                        <span><i class="bi bi-speedometer2 me-2"></i> My Dashboard</span>
+                    </a>
+                </li>
+
+                <!-- All Memories Dropdown -->
+                <li class="nav-item">
+                    <a href="#memoriesSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle active d-flex justify-content-between align-items-center" aria-expanded="true">
+                        <span><i class="bi bi-collection me-2"></i> All Memories</span>
+                        <i class="bi bi-chevron-down small dropdown-arrow"></i>
+                    </a>
+                    <ul class="collapse show list-unstyled submenu" id="memoriesSubmenu">
+                        <li>
+                            <a href="#" class="nav-link sub-link">My Memories</a>
+                        </li>
+                        <li>
+                            <a href="create-memory.html" class="nav-link sub-link active">Create Memories</a>
+                        </li>
+                    </ul>
+                </li>
+
+                
+                         <!-- All Events  Dropdown -->
+                <li class="nav-item">
+                    <a href="#memoriesSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle  d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-collection me-2"></i> Events</span>
+                        <i class="bi bi-chevron-down small dropdown-arrow"></i>
+                    </a>
+                    <ul class="collapse list-unstyled submenu" id="memoriesSubmenu">
+                        <li>
+                            <a href="my_events.html" class="nav-link sub-link">My Events</a>
+                        </li>
+                        <li>
+                            <a href="create_my_event.html" class="nav-link sub-link">Create Events </a>
+                        </li>
+                    </ul>
+                </li>
+
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-heart me-2"></i> Leads & Enquiry</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-currency-dollar me-2"></i> Payment & Promo</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-person-badge me-2"></i> Profile Pages</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-activity me-2"></i> My Activities</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item mt-4">
+                    <a href="#" class="nav-link text-warning">
+                        <span><i class="bi bi-gear me-2"></i> Setting</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Navbar -->
+            <nav class="navbar navbar-dark top-navbar px-3 py-2">
+                <div class="container-fluid">
+                    <div class="d-flex align-items-center gap-2">
+                        <button class="btn btn-outline-light d-lg-none btn-sm" id="sidebarToggle">
+                            <i class="bi bi-list fs-5"></i>
+                        </button>
+                        <span class="navbar-brand mb-0 h6 text-gold font-serif ms-1">Memorial Information & Settings</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="text-white small d-none d-sm-inline">M.A.N. Lakshan</span>
+                        <a href="#" class="btn btn-sm btn-warning fw-bold text-dark px-3">Logout</a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Dashboard Body Content with Tabs -->
+            <div class="container-fluid p-4">
+                <div class="row g-4">
+                    
+                    <!-- Left Side: Dynamic Tab Content Area -->
+                    <div class="col-lg-8">
+                        <div class="sidebar-card p-4 shadow-sm bg-white">
+                            <h5 class="font-serif text-brown mb-1">Memorial Information and Settings</h5>
+                            <p class="text-muted small mb-4">Fill or update the loved one's basic details and manage all public memorial page contents through tabs.</p>
+
+                            <!-- Tab Content Panes -->
+                            <div class="tab-content" id="memorialTabContent">
+                                
+                                <!-- Tab 1: Basic Details & Info -->
+                                <div class="tab-pane fade show active" id="tab-basic" role="tabpanel">
+                                    <form>
+                                        <h6 class="fw-bold text-brown mb-3 border-bottom pb-2">1. Basic Details</h6>
+                                        <div class="row g-3 mb-4">
+                                            <div class="col-md-4">
+                                                <label class="form-label small fw-bold">First Name *</label>
+                                                <input type="text" class="form-control" value="Lallan" required>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label small fw-bold">Middle Name</label>
+                                                <input type="text" class="form-control" placeholder="Middle name">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label small fw-bold">Last Name *</label>
+                                                <input type="text" class="form-control" value="Writer" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-bold">Country *</label>
+                                                <input type="text" class="form-control" value="Sri Lanka">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-bold">City / Town *</label>
+                                                <input type="text" class="form-control" value="Kalutara">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-bold">Birth Date</label>
+                                                <input type="date" class="form-control" value="1959-01-15">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-bold">Passed Away Date</label>
+                                                <input type="date" class="form-control" value="2026-08-18">
+                                            </div>
+                                        </div>
+
+                                        <h6 class="fw-bold text-brown mb-3 border-bottom pb-2">2. Memorial Page Contents</h6>
+                                        <div class="mb-3">
+                                            <label class="form-label small fw-bold">Main Tribute Quote</label>
+                                            <input type="text" class="form-control" value="Let the memory of Lallan be with us forever.">
+                                        </div>
+                                        <div class="row g-3 mb-4">
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-bold">Funeral & Wake Location Name</label>
+                                                <input type="text" class="form-control" value="Jayaratne Funeral Parlour">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-bold">Family Contact Number</label>
+                                                <input type="text" class="form-control" value="+94 77 123 4567">
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <button type="submit" class="btn btn-warning fw-bold text-dark px-4 rounded-pill">Save Memorial Details</button>
+                                            <a href="#" class="text-danger small text-decoration-none">Delete Memorial</a>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- Tab 2: Life Story Tab -->
+                                <!-- <div class="tab-pane fade" id="tab-lifestory" role="tabpanel">
+                                    <h6 class="fw-bold text-brown mb-3 border-bottom pb-2"><i class="bi bi-heart-fill me-2 text-danger"></i> Edit Life Story Tab</h6>
+                                    <form>
+                                        <div class="mb-3">
+                                            <label class="form-label small fw-bold">Story Type</label>
+                                            <input type="text" class="form-control" placeholder="Enter story type (e.g., Early Life)">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label small fw-bold">Story Title</label>
+                                            <input type="text" class="form-control" placeholder="Enter story title (e.g., Birth & Childhood)">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label small fw-bold">Story / Biography Content</label>
+                                            <textarea class="form-control" rows="6">This memorial website was created in memory of our loved one, Lallan Writer, 65 years old, born on January 15, 1959, and passed away on August 18, 2026. Add more details about their career, hobbies, passions, and legacy here...</textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-warning fw-bold text-dark px-4 rounded-pill">Save Life Story</button>
+                                    </form>
+                                </div> -->
+
+
+                                <!-- Tab 2: Life Story Tab -->
+                                <div class="tab-pane fade" id="tab-lifestory" role="tabpanel">
+                                    <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                                        <h6 class="fw-bold text-brown m-0"><i class="bi bi-heart-fill me-2 text-danger"></i> Edit Life Story </h6>
+                                        <!-- Add New Form Button with Plus Mark -->
+                                        <button type="button" class="btn btn-sm btn-outline-dark fw-bold" id="addStoryBtn">
+                                            <i class="bi bi-plus-circle me-1 text-primary"></i> Add Another Story
+                                        </button>
+                                    </div>
+                                    <p class="text-muted small">Add multiple chapters or sections to the loved one's life story.</p>
+
+                                    <!-- Dynamic Container for Forms -->
+                                    <div id="lifeStoryContainer">
+                                        <!-- Default Initial Form Card -->
+                                        <div class="card border-0 shadow-sm bg-light p-3 mb-3 story-item">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="badge bg-secondary">Story #1</span>
+                                                <!-- Delete Button (Hidden for the first default form if you want, or kept active) -->
+                                                <button type="button" class="btn btn-sm text-danger delete-story-btn" title="Delete Form">
+                                                    <i class="bi bi-trash fs-6"></i>
+                                                </button>
+                                            </div>
+                                            <form>
+                                                <div class="mb-3">
+                                                    <label class="form-label small fw-bold">Story Type</label>
+                                                    <input type="text" class="form-control" placeholder="Enter story type (e.g., Early Life)">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label small fw-bold">Story Title</label>
+                                                    <input type="text" class="form-control" placeholder="Enter story title (e.g., Birth & Childhood)">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label small fw-bold">Story / Biography Content</label>
+                                                    <textarea class="form-control" rows="4" placeholder="Write story details here..."></textarea>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <!-- Save All Button -->
+                                    <button type="button" class="btn btn-warning fw-bold text-dark px-4 rounded-pill mt-2">Save All Life Stories</button>
+                                </div>
+
+                                <!-- Tab 3: Gallery Photos Tab -->
+                                <!-- <div class="tab-pane fade" id="tab-gallery" role="tabpanel">
+                                    <h6 class="fw-bold text-brown mb-3 border-bottom pb-2"><i class="bi bi-images me-2 text-warning"></i> Add Gallery Photos</h6>
+                                    <p class="text-muted small">Upload memorable photos of your loved one to display in the public photo gallery.</p>
+                                    <div class="mb-3">
+                                        <input type="file" class="form-control" multiple>
+                                    </div>
+                                    <button type="button" class="btn btn-warning fw-bold text-dark px-4 rounded-pill">Upload Photos</button>
+                                </div> -->
+
+                        <!-- Tab 3: Media Gallery Tab (Photo, Movie, Audio) -->
+                                <div class="tab-pane fade" id="tab-gallery" role="tabpanel">
+                                    <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                                        <h6 class="fw-bold text-brown m-0"><i class="bi bi-images me-2 text-warning"></i> Media Gallery Management</h6>
+                                    </div>
+                                    <p class="text-muted small">Upload and manage photos, movies/videos, and audio files for the memorial page.</p>
+
+                                    <!-- Sub-Tabs Navigation (Photo, Movie, Audio) -->
+                                    <ul class="nav nav-pills mb-4 gap-2 bg-light p-2 rounded" id="mediaSubTabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active fw-bold px-4 py-2" id="photo-sub-tab" data-bs-toggle="pill" data-bs-target="#sub-photo" type="button" role="tab">
+                                                <i class="bi bi-image me-1"></i> PHOTO
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link fw-bold px-4 py-2" id="movie-sub-tab" data-bs-toggle="pill" data-bs-target="#sub-movie" type="button" role="tab">
+                                                <i class="bi bi-film me-1"></i> MOVIE
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link fw-bold px-4 py-2" id="audio-sub-tab" data-bs-toggle="pill" data-bs-target="#sub-audio" type="button" role="tab">
+                                                <i class="bi bi-music-note-beamed me-1"></i> AUDIO
+                                            </button>
+                                        </li>
+                                    </ul>
+
+                                    <!-- Sub-Tabs Content -->
+                                    <div class="tab-content" id="mediaSubContent">
+                                        
+                                        <!-- 1. PHOTO SUB-TAB -->
+                                        <div class="tab-pane fade show active" id="sub-photo" role="tabpanel">
+                                            <div class="d-flex gap-2 mb-4">
+                                                <label class="btn btn-outline-dark btn-sm fw-bold cursor-pointer">
+                                                    <i class="bi bi-plus-circle me-1 text-primary"></i> Add photos
+                                                    <input type="file" id="photoUploadInput" class="d-none" accept="image/*" multiple>
+                                                </label>
+                                                <button type="button" class="btn btn-outline-secondary btn-sm fw-bold">
+                                                    <i class="bi bi-play-circle me-1"></i> Start slideshow
+                                                </button>
+                                            </div>
+
+                                            <!-- Photo Grid Preview Container -->
+                                            <div class="row g-3" id="photoGridContainer">
+                                                <!-- Sample Existing Photo Item -->
+                                                <div class="col-md-4 col-sm-6 media-card-item">
+                                                    <div class="card border-0 shadow-sm position-relative overflow-hidden h-100">
+                                                        <span class="badge bg-danger position-absolute top-0 start-0 m-2">NEW</span>
+                                                        <button type="button" class="btn btn-sm btn-light text-danger position-absolute top-0 end-0 m-2 rounded-circle delete-media-btn" title="Delete">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop" class="card-img-top object-fit-cover" style="height: 180px;" alt="Photo">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 col-sm-6 media-card-item">
+                                                    <div class="card border-0 shadow-sm position-relative overflow-hidden h-100">
+                                                        <span class="badge bg-danger position-absolute top-0 start-0 m-2">NEW</span>
+                                                        <button type="button" class="btn btn-sm btn-light text-danger position-absolute top-0 end-0 m-2 rounded-circle delete-media-btn" title="Delete">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop" class="card-img-top object-fit-cover" style="height: 180px;" alt="Photo">
+                                                    </div>
+                                                </div>
+                                               
+                                            </div>
+
+                                                <br>
+                                                    <button type="submit" class="btn btn-warning fw-bold text-dark px-4 rounded-pill">
+                                                        <i class="bi bi-check2-circle me-1"></i> Save videos
+                                                    </button>
+                                                
+                                        </div>
+
+                                        <!-- 2. MOVIE SUB-TAB -->
+                                        <div class="tab-pane fade" id="sub-movie" role="tabpanel">
+                                            <div class="d-flex gap-2 mb-4">
+                                                <label class="btn btn-outline-dark btn-sm fw-bold cursor-pointer">
+                                                    <i class="bi bi-plus-circle me-1 text-primary"></i> Add movies / videos
+                                                    <input type="file" id="movieUploadInput" class="d-none" accept="video/*" multiple>
+                                                </label>
+                                            </div>
+
+                                            <!-- Movie Grid Preview Container -->
+                                            <div class="row g-3" id="movieGridContainer">
+                                                <div class="col-md-6 media-card-item">
+                                                    <div class="card border-0 shadow-sm p-2 position-relative bg-light">
+                                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                                            <span class="badge bg-secondary">Video #1</span>
+                                                            <button type="button" class="btn btn-sm text-danger delete-media-btn"><i class="bi bi-trash"></i></button>
+                                                        </div>
+                                                        <video class="w-100 rounded" controls style="height: 150px; background: #000;">
+                                                            <source src="" type="video/mp4">
+                                                            Your browser does not support the video tag.
+                                                        </video>
+
+                                                        
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                                         <button type="submit" class="btn btn-warning fw-bold text-dark px-4 rounded-pill">
+                                                        <i class="bi bi-check2-circle me-1"></i> Save Photos
+                                                    </button>
+                                        </div>
+
+
+
+                                        <!-- 3. AUDIO SUB-TAB -->
+                                        <div class="tab-pane fade" id="sub-audio" role="tabpanel">
+                                            <div class="d-flex gap-2 mb-4">
+                                                <label class="btn btn-outline-dark btn-sm fw-bold cursor-pointer">
+                                                    <i class="bi bi-plus-circle me-1 text-primary"></i> Add audio tracks
+                                                    <input type="file" id="audioUploadInput" class="d-none" accept="audio/*" multiple>
+                                                </label>
+                                            </div>
+
+                                            <!-- Audio List/Grid Preview Container -->
+                                            <div class="row g-3" id="audioGridContainer">
+                                                <div class="col-md-6 media-card-item">
+                                                    <div class="card border-0 shadow-sm p-3 position-relative bg-light">
+                                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                                            <span class="badge bg-secondary">Audio Track #1</span>
+                                                            <button type="button" class="btn btn-sm text-danger delete-media-btn"><i class="bi bi-trash"></i></button>
+                                                        </div>
+                                                        <audio class="w-100" controls>
+                                                            <source src="" type="audio/mpeg">
+                                                            Your browser does not support the audio element.
+                                                        </audio>
+                                                    </div>
+                                                </div>
+                                            </div>
+<br>
+                                                     <button type="submit" class="btn btn-warning fw-bold text-dark px-4 rounded-pill">
+                                                        <i class="bi bi-check2-circle me-1"></i> Save videos
+                                                    </button>
+                                                
+                                        </div>
+
+                                        
+                                  
+
+                                    </div>
+                                </div>
+
+
+                                <!-- Tab 4: Stories & Tributes Tab -->
+                                <div class="tab-pane fade" id="tab-stories" role="tabpanel">
+                                    <h6 class="fw-bold text-brown mb-3 border-bottom pb-2"><i class="bi bi-journal-richtext me-2 text-success"></i> Add Stories & Tributes</h6>
+                                    <p class="text-muted small">Publish family tributes, eulogies, or cherished memories shared by friends.</p>
+                                    <form>
+                                        <div class="mb-3">
+                                            <label class="form-label small fw-bold">Tribute Title</label>
+                                            <input type="text" class="form-control" placeholder="e.g., A Loving Father and Mentor">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label small fw-bold">Tribute Content</label>
+                                            <textarea class="form-control" rows="4" placeholder="Write the tribute message here..."></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-warning fw-bold text-dark px-4 rounded-pill">Publish Tribute</button>
+                                    </form>
+                                </div>
+
+                                <!-- Tab 5: Timeline Events Tab -->
+                                <!-- <div class="tab-pane fade" id="tab-timeline" role="tabpanel">
+                                    <h6 class="fw-bold text-brown mb-3 border-bottom pb-2"><i class="bi bi-clock-history me-2 text-info"></i> Manage Timeline Events</h6>
+                                    <p class="text-muted small">Highlight key milestones throughout their life journey (e.g., Birth, Graduation, Marriage).</p>
+                                    <button type="button" class="btn btn-outline-dark btn-sm mb-3">+ Add New Milestone</button>
+                                </div> -->
+<!-- Tab 4: Timeline Events Management Tab -->
+<div class="tab-pane fade" id="tab-timeline" role="tabpanel">
+    <form id="timelineForm">
+        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+            <h6 class="fw-bold text-brown m-0"><i class="bi bi-clock-history me-2 text-info"></i> Manage Timeline Events</h6>
+            <!-- Add New Milestone Button -->
+            <button type="button" class="btn btn-sm btn-outline-dark fw-bold" id="addTimelineBtn">
+                <i class="bi bi-plus-circle me-1 text-primary"></i> Add New Milestone
+            </button>
+        </div>
+        <p class="text-muted small">Highlight key milestones throughout their life journey (e.g., Birth, Graduation, Marriage) with custom icons and images.</p>
+
+        <!-- Dynamic Container for Timeline Forms -->
+        <div id="timelineContainer">
+            
+            <!-- Default Initial Timeline Form Card -->
+            <div class="card border-0 shadow-sm bg-light p-3 mb-3 timeline-item">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="badge bg-secondary">Milestone #1</span>
+                    <button type="button" class="btn btn-sm text-danger delete-timeline-btn" title="Delete Milestone">
+                        <i class="bi bi-trash fs-6"></i>
+                    </button>
+                </div>
+                
+                <div class="row">
+                    <!-- Event Title -->
+                    <div class="col-md-7 mb-3">
+                        <label class="form-label small fw-bold">Milestone Title</label>
+                        <input type="text" class="form-control" placeholder="e.g., Graduated from high school" required>
+                    </div>
+
+                    <!-- Icon Selector with Live Preview -->
+              
+                  <!-- <div class="col-md-5 mb-3">
+                        <label class="form-label small fw-bold">Event Icon</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-star icon-preview fs-4"></i>
+                            <select class="form-select" onchange="this.previousElementSibling.className = 'bi ' + this.value + ' icon-preview fs-4'">
+                                <option value="bi-star" selected>Star / General</option>
+                                <option value="bi-balloon-heart">Birth / Baby</option>
+                                <option value="bi-mortarboard">Education / Graduation</option>
+                                <option value="bi-briefcase">Career / Work</option>
+                                <option value="bi-people">Meeting / People</option>
+                                <option value="bi-heart">Marriage / Love</option>
+                                <option value="bi-house">Moved / Home</option>
+                                <option value="bi-tree">Retired / Life</option>
+                                <option value="bi-flag">Passed away</option>
+                            </select>
+                        </div>
+                    </div> -->
+ 
+ <div class="col-md-5 mb-3">
+    <label class="form-label small fw-bold">Event Icon</label>
+    
+    <!-- Custom Dropdown Container -->
+    <div class="dropdown custom-icon-dropdown">
+        <!-- Dropdown Toggle Button -->
+        <button class="btn btn-light border w-100 d-flex align-items-center justify-content-between dropdown-toggle bg-white py-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="d-flex align-items-center gap-2 selected-option-text">
+                <i class="bi bi-star icon-preview fs-5"></i> Star / General
+            </span>
+        </button>
+        
+        <!-- Hidden input to store selected value for form submission -->
+        <input type="hidden" name="event_icon" class="icon-hidden-input" value="bi-star">
+
+        <!-- Dropdown Menu with Icons -->
+        <ul class="dropdown-menu w-100 shadow-sm py-1">
+            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-star"><i class="bi bi-star fs-5"></i> Star / General</a></li>
+            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-balloon-heart fs-5"><i class="bi bi-balloon-heart"></i> Birth / Baby</a></li>
+            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-mortarboard"><i class="bi bi-mortarboard fs-5"></i> Education/Graduation</a></li>
+            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-briefcase"><i class="bi bi-briefcase fs-5"></i> Career / Work</a></li>
+            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-people"><i class="bi bi-people fs-5"></i> Meeting / People</a></li>
+            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-heart"><i class="bi bi-heart fs-5"></i> Marriage / Love</a></li>
+            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-house"><i class="bi bi-house fs-5"></i> Moved / Home</a></li>
+            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-tree"><i class="bi bi-tree fs-5"></i> Retired / Life</a></li>
+            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-flag"><i class="bi bi-flag fs-5"></i> Passed away</a></li>
+        </ul>
+    </div>
+</div>
+ 
+                </div>
+
+                <div class="row">
+                    <!-- Year / Date -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label small fw-bold">Year / Date</label>
+                        <input type="text" class="form-control" placeholder="e.g., 1961 or December 12th, 1944">
+                    </div>
+
+                    <!-- Location / Address -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label small fw-bold">Location / Address</label>
+                        <input type="text" class="form-control" placeholder="e.g., Central High School, City Campus">
+                    </div>
+                </div>
+
+                <!-- Short Description -->
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Short Description / Details</label>
+                    <textarea class="form-control" rows="2" placeholder="Write a short note about this milestone..."></textarea>
+                </div>
+
+                <!-- Image Upload -->
+                <div class="mb-2">
+                    <label class="form-label small fw-bold">Upload Event Image (Optional)</label>
+                    <input type="file" class="form-control" accept="image/*">
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- Privacy Checkbox / Toggle Switch -->
+<div class="form-check form-switch mb-3 p-2 bg-white rounded border d-flex align-items-center justify-content-between px-3">
+    <div>
+        <label class="form-check-label small fw-bold text-dark mb-0" for="privacySwitch1">
+            <i class="bi bi-lock-fill me-1 text-warning"></i> Make this Timeline Private
+        </label>
+        <div class="text-muted" style="font-size: 0.75rem;">If private, this event will only be visible to only you.</div>
+    </div>
+    <input class="form-check-input fs-5 m-0" type="checkbox" role="switch" id="privacySwitch1" name="is_private" value="1">
+</div>
+
+        <!-- Save Timeline Button -->
+        <div class="mt-4 pt-3 border-top">
+            <button type="submit" class="btn btn-warning fw-bold text-dark px-4 rounded-pill">
+                <i class="bi bi-check2-circle me-1"></i> Save Timeline Events
+            </button>
+        </div>
+    </form>
+</div>
+                                <!-- Tab 6: Upcoming Events Tab -->
+                                <!-- <div class="tab-pane fade" id="tab-events" role="tabpanel">
+                                    <h6 class="fw-bold text-brown mb-3 border-bottom pb-2"><i class="bi bi-calendar-event me-2" style="color: #6f42c1;"></i> Add Upcoming Events</h6>
+                                    <p class="text-muted small">Schedule events like memorial services, annual remembrances, or gatherings.</p>
+                                    <form>
+                                        <div class="mb-3">
+                                            <label class="form-label small fw-bold">Event Name</label>
+                                            <input type="text" class="form-control" placeholder="e.g., 7th Day Alms / Memorial Service">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label small fw-bold">Date & Time</label>
+                                            <input type="datetime-local" class="form-control">
+                                        </div>
+                                        <button type="submit" class="btn btn-warning fw-bold text-dark px-4 rounded-pill">Save Event</button>
+                                    </form>
+                                </div> -->
+
+
+
+
+<div class="tab-pane fade" id="tab-events" role="tabpanel">
+    <form id="eventForm">
+        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+            <h6 class="fw-bold text-brown m-0"><i class="bi bi-calendar-event me-2" style="color: #6f42c1;"></i> Manage & Schedule Events</h6>
+            <button type="button" class="btn btn-sm btn-outline-dark fw-bold" id="addEventCardBtn">
+                <i class="bi bi-plus-circle me-1 text-primary"></i> Add Another Event
+            </button>
+        </div>
+        <p class="text-muted small">Schedule memorial services, annual remembrances, or live-streamed gatherings with venue maps and streaming links.</p>
+
+        <div id="eventsContainer">
+            <!-- Event Form Card #1 -->
+            <div class="card border-0 shadow-sm bg-light p-3 mb-3 event-card-item">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="badge bg-secondary">Event #1</span>
+                    <button type="button" class="btn btn-sm text-danger delete-event-btn" title="Delete Event">
+                        <i class="bi bi-trash fs-6"></i>
+                    </button>
+                </div>
+
+                <div class="row g-2">
+                    <div class="col-md-7 mb-2">
+                        <label class="form-label small fw-bold">Event Name</label>
+                        <input type="text" class="form-control" placeholder="e.g., Annual Memorial Alms Giving" required>
+                    </div>
+
+                    <div class="col-md-5 mb-2">
+                        <label class="form-label small fw-bold">Event Type Status</label>
+                        <div class="dropdown custom-event-type-dropdown">
+                            <button class="btn btn-light border w-100 d-flex align-items-center justify-content-between dropdown-toggle bg-white py-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="d-flex align-items-center gap-2 selected-type-text text-truncate">
+                                    <i class="bi bi-hourglass-split text-warning"></i> Upcoming Event
+                                </span>
+                            </button>
+                            <input type="hidden" name="event_type" class="event-type-hidden-input" value="upcoming">
+                            <ul class="dropdown-menu w-100 shadow-sm py-1">
+                                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="upcoming"><i class="bi bi-hourglass-split text-warning"></i> Upcoming Event</a></li>
+                                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="live"><i class="bi bi-broadcast text-danger"></i> Live Event (Streaming)</a></li>
+                                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="past"><i class="bi bi-check-circle text-success"></i> Past Event</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 1: Start Date & End Date -->
+                <div class="row g-2">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label small fw-bold">Start Date</label>
+                        <input type="date" class="form-control" name="start_date" required>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label small fw-bold">End Date</label>
+                        <input type="date" class="form-control" name="end_date">
+                    </div>
+                </div>
+
+                <!-- Row 2: Start Time & End Time -->
+                <div class="row g-2">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label small fw-bold">Start Time</label>
+                        <input type="time" class="form-control" name="start_time" required>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label small fw-bold">End Time</label>
+                        <input type="time" class="form-control" name="end_time">
+                    </div>
+                </div>
+
+                <div class="row g-2">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label small fw-bold">Venue Location</label>
+                        <input type="text" class="form-control" placeholder="e.g., Memorial Hall">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label small fw-bold">Google Map Embed Link</label>
+                        <input type="text" class="form-control" placeholder="Paste embed link">
+                    </div>
+                </div>
+
+                <div class="mb-2 live-stream-section">
+                    <label class="form-label small fw-bold"><i class="bi bi-camera-video text-danger"></i> Live Broadcast URL</label>
+                    <input type="url" class="form-control" placeholder="https://youtube.com/embed/...">
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label small fw-bold">Event Description</label>
+                    <textarea class="form-control" rows="2" placeholder="Write details..."></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Featured Event Image</label>
+                    <input type="file" class="form-control event-image-input" accept="image/*">
+                    <div class="event-img-preview-container mt-2 position-relative d-none" style="width: 150px;">
+                        <img src="" class="img-thumbnail object-fit-cover w-100" style="height: 100px;" alt="Preview">
+                        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle remove-event-img-btn">
+                            <i class="bi bi-x"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row g-2">
+                    <div class="col-12 col-md-6 mb-2">
+                        <div class="form-check p-2 bg-white rounded border d-flex align-items-center justify-content-between px-3 h-100">
+                            <label class="form-check-label small fw-bold text-dark"><i class="bi bi-heart-fill text-danger me-1"></i> Allow Donations</label>
+                            <input class="form-check-input fs-5 m-0" type="checkbox" name="allow_donation" value="1">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 mb-2">
+                        <div class="form-check form-switch p-2 bg-white rounded border d-flex align-items-center justify-content-between px-3 h-100">
+                            <label class="form-check-label small fw-bold text-dark"><i class="bi bi-lock-fill text-warning me-1"></i> Make Event Private</label>
+                            <input class="form-check-input fs-5 m-0" type="checkbox" role="switch" name="is_private" value="1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-top">
+            <button type="submit" class="btn btn-warning fw-bold text-dark px-4 rounded-pill">
+                <i class="bi bi-check2-circle me-1"></i> Save All Events
+            </button>
+        </div>
+    </form>
+</div>
+                               <!-- Tab 7: Donations Tab -->
+    <div class="tab-pane fade" id="tab-donations" role="tabpanel">
+        <h6 class="fw-bold text-brown mb-3 border-bottom pb-2"><i class="bi bi-gift-fill me-2 text-warning"></i> Configure Donations</h6>
+        <p class="text-muted small">Set up charity preferences or memorial fund details for contributions.</p>
+        
+        <form class="mb-4">
+            <div class="mb-3">
+                <label class="form-label small fw-bold">Charity / Organization Name</label>
+                <input type="text" class="form-control" placeholder="e.g., Cancer Treatment Fund">
+            </div>
+            <button type="submit" class="btn btn-warning fw-bold text-dark px-4 rounded-pill">Save Donation Settings</button>
+        </form>
+
+        <!-- Honored Contributors Section Matching the Image Style -->
+        <div class="mt-5 p-4 rounded-4 shadow-sm" style="background-color: #fcf8f2;">
+            
+            <!-- Header & Total Badge -->
+            <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="rounded-circle bg-warning bg-opacity-20 p-2 text-warning d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                        <i class="bi bi-heart-fill fs-5"></i>
+                    </div>
+                    <div>
+                        <h6 class="m-0 fw-bold text-dark">Honored Contributors</h6>
+                        <small class="text-muted" style="font-size: 0.75rem;">පූජ්‍යදායකයින්ගේ නාම ලේඛනය</small>
+                    </div>
+                </div>
+                <span class="badge text-white px-3 py-2 fw-bold shadow-sm" style="background-color: #5c3a21;">10 Donors</span>
+            </div>
+
+            <!-- Table Header Labels (Hidden on extra small screens for responsiveness) -->
+            <div class="row text-muted fw-bold px-3 py-2 small d-none d-md-flex" style="font-size: 0.8rem;">
+                <div class="col-md-3">CONTRIBUTOR NAME</div>
+                <div class="col-md-2">AMOUNT</div>
+                <div class="col-md-2">DATE</div>
+                <div class="col-md-5">BLESSING MESSAGE</div>
+            </div>
+
+            <!-- Donors Card List -->
+            <div class="d-flex flex-column gap-3 mt-2">
+                
+                <!-- Donor Card 1 -->
+                <div class="bg-white p-3 rounded-3 shadow-sm border">
+                    <div class="row align-items-center g-2">
+                        <div class="col-md-3 col-12 d-flex align-items-center gap-2">
+                            <span class="rounded-circle text-white d-flex align-items-center justify-content-center fw-bold small flex-shrink-0" style="width: 35px; height: 35px; background-color: #5c3a21; font-size: 0.8rem;">JR</span>
+                            <span class="fw-bold text-dark small text-truncate">James Reynolds</span>
+                        </div>
+                        <div class="col-md-2 col-6">
+                            <span class="d-md-none text-muted small fw-bold me-1">Amount:</span>
+                            <span class="badge bg-success bg-opacity-10 text-success fw-bold px-2 py-1">$200.00</span>
+                        </div>
+                        <div class="col-md-2 col-6 text-md-start text-end">
+                            <span class="d-md-none text-muted small fw-bold me-1">Date:</span>
+                            <span class="text-muted small">Aug 10, 2026</span>
+                        </div>
+                        <div class="col-md-5 col-12 text-muted fst-italic small mt-2 mt-md-0">
+                            "May his soul rest in eternal peace."
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Donor Card 2 -->
+                <div class="bg-white p-3 rounded-3 shadow-sm border">
+                    <div class="row align-items-center g-2">
+                        <div class="col-md-3 col-12 d-flex align-items-center gap-2">
+                            <span class="rounded-circle text-white d-flex align-items-center justify-content-center fw-bold small flex-shrink-0" style="width: 35px; height: 35px; background-color: #5c3a21; font-size: 0.8rem;">AG</span>
+                            <span class="fw-bold text-dark small text-truncate">Adam Green</span>
+                        </div>
+                        <div class="col-md-2 col-6">
+                            <span class="d-md-none text-muted small fw-bold me-1">Amount:</span>
+                            <span class="badge bg-success bg-opacity-10 text-success fw-bold px-2 py-1">$150.00</span>
+                        </div>
+                        <div class="col-md-2 col-6 text-md-start text-end">
+                            <span class="d-md-none text-muted small fw-bold me-1">Date:</span>
+                            <span class="text-muted small">Aug 08, 2026</span>
+                        </div>
+                        <div class="col-md-5 col-12 text-muted fst-italic small mt-2 mt-md-0">
+                            "In memory of a great human being."
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Donor Card 3 -->
+                <div class="bg-white p-3 rounded-3 shadow-sm border">
+                    <div class="row align-items-center g-2">
+                        <div class="col-md-3 col-12 d-flex align-items-center gap-2">
+                            <span class="rounded-circle text-white d-flex align-items-center justify-content-center fw-bold small flex-shrink-0" style="width: 35px; height: 35px; background-color: #5c3a21; font-size: 0.8rem;">DL</span>
+                            <span class="fw-bold text-dark small text-truncate">Darlene Leonardo</span>
+                        </div>
+                        <div class="col-md-2 col-6">
+                            <span class="d-md-none text-muted small fw-bold me-1">Amount:</span>
+                            <span class="badge bg-success bg-opacity-10 text-success fw-bold px-2 py-1">$300.00</span>
+                        </div>
+                        <div class="col-md-2 col-6 text-md-start text-end">
+                            <span class="d-md-none text-muted small fw-bold me-1">Date:</span>
+                            <span class="text-muted small">Jul 28, 2026</span>
+                        </div>
+                        <div class="col-md-5 col-12 text-muted fst-italic small mt-2 mt-md-0">
+                            "Deepest sympathies to the family."
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Donor Card 4 -->
+                <div class="bg-white p-3 rounded-3 shadow-sm border">
+                    <div class="row align-items-center g-2">
+                        <div class="col-md-3 col-12 d-flex align-items-center gap-2">
+                            <span class="rounded-circle text-white d-flex align-items-center justify-content-center fw-bold small flex-shrink-0" style="width: 35px; height: 35px; background-color: #5c3a21; font-size: 0.8rem;">PF</span>
+                            <span class="fw-bold text-dark small text-truncate">Perera Family</span>
+                        </div>
+                        <div class="col-md-2 col-6">
+                            <span class="d-md-none text-muted small fw-bold me-1">Amount:</span>
+                            <span class="badge bg-success bg-opacity-10 text-success fw-bold px-2 py-1">$500.00</span>
+                        </div>
+                        <div class="col-md-2 col-6 text-md-start text-end">
+                            <span class="d-md-none text-muted small fw-bold me-1">Date:</span>
+                            <span class="text-muted small">Jul 15, 2026</span>
+                        </div>
+                        <div class="col-md-5 col-12 text-muted fst-italic small mt-2 mt-md-0">
+                            "නිවන් සුව ලැබේවා!"
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Donor Card 5 -->
+                <div class="bg-white p-3 rounded-3 shadow-sm border">
+                    <div class="row align-items-center g-2">
+                        <div class="col-md-3 col-12 d-flex align-items-center gap-2">
+                            <span class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center small flex-shrink-0" style="width: 35px; height: 35px;"><i class="bi bi-person"></i></span>
+                            <span class="fw-bold text-dark small text-truncate">Anonymous Donor</span>
+                        </div>
+                        <div class="col-md-2 col-6">
+                            <span class="d-md-none text-muted small fw-bold me-1">Amount:</span>
+                            <span class="badge bg-success bg-opacity-10 text-success fw-bold px-2 py-1">$100.00</span>
+                        </div>
+                        <div class="col-md-2 col-6 text-md-start text-end">
+                            <span class="d-md-none text-muted small fw-bold me-1">Date:</span>
+                            <span class="text-muted small">Jul 02, 2026</span>
+                        </div>
+                        <div class="col-md-5 col-12 text-muted small mt-2 mt-md-0">
+                            -
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Pagination Bar -->
+            <nav aria-label="Donors Pagination" class="mt-4">
+                <ul class="pagination pagination-sm justify-content-center m-0">
+                    <li class="page-item disabled">
+                        <a class="page-link text-muted" href="#" tabindex="-1" aria-disabled="true">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item active"><a class="page-link bg-dark border-dark text-white" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link text-dark" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link text-dark" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link text-dark" href="#">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Side: Profile Picture & Interactive Navigation Tabs -->
+                    <div class="col-lg-4">
+                        <!-- <div class="sidebar-card p-4 shadow-sm bg-white mb-4 text-center">
+                            <h6 class="fw-bold text-brown mb-3 font-serif">Profile Picture</h6>
+                            <div class="mb-3">
+                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120" class="rounded-circle border border-3 border-warning shadow-sm" width="90" height="90" alt="Profile">
+                            </div>
+                            <input type="file" class="form-control form-control-sm mb-2">
+                            <small class="text-muted" style="font-size: 0.75rem;">Upload main portrait photo for the memorial page header.</small>
+                        </div> -->
+
+                        <!-- Navigation Action Buttons wired up as Tab Triggers -->
+                        <div class="sidebar-card p-4 shadow-sm bg-white">
+                            <h6 class="fw-bold text-brown mb-3 font-serif">Add & Edit Page Sections</h6>
+                            <p class="text-muted small mb-3">Click any section below to manage public page contents:</p>
+                            
+                            <div class="list-group list-group-flush gap-2" id="memorialTabs" role="tablist">
+                                <a href="#tab-basic" data-bs-toggle="tab" role="tab" class="btn-outline-dark-custom btn-sm text-start text-decoration-none d-flex justify-content-between align-items-center p-2 rounded">
+                                    <span><i class="bi bi-info-circle me-2 text-secondary"></i> Basic Information</span>
+                                    <i class="bi bi-chevron-right text-primary"></i>
+                                </a>
+                                <a href="#tab-lifestory" data-bs-toggle="tab" role="tab" class="btn-outline-dark-custom btn-sm text-start text-decoration-none d-flex justify-content-between align-items-center p-2 rounded">
+                                    <span><i class="bi bi-heart-fill me-2 text-danger"></i> Edit Life Story Tab</span>
+                                    <i class="bi bi-plus-circle text-primary"></i>
+                                </a>
+                                <a href="#tab-gallery" data-bs-toggle="tab" role="tab" class="btn-outline-dark-custom btn-sm text-start text-decoration-none d-flex justify-content-between align-items-center p-2 rounded">
+                                    <span><i class="bi bi-images me-2 text-warning"></i> Add Gallery Photos</span>
+                                    <i class="bi bi-plus-circle text-primary"></i>
+                                </a>
+                                <a href="#tab-stories" data-bs-toggle="tab" role="tab" class="btn-outline-dark-custom btn-sm text-start text-decoration-none d-flex justify-content-between align-items-center p-2 rounded">
+                                    <span><i class="bi bi-journal-richtext me-2 text-success"></i> Add Stories & Tributes</span>
+                                    <i class="bi bi-plus-circle text-primary"></i>
+                                </a>
+                                <a href="#tab-timeline" data-bs-toggle="tab" role="tab" class="btn-outline-dark-custom btn-sm text-start text-decoration-none d-flex justify-content-between align-items-center p-2 rounded">
+                                    <span><i class="bi bi-clock-history me-2 text-info"></i> Manage Timeline Events</span>
+                                    <i class="bi bi-plus-circle text-primary"></i>
+                                </a>
+                                <a href="#tab-events" data-bs-toggle="tab" role="tab" class="btn-outline-dark-custom btn-sm text-start text-decoration-none d-flex justify-content-between align-items-center p-2 rounded">
+                                    <span><i class="bi bi-calendar-event me-2" style="color: #6f42c1;"></i> Add Upcoming Events</span>
+                                    <i class="bi bi-plus-circle text-primary"></i>
+                                </a>
+                                <a href="#tab-donations" data-bs-toggle="tab" role="tab" class="btn-outline-dark-custom btn-sm text-start text-decoration-none d-flex justify-content-between align-items-center p-2 rounded">
+                                    <span><i class="bi bi-gift-fill me-2 text-warning"></i> Configure Donations</span>
+                                    <i class="bi bi-plus-circle text-primary"></i>
+                                </a>
+                            </div>
+                        </div>
+                          <div class="sidebar-card p-4 shadow-sm bg-white mb-4 text-center">
+                            <h6 class="fw-bold text-brown mb-3 font-serif">Profile Picture</h6>
+                            <div class="mb-3">
+                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120" class="rounded-circle border border-3 border-warning shadow-sm" width="90" height="90" alt="Profile">
+                            </div>
+                            <input type="file" class="form-control form-control-sm mb-2">
+                            <small class="text-muted" style="font-size: 0.75rem;">Upload main portrait photo for the memorial page header.</small>
+                        </div> 
+                        
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS and Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        if(sidebarToggle) {
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('show');
+                sidebarOverlay.classList.toggle('show');
+            });
+        }
+
+        if(sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', () => {
+                sidebar.classList.remove('show');
+                sidebarOverlay.classList.remove('show');
+            });
+        }
+
+        // Force initialize default active tab securely
+        document.addEventListener('DOMContentLoaded', function () {
+            const defaultTabEl = document.querySelector('#memorialTabs a[href="#tab-basic"]');
+            if (defaultTabEl) {
+                const tab = new bootstrap.Tab(defaultTabEl);
+                tab.show();
+            }
+        });
+    </script>
+
+    <!--script for lifestory -->
+
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addStoryBtn = document.getElementById('addStoryBtn');
+        const container = document.getElementById('lifeStoryContainer');
+
+        // 1. Add new story form when plus button is clicked
+        if (addStoryBtn) {
+            addStoryBtn.addEventListener('click', function() {
+                const storyCount = container.querySelectorAll('.story-item').length + 1;
+                
+                const newFormHTML = `
+                    <div class="card border-0 shadow-sm bg-light p-3 mb-3 story-item">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-secondary">Story #${storyCount}</span>
+                            <button type="button" class="btn btn-sm text-danger delete-story-btn" title="Delete Form">
+                                <i class="bi bi-trash fs-6"></i>
+                            </button>
+                        </div>
+                        <form>
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Story Type</label>
+                                <input type="text" class="form-control" placeholder="Enter story type (e.g., Career)">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Story Title</label>
+                                <input type="text" class="form-control" placeholder="Enter story title">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Story / Biography Content</label>
+                                <textarea class="form-control" rows="4" placeholder="Write story details here..."></textarea>
+                            </div>
+                        </form>
+                    </div>
+                `;
+                
+                container.insertAdjacentHTML('beforeend', newFormHTML);
+            });
+        }
+
+        // 2. Remove form when trash/delete icon is clicked
+        document.addEventListener('click', function(event) {
+            const deleteBtn = event.target.closest('.delete-story-btn');
+            if (deleteBtn) {
+                const storyItem = deleteBtn.closest('.story-item');
+                // Ensure at least one form remains if desired, or let it delete all
+                const totalItems = container.querySelectorAll('.story-item').length;
+                if (totalItems > 1) {
+                    storyItem.remove();
+                } else {
+                    alert("You must keep at least one story section.");
+                }
+            }
+        });
+    });
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Handle Photo Upload & Preview
+        const photoInput = document.getElementById('photoUploadInput');
+        const photoContainer = document.getElementById('photoGridContainer');
+        if(photoInput) {
+            photoInput.addEventListener('change', function(e) {
+                const files = e.target.files;
+                for (let file of files) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const html = `
+                            <div class="col-md-4 col-sm-6 media-card-item">
+                                <div class="card border-0 shadow-sm position-relative overflow-hidden h-100">
+                                    <span class="badge bg-danger position-absolute top-0 start-0 m-2">NEW</span>
+                                    <button type="button" class="btn btn-sm btn-light text-danger position-absolute top-0 end-0 m-2 rounded-circle delete-media-btn" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                    <img src="${event.target.result}" class="card-img-top object-fit-cover" style="height: 180px;" alt="Uploaded Photo">
+                                </div>
+                            </div>
+                        `;
+                        photoContainer.insertAdjacentHTML('beforeend', html);
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // 2. Handle Movie Upload & Preview
+        const movieInput = document.getElementById('movieUploadInput');
+        const movieContainer = document.getElementById('movieGridContainer');
+        if(movieInput) {
+            movieInput.addEventListener('change', function(e) {
+                const files = e.target.files;
+                for (let file of files) {
+                    const videoURL = URL.createObjectURL(file);
+                    const html = `
+                        <div class="col-md-6 media-card-item">
+                            <div class="card border-0 shadow-sm p-2 position-relative bg-light">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="badge bg-danger">NEW VIDEO</span>
+                                    <button type="button" class="btn btn-sm text-danger delete-media-btn"><i class="bi bi-trash"></i></button>
+                                </div>
+                                <video class="w-100 rounded" controls style="height: 150px; background: #000;">
+                                    <source src="${videoURL}" type="${file.type}">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                        </div>
+                    `;
+                    movieContainer.insertAdjacentHTML('beforeend', html);
+                }
+            });
+        }
+
+        // 3. Handle Audio Upload & Preview
+        const audioInput = document.getElementById('audioUploadInput');
+        const audioContainer = document.getElementById('audioGridContainer');
+        if(audioInput) {
+            audioInput.addEventListener('change', function(e) {
+                const files = e.target.files;
+                for (let file of files) {
+                    const audioURL = URL.createObjectURL(file);
+                    const html = `
+                        <div class="col-md-6 media-card-item">
+                            <div class="card border-0 shadow-sm p-3 position-relative bg-light">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="badge bg-danger">NEW AUDIO</span>
+                                    <button type="button" class="btn btn-sm text-danger delete-media-btn"><i class="bi bi-trash"></i></button>
+                                </div>
+                                <audio class="w-100" controls>
+                                    <source src="${audioURL}" type="${file.type}">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </div>
+                        </div>
+                    `;
+                    audioContainer.insertAdjacentHTML('beforeend', html);
+                }
+            });
+        }
+
+        // 4. Global Delete Handler for Media items
+        document.addEventListener('click', function(event) {
+            const deleteBtn = event.target.closest('.delete-media-btn');
+            if(deleteBtn) {
+                const cardItem = deleteBtn.closest('.media-card-item');
+                if(cardItem) {
+                    cardItem.remove();
+                }
+            }
+        });
+    });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addTimelineBtn = document.getElementById('addTimelineBtn');
+    const timelineContainer = document.getElementById('timelineContainer');
+
+    if(addTimelineBtn && timelineContainer) {
+        addTimelineBtn.addEventListener('click', function() {
+            // Milestone count eka ganna
+            const count = timelineContainer.querySelectorAll('.timeline-item').length + 1;
+            
+            const timelineCardHTML = `
+                <div class="card border-0 shadow-sm bg-light p-3 mb-3 timeline-item">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-secondary">Milestone #${count}</span>
+                        <button type="button" class="btn btn-sm text-danger delete-timeline-btn" title="Delete Milestone">
+                            <i class="bi bi-trash fs-6"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-7 mb-3">
+                            <label class="form-label small fw-bold">Milestone Title</label>
+                            <input type="text" class="form-control" placeholder="e.g., Graduated from high school" required>
+                        </div>
+
+                        <div class="col-md-5 mb-3">
+                            <label class="form-label small fw-bold">Event Icon</label>
+                            <div class="dropdown custom-icon-dropdown">
+                                <button class="btn btn-light border w-100 d-flex align-items-center justify-content-between dropdown-toggle bg-white py-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="d-flex align-items-center gap-2 selected-option-text">
+                                        <i class="bi bi-star icon-preview fs-5"></i> Star / General
+                                    </span>
+                                </button>
+                                <input type="hidden" name="event_icon" class="icon-hidden-input" value="bi-star">
+                                <ul class="dropdown-menu w-100 shadow-sm py-1">
+                                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-star"><i class="bi bi-star fs-5"></i> Star / General</a></li>
+                                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-balloon-heart"><i class="bi bi-balloon-heart fs-5"></i> Birth / Baby</a></li>
+                                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-mortarboard"><i class="bi bi-mortarboard fs-5"></i> Education/Graduation</a></li>
+                                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-briefcase"><i class="bi bi-briefcase fs-5"></i> Career / Work</a></li>
+                                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-people"><i class="bi bi-people fs-5"></i> Meeting / People</a></li>
+                                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-heart"><i class="bi bi-heart fs-5"></i> Marriage / Love</a></li>
+                                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-house"><i class="bi bi-house fs-5"></i> Moved / Home</a></li>
+                                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-tree"><i class="bi bi-tree fs-5"></i> Retired / Life</a></li>
+                                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-flag"><i class="bi bi-flag fs-5"></i> Passed away</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold">Year / Date</label>
+                            <input type="text" class="form-control" placeholder="e.g., 1961 or December 12th, 1944">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold">Location / Address</label>
+                            <input type="text" class="form-control" placeholder="e.g., Central High School, City Campus">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Short Description / Details</label>
+                        <textarea class="form-control" rows="2" placeholder="Write a short note about this milestone..."></textarea>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label small fw-bold">Upload Event Image (Optional)</label>
+                        <input type="file" class="form-control" accept="image/*">
+                    </div>
+                </div>
+            `;
+            timelineContainer.insertAdjacentHTML('beforeend', timelineCardHTML);
+        });
+    }
+
+    // Custom Icon Dropdown Selection Handler (Delegated for dynamic items too)
+    document.addEventListener('click', function(e) {
+        // Dropdown selection logic
+        const dropdownItem = e.target.closest('.custom-icon-dropdown .dropdown-item');
+        if (dropdownItem) {
+            e.preventDefault();
+            const dropdownContainer = dropdownItem.closest('.custom-icon-dropdown');
+            const toggleButton = dropdownContainer.querySelector('.dropdown-toggle');
+            const hiddenInput = dropdownContainer.querySelector('.icon-hidden-input');
+            
+            const iconHtml = dropdownItem.innerHTML;
+            const value = dropdownItem.getAttribute('data-value');
+            
+            toggleButton.innerHTML = `<span class="d-flex align-items-center gap-2 selected-option-text">${iconHtml}</span>`;
+            hiddenInput.value = value;
+            return;
+        }
+
+        // Delete Button Click Event
+        const deleteBtn = e.target.closest('.delete-timeline-btn');
+        if(deleteBtn) {
+            const timelineItem = deleteBtn.closest('.timeline-item');
+            if(timelineItem) {
+                timelineItem.remove();
+            }
+        }
+    });
+});
+</script>
+
+
+
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const addEventCardBtn = document.getElementById('addEventCardBtn');
+    const eventsContainer = document.getElementById('eventsContainer');
+
+    // Add New Event Card
+    if(addEventCardBtn && eventsContainer) {
+        addEventCardBtn.addEventListener('click', function() {
+            const count = eventsContainer.querySelectorAll('.event-card-item').length + 1;
+            
+            const eventCardHTML = `
+            <div class="card border-0 shadow-sm bg-light p-3 mb-3 event-card-item">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="badge bg-secondary">Event #${count}</span>
+                    <button type="button" class="btn btn-sm text-danger delete-event-btn" title="Delete Event">
+                        <i class="bi bi-trash fs-6"></i>
+                    </button>
+                </div>
+
+                <div class="row g-2">
+                    <div class="col-md-7 mb-2">
+                        <label class="form-label small fw-bold">Event Name</label>
+                        <input type="text" class="form-control" placeholder="e.g., Annual Memorial Alms Giving" required>
+                    </div>
+
+                    <div class="col-md-5 mb-2">
+                        <label class="form-label small fw-bold">Event Type Status</label>
+                        <div class="dropdown custom-event-type-dropdown">
+                            <button class="btn btn-light border w-100 d-flex align-items-center justify-content-between dropdown-toggle bg-white py-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="d-flex align-items-center gap-2 selected-type-text text-truncate">
+                                    <i class="bi bi-hourglass-split text-warning"></i> Upcoming Event
+                                </span>
+                            </button>
+                            <input type="hidden" name="event_type" class="event-type-hidden-input" value="upcoming">
+                            <ul class="dropdown-menu w-100 shadow-sm py-1">
+                                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="upcoming"><i class="bi bi-hourglass-split text-warning"></i> Upcoming Event</a></li>
+                                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="live"><i class="bi bi-broadcast text-danger"></i> Live Event (Streaming)</a></li>
+                                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="past"><i class="bi bi-check-circle text-success"></i> Past Event</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+<div class="row g-2">
+    <div class="col-md-6 mb-2">
+        <label class="form-label small fw-bold">Start Date</label>
+        <input type="date" class="form-control" name="start_date" required>
+    </div>
+    <div class="col-md-6 mb-2">
+        <label class="form-label small fw-bold">End Date</label>
+        <input type="date" class="form-control" name="end_date">
+    </div>
+</div>
+
+<div class="row g-2">
+    <div class="col-md-6 mb-2">
+        <label class="form-label small fw-bold">Start Time</label>
+        <input type="time" class="form-control" name="start_time" required>
+    </div>
+    <div class="col-md-6 mb-2">
+        <label class="form-label small fw-bold">End Time</label>
+        <input type="time" class="form-control" name="end_time">
+    </div>
+</div>
+
+                <div class="row g-2">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label small fw-bold">Venue Location / Address</label>
+                        <input type="text" class="form-control" placeholder="e.g., Memorial Hall, Dream Lake">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label small fw-bold">Google Map Embed Link</label>
+                        <input type="text" class="form-control" placeholder="Paste Google Maps embed link">
+                    </div>
+                </div>
+
+                <div class="mb-2 live-stream-section">
+                    <label class="form-label small fw-bold"><i class="bi bi-camera-video text-danger"></i> Live Broadcast / Watch Stream URL</label>
+                    <input type="url" class="form-control" placeholder="https://youtube.com/embed/...">
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label small fw-bold">Event Description & Instructions</label>
+                    <textarea class="form-control" rows="2" placeholder="Write details about the program..."></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Featured Event Image</label>
+                    <input type="file" class="form-control event-image-input" accept="image/*">
+                    <div class="event-img-preview-container mt-2 position-relative d-none" style="width: 150px;">
+                        <img src="" class="img-thumbnail object-fit-cover w-100" style="height: 100px;" alt="Preview">
+                        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle remove-event-img-btn">
+                            <i class="bi bi-x"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row g-2">
+                    <div class="col-12 col-md-6 mb-2">
+                        <div class="form-check p-2 bg-white rounded border d-flex align-items-center justify-content-between px-3 h-100">
+                            <div>
+                                <label class="form-check-label small fw-bold text-dark mb-0"><i class="bi bi-heart-fill text-danger me-1"></i> Allow Donations</label>
+                            </div>
+                            <input class="form-check-input fs-5 m-0" type="checkbox" name="allow_donation" value="1">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 mb-2">
+                        <div class="form-check form-switch p-2 bg-white rounded border d-flex align-items-center justify-content-between px-3 h-100">
+                            <div>
+                                <label class="form-check-label small fw-bold text-dark mb-0"><i class="bi bi-lock-fill text-warning me-1"></i> Make Event Private</label>
+                            </div>
+                            <input class="form-check-input fs-5 m-0" type="checkbox" role="switch" name="is_private" value="1">
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+            eventsContainer.insertAdjacentHTML('beforeend', eventCardHTML);
+        });
+    }
+
+    // Event Delegation for all dynamic elements
+    document.addEventListener('click', function(e) {
+        // Dropdown selection
+        if (e.target.closest('.dropdown-item')) {
+            const item = e.target.closest('.dropdown-item');
+            const container = item.closest('.custom-event-type-dropdown');
+            container.querySelector('.dropdown-toggle').innerHTML = `<span class="d-flex align-items-center gap-2 selected-type-text text-truncate">${item.innerHTML}</span>`;
+            container.querySelector('.event-type-hidden-input').value = item.getAttribute('data-value');
+        }
+
+        // Remove image
+        if (e.target.closest('.remove-event-img-btn')) {
+            const btn = e.target.closest('.remove-event-img-btn');
+            const container = btn.closest('.event-img-preview-container');
+            container.closest('.mb-3').querySelector('.event-image-input').value = '';
+            container.classList.add('d-none');
+        }
+
+        // Delete card
+        if (e.target.closest('.delete-event-btn')) {
+            e.target.closest('.event-card-item').remove();
+        }
+    });
+
+    // Image Preview
+    document.addEventListener('change', function(e) {
+        if(e.target.classList.contains('event-image-input')) {
+            const input = e.target;
+            const container = input.closest('.mb-3').querySelector('.event-img-preview-container');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    container.querySelector('img').src = e.target.result;
+                    container.classList.remove('d-none');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    });
+});
+</script>
+
+
+</body>
+</html>

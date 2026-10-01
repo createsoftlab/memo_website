@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event In-Detail & Donors Management - Memorial Dashboard</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Custom External Dashboard CSS -->
+    <link rel="stylesheet" href="assets/css/dashboard-main.css">
+</head>
+<body>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="dashboard-wrapper">
+ 
+     <!-- Sidebar -->
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-profile p-3 d-flex align-items-center gap-3">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?fit=crop&w=100&h=100" class="rounded-circle border border-warning" width="45" height="45" alt="Profile">
+                <div>
+                    <h6 class="m-0 text-white fw-bold" style="font-size: 0.9rem;">M.A.N. Lakshan</h6>
+                    <small class="text-gold" style="font-size: 0.75rem;">Joined 02 Jun 2026</small>
+                </div>
+            </div>
+
+            <ul class="nav flex-column py-2">
+                <li class="nav-item">
+                    <a href="dashbord_index.html" class="nav-link">
+                        <span><i class="bi bi-speedometer2 me-2"></i> My Dashboard</span>
+                    </a>
+                </li>
+
+                <!-- All Memories Dropdown -->
+                <li class="nav-item">
+                    <a href="#memoriesSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle d-flex justify-content-between align-items-center collapsed" aria-expanded="false">
+                        <span><i class="bi bi-collection me-2"></i> All Memories</span>
+                        <i class="bi bi-chevron-down small dropdown-arrow"></i>
+                    </a>
+                    <ul class="collapse list-unstyled submenu" id="memoriesSubmenu">
+                        <li>
+                            <a href="#" class="nav-link sub-link">My Memories</a>
+                        </li>
+                        <li>
+                            <a href="create-memory.html" class="nav-link sub-link">Create Memories</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- Events Dropdown -->
+                <li class="nav-item">
+                    <a href="#eventsSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle d-flex justify-content-between align-items-center" aria-expanded="true">
+                        <span><i class="bi bi-calendar-event me-2"></i> Events</span>
+                        <i class="bi bi-chevron-down small dropdown-arrow"></i>
+                    </a>
+                    <ul class="collapse show list-unstyled submenu" id="eventsSubmenu">
+                        <li>
+                            <a href="my_events.html" class="nav-link sub-link active">My Events</a>
+                        </li>
+                        <li>
+                            <a href="create_my_event.html" class="nav-link sub-link">Create Events</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-heart me-2"></i> Leads & Enquiry</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-currency-dollar me-2"></i> Payment & Promo</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-person-badge me-2"></i> Profile Pages</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-activity me-2"></i> My Activities</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item mt-4">
+                    <a href="#" class="nav-link text-warning">
+                        <span><i class="bi bi-gear me-2"></i> Setting</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Navbar -->
+            <nav class="navbar navbar-dark top-navbar px-3 py-2">
+                <div class="container-fluid">
+                    <div class="d-flex align-items-center gap-2">
+                        <button class="btn btn-outline-light d-lg-none btn-sm" id="sidebarToggle">
+                            <i class="bi bi-list fs-5"></i>
+                        </button>
+                        <span class="navbar-brand mb-0 h6 text-gold font-serif ms-1">Event In-Detail View</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="text-white small d-none d-sm-inline">M.A.N. Lakshan</span>
+                        <a href="#" class="btn btn-sm btn-warning fw-bold text-dark px-3">Logout</a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Page Body -->
+            <div class="container-fluid py-4">
+                
+                <!-- Back Button & Privacy Switch Control Bar -->
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                    <a href="my_events.html" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-arrow-left me-1"></i> Back to My Events
+                    </a>
+                    
+                    <div class="d-flex align-items-center gap-3 bg-white p-2 px-3 rounded-pill shadow-sm">
+                        <span class="small fw-bold text-muted">Event Visibility:</span>
+                        <div class="form-check form-switch m-0">
+                            <input class="form-check-input" type="checkbox" role="switch" id="eventPublishSwitch" checked>
+                            <label class="form-check-label small fw-bold text-success" for="eventPublishSwitch" id="publishLabel">Published (Public)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Details & Donation Overview Container (Mobile Responsive Width) -->
+                <div class="row g-4">
+                    
+                    <!-- Left Column: Event In-Detail View (Similar to 1st Image) -->
+                    <div class="col-xl-8 col-lg-7 col-12">
+                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4" style="background-color: #fcf8f2;">
+                            <!-- Live Header -->
+                            <div class="p-3 text-white d-flex justify-content-between align-items-center" style="background-color: #5c3a21;">
+                                <div>
+                                    <span class="badge bg-danger me-1">LIVE / UPCOMING</span>
+                                    <span class="small font-serif">Memorial Alms Giving Service</span>
+                                </div>
+                                <span class="small text-warning"><i class="bi bi-broadcast me-1"></i> Live Webcast Active on Event Day</span>
+                            </div>
+
+                            <div class="card-body p-4">
+                                <!-- Notice Box -->
+                                <div class="p-3 mb-4 rounded-3 border-warning border bg-white d-flex gap-3 align-items-start">
+                                    <i class="bi bi-bell-fill text-warning fs-5"></i>
+                                    <div>
+                                        <h6 class="fw-bold mb-1 text-dark">Memorial Alms Giving & Sanghika Dana Notice</h6>
+                                        <p class="text-muted small mb-2">The family of late Lallan Weerasinghe cordially invites all relatives, friends, and well-wishers to join the 3-Month Memorial Alms Giving (වාර්ෂික පින්කම) to transfer merits to his soul.</p>
+                                        <span class="badge bg-warning text-dark">Reminder: 5 Days Remaining</span>
+                                    </div>
+                                </div>
+
+                                <h4 class="fw-bold text-dark font-serif mb-2">Annual Memorial Alms Giving (වාර්ෂික පින්කම)</h4>
+                                <p class="text-muted small mb-4">Please RSVP to help the family organize the arrangements accordingly.</p>
+
+                                <!-- Event Meta Details -->
+                                <div class="d-flex flex-column gap-3 mb-4">
+                                    <div class="d-flex align-items-start gap-3">
+                                        <i class="bi bi-calendar-event text-warning fs-5"></i>
+                                        <div>
+                                            <h6 class="mb-0 fw-bold text-dark" style="font-size: 0.9rem;">Date & Time</h6>
+                                            <small class="text-muted">Saturday, August 22, 2026 at 10:30 AM (IST)</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-start gap-3">
+                                        <i class="bi bi-camera-video text-warning fs-5"></i>
+                                        <div>
+                                            <h6 class="mb-0 fw-bold text-dark" style="font-size: 0.9rem;">Participation Mode</h6>
+                                            <small class="text-muted">In-person & Virtual Live Streaming Available</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-start gap-3">
+                                        <i class="bi bi-geo-alt text-warning fs-5"></i>
+                                        <div>
+                                            <h6 class="mb-0 fw-bold text-dark" style="font-size: 0.9rem;">Venue Location</h6>
+                                            <small class="text-muted">Memorial Hall, Dream Lake Residence, Colorado 80517, USA / Online Stream</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Video Broadcast Placeholder -->
+                                <div class="mt-4">
+                                    <h6 class="fw-bold text-dark font-serif mb-2"><i class="bi bi-play-btn text-warning me-1"></i> Live Event Broadcast</h6>
+                                    <div class="ratio ratio-16x9 rounded-4 overflow-hidden bg-dark shadow-sm">
+                                        <div class="d-flex flex-column justify-content-center align-items-center text-white p-4 text-center">
+                                            <i class="bi bi-play-circle-fill text-warning fs-1 mb-2"></i>
+                                            <p class="small text-muted m-0">Livestream will activate when the event starts.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <!-- Right Column: Total Donations & Honored Contributors with Pagination -->
+    <div class="col-xl-4 col-lg-5 col-12">
+        <div class="card border-0 shadow-sm rounded-4 p-4" style="background-color: #fcf8f2;">
+            
+            <!-- Header & Total Summary Badge -->
+            <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="rounded-circle bg-warning bg-opacity-20 p-2 text-warning d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                        <i class="bi bi-heart-fill fs-5"></i>
+                    </div>
+                    <div>
+                        <h6 class="m-0 fw-bold text-dark">Honored Contributors</h6>
+                        <small class="text-muted" style="font-size: 0.75rem;">පූජ්‍යදායකයින්ගේ නාම ලේඛනය</small>
+                    </div>
+                </div>
+                <span class="badge text-white px-3 py-2 fw-bold shadow-sm" style="background-color: #5c3a21;">10 Donors</span>
+            </div>
+
+            <!-- Total Collected Card -->
+            <div class="bg-white p-3 rounded-3 shadow-sm mb-4 d-flex justify-content-between align-items-center border">
+                <span class="small text-muted fw-bold">Total Collection:</span>
+                <span class="fs-5 fw-bold text-success">$1,250.00</span>
+            </div>
+
+            <!-- Donors List (Mobile Scrollable Stack) -->
+            <div class="d-flex flex-column gap-3 mb-4">
+                
+                <!-- Donor 1 -->
+                <div class="bg-white p-3 rounded-3 shadow-sm border">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="rounded-circle text-white d-flex align-items-center justify-content-center fw-bold small" style="width: 32px; height: 32px; background-color: #5c3a21;">JR</span>
+                            <span class="fw-bold text-dark small">James Reynolds</span>
+                        </div>
+                        <span class="badge bg-success bg-opacity-10 text-success fw-bold px-2 py-1">$200.00</span>
+                    </div>
+                    <div class="text-muted small ps-4 ms-2" style="font-size: 0.75rem;">
+                        <div>Aug 10, 2026</div>
+                        <div class="fst-italic text-dark mt-1">"May his soul rest in eternal peace."</div>
+                    </div>
+                </div>
+
+                <!-- Donor 2 -->
+                <div class="bg-white p-3 rounded-3 shadow-sm border">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="rounded-circle text-white d-flex align-items-center justify-content-center fw-bold small" style="width: 32px; height: 32px; background-color: #5c3a21;">AG</span>
+                            <span class="fw-bold text-dark small">Adam Green</span>
+                        </div>
+                        <span class="badge bg-success bg-opacity-10 text-success fw-bold px-2 py-1">$150.00</span>
+                    </div>
+                    <div class="text-muted small ps-4 ms-2" style="font-size: 0.75rem;">
+                        <div>Aug 08, 2026</div>
+                        <div class="fst-italic text-dark mt-1">"In memory of a great human being."</div>
+                    </div>
+                </div>
+
+                <!-- Donor 3 -->
+                <div class="bg-white p-3 rounded-3 shadow-sm border">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="rounded-circle text-white d-flex align-items-center justify-content-center fw-bold small" style="width: 32px; height: 32px; background-color: #5c3a21;">DL</span>
+                            <span class="fw-bold text-dark small">Darlene Leonardo</span>
+                        </div>
+                        <span class="badge bg-success bg-opacity-10 text-success fw-bold px-2 py-1">$300.00</span>
+                    </div>
+                    <div class="text-muted small ps-4 ms-2" style="font-size: 0.75rem;">
+                        <div>Jul 28, 2026</div>
+                        <div class="fst-italic text-dark mt-1">"Deepest sympathies to the family."</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Pagination Bar -->
+            <nav aria-label="Donors List Pagination">
+                <ul class="pagination pagination-sm justify-content-center m-0">
+                    <li class="page-item disabled">
+                        <a class="page-link text-muted" href="#" tabindex="-1" aria-disabled="true">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item active"><a class="page-link bg-dark border-dark text-white" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link text-dark" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link text-dark" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link text-dark" href="#">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript to handle Publish / Private toggle text switch dynamically -->
+    <script>
+        const publishSwitch = document.getElementById('eventPublishSwitch');
+        const publishLabel = document.getElementById('publishLabel');
+
+        publishSwitch.addEventListener('change', function() {
+            if(this.checked) {
+                publishLabel.textContent = "Published (Public)";
+                publishLabel.className = "form-check-label small fw-bold text-success";
+            } else {
+                publishLabel.textContent = "Draft (Private)";
+                publishLabel.className = "form-check-label small fw-bold text-secondary";
+            }
+        });
+    </script>
+
+    <!-- Bootstrap 5 JS and Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

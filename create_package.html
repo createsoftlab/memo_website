@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit My Events - Memorial Dashboard</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Custom External Dashboard CSS -->
+    <link rel="stylesheet" href="assets/css/dashboard-main.css">
+</head>
+<body>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="dashboard-wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-profile p-3 d-flex align-items-center gap-3">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?fit=crop&w=100&h=100" class="rounded-circle border border-warning" width="45" height="45" alt="Profile">
+                <div>
+                    <h6 class="m-0 text-white fw-bold profile-name">M.A.N. Lakshan</h6>
+                    <small class="text-gold profile-date">Joined 02 Jun 2026</small>
+                </div>
+            </div>
+
+            <ul class="nav flex-column py-2">
+                <li class="nav-item">
+                    <a href="dashbord_index.html" class="nav-link">
+                        <span><i class="bi bi-speedometer2 me-2"></i> My Dashboard</span>
+                    </a>
+                </li>
+
+                <!-- All Memories Dropdown -->
+                <li class="nav-item">
+                    <a href="#memoriesSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle d-flex justify-content-between align-items-center collapsed" aria-expanded="false">
+                        <span><i class="bi bi-collection me-2"></i> All Memories</span>
+                        <i class="bi bi-chevron-down small dropdown-arrow"></i>
+                    </a>
+                    <ul class="collapse list-unstyled submenu" id="memoriesSubmenu">
+                        <li>
+                            <a href="#" class="nav-link sub-link">My Memories</a>
+                        </li>
+                        <li>
+                            <a href="create-memory.html" class="nav-link sub-link">Create Memories</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- Events Dropdown -->
+                <li class="nav-item">
+                    <a href="#eventsSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle d-flex justify-content-between align-items-center" aria-expanded="true">
+                        <span><i class="bi bi-calendar-event me-2"></i> Events</span>
+                        <i class="bi bi-chevron-down small dropdown-arrow"></i>
+                    </a>
+                    <ul class="collapse show list-unstyled submenu" id="eventsSubmenu">
+                        <li>
+                            <a href="my_events.html" class="nav-link sub-link active">My Events</a>
+                        </li>
+                        <li>
+                            <a href="create_my_event.html" class="nav-link sub-link">Create Events</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-heart me-2"></i> Leads & Enquiry</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-currency-dollar me-2"></i> Payment & Promo</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-person-badge me-2"></i> Profile Pages</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-activity me-2"></i> My Activities</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item mt-4">
+                    <a href="#" class="nav-link text-warning">
+                        <span><i class="bi bi-gear me-2"></i> Setting</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Navbar -->
+            <nav class="navbar navbar-dark top-navbar px-3 py-2">
+                <div class="container-fluid">
+                    <div class="d-flex align-items-center gap-2">
+                        <button class="btn btn-outline-light d-lg-none btn-sm" id="sidebarToggle">
+                            <i class="bi bi-list fs-5"></i>
+                        </button>
+                        <span class="navbar-brand mb-0 h6 text-gold font-serif ms-1">My Events</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="text-white small d-none d-sm-inline">M.A.N. Lakshan</span>
+                        <a href="#" class="btn btn-sm btn-warning fw-bold text-dark px-3">Logout</a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Page Body -->
+        <div class="container py-5">
+        
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <h2 class="font-serif fw-bold text-dark" style="color: #3b281a;">Admin Control: Pricing & Packages</h2>
+                <p class="text-muted small">Create and configure subscription packages or individual add-on items (Flowers, Candles)</p>
+            </div>
+        </div>
+
+        <!-- Form Container Card -->
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="admin-form-card p-4 p-md-5">
+                    
+                    <!-- Tab Switcher: Package vs Single Items -->
+                    <ul class="nav nav-pills mb-4 justify-content-center gap-2" id="creationTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active rounded-pill px-4" id="package-tab" data-bs-toggle="pill" data-bs-target="#packageContent" type="button" role="tab">Create Package</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link rounded-pill px-4" id="item-tab" data-bs-toggle="pill" data-bs-target="#itemContent" type="button" role="tab">Create Single Item (Flower / Candle)</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="creationTabContent">
+                        
+                        <!-- ================= 1. PACKAGE CREATION FORM ================= -->
+                        <div class="tab-pane fade show active" id="packageContent" role="tabpanel">
+                            <form action="#" method="POST">
+                                <h4 class="form-section-title fs-5"><i class="bi bi-box-seam me-2"></i> Package Configuration</h4>
+                                
+                                <div class="row g-3 mb-3">
+                                    <!-- Package Name -->
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Package Name</label>
+                                        <input type="text" class="form-control" placeholder="e.g. Gold Memorial Plan" required>
+                                    </div>
+                                    <!-- Price -->
+                                    <div class="col-md-3">
+                                        <label class="form-label fw-semibold small">Price ($)</label>
+                                        <input type="number" step="0.01" class="form-control" placeholder="79.95" required>
+                                    </div>
+                                    <!-- Billing Cycle -->
+                                    <div class="col-md-3">
+                                        <label class="form-label fw-semibold small">Billing Type</label>
+                                        <select class="form-select">
+                                            <option value="monthly">Monthly</option>
+                                            <option value="yearly">Yearly</option>
+                                            <option value="lifetime">Lifetime (One-time)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mb-3">
+                                    <!-- Target Country Selection -->
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Available Country</label>
+                                        <select class="form-select">
+                                            <option value="all">All Countries (Global)</option>
+                                            <option value="lk">Sri Lanka</option>
+                                            <option value="us">United States</option>
+                                            <option value="uk">United Kingdom</option>
+                                            <option value="au">Australia</option>
+                                        </select>
+                                    </div>
+                                    <!-- Business Profile Selection -->
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Business Profile Type</label>
+                                        <select class="form-select">
+                                            <option value="all">All Profiles</option>
+                                            <option value="funeral_director">Funeral Director / Parlor</option>
+                                            <option value="individual">Individual / Family</option>
+                                            <option value="cemetery">Cemetery Management</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mb-4">
+                                    <!-- Time Duration Settings -->
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Time Duration Limit (Validity)</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" placeholder="365">
+                                            <select class="form-select" style="max-width: 140px;">
+                                                <option value="days">Days</option>
+                                                <option value="months">Months</option>
+                                                <option value="years">Years</option>
+                                                <option value="unlimited">Unlimited</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- Trial Duration -->
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Free Trial Period (Days)</label>
+                                        <input type="number" class="form-control" placeholder="e.g. 14 (Leave 0 for no trial)">
+                                    </div>
+                                </div>
+
+                                <!-- Features & Limits Section -->
+                                <h5 class="form-section-title fs-6 mt-4"><i class="bi bi-sliders me-2"></i> Features & Item Limits</h5>
+                                <div class="row g-3 mb-4 bg-light p-3 rounded-3 border">
+                                    <div class="col-md-4">
+                                        <label class="form-label small fw-bold">Max Photo Uploads</label>
+                                        <input type="number" class="form-control form-control-sm" placeholder="e.g. 50 or -1 for unlimited">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small fw-bold">Max Video Uploads</label>
+                                        <input type="number" class="form-control form-control-sm" placeholder="e.g. 5">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small fw-bold">Max Comments Limit</label>
+                                        <input type="number" class="form-control form-control-sm" placeholder="e.g. 100 or -1 for unlimited">
+                                    </div>
+                                    
+                                    <div class="col-md-6 mt-3">
+                                        <label class="form-label small fw-bold">Candles Allocation / Feature Limit</label>
+                                        <input type="number" class="form-control form-control-sm" placeholder="Free virtual candles included">
+                                    </div>
+                                    <div class="col-md-6 mt-3">
+                                        <label class="form-label small fw-bold">Flowers Allocation / Feature Limit</label>
+                                        <input type="number" class="form-control form-control-sm" placeholder="Free virtual flowers included">
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-dark w-100 py-2 fw-bold text-uppercase">Publish Package</button>
+                            </form>
+                        </div>
+
+                        <!-- ================= 2. SINGLE ITEMS (FLOWERS / CANDLES) FORM ================= -->
+                        <div class="tab-pane fade" id="itemContent" role="tabpanel">
+                            <form action="#" method="POST">
+                                <h4 class="form-section-title fs-5"><i class="bi bi-flower1 me-2"></i> Single Item (Flower / Candle) Price & Extend Setup</h4>
+                                
+                                <div class="row g-3 mb-3">
+                                    <!-- Item Type -->
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Item Category</label>
+                                        <select class="form-select" required>
+                                            <option value="candle">Virtual Candle</option>
+                                            <option value="flower">Virtual Flower Bouquet</option>
+                                        </select>
+                                    </div>
+                                    <!-- Item Name -->
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Item Name</label>
+                                        <input type="text" class="form-control" placeholder="e.g. Red Rose / Eternal Flame Candle" required>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mb-3">
+                                    <!-- Country -->
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Applicable Country</label>
+                                        <select class="form-select">
+                                            <option value="all">All Countries (Global)</option>
+                                            <option value="lk">Sri Lanka</option>
+                                            <option value="us">United States</option>
+                                        </select>
+                                    </div>
+                                    <!-- Base Price -->
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Base Price ($)</label>
+                                        <input type="number" step="0.01" class="form-control" placeholder="4.99" required>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mb-4">
+                                    <!-- Initial Time Duration Display -->
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Initial Active Duration (Validity)</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" placeholder="7" value="7" required>
+                                            <span class="input-group-text">Days</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Extend Price & Duration Setup -->
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small text-primary fw-bold">Extend Price (Renewal for time extension)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" step="0.01" class="form-control" placeholder="2.99" required>
+                                            <span class="input-group-text">per</span>
+                                            <input type="number" class="form-control" placeholder="30" value="30" style="max-width: 80px;" required>
+                                            <span class="input-group-text">Days Extension</span>
+                                        </div>
+                                        <small class="text-muted" style="font-size: 0.75rem;">Allows users to pay an extension fee to keep the flower/candle displayed longer.</small>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-warning w-100 py-2 fw-bold text-uppercase text-dark">Save Single Item Pricing</button>
+                            </form>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS and Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

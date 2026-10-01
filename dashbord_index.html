@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memorial Dashboard</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Custom External Dashboard CSS -->
+    <link rel="stylesheet" href="assets/css/dashboard-main.css">
+</head>
+<body>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="dashboard-wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-profile p-3 d-flex align-items-center gap-3">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?fit=crop&w=100&h=100" class="rounded-circle" width="45" height="45" alt="Profile">
+                <div>
+                    <h6 class="m-0 text-white fw-bold" style="font-size: 0.9rem;">M.A.N.Lakshan</h6>
+                    <small class="text-gold" style="font-size: 0.75rem;">Joined 02 Jun 2026</small>
+                </div>
+            </div>
+
+            <ul class="nav flex-column py-3">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-speedometer2 me-2"></i> My Dashboard</span>
+                    </a>
+                </li>
+
+                <!-- All Memories Dropdown -->
+                <li class="nav-item">
+                    <a href="#memoriesSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle active d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-collection me-2"></i> All Memories</span>
+                        <i class="bi bi-chevron-down small dropdown-arrow"></i>
+                    </a>
+                    <ul class="collapse list-unstyled submenu" id="memoriesSubmenu">
+                        <li>
+                            <a href="#" class="nav-link sub-link">My Memories</a>
+                        </li>
+                           <li>
+                            <a href="all_memories.html" class="nav-link sub-link">All Memories </a>
+                        </li>
+                        <li>
+                            <a href="create-memory.html" class="nav-link sub-link">Create Memories</a>
+                        </li>
+                    </ul>
+                </li>
+
+                         <!-- All Events  Dropdown -->
+                <li class="nav-item">
+                    <a href="#memoriesSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle active d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-collection me-2"></i> Events</span>
+                        <i class="bi bi-chevron-down small dropdown-arrow"></i>
+                    </a>
+                    <ul class="collapse list-unstyled submenu" id="memoriesSubmenu">
+                        <li>
+                            <a href="#" class="nav-link sub-link">My Events</a>
+                        </li>
+                           <li>
+                            <a href="all_events.html" class="nav-link sub-link">All Events</a>
+                        </li>
+                        <li>
+                            <a href="create_my_event.html" class="nav-link sub-link">Create Events </a>
+                        </li>
+                    </ul>
+                </li>
+
+
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-heart me-2"></i> Leads & Enquiry</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <!-- <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-currency-dollar me-2"></i> Payment & Promo</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li> -->
+
+<li class="nav-item">
+    <a href="#packagesSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle d-flex justify-content-between align-items-center" aria-expanded="false">
+        <span><i class="bi bi-box-seam me-2"></i> Packages</span>
+        <i class="bi bi-chevron-down small dropdown-arrow"></i>
+    </a>
+    <ul class="collapse list-unstyled submenu" id="packagesSubmenu">
+        <li>
+            <a href="my_packages.html" class="nav-link sub-link">My Packages</a>
+        </li>
+        <li>
+            <a href="create_package.html" class="nav-link sub-link">Create Package</a>
+        </li>
+    </ul>
+</li>
+    
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-person-badge me-2"></i> Profile Pages</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-activity me-2"></i> My Activities</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item mt-4">
+                    <a href="#" class="nav-link text-warning">
+                        <span><i class="bi bi-gear me-2"></i> Setting</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Navbar -->
+            <nav class="navbar navbar-dark top-navbar px-3">
+                <div class="container-fluid">
+                    <button class="btn btn-outline-light d-lg-none" id="sidebarToggle">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <span class="navbar-brand mb-0 h6 text-gold font-serif ms-2">User Dashboard / All Memories</span>
+                    <div class="ms-auto">
+                        <a href="#" class="btn btn-sm btn-warning fw-bold">Logout</a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Dashboard Body -->
+            <!-- <div class="container-fluid p-4">
+                <div class="row g-4">
+                    <div class="col-lg-8">
+                        <div class="sidebar-card p-4">
+                            <h4 class="font-serif text-brown mb-3">Memory Details</h4>
+                            <p class="text-muted">ඔබගේ මතක සටහන් (Memories) මෙතැනින් කළමනාකරණය කරගත හැක.</p>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- Dashboard Body -->
+<div class="container-fluid p-4">
+    
+    <!-- Welcome Banner with Robot -->
+    <div class="welcome-banner mb-4 d-flex align-items-center gap-3 p-3 rounded-4 shadow-sm">
+        <div class="robot-avatar">
+            <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Robot" width="60">
+        </div>
+        <div class="speech-bubble px-4 py-2 bg-white rounded-pill shadow-sm">
+            <h6 class="m-0 fw-bold text-dark font-serif" style="font-size: 0.95rem;">WELCOME BACK, NIMANTHA...</h6>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Left Side Main Area -->
+        <div class="col-lg-8">
+            
+            <!-- Top Stat Cards (3 Cards) -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="stat-card p-3 rounded-4 position-relative overflow-hidden text-white shadow-sm" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400') center/cover;">
+                        <small class="text-uppercase tracking-wider fw-bold" style="font-size: 0.7rem; letter-spacing: 1px;">NEW USERS</small>
+                        <h3 class="fw-bold my-1 font-serif">All Listings</h3>
+                        <h2 class="display-6 fw-bold mb-1">04</h2>
+                        <small class="text-white-50" style="font-size: 0.75rem;">Total number of listings</small>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="stat-card p-3 rounded-4 position-relative overflow-hidden text-white shadow-sm" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=400') center/cover;">
+                        <small class="text-uppercase tracking-wider fw-bold" style="font-size: 0.7rem; letter-spacing: 1px;">ENQUIRIES</small>
+                        <h3 class="fw-bold my-1 font-serif">Enquiries</h3>
+                        <h2 class="display-6 fw-bold mb-1">03</h2>
+                        <small class="text-white-50" style="font-size: 0.75rem;">Total number of Enquiry</small>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="stat-card p-3 rounded-4 position-relative overflow-hidden text-white shadow-sm" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1577495508048-b635879837f1?w=400') center/cover;">
+                        <small class="text-uppercase tracking-wider fw-bold" style="font-size: 0.7rem; letter-spacing: 1px;">FOLLOWINGS</small>
+                        <h3 class="fw-bold my-1 font-serif">Followings</h3>
+                        <h2 class="display-6 fw-bold mb-1">38</h2>
+                        <small class="text-white-50" style="font-size: 0.75rem;">Total number of followings</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid Profile Cards (2x2 Grid) -->
+            <div class="row g-4">
+                <!-- Profile Card 1 -->
+                <div class="col-md-6">
+                    <div class="custom-profile-card bg-white rounded-4 overflow-hidden shadow-sm border">
+                        <div class="card-banner p-3 position-relative text-white" style="background: linear-gradient(135deg, rgba(65, 88, 208, 0.85), rgba(200, 80, 192, 0.85)), url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400') center/cover; height: 110px;">
+                            <div class="position-absolute bottom-0 start-3 translate-middle-y ms-3 d-flex align-items-center gap-3">
+                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" class="rounded-circle border border-2 border-white" width="50" height="50" alt="Avatar">
+                                <h5 class="m-0 fw-bold text-white font-serif">Profile page</h5>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-white">
+                            <h6 class="fw-bold text-dark m-0">M.A.N.Lakshan</h6>
+                            <small class="text-muted" style="font-size: 0.75rem;">Member-09 Jun 2025</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Card 2 -->
+                <div class="col-md-6">
+                    <div class="custom-profile-card bg-white rounded-4 overflow-hidden shadow-sm border">
+                        <div class="card-banner p-3 position-relative text-white" style="background: linear-gradient(135deg, rgba(65, 88, 208, 0.85), rgba(200, 80, 192, 0.85)), url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=400') center/cover; height: 110px;">
+                            <div class="position-absolute bottom-0 start-3 translate-middle-y ms-3 d-flex align-items-center gap-3">
+                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" class="rounded-circle border border-2 border-white" width="50" height="50" alt="Avatar">
+                                <h5 class="m-0 fw-bold text-white font-serif">Business page</h5>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-white">
+                            <h6 class="fw-bold text-dark m-0">M.A.N.Lakshan</h6>
+                            <small class="text-muted" style="font-size: 0.75rem;">Member-09 Jun 2025</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Card 3 -->
+                <div class="col-md-6">
+                    <div class="custom-profile-card bg-white rounded-4 overflow-hidden shadow-sm border">
+                        <div class="card-banner p-3 position-relative text-white" style="background: linear-gradient(135deg, rgba(65, 88, 208, 0.85), rgba(200, 80, 192, 0.85)), url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400') center/cover; height: 110px;">
+                            <div class="position-absolute bottom-0 start-3 translate-middle-y ms-3 d-flex align-items-center gap-3">
+                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" class="rounded-circle border border-2 border-white" width="50" height="50" alt="Avatar">
+                                <h5 class="m-0 fw-bold text-white font-serif" style="font-size: 0.95rem;">Service Expert Profile</h5>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-white">
+                            <h6 class="fw-bold text-dark m-0">M.A.N.Lakshan</h6>
+                            <small class="text-muted" style="font-size: 0.75rem;">Member-09 Jun 2025</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Card 4 -->
+                <div class="col-md-6">
+                    <div class="custom-profile-card bg-white rounded-4 overflow-hidden shadow-sm border">
+                        <div class="card-banner p-3 position-relative text-white" style="background: linear-gradient(135deg, rgba(65, 88, 208, 0.85), rgba(200, 80, 192, 0.85)), url('https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400') center/cover; height: 110px;">
+                            <div class="position-absolute bottom-0 start-3 translate-middle-y ms-3 d-flex align-items-center gap-3">
+                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" class="rounded-circle border border-2 border-white" width="50" height="50" alt="Avatar">
+                                <h5 class="m-0 fw-bold text-white font-serif">Job Profile</h5>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-white">
+                            <h6 class="fw-bold text-dark m-0">M.A.N.Lakshan</h6>
+                            <small class="text-muted" style="font-size: 0.75rem;">Member-09 Jun 2025</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Side Widgets Area -->
+        <div class="col-lg-4">
+            
+            <!-- Promote My Business Card -->
+            <div class="promote-card p-4 rounded-4 text-white position-relative overflow-hidden shadow-sm mb-4" style="background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=400') center/cover;">
+                <h4 class="fw-bold font-serif mb-2">Promote My Business</h4>
+                <p class="small text-white-50 mb-3" style="font-size: 0.8rem;">Your listing show at the top of the recommended category page</p>
+                <button class="btn btn-warning btn-sm px-4 fw-bold rounded-pill text-dark" style="background-color: #ffb700; border: none;">START NOW</button>
+            </div>
+
+            <!-- Your Points Card -->
+            <!-- <div class="points-card bg-white p-4 rounded-4 shadow-sm border mb-4 text-center">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="fw-bold m-0 font-serif">YOUR POINTS</h6>
+                    <i class="bi bi-trophy-fill text-warning fs-3"></i>
+                </div>
+                <h1 class="display-4 fw-bold text-dark my-2 font-serif">0</h1>
+                <hr class="text-muted opacity-25">
+                <div class="text-start mt-3">
+                    <h6 class="fw-bold text-dark mb-1" style="font-size: 0.9rem;">Earn more credit points</h6>
+                    <p class="text-muted small mb-3" style="font-size: 0.78rem;">Use this points to promote your listing. <a href="#" class="text-primary text-decoration-underline">Click Here..</a></p>
+                    <button class="btn btn-primary btn-sm w-100 fw-bold rounded-pill py-2" style="background-color: #483d8b; border: none;">BUY POINTS</button>
+                </div>
+            </div> -->
+
+            <!-- Community Members Card -->
+            <div class="community-card p-4 rounded-4 text-white position-relative overflow-hidden shadow-sm" style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1477959858617-67f30bc75b82?w=400') center/cover;">
+                <h4 class="fw-bold font-serif mb-2">Community Members</h4>
+                <p class="small text-white-50 mb-3" style="font-size: 0.8rem;">Follow your favorite business coach and grow your status in grow network.</p>
+                <button class="btn btn-warning btn-sm px-4 fw-bold rounded-pill text-dark" style="background-color: #ffb700; border: none;">COMMUNITY</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Responsive Toggle Script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('show');
+            sidebarOverlay.classList.toggle('show');
+        });
+
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('show');
+            sidebarOverlay.classList.remove('show');
+        });
+    </script>
+</body>
+</html>

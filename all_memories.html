@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Memories - Memorial Dashboard</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Custom External Dashboard CSS -->
+    <link rel="stylesheet" href="assets/css/dashboard-main.css">
+</head>
+<body>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="dashboard-wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-profile p-3 d-flex align-items-center gap-3">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?fit=crop&w=100&h=100" class="rounded-circle border border-warning" width="45" height="45" alt="Profile">
+                <div>
+                    <h6 class="m-0 text-white fw-bold" style="font-size: 0.9rem;">M.A.N. Lakshan</h6>
+                    <small class="text-gold" style="font-size: 0.75rem;">Joined 02 Jun 2026</small>
+                </div>
+            </div>
+
+            <ul class="nav flex-column py-2">
+                <li class="nav-item">
+                    <a href="dashbord_index.html" class="nav-link">
+                        <span><i class="bi bi-speedometer2 me-2"></i> My Dashboard</span>
+                    </a>
+                </li>
+
+                <!-- All Memories Dropdown -->
+                <li class="nav-item">
+                    <a href="#memoriesSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle d-flex justify-content-between align-items-center" aria-expanded="true">
+                        <span><i class="bi bi-collection me-2"></i> All Memories</span>
+                        <i class="bi bi-chevron-down small dropdown-arrow"></i>
+                    </a>
+                    <ul class="collapse show list-unstyled submenu" id="memoriesSubmenu">
+                        <li>
+                            <a href="all_memories.html" class="nav-link sub-link active">My Memories</a>
+                        </li>
+                        <li>
+                            <a href="create-memory.html" class="nav-link sub-link">Create Memories</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- Events Dropdown -->
+                <li class="nav-item">
+                    <a href="#eventsSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle d-flex justify-content-between align-items-center collapsed" aria-expanded="false">
+                        <span><i class="bi bi-calendar-event me-2"></i> Events</span>
+                        <i class="bi bi-chevron-down small dropdown-arrow"></i>
+                    </a>
+                    <ul class="collapse list-unstyled submenu" id="eventsSubmenu">
+                        <li>
+                            <a href="my_events.html" class="nav-link sub-link">My Events</a>
+                        </li>
+                        <li>
+                            <a href="create_my_event.html" class="nav-link sub-link">Create Events</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-heart me-2"></i> Leads & Enquiry</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-currency-dollar me-2"></i> Payment & Promo</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-person-badge me-2"></i> Profile Pages</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span><i class="bi bi-activity me-2"></i> My Activities</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+                <li class="nav-item mt-4">
+                    <a href="#" class="nav-link text-warning">
+                        <span><i class="bi bi-gear me-2"></i> Setting</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Navbar -->
+            <nav class="navbar navbar-dark top-navbar px-3 py-2">
+                <div class="container-fluid">
+                    <div class="d-flex align-items-center gap-2">
+                        <button class="btn btn-outline-light d-lg-none btn-sm" id="sidebarToggle">
+                            <i class="bi bi-list fs-5"></i>
+                        </button>
+                        <span class="navbar-brand mb-0 h6 text-gold font-serif ms-1">All Memories</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="text-white small d-none d-sm-inline">M.A.N. Lakshan</span>
+                        <a href="#" class="btn btn-sm btn-warning fw-bold text-dark px-3">Logout</a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Page Body -->
+            <div class="container-fluid py-4 overflow-hidden">
+                
+                <!-- Section Header & Filter Bar Container -->
+                <div class="row align-items-center mb-4 g-3">
+                    <div class="col-xl-4 col-lg-4 col-12">
+                        <h4 class="fw-bold text-dark m-0 font-serif">
+                            <i class="bi bi-collection text-warning me-2"></i> All Memories
+                        </h4>
+                        <p class="text-muted small m-0">View and manage all user submitted memories here.</p>
+                    </div>
+
+                    <!-- Custom Filter & Search Bar -->
+                    <div class="col-xl-8 col-lg-8 col-12">
+                        <div class="row g-2 justify-content-lg-end">
+                            <!-- Search Box -->
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                                <div class="input-group input-group-sm shadow-sm w-100">
+                                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0" placeholder="Search memories...">
+                                </div>
+                            </div>
+
+                            <!-- Status Filter Dropdown -->
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="dropdown w-100">
+                                    <button class="btn btn-sm btn-white bg-white border w-100 d-flex justify-content-between align-items-center shadow-sm text-muted dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 0.85rem; padding: 6px 10px;">
+                                        <span>Filter Status</span>
+                                    </button>
+                                    <ul class="dropdown-menu w-100 shadow border-0" style="font-size: 0.85rem;">
+                                        <li><a class="dropdown-item py-1" href="#" data-value="">All Status</a></li>
+                                        <li><a class="dropdown-item py-1" href="#" data-value="approved">Approved</a></li>
+                                        <li><a class="dropdown-item py-1" href="#" data-value="pending">Pending</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Privacy Filter Dropdown -->
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="dropdown w-100">
+                                    <button class="btn btn-sm btn-white bg-white border w-100 d-flex justify-content-between align-items-center shadow-sm text-muted dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 0.85rem; padding: 6px 10px;">
+                                        <span>Filter Privacy</span>
+                                    </button>
+                                    <ul class="dropdown-menu w-100 shadow border-0" style="font-size: 0.85rem;">
+                                        <li><a class="dropdown-item py-1" href="#" data-value="">All Privacy</a></li>
+                                        <li><a class="dropdown-item py-1" href="#" data-value="public">Public</a></li>
+                                        <li><a class="dropdown-item py-1" href="#" data-value="private">Private</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Memories Card Grid Section -->
+                <div class="row g-4">
+                    
+                    <!-- Card Item 1 -->
+                    <div class="col-xxl-3 col-xl-4 col-md-6 col-12">
+                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 bg-white memory-card">
+                            <div class="position-relative text-center pt-4 bg-light">
+                                <!-- Profile Picture Style Image -->
+                                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?fit=crop&w=150&h=150" class="rounded-circle border border-3 border-white shadow-sm object-fit-cover" style="width: 90px; height: 90px;" alt="Profile Picture">
+                                
+                                <!-- Status Badge -->
+                                <span class="badge bg-success position-absolute top-0 start-0 m-2 shadow-sm px-2 py-1">
+                                    <i class="bi bi-check-circle me-1"></i> Approved
+                                </span>
+                                <!-- Privacy Badge -->
+                                <span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2 shadow-sm px-2 py-1">
+                                    <i class="bi bi-globe me-1"></i> Public
+                                </span>
+                            </div>
+
+                            <div class="card-body p-3 d-flex flex-column justify-content-between text-center">
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-1 text-truncate">Late Lallan Writer</h6>
+                                    <p class="text-muted small mb-2"><i class="bi bi-calendar-event me-1 text-warning"></i> 1945 - 2026</p>
+                                    <p class="text-muted small mb-3 text-truncate" style="font-size: 0.8rem;"><i class="bi bi-geo-alt me-1 text-danger"></i> Colombo, Sri Lanka</p>
+                                </div>
+
+                                <!-- Card Actions -->
+                                <div>
+                                    <div class="d-flex align-items-center justify-content-center mb-2">
+                                        <span class="text-muted small" style="font-size: 0.75rem;"><i class="bi bi-heart-fill text-danger me-1"></i> Tributes Open</span>
+                                    </div>
+
+                                    <!-- Quick Action Buttons Bar -->
+                                    <div class="d-flex flex-wrap gap-1 mb-2">
+                                        <button class="btn btn-xs btn-outline-success flex-fill py-1" style="font-size: 0.75rem;"><i class="bi bi-check-lg"></i> Approve</button>
+                                        <button class="btn btn-xs btn-outline-warning text-dark flex-fill py-1" style="font-size: 0.75rem;"><i class="bi bi-x-lg"></i> Reject</button>
+                                        <button class="btn btn-xs btn-outline-danger flex-fill py-1" style="font-size: 0.75rem;"><i class="bi bi-trash"></i> Delete</button>
+                                    </div>
+
+                                    <div class="d-flex align-items-center justify-content-between border-top pt-2">
+                                        <span class="text-muted small" style="font-size: 0.7rem;">ID: #MEM-001</span>
+                                        <div class="d-flex gap-2">
+                                            <!-- View Button (Triggers Modal) -->
+                                            <button type="button" class="btn btn-sm btn-light border text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" data-bs-toggle="modal" data-bs-target="#viewMemoryModal1" title="View Memory">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <a href="edit-memory.html" class="btn btn-sm btn-light border text-warning rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" title="Edit Memory">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Item 2 -->
+                    <div class="col-xxl-3 col-xl-4 col-md-6 col-12">
+                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 bg-white memory-card">
+                            <div class="position-relative text-center pt-4 bg-light">
+                                <!-- Profile Picture Style Image -->
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=150&h=150" class="rounded-circle border border-3 border-white shadow-sm object-fit-cover" style="width: 90px; height: 90px;" alt="Profile Picture">
+                                
+                                <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2 shadow-sm px-2 py-1">
+                                    <i class="bi bi-hourglass-split me-1"></i> Pending
+                                </span>
+                                <span class="badge bg-secondary position-absolute top-0 end-0 m-2 shadow-sm px-2 py-1">
+                                    <i class="bi bi-lock me-1"></i> Private
+                                </span>
+                            </div>
+
+                            <div class="card-body p-3 d-flex flex-column justify-content-between text-center">
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-1 text-truncate">Arthur Pendelton</h6>
+                                    <p class="text-muted small mb-2"><i class="bi bi-calendar-event me-1 text-warning"></i> 1950 - 2026</p>
+                                    <p class="text-muted small mb-3 text-truncate" style="font-size: 0.8rem;"><i class="bi bi-geo-alt me-1 text-danger"></i> Kandy, Sri Lanka</p>
+                                </div>
+
+                                <div>
+                                    <div class="d-flex align-items-center justify-content-center mb-2">
+                                        <span class="text-muted small" style="font-size: 0.75rem;"><i class="bi bi-heart text-muted me-1"></i> Tributes Off</span>
+                                    </div>
+
+                                    <!-- Quick Action Buttons Bar -->
+                                    <div class="d-flex flex-wrap gap-1 mb-2">
+                                        <button class="btn btn-xs btn-outline-success flex-fill py-1" style="font-size: 0.75rem;"><i class="bi bi-check-lg"></i> Approve</button>
+                                        <button class="btn btn-xs btn-outline-warning text-dark flex-fill py-1" style="font-size: 0.75rem;"><i class="bi bi-x-lg"></i> Reject</button>
+                                        <button class="btn btn-xs btn-outline-danger flex-fill py-1" style="font-size: 0.75rem;"><i class="bi bi-trash"></i> Delete</button>
+                                    </div>
+
+                                    <div class="d-flex align-items-center justify-content-between border-top pt-2">
+                                        <span class="text-muted small" style="font-size: 0.7rem;">ID: #MEM-002</span>
+                                        <div class="d-flex gap-2">
+                                            <!-- View Button (Triggers Modal) -->
+                                            <button type="button" class="btn btn-sm btn-light border text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" data-bs-toggle="modal" data-bs-target="#viewMemoryModal2" title="View Memory">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <a href="edit-memory.html" class="btn btn-sm btn-light border text-warning rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" title="Edit Memory">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VIEW MEMORY MODAL WITH TABS (CARD 1)       -->
+    <!-- ========================================== -->
+    <div class="modal fade" id="viewMemoryModal1" tabindex="-1" aria-labelledby="viewMemoryModalLabel1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title font-serif" id="viewMemoryModalLabel1"><i class="bi bi-info-circle text-warning me-2"></i> Memory Profile: Late Lallan Writer</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    
+                    <!-- Modal Navigation Tabs -->
+                    <ul class="nav nav-tabs px-4 pt-3 bg-light border-bottom" id="memoryTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active fw-bold text-dark" id="about-tab" data-bs-toggle="tab" data-bs-target="#about-pane" type="button" role="tab"><i class="bi bi-person me-1"></i> About</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold text-dark" id="life-tab" data-bs-toggle="tab" data-bs-target="#life-pane" type="button" role="tab"><i class="bi bi-journal-text me-1"></i> Life Story</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold text-dark" id="gallery-tab" data-bs-toggle="tab" data-bs-target="#gallery-pane" type="button" role="tab"><i class="bi bi-images me-1"></i> Gallery</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold text-dark" id="tributes-tab" data-bs-toggle="tab" data-bs-target="#tributes-pane" type="button" role="tab"><i class="bi bi-heart me-1"></i> Tributes</button>
+                        </li>
+                    </ul>
+
+                    <!-- Tab Content Panes -->
+                    <div class="tab-content p-4" id="memoryTabContent">
+                        
+                        <!-- ABOUT PANE -->
+                        <div class="tab-pane fade show active" id="about-pane" role="tabpanel">
+                            <div class="row g-4 align-items-center">
+                                <div class="col-md-4 text-center">
+                                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?fit=crop&w=200&h=200" class="rounded-circle shadow-sm object-fit-cover border mb-2" style="width: 120px; height: 120px;" alt="Profile">
+                                    <div class="d-flex justify-content-center gap-2 mt-2">
+                                        <span class="badge bg-success">Approved</span>
+                                        <span class="badge bg-dark">Public</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <h4 class="fw-bold text-dark mb-1">Late Lallan Writer</h4>
+                                    <p class="text-muted small mb-3">In honor of late Lallan Writer, all financial and material donations are directed towards community welfare projects, elders' care homes, and organizing annual memorial services.</p>
+                                    <ul class="list-unstyled small text-muted mb-0">
+                                        <li class="mb-2"><i class="bi bi-calendar-event text-warning me-2"></i><strong>Lifespan:</strong> 1945 - 2026</li>
+                                        <li class="mb-2"><i class="bi bi-geo-alt text-danger me-2"></i><strong>Location:</strong> Colombo, Sri Lanka</li>
+                                        <li class="mb-2"><i class="bi bi-heart-fill text-danger me-2"></i><strong>Donations:</strong> Enabled & Active</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- LIFE STORY PANE -->
+                        <div class="tab-pane fade" id="life-pane" role="tabpanel">
+                            <h6 class="fw-bold text-dark">Biography & Life History</h6>
+                            <p class="text-muted small">Lallan Writer was a dedicated individual who spent decades contributing to literature, community development, and uplifting underprivileged families. This section preserves their milestones, memoirs, and historic achievements.</p>
+                        </div>
+
+                        <!-- GALLERY PANE -->
+                        <div class="tab-pane fade" id="gallery-pane" role="tabpanel">
+                            <h6 class="fw-bold text-dark mb-3">Photo & Video Memories</h6>
+                            <div class="row g-2">
+                                <div class="col-4"><img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?fit=crop&w=200&h=150" class="img-fluid rounded shadow-sm w-100 object-fit-cover" style="height: 100px;"></div>
+                                <div class="col-4"><img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?fit=crop&w=200&h=150" class="img-fluid rounded shadow-sm w-100 object-fit-cover" style="height: 100px;"></div>
+                                <div class="col-4"><img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?fit=crop&w=200&h=150" class="img-fluid rounded shadow-sm w-100 object-fit-cover" style="height: 100px;"></div>
+                            </div>
+                        </div>
+
+                        <!-- TRIBUTES PANE -->
+                        <div class="tab-pane fade" id="tributes-pane" role="tabpanel">
+                            <h6 class="fw-bold text-dark mb-3">Condolences & Messages</h6>
+                            <div class="border rounded p-2 mb-2 bg-light">
+                                <small class="text-muted d-block"><strong>Amaan Silva:</strong> "An incredible soul who will always be remembered in our hearts."</small>
+                            </div>
+                            <div class="border rounded p-2 bg-light">
+                                <small class="text-muted d-block"><strong>Priyantha Perera:</strong> "Rest in peace. Thank you for everything you've done for the community."</small>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer bg-light px-4 py-3 d-flex justify-content-between">
+                    <span class="text-muted small">Memory ID: #MEM-001</span>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-outline-success btn-sm"><i class="bi bi-check-lg"></i> Approve</button>
+                        <button type="button" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i> Delete</button>
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VIEW MEMORY MODAL WITH TABS (CARD 2)       -->
+    <!-- ========================================== -->
+    <div class="modal fade" id="viewMemoryModal2" tabindex="-1" aria-labelledby="viewMemoryModalLabel2" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title font-serif" id="viewMemoryModalLabel2"><i class="bi bi-info-circle text-warning me-2"></i> Memory Profile: Arthur Pendelton</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    
+                    <!-- Modal Navigation Tabs -->
+                    <ul class="nav nav-tabs px-4 pt-3 bg-light border-bottom" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active fw-bold text-dark" data-bs-toggle="tab" data-bs-target="#about-pane-2" type="button" role="tab"><i class="bi bi-person me-1"></i> About</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold text-dark" data-bs-toggle="tab" data-bs-target="#life-pane-2" type="button" role="tab"><i class="bi bi-journal-text me-1"></i> Life Story</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold text-dark" data-bs-toggle="tab" data-bs-target="#gallery-pane-2" type="button" role="tab"><i class="bi bi-images me-1"></i> Gallery</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold text-dark" data-bs-toggle="tab" data-bs-target="#tributes-pane-2" type="button" role="tab"><i class="bi bi-heart me-1"></i> Tributes</button>
+                        </li>
+                    </ul>
+
+                    <!-- Tab Content Panes -->
+                    <div class="tab-content p-4">
+                        <div class="tab-pane fade show active" id="about-pane-2" role="tabpanel">
+                            <div class="row g-4 align-items-center">
+                                <div class="col-md-4 text-center">
+                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=200&h=200" class="rounded-circle shadow-sm object-fit-cover border mb-2" style="width: 120px; height: 120px;" alt="Profile">
+                                    <div class="d-flex justify-content-center gap-2 mt-2">
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                        <span class="badge bg-secondary">Private</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <h4 class="fw-bold text-dark mb-1">Arthur Pendelton</h4>
+                                    <p class="text-muted small mb-3">A private family archive to remember and honor relatives in a quiet, intimate setting.</p>
+                                    <ul class="list-unstyled small text-muted mb-0">
+                                        <li class="mb-2"><i class="bi bi-calendar-event text-warning me-2"></i><strong>Lifespan:</strong> 1950 - 2026</li>
+                                        <li class="mb-2"><i class="bi bi-geo-alt text-danger me-2"></i><strong>Location:</strong> Kandy, Sri Lanka</li>
+                                        <li class="mb-2"><i class="bi bi-heart text-muted me-2"></i><strong>Donations:</strong> Disabled</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="life-pane-2" role="tabpanel">
+                            <h6 class="fw-bold text-dark">Biography & Life History</h6>
+                            <p class="text-muted small">Private records and historical notes belonging to Arthur Pendelton.</p>
+                        </div>
+                        <div class="tab-pane fade" id="gallery-pane-2" role="tabpanel">
+                            <h6 class="fw-bold text-dark mb-3">Photo & Video Memories</h6>
+                            <p class="text-muted small">No public photos uploaded yet.</p>
+                        </div>
+                        <div class="tab-pane fade" id="tributes-pane-2" role="tabpanel">
+                            <h6 class="fw-bold text-dark mb-3">Condolences & Messages</h6>
+                            <p class="text-muted small">Private profile - no public messages visible.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light px-4 py-3 d-flex justify-content-between">
+                    <span class="text-muted small">Memory ID: #MEM-002</span>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-outline-success btn-sm"><i class="bi bi-check-lg"></i> Approve</button>
+                        <button type="button" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i> Delete</button>
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS and Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
