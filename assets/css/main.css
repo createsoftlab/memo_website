@@ -322,7 +322,7 @@ body {
 
 /* Sidebar Cards Specific Styling matching the provided image */
 .sidebar-card {
-  background-color: #f7ebe1; /* Soft warm beige background */
+  background-color: #f5dbbf ; /* Soft warm beige background */
   border: 1px solid #ebd3c2;
   transition: all 0.2s ease-in-out;
 }
