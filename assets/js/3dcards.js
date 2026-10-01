@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!container) return;
 
     let secScene, secCamera, secRenderer, secControls;
-    let secHeartGroup, secCoreMesh, secParticleSystem, secAmbientParticles;
+    let secHeartGroup, secCoreMesh, secParticleSystem;
     let secClock = new THREE.Clock();
     
     let secThemeIndex = 0;
@@ -291,277 +291,61 @@ document.addEventListener('DOMContentLoaded', () => {
         secRenderer.setSize(w, h);
     });
 
-    // Events
-    document.getElementById('sec-beat-btn').addEventListener('click', () => { secTargetBeatIntensity = 2.2; });
-    document.getElementById('sec-color-btn').addEventListener('click', () => {
-        secThemeIndex = (secThemeIndex + 1) % secThemes.length;
-        const theme = secThemes[secThemeIndex];
-        secScene.background = new THREE.Color(theme.bg);
-        secScene.fog.color = new THREE.Color(theme.bg);
-        if (secCoreMesh) {
-            secCoreMesh.material.color.setHex(theme.core);
-            secCoreMesh.material.emissive.setHex(theme.core);
-        }
-        if (secParticleSystem) secParticleSystem.material.color.setHex(theme.particles);
-        document.getElementById('heart-bpm-section').textContent = `Theme: ${theme.name}`;
-    });
+    // Safe Event Listeners (Elements පවතින විට පමණක් ක්‍රියාත්මක වේ)
+    const beatBtn = document.getElementById('sec-beat-btn');
+    if (beatBtn) {
+        beatBtn.addEventListener('click', () => { secTargetBeatIntensity = 2.2; });
+    }
+
+    const colorBtn = document.getElementById('sec-color-btn');
+    if (colorBtn) {
+        colorBtn.addEventListener('click', () => {
+            secThemeIndex = (secThemeIndex + 1) % secThemes.length;
+            const theme = secThemes[secThemeIndex];
+            secScene.background = new THREE.Color(theme.bg);
+            secScene.fog.color = new THREE.Color(theme.bg);
+            if (secCoreMesh) {
+                secCoreMesh.material.color.setHex(theme.core);
+                secCoreMesh.material.emissive.setHex(theme.core);
+            }
+            if (secParticleSystem) secParticleSystem.material.color.setHex(theme.particles);
+            
+            const bpmSection = document.getElementById('heart-bpm-section');
+            if (bpmSection) bpmSection.textContent = `Theme: ${theme.name}`;
+        });
+    }
 
     const explodeBtn = document.getElementById('sec-explode-btn');
-    explodeBtn.addEventListener('click', () => {
-        secIsExploded = !secIsExploded;
-        explodeBtn.classList.toggle('bg-rose-500/30', secIsExploded);
-    });
+    if (explodeBtn) {
+        explodeBtn.addEventListener('click', () => {
+            secIsExploded = !secIsExploded;
+            explodeBtn.classList.toggle('bg-rose-500/30', secIsExploded);
+        });
+    }
 
-    document.getElementById('sec-reset-btn').addEventListener('click', () => {
-        secIsExploded = false;
-        secAnimationSpeed = 1.0;
-        secControls.reset();
-        document.getElementById('heart-bpm-section').textContent = 'BPM: 75';
-    });
+    const resetBtn = document.getElementById('sec-reset-btn');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            secIsExploded = false;
+            secAnimationSpeed = 1.0;
+            secControls.reset();
+            const bpmSection = document.getElementById('heart-bpm-section');
+            if (bpmSection) bpmSection.textContent = 'BPM: 75';
+        });
+    }
 
-    document.getElementById('section-fullscreen-btn').addEventListener('click', () => {
-        const wrapper = container.parentElement;
-        if (!document.fullscreenElement) {
-            wrapper.requestFullscreen().catch(err => console.error(err));
-        } else {
-            if (document.exitFullscreen) document.exitFullscreen();
-        }
-    });
+    const fullscreenBtn = document.getElementById('section-fullscreen-btn');
+    if (fullscreenBtn) {
+        fullscreenBtn.addEventListener('click', () => {
+            const wrapper = container.parentElement;
+            if (!document.fullscreenElement) {
+                wrapper.requestFullscreen().catch(err => console.error(err));
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        });
+    }
 });
-
-
-//flowers
-// document.addEventListener('DOMContentLoaded', () => {
-//     const container = document.getElementById('cat-multiflower-canvas-container');
-//     if (!container) return;
-
-//     let scene, camera, renderer, controls;
-//     let roseGroups = [];
-//     let ambientParticles;
-//     let clock = new THREE.Clock();
-    
-//     let themeIndex = 0;
-//     let isBurst = false;
-
-//     // Rose Color Themes
-//     const themes = [
-//         { name: "Velvet Red Roses", petal: 0xd81b60, center: 0x880e4f },
-//         { name: "Golden Sunset", petal: 0xffb300, center: 0xe65100 },
-//         { name: "Soft Pink Roses", petal: 0xff80ab, center: 0xc51162 },
-//         { name: "Pure White Roses", petal: 0xffffff, center: 0xffd54f }
-//     ];
-
-//     scene = new THREE.Scene();
-
-//     const width = container.clientWidth;
-//     const height = container.clientHeight;
-
-//     camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
-//     camera.position.set(0, 0, 7);
-
-//     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
-//     renderer.setSize(width, height);
-//     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-//     container.appendChild(renderer.domElement);
-
-//     controls = new THREE.OrbitControls(camera, renderer.domElement);
-//     controls.enableDamping = true;
-//     controls.dampingFactor = 0.05;
-//     controls.maxDistance = 12;
-//     controls.minDistance = 2;
-//     controls.autoRotate = true;
-//     controls.autoRotateSpeed = 0.8;
-
-//     // Lighting
-//     const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
-//     scene.add(ambientLight);
-
-//     const pointLight = new THREE.PointLight(0xffffff, 4, 50);
-//     pointLight.position.set(3, 5, 4);
-//     scene.add(pointLight);
-
-//     const masterGroup = new THREE.Group();
-//     scene.add(masterGroup);
-
-//     // Function to create a true Rose-like structure using curved petal planes
-//     function createTrueRose(theme, scale = 1) {
-//         const flowerGroup = new THREE.Group();
-
-//         // Rose Center Core (Tight bud)
-//         const coreGeo = new THREE.SphereGeometry(0.25 * scale, 16, 16);
-//         const coreMat = new THREE.MeshStandardMaterial({ color: theme.center, roughness: 0.4 });
-//         const coreMesh = new THREE.Mesh(coreGeo, coreMat);
-//         flowerGroup.add(coreMesh);
-
-//         const petals = [];
-//         const layers = 3; // 3 layers of rose petals
-
-//         for (let l = 0; l < layers; l++) {
-//             const petalCount = 6 + l * 3; // Inner to outer layers
-//             const layerRadius = (0.35 + l * 0.3) * scale;
-//             const petalWidth = (0.5 + l * 0.2) * scale;
-//             const petalHeight = (0.6 + l * 0.2) * scale;
-
-//             for (let i = 0; i < petalCount; i++) {
-//                 const angle = (i / petalCount) * Math.PI * 2 + (l * 0.4); // Stagger layers
-
-//                 // Using PlaneGeometry with double side to form soft curved petals
-//                 const petalGeo = new THREE.PlaneGeometry(petalWidth, petalHeight, 4, 4);
-                
-//                 // Bend the plane slightly to look like a curved rose petal
-//                 const pos = petalGeo.attributes.position;
-//                 for (let p = 0; p < pos.count; p++) {
-//                     let vx = pos.getX(p);
-//                     let vy = pos.getY(p);
-//                     // Curve outward at the top
-//                     let vz = Math.sin((vy / petalHeight) * Math.PI) * 0.15;
-//                     pos.setZ(p, vz);
-//                 }
-//                 petalGeo.computeVertexNormals();
-
-//                 const petalMat = new THREE.MeshPhysicalMaterial({
-//                     color: theme.petal,
-//                     emissive: theme.petal,
-//                     emissiveIntensity: 0.2,
-//                     roughness: 0.3,
-//                     metalness: 0.05,
-//                     transmission: 0.2,
-//                     transparent: true,
-//                     opacity: 0.95,
-//                     side: THREE.DoubleSide
-//                 });
-
-//                 const petal = new THREE.Mesh(petalGeo, petalMat);
-
-//                 // Position in a circle
-//                 petal.position.x = Math.cos(angle) * layerRadius;
-//                 petal.position.z = Math.sin(angle) * layerRadius;
-//                 petal.position.y = (l * 0.05 - 0.1) * scale;
-
-//                 // Rotate outwards to form a blooming rose shape
-//                 petal.rotation.y = -angle + Math.PI / 2;
-//                 petal.rotation.x = 0.5 + (l * 0.2);
-
-//                 petal.userData = { baseAngle: angle, layer: l };
-//                 flowerGroup.add(petal);
-//                 petals.push(petal);
-//             }
-//         }
-
-//         flowerGroup.userData = { petals: petals };
-//         return flowerGroup;
-//     }
-
-//     // Generate Multiple Roses Cluster
-//     const roseCount = 5;
-//     for (let i = 0; i < roseCount; i++) {
-//         const theme = themes[themeIndex];
-//         const rose = createTrueRose(theme, i === 0 ? 1.25 : 0.8);
-
-//         if (i === 0) {
-//             rose.position.set(0, 0, 0);
-//         } else {
-//             const u = Math.random();
-//             const v = Math.random();
-//             const theta = u * 2.0 * Math.PI;
-//             const phi = Math.acos(2.0 * v - 1.0);
-//             const r = 1.8 + Math.random() * 1.2;
-            
-//             rose.position.x = r * Math.sin(phi) * Math.cos(theta);
-//             rose.position.y = r * Math.sin(phi) * Math.sin(theta);
-//             rose.position.z = r * Math.cos(phi);
-            
-//             rose.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
-//         }
-
-//         masterGroup.add(rose);
-//         roseGroups.push(rose);
-//     }
-
-//     // Floating Ambient Dust Particles
-//     const pGeo = new THREE.BufferGeometry();
-//     const positions = [];
-//     for (let i = 0; i < 200; i++) {
-//         positions.push((Math.random() - 0.5) * 12, (Math.random() - 0.5) * 12, (Math.random() - 0.5) * 12);
-//     }
-//     pGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-//     ambientParticles = new THREE.Points(pGeo, new THREE.PointsMaterial({
-//         color: 0xff80ab, size: 0.06, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending
-//     }));
-//     scene.add(ambientParticles);
-
-//     function animate() {
-//         requestAnimationFrame(animate);
-//         const time = clock.getElapsedTime();
-//         controls.update();
-
-//         masterGroup.rotation.y = time * 0.2;
-
-//         roseGroups.forEach((rose, rIndex) => {
-//             rose.rotation.x += 0.002;
-//             rose.rotation.z += 0.001;
-
-//             const burstFactor = isBurst ? 1.35 : 1.0;
-
-//             if (rose.userData && rose.userData.petals) {
-//                 rose.userData.petals.forEach((petal, pIndex) => {
-//                     const wave = Math.sin(time * 3 + rIndex + pIndex) * 0.04;
-//                     petal.scale.set(burstFactor + wave, burstFactor + wave, burstFactor);
-//                 });
-//             }
-//         });
-
-//         if (ambientParticles) {
-//             ambientParticles.rotation.y -= 0.001;
-//         }
-
-//         renderer.render(scene, camera);
-//     }
-//     animate();
-
-//     window.addEventListener('resize', () => {
-//         if (!container) return;
-//         const w = container.clientWidth;
-//         const h = container.clientHeight;
-//         camera.aspect = w / h;
-//         camera.updateProjectionMatrix();
-//         renderer.setSize(w, h);
-//     });
-
-//     // Theme Switcher
-//     document.getElementById('cat-multiflower-color-btn').addEventListener('click', () => {
-//         themeIndex = (themeIndex + 1) % themes.length;
-//         const theme = themes[themeIndex];
-        
-//         roseGroups.forEach(rose => {
-//             rose.children.forEach((child, idx) => {
-//                 if (idx === 0) {
-//                     child.material.color.setHex(theme.center);
-//                 } else {
-//                     child.material.color.setHex(theme.petal);
-//                     child.material.emissive.setHex(theme.petal);
-//                 }
-//             });
-//         });
-        
-//         document.getElementById('cat-multiflower-status').textContent = theme.name;
-//     });
-
-//     // Bloom / Burst Button
-//     const bloomBtn = document.getElementById('cat-multiflower-bloom-btn');
-//     bloomBtn.addEventListener('click', () => {
-//         isBurst = !isBurst;
-//         bloomBtn.classList.toggle('bg-amber-500/30', isBurst);
-//     });
-
-//     // Reset Button
-//     document.getElementById('cat-multiflower-reset-btn').addEventListener('click', () => {
-//         isBurst = false;
-//         bloomBtn.classList.remove('bg-amber-500/30');
-//         controls.reset();
-//         document.getElementById('cat-multiflower-status').textContent = 'True 3D Roses';
-//     });
-// });
 
 
 
@@ -618,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const masterGroup = new THREE.Group();
     scene.add(masterGroup);
 
-    // Function to create a stylized 3D Dove (Abstract Low-Poly Dove shape using geometries)
+    // Function to create a stylized 3D Dove
     function createDove(theme, scale = 1) {
         const doveGroup = new THREE.Group();
 
@@ -637,7 +421,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Wings (Left & Right)
         const wingGeo = new THREE.BoxGeometry(0.9 * scale, 0.05 * scale, 0.4 * scale);
-        
         const wingMat = new THREE.MeshStandardMaterial({ 
             color: theme.body, 
             roughness: 0.3,
@@ -716,12 +499,9 @@ document.addEventListener('DOMContentLoaded', () => {
             dove.rotation.x += 0.001;
             dove.rotation.z += 0.001;
 
-            const burstFactor = isBurst ? 1.3 : 1.0;
-
             if (dove.userData && dove.userData.wings) {
                 dove.userData.wings.forEach(wing => {
                     const side = wing.userData.side;
-                    // Flapping motion using Math.sin
                     wing.rotation.z = side * (Math.sin(time * 6 + dIndex) * 0.4 + 0.2);
                 });
             }
@@ -744,177 +524,50 @@ document.addEventListener('DOMContentLoaded', () => {
         renderer.setSize(w, h);
     });
 
-    // Theme Switcher Button
-    document.getElementById('cat-multiflower-color-btn').addEventListener('click', () => {
-        themeIndex = (themeIndex + 1) % themes.length;
-        const theme = themes[themeIndex];
-        
-        dovesGroup.forEach(dove => {
-            dove.children.forEach((child, idx) => {
-                if (child.material) {
-                    child.material.color.setHex(theme.body);
-                    if (child.material.emissive) {
-                        child.material.emissive.setHex(theme.glow);
+    // Safe Event Listeners (Null Safety Checks සමඟ)
+    const colorBtn = document.getElementById('cat-multiflower-color-btn');
+    if (colorBtn) {
+        colorBtn.addEventListener('click', () => {
+            themeIndex = (themeIndex + 1) % themes.length;
+            const theme = themes[themeIndex];
+            
+            dovesGroup.forEach(dove => {
+                dove.children.forEach(child => {
+                    if (child.material) {
+                        child.material.color.setHex(theme.body);
+                        if (child.material.emissive) {
+                            child.material.emissive.setHex(theme.glow);
+                        }
                     }
-                }
+                });
             });
+            
+            const statusEl = document.getElementById('cat-multiflower-status');
+            if (statusEl) statusEl.textContent = theme.name;
         });
-        
-        document.getElementById('cat-multiflower-status').textContent = theme.name;
-    });
+    }
 
-    // Spread / Burst Effect Button
     const bloomBtn = document.getElementById('cat-multiflower-bloom-btn');
-    bloomBtn.addEventListener('click', () => {
-        isBurst = !isBurst;
-        bloomBtn.classList.toggle('bg-amber-500/30', isBurst);
-    });
+    if (bloomBtn) {
+        bloomBtn.addEventListener('click', () => {
+            isBurst = !isBurst;
+            bloomBtn.classList.toggle('bg-amber-500/30', isBurst);
+        });
+    }
 
-    // Reset Button
-    document.getElementById('cat-multiflower-reset-btn').addEventListener('click', () => {
-        isBurst = false;
-        bloomBtn.classList.remove('bg-amber-500/30');
-        controls.reset();
-        document.getElementById('cat-multiflower-status').textContent = 'Peace Doves';
-    });
+    const resetBtn = document.getElementById('cat-multiflower-reset-btn');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            isBurst = false;
+            if (bloomBtn) bloomBtn.classList.remove('bg-amber-500/30');
+            controls.reset();
+            const statusEl = document.getElementById('cat-multiflower-status');
+            if (statusEl) statusEl.textContent = 'Peace Doves';
+        });
+    }
 });
 
 
-
-//3d card 
-
-
-// document.addEventListener('DOMContentLoaded', () => {
-//     const container = document.getElementById('memory-3d-container');
-//     if (!container) return;
-
-//     let scene, camera, renderer, controls;
-//     let memoryGroup = new THREE.Group();
-//     let clock = new THREE.Clock();
-
-//     // Memory cards data list
-//     const memories = [
-//         { title: "Always in our hearts", subtitle: "Remembering " },
-//         { title: "Forever Missed", subtitle: "A beautiful soul" },
-//         { title: "Cherished Moments", subtitle: "Rest in Peace" },
-//         { title: "Unforgettable", subtitle: "In loving memory" },
-//         { title: "Eternal Light", subtitle: "Gone but not forgotten" },
-//         { title: "Precious Smiles", subtitle: "Always with us" }
-//     ];
-
-//     scene = new THREE.Scene();
-
-//     const width = container.clientWidth;
-//     const height = container.clientHeight;
-
-//     camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
-//     camera.position.set(0, 0, 6.0);
-
-//     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-//     renderer.setSize(width, height);
-//     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-//     renderer.setClearColor(0x000000, 0); // සම්පූර්ණයෙන්ම Transparent පසුබිම
-//     container.appendChild(renderer.domElement);
-
-//     // OrbitControls for smooth drag & swipe support
-//     controls = new THREE.OrbitControls(camera, renderer.domElement);
-//     controls.enableDamping = true;
-//     controls.dampingFactor = 0.05;
-//     controls.autoRotate = true;          
-//     controls.autoRotateSpeed = 0.8;      
-//     controls.enableZoom = false;
-
-//     // Lighting setup වැඩි කර කාඩ්පත් හොඳින් මතුවී පෙනෙන සේ සැකසීම
-//     scene.add(new THREE.AmbientLight(0xffffff, 2.0)); // Ambient light වැඩි කළා
-//     const pointLight = new THREE.PointLight(0xffffff, 3.5, 50);
-//     pointLight.position.set(0, 5, 5);
-//     scene.add(pointLight);
-
-//     scene.add(memoryGroup);
-
-//     // Create 3D memory cards dynamically (ප්‍රමාණය ලොකු කර ඇත)
-//     memories.forEach((mem, index) => {
-//         const cardCanvas = document.createElement('canvas');
-//         cardCanvas.width = 640;  // Resolution වැඩි කළා (Sharp පෙනුම සඳහා)
-//         cardCanvas.height = 400;
-//         const ctx = cardCanvas.getContext('2d');
-
-//         ctx.clearRect(0, 0, cardCanvas.width, cardCanvas.height);
-
-//         // Glassmorphism background with nice glow tint
-//         ctx.fillStyle = 'rgba(58, 39, 1, 0.87)'; 
-//         ctx.roundRect(10, 10, 620, 380, 28);
-//         ctx.fill();
-
-//         // Bright Glowing 3D Border
-//         ctx.strokeStyle = 'rgb(24, 16, 1)';
-//         ctx.lineWidth = 6;
-//         ctx.stroke();
-
-//         // Card Text Details (විශාල කර පැහැදිලිව පෙන්වීම)
-//         ctx.fillStyle = '#ffffff';
-//         ctx.font = 'bold 42px sans-serif';
-//         ctx.textAlign = 'center';
-//         ctx.fillText(mem.title, 320, 160);
-
-//         ctx.fillStyle = '#cbd5e1';
-//         ctx.font = '28px sans-serif';
-//         ctx.fillText(mem.subtitle, 320, 220);
-
-//         ctx.fillStyle = '#ffd000';
-//         ctx.font = 'italic 22px sans-serif';
-//         ctx.fillText("❤️ List Your Memory", 320, 300);
-
-//         const texture = new THREE.CanvasTexture(cardCanvas);
-        
-//         // PlaneGeometry මඟින් කාඩ්පතේ ප්‍රමාණය (Width & Height) පෙරට වඩා විශාල කළා
-//         const geometry = new THREE.PlaneGeometry(2.7, 1.7); 
-//         const material = new THREE.MeshStandardMaterial({ 
-//             map: texture, 
-//             side: THREE.DoubleSide,
-//             transparent: true,
-//             roughness: 0.1,
-//             metalness: 0.1
-//         });
-
-//         const card = new THREE.Mesh(geometry, material);
-
-//         // Circular ring radius වැඩි කර කාඩ් එකිනෙක අතර ඉඩ ලබා දීම
-//         const angle = (index / memories.length) * Math.PI * 2;
-//         const radius = 3.1; 
-//         card.position.x = Math.cos(angle) * radius;
-//         card.position.z = Math.sin(angle) * radius;
-//         card.position.y = (Math.sin(index * 2) * 0.4);
-
-//         card.rotation.y = -angle + Math.PI / 2;
-//         card.userData = { originalY: card.position.y };
-//         memoryGroup.add(card);
-//     });
-
-//     // Animation Loop
-//     function animate() {
-//         requestAnimationFrame(animate);
-//         const time = clock.getElapsedTime();
-//         controls.update();
-
-//         memoryGroup.children.forEach((card, idx) => {
-//             card.position.y = card.userData.originalY + Math.sin(time * 2.2 + idx) * 0.1;
-//         });
-
-//         renderer.render(scene, camera);
-//     }
-//     animate();
-
-//     // Responsive screen resize
-//     window.addEventListener('resize', () => {
-//         if (!container) return;
-//         const w = container.clientWidth;
-//         const h = container.clientHeight;
-//         camera.aspect = w / h;
-//         camera.updateProjectionMatrix();
-//         renderer.setSize(w, h);
-//     });
-// });
 
 
 document.addEventListener('DOMContentLoaded', () => {
