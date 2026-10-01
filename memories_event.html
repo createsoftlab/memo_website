@@ -133,10 +133,10 @@
     <div class="row g-4">
       
       <!-- Left Column: Memorial Events & Live Banner -->
-      <div class="col-lg-8 d-flex flex-column gap-4">
+      <div class="col-lg-8 d-flex flex-column gap-4 ">
 
         <!-- Live Event Stream Banner -->
-        <div class="live-banner rounded p-3 text-white d-flex flex-wrap align-items-center justify-content-between gap-3 shadow-sm">
+        <div class="live-banner rounded p-3 text-white d-flex flex-wrap align-items-center justify-content-between gap-3 shadow-sm animate-main-column">
           <div class="d-flex align-items-center gap-3">
             <span class="live-badge rounded-pill px-3 py-1 fw-bold text-uppercase d-flex align-items-center gap-2">
               <span class="pulse-dot"></span> LIVE / UPCOMING
@@ -152,7 +152,7 @@
         </div>
 
         <!-- Notification Banner / Reminder Announcement -->
-        <div class="sidebar-card p-3 rounded border-start border-4 border-warning shadow-sm">
+        <div class="sidebar-card p-3 rounded border-start border-4 border-warning shadow-sm animate-main-column">
           <div class="d-flex align-items-start gap-3">
             <div class="bg-warning bg-opacity-20 p-2 rounded text-warning-emphasis">
               <i class="bi bi-bell-fill fs-4"></i>
@@ -176,7 +176,7 @@
         </div>
 
         <!-- Main Event Card -->
-        <div class="sidebar-card p-4 rounded shadow-sm bg-memorial-card">
+        <div class="sidebar-card p-4 rounded shadow-sm bg-memorial-card animate-main-column">
           <h4 class="fw-bold text-dark mb-1">Annual Memorial Alms Giving (සංඝගත දානය)</h4>
           <p class="text-muted small border-bottom pb-3">Please RSVP to help the family organize the arrangements accordingly.</p>
 
@@ -198,7 +198,7 @@
               <i class="bi bi-calendar-event fs-5 text-memorial-accent mt-1"></i>
               <div>
                 <strong class="text-dark d-block">Date & Time</strong>
-                <span class="text-muted small">Saturday, August 22, 2026 at 10:30 AM (IST)</span>
+                <span class="small-textbold">Saturday, August 22, 2026 at 10:30 AM (IST)</span>
               </div>
             </div>
 
@@ -206,7 +206,7 @@
               <i class="bi bi-camera-video fs-5 text-memorial-accent mt-1"></i>
               <div>
                 <strong class="text-dark d-block">Participation Mode</strong>
-                <span class="text-muted small">In-person & Virtual Live Streaming Available</span>
+                <span class="small-textbold small">In-person & Virtual Live Streaming Available</span>
               </div>
             </div>
 
@@ -214,7 +214,7 @@
               <i class="bi bi-info-circle fs-5 text-memorial-accent mt-1"></i>
               <div>
                 <strong class="text-dark d-block">Event Description & Instructions</strong>
-                <p class="text-muted small mb-0">
+                <p class="small-textbold small mb-0">
                   The Buddha Puja and Sanghika Dana offering will commence at 11:00 AM, followed by the sermon (ධර්මානුශාසනාව) and transfer of merits at 12:30 PM. Everyone is warmly welcome to partake in the blessing ceremony.
                 </p>
               </div>
@@ -224,7 +224,7 @@
               <i class="bi bi-geo-alt fs-5 text-memorial-accent mt-1"></i>
               <div>
                 <strong class="text-dark d-block">Venue Location</strong>
-                <span class="text-muted small">Memorial Hall, Dream Lake Residence, Colorado 80517, USA / Online Stream</span>
+                <span class="small-textbold small">Memorial Hall, Dream Lake Residence, Colorado 80517, USA / Online Stream</span>
               </div>
             </div>
 
@@ -249,30 +249,164 @@
             <div class="ratio ratio-16x9 rounded overflow-hidden shadow-sm bg-black">
               <div class="d-flex align-items-center justify-content-center text-white flex-column">
                 <i class="bi bi-play-circle fs-1 text-warning mb-2"></i>
-                <span class="small opacity-75">Livestream will activate when the event starts.</span>
+                <span class=" small-textbold small">Livestream will activate when the event starts.</span>
               </div>
             </div>
           </div>
 
         </div>
 
+
+
+      <!--SECOND EVENT STRART HERE -->
+
+
+             <!-- Live Event Stream Banner -->
+        <div class="live-banner rounded p-3 text-white d-flex flex-wrap align-items-center justify-content-between gap-3 shadow-sm animate-main-column">
+          <div class="d-flex align-items-center gap-3">
+            <span class="live-badge rounded-pill px-3 py-1 fw-bold text-uppercase d-flex align-items-center gap-2">
+              <span class="pulse-dot"></span> LIVE / UPCOMING
+            </span>
+            <div>
+              <h6 class="mb-0 fw-bold">Memorial Alms Giving Service</h6>
+              <small class="opacity-75">Live Webcast will start on Event Day</small>
+            </div>
+          </div>
+          <a href="#eventVideo" class="btn btn-light btn-sm text-dark fw-bold rounded-pill px-3">
+            <i class="bi bi-broadcast me-1 text-danger"></i> Watch Stream
+          </a>
+        </div>
+
+        <!-- Notification Banner / Reminder Announcement -->
+        <div class="sidebar-card p-3 rounded border-start border-4 border-warning shadow-sm animate-main-column">
+          <div class="d-flex align-items-start gap-3">
+            <div class="bg-warning bg-opacity-20 p-2 rounded text-warning-emphasis">
+              <i class="bi bi-bell-fill fs-4"></i>
+            </div>
+            <div class="flex-grow-1">
+              <h6 class="fw-bold text-dark mb-1">Memorial Alms Giving & Sanghika Dana Notice</h6>
+              <p class="small text-muted mb-2">
+                The family of late Lallan Writer cordially invites all relatives, friends, and well-wishers to join the 3-Month Memorial Alms Giving (දන් දීම සහ පින් අනුමෝදන් කිරීම) to transfer merits to his soul.
+              </p>
+              <!-- Countdown / Reminder Widget -->
+              <div class="d-flex align-items-center gap-2 mt-2">
+                <span class="badge bg-memorial-accent text-white py-2 px-3 rounded-pill fs-7">
+                  <i class="bi bi-clock-history me-1"></i> Reminder: 5 Days Remaining
+                </span>
+                <!-- <button class="btn btn-sm btn-outline-memorial-dark rounded-pill py-1 px-3" onclick="alert('Reminder set for your calendar!')">
+                  <i class="bi bi-calendar-plus me-1"></i> Add to Calendar
+                </button> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Event Card -->
+        <div class="sidebar-card p-4 rounded shadow-sm bg-memorial-card animate-main-column">
+          <h4 class="fw-bold text-dark mb-1">Annual Memorial Alms Giving (සංඝගත දානය)</h4>
+          <p class="text-muted small border-bottom pb-3">Please RSVP to help the family organize the arrangements accordingly.</p>
+
+          <!-- RSVP Card Container -->
+          <!-- <div class="rsvp-box rounded p-3 mb-4 bg-white border">
+            <label class="fw-bold text-dark mb-2 small d-block">Are you able to attend in person or virtually?</label>
+            <select class="form-select form-select-sm border-memorial" id="rsvpSelect">
+              <option value="none" selected>No reply</option>
+              <option value="yes">Yes, I will attend in person</option>
+              <option value="virtual">I will join online (Virtual)</option>
+              <option value="no">Regretfully unable to attend</option>
+            </select>
+          </div> -->
+
+          <!-- Event Details List -->
+          <div class="event-details d-flex flex-column gap-3 mb-4">
+            
+            <div class="d-flex align-items-start gap-3">
+              <i class="bi bi-calendar-event fs-5 text-memorial-accent mt-1"></i>
+              <div>
+                <strong class="text-dark d-block">Date & Time</strong>
+                <span class="small-textbold">Saturday, August 22, 2026 at 10:30 AM (IST)</span>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-start gap-3">
+              <i class="bi bi-camera-video fs-5 text-memorial-accent mt-1"></i>
+              <div>
+                <strong class="text-dark d-block">Participation Mode</strong>
+                <span class="small-textbold small">In-person & Virtual Live Streaming Available</span>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-start gap-3">
+              <i class="bi bi-info-circle fs-5 text-memorial-accent mt-1"></i>
+              <div>
+                <strong class="text-dark d-block">Event Description & Instructions</strong>
+                <p class="small-textbold small mb-0">
+                  The Buddha Puja and Sanghika Dana offering will commence at 11:00 AM, followed by the sermon (ධර්මානුශාසනාව) and transfer of merits at 12:30 PM. Everyone is warmly welcome to partake in the blessing ceremony.
+                </p>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-start gap-3">
+              <i class="bi bi-geo-alt fs-5 text-memorial-accent mt-1"></i>
+              <div>
+                <strong class="text-dark d-block">Venue Location</strong>
+                <span class="small-textbold small">Memorial Hall, Dream Lake Residence, Colorado 80517, USA / Online Stream</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Location Map Placeholder -->
+          <div class="map-container rounded mb-4 overflow-hidden shadow-sm border">
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1839482811776!2d-73.98565568459377!3d40.74844097932801!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259a9b3117469%3A0xd134e199a405a163!2sEmpire%20State%20Building!5e0!3m2!1sen!2slk!4v1629800000000!5m2!1sen!2slk" 
+              width="100%" 
+              height="200" 
+              style="border:0;" 
+              allowfullscreen="" 
+              loading="lazy">
+            </iframe>
+          </div>
+
+          <!-- Event Video Stream Section -->
+          <div id="eventVideo" class="pt-3 border-top">
+            <h6 class="fw-bold text-dark mb-1">Live Event Broadcast</h6>
+            <p class="small text-muted mb-3">This service will be livestreamed below so family members globally can participate.</p>
+            <div class="ratio ratio-16x9 rounded overflow-hidden shadow-sm bg-black">
+              <div class="d-flex align-items-center justify-content-center text-white flex-column">
+                <i class="bi bi-play-circle fs-1 text-warning mb-2"></i>
+                <span class=" small-textbold small">Livestream will activate when the event starts.</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+
+
       </div>
+
+
+
+
+      
 
       <!-- Right Column: Sidebar (Donations, Share & Info) -->
       <div class="col-lg-4 d-flex flex-column gap-3">
 
         <!-- Donation / Meritorious Contributions Card -->
-        <div class="sidebar-card p-3 rounded shadow-sm bg-memorial-card">
+        <div class="main-content-card p-3 rounded shadow-sm bg-memorial-card">
           <div class="d-flex align-items-center gap-2 mb-2">
             <i class="bi bi-heart-fill text-danger fs-5"></i>
             <h6 class="fw-bold mb-0 text-dark">Flowers / Donations</h6>
           </div>
-          <p class="small text-muted mb-3">Please consider a charity contribution in honor of Lallan Writer to support local elder care homes.</p>
+          <p class="small fw-semibold mb-3">Please consider a charity contribution in honor of Lallan Writer to support local elder care homes.</p>
           
           <div class="donation-progress bg-white p-3 rounded border mb-3">
             <div class="d-flex justify-content-between align-items-baseline mb-1">
               <span class="fs-4 fw-bold text-dark">$3,375.00</span>
-              <span class="small text-muted">Raised by 10 people</span>
+              <span class="small fw-semibold">Raised by 10 people</span>
             </div>
             <div class="progress" style="height: 6px;">
               <div class="progress-bar bg-memorial-accent" style="width: 68%;"></div>
@@ -290,23 +424,23 @@
           <!-- Recent Contributions -->
           <h6 class="fw-bold small text-dark border-bottom pb-2 mb-2">Recent Contributions</h6>
           <div class="d-flex justify-content-between align-items-center small py-1 border-bottom border-light-subtle">
-            <span class="text-muted">James Reynolds</span>
+            <span class="small-textbold">James Reynolds</span>
             <span class="fw-bold text-dark">$20.00</span>
           </div>
           <div class="d-flex justify-content-between align-items-center small py-1 border-bottom border-light-subtle">
-            <span class="text-muted">Adam Green</span>
+            <span class="small-textbold">Adam Green</span>
             <span class="fw-bold text-dark">$30.00</span>
           </div>
           <div class="d-flex justify-content-between align-items-center small py-1">
-            <span class="text-muted">Darlene Leonardo</span>
+            <span class="small-textbold">Darlene Leonardo</span>
             <span class="fw-bold text-dark">$40.00</span>
           </div>
         </div>
 
         <!-- Share Memorial / Event Section -->
-        <div class="sidebar-card p-3 rounded shadow-sm">
+        <div class="main-content-card p-3 rounded shadow-sm">
           <h6 class="fw-bold mb-2 text-dark">Share this memorial event</h6>
-          <p class="small text-muted mb-3">Help notify relatives and friends by sharing this invitation page.</p>
+          <p class="small fw-semibold mb-3">Help notify relatives and friends by sharing this invitation page.</p>
           
           <div class="d-flex gap-2">
             <button class="btn btn-facebook flex-fill py-2 d-flex align-items-center justify-content-center gap-1" title="Share on Facebook">
@@ -322,7 +456,7 @@
         </div>
 
         <!-- Invite Panel -->
-        <div class="sidebar-card p-3 rounded shadow-sm">
+        <div class="main-content-card p-3 rounded shadow-sm">
           <div class="d-flex justify-content-between align-items-start mb-2">
             <h6 class="fw-bold mb-0 me-2 text-dark">Invite Lallan's family and friends</h6>
             <i class="bi bi-person-add fs-4 text-muted"></i>
@@ -408,6 +542,31 @@
   <!-- JavaScript Files -->
   <script src="assets/js/main.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1 // අයිතමයෙන් 10%ක් තිරයට පෙනުනු විගස ඇනිමේෂන් එක පටන් ගනී
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('reveal');
+                observer.unobserve(entry.target); // එක සැරයක් ඇනිමේෂන් එක වුණාට පසු නැවත අවශ්‍ය නොවේ
+            }
+        });
+    }, observerOptions);
+
+    // animate-main-column සියල්ල සඳහා observer එක සම්බන්ධ කිරීම
+    document.querySelectorAll('.animate-main-column').forEach(el => {
+        observer.observe(el);
+    });
+});
+  </script>
 
 </body>
 </html>

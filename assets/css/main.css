@@ -446,3 +446,27 @@ body {
     color: var(--nav-hover);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
+
+
+
+
+
+/* --- Main Content Cards Styling (Tea / Memorial Theme) --- */
+.main-content-card {
+    background-color: #f5dbbf !important; /* Soft warm cream-brown base */
+    border: 1px solid #e6ded6 !important;   /* Subtle earthy border */
+    color: #4a3525 !important;            /* Rich deep tea-brown text */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover කරද්දී ලැබෙන ලස්සන 3D/Lift effect එක (අවශ්‍ය නම් පමණි) */
+.main-content-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(74, 53, 37, 0.08) !important;
+}
+
+.small-textbold{
+   font-weight: 600 !important; /* Semi-bold look */
+    color: #1b1504 !important;    /* Rich deep tea-brown color */
+}
+
