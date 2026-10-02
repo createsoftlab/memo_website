@@ -616,3 +616,113 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     filter: invert(0.5); /* Icon එක පෙනෙන ලෙස සැකසීම */
 }
 }
+
+
+
+/* Custom Profile Card Styles */
+.custom-profile-card {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border-card) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-profile-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 .5rem 1rem rgba(74, 40, 24, 0.1) !important;
+}
+
+
+
+
+
+
+
+
+/* Card Banner Styling using your Theme Colors */
+.card-banner {
+  height: 110px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  /* Theme gradient using your dark and medium brown variables with opacity */
+  background-image: linear-gradient(135deg, rgba(45, 26, 16, 0.88), rgba(77, 45, 29, 0.88)), var(--banner-img);
+}
+
+/* Individual Background Images for each card */
+.banner-1 { --banner-img: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400'); }
+.banner-2 { --banner-img: url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=400'); }
+.banner-3 { --banner-img: url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400'); }
+.banner-4 { --banner-img: url('https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400'); }
+
+/* Avatar & Title positioning adjustment */
+.avatar-title-wrapper {
+  position: absolute;
+  bottom: 0;
+  left: 1.5rem;
+  transform: translateY(50%);
+}
+
+/* Button Styling using your theme colors */
+.btn-theme-gold {
+  background-color: var(--gold-accent);
+  color: var(--text-brown);
+  border: none;
+}
+
+.btn-theme-gold:hover {
+  background-color: var(--gold-hover);
+  color: var(--text-brown);
+}
+
+/* Text styles */
+.text-theme-brown {
+  color: var(--text-brown);
+}
+
+.text-theme-muted {
+  color: var(--text-accent);
+  font-size: 0.75rem;
+}
+
+/* Avatar & Title positioning adjustment */
+.avatar-title-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 1.5rem;
+  transform: translateY(-50%);
+}
+
+/* Profile Avatar Styles */
+.profile-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 .125rem .25rem rgba(0, 0, 0, 0.075);
+  object-fit: cover;
+}
+
+
+/* Footer Theme Mapping */
+.bg-memorial-dark {
+  background-color: var(--nav-bg) !important;
+}
+
+.text-gold {
+  color: var(--gold-accent) !important;
+}
+
+.text-light-tan {
+  color: var(--bg-card-tan-light) !important;
+}
+
+.leading-relaxed {
+  line-height: 1.6;
+}
+
+/* Footer social buttons hover effect */
+.footer-social-btn:hover {
+  background-color: var(--gold-accent) !important;
+  color: var(--text-brown) !important;
+  border-color: var(--gold-accent) !important;
+}

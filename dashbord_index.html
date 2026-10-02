@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <!-- Custom External Dashboard CSS -->
     <link rel="stylesheet" href="assets/css/dashboard-main.css">
+    <!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 </head>
 <body>
 
@@ -29,14 +31,14 @@
 
             <ul class="nav flex-column py-3">
                 <li class="nav-item">
-                    <a href="dashbord_index.html" class="nav-link">
+                    <a href="dashbord_index.html" class="nav-link active">
                         <span><i class="bi bi-speedometer2 me-2"></i> My Dashboard</span>
                     </a>
                 </li>
 
                 <!-- All Memories Dropdown -->
                 <li class="nav-item">
-                    <a href="#memoriesSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle active d-flex justify-content-between align-items-center">
+                    <a href="#memoriesSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle  d-flex justify-content-between align-items-center">
                         <span><i class="bi bi-collection me-2"></i> All Memories</span>
                         <i class="bi bi-chevron-down small dropdown-arrow"></i>
                     </a>
@@ -55,7 +57,7 @@
 
                          <!-- All Events  Dropdown -->
                 <li class="nav-item">
-                    <a href="#eventSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle active d-flex justify-content-between align-items-center">
+                    <a href="#eventSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle  d-flex justify-content-between align-items-center">
                         <span><i class="bi bi-collection me-2"></i> Events</span>
                         <i class="bi bi-chevron-down small dropdown-arrow"></i>
                     </a>
@@ -138,28 +140,18 @@
                 </div>
             </nav>
 
-            <!-- Dashboard Body -->
-            <!-- <div class="container-fluid p-4">
-                <div class="row g-4">
-                    <div class="col-lg-8">
-                        <div class="sidebar-card p-4">
-                            <h4 class="font-serif text-brown mb-3">Memory Details</h4>
-                            <p class="text-muted">ඔබගේ මතක සටහන් (Memories) මෙතැනින් කළමනාකරණය කරගත හැක.</p>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
+  
 
             <!-- Dashboard Body -->
-<div class="container-fluid p-4">
+            <div class="container-fluid p-4">
     
     <!-- Welcome Banner with Robot -->
     <div class="welcome-banner mb-4 d-flex align-items-center gap-3 p-3 rounded-4 shadow-sm">
-        <div class="robot-avatar">
+        <!-- <div class="robot-avatar">
             <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Robot" width="60">
-        </div>
+        </div> -->
         <div class="speech-bubble px-4 py-2 bg-white rounded-pill shadow-sm">
-            <h6 class="m-0 fw-bold text-dark font-serif" style="font-size: 0.95rem;">WELCOME BACK, NIMANTHA...</h6>
+            <h6 class="m-0 fw-bold text-dark font-serif" style="font-size: 0.95rem;">WELCOME BACK, USER NAME...</h6>
         </div>
     </div>
 
@@ -189,80 +181,76 @@
 
                 <div class="col-md-4">
                     <div class="stat-card p-3 rounded-4 position-relative overflow-hidden text-white shadow-sm" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1577495508048-b635879837f1?w=400') center/cover;">
-                        <small class="text-uppercase tracking-wider fw-bold" style="font-size: 0.7rem; letter-spacing: 1px;">FOLLOWINGS</small>
-                        <h3 class="fw-bold my-1 font-serif">Followings</h3>
+                        <small class="text-uppercase tracking-wider fw-bold" style="font-size: 0.7rem; letter-spacing: 1px;">Events </small>
+                        <h3 class="fw-bold my-1 font-serif">Evennts</h3>
                         <h2 class="display-6 fw-bold mb-1">38</h2>
                         <small class="text-white-50" style="font-size: 0.75rem;">Total number of followings</small>
                     </div>
                 </div>
             </div>
 
-            <!-- Grid Profile Cards (2x2 Grid) -->
-            <div class="row g-4">
-                <!-- Profile Card 1 -->
-                <div class="col-md-6">
-                    <div class="custom-profile-card bg-white rounded-4 overflow-hidden shadow-sm border">
-                        <div class="card-banner p-3 position-relative text-white" style="background: linear-gradient(135deg, rgba(65, 88, 208, 0.85), rgba(200, 80, 192, 0.85)), url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400') center/cover; height: 110px;">
-                            <div class="position-absolute bottom-0 start-3 translate-middle-y ms-3 d-flex align-items-center gap-3">
-                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" class="rounded-circle border border-2 border-white" width="50" height="50" alt="Avatar">
-                                <h5 class="m-0 fw-bold text-white font-serif">Profile page</h5>
-                            </div>
-                        </div>
-                        <div class="p-3 bg-white">
-                            <h6 class="fw-bold text-dark m-0">M.A.N.Lakshan</h6>
-                            <small class="text-muted" style="font-size: 0.75rem;">Member-09 Jun 2025</small>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Profile Card 2 -->
-                <div class="col-md-6">
-                    <div class="custom-profile-card bg-white rounded-4 overflow-hidden shadow-sm border">
-                        <div class="card-banner p-3 position-relative text-white" style="background: linear-gradient(135deg, rgba(65, 88, 208, 0.85), rgba(200, 80, 192, 0.85)), url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=400') center/cover; height: 110px;">
-                            <div class="position-absolute bottom-0 start-3 translate-middle-y ms-3 d-flex align-items-center gap-3">
-                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" class="rounded-circle border border-2 border-white" width="50" height="50" alt="Avatar">
-                                <h5 class="m-0 fw-bold text-white font-serif">Business page</h5>
-                            </div>
-                        </div>
-                        <div class="p-3 bg-white">
-                            <h6 class="fw-bold text-dark m-0">M.A.N.Lakshan</h6>
-                            <small class="text-muted" style="font-size: 0.75rem;">Member-09 Jun 2025</small>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Profile Card 3 -->
-                <div class="col-md-6">
-                    <div class="custom-profile-card bg-white rounded-4 overflow-hidden shadow-sm border">
-                        <div class="card-banner p-3 position-relative text-white" style="background: linear-gradient(135deg, rgba(65, 88, 208, 0.85), rgba(200, 80, 192, 0.85)), url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400') center/cover; height: 110px;">
-                            <div class="position-absolute bottom-0 start-3 translate-middle-y ms-3 d-flex align-items-center gap-3">
-                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" class="rounded-circle border border-2 border-white" width="50" height="50" alt="Avatar">
-                                <h5 class="m-0 fw-bold text-white font-serif" style="font-size: 0.95rem;">Service Expert Profile</h5>
-                            </div>
-                        </div>
-                        <div class="p-3 bg-white">
-                            <h6 class="fw-bold text-dark m-0">M.A.N.Lakshan</h6>
-                            <small class="text-muted" style="font-size: 0.75rem;">Member-09 Jun 2025</small>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Profile Card 4 -->
-                <div class="col-md-6">
-                    <div class="custom-profile-card bg-white rounded-4 overflow-hidden shadow-sm border">
-                        <div class="card-banner p-3 position-relative text-white" style="background: linear-gradient(135deg, rgba(65, 88, 208, 0.85), rgba(200, 80, 192, 0.85)), url('https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400') center/cover; height: 110px;">
-                            <div class="position-absolute bottom-0 start-3 translate-middle-y ms-3 d-flex align-items-center gap-3">
-                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" class="rounded-circle border border-2 border-white" width="50" height="50" alt="Avatar">
-                                <h5 class="m-0 fw-bold text-white font-serif">Job Profile</h5>
-                            </div>
-                        </div>
-                        <div class="p-3 bg-white">
-                            <h6 class="fw-bold text-dark m-0">M.A.N.Lakshan</h6>
-                            <small class="text-muted" style="font-size: 0.75rem;">Member-09 Jun 2025</small>
-                        </div>
-                    </div>
+<!-- Grid Profile Cards (2x2 Grid) -->
+<div class="row g-4">
+    <!-- Profile Card 1 -->
+    <div class="col-md-6">
+        <div class="custom-profile-card rounded-4 overflow-hidden shadow-sm border">
+            <div class="card-banner banner-1 p-3 text-white">
+                <div class="avatar-title-wrapper d-flex align-items-center gap-3">
+                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" class="rounded-circle border border-2 border-white shadow-sm" width="50" height="50" alt="Avatar">
+                    <h5 class="m-0 fw-bold text-white font-serif">Profile page</h5>
                 </div>
             </div>
+            <div class="p-3 pt-4 bg-white">
+                <button class="btn btn-sm px-4 fw-bold rounded-pill btn-theme-gold">START NOW</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Card 2 -->
+    <div class="col-md-6">
+        <div class="custom-profile-card rounded-4 overflow-hidden shadow-sm border">
+            <div class="card-banner banner-2 p-3 text-white">
+                <div class="avatar-title-wrapper d-flex align-items-center gap-3">
+<img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" class="profile-avatar" alt="Avatar">
+                    <h5 class="m-0 fw-bold text-white font-serif">Event  page</h5>
+                </div>
+            </div>
+            <div class="p-3 pt-4 bg-white">
+               <button class="btn btn-sm px-4 fw-bold rounded-pill btn-theme-gold">START NOW</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Card 3 -->
+    <div class="col-md-6">
+        <div class="custom-profile-card rounded-4 overflow-hidden shadow-sm border">
+            <div class="card-banner banner-3 p-3 text-white">
+                <div class="avatar-title-wrapper d-flex align-items-center gap-3">
+                 <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" class="profile-avatar" alt="Avatar">
+                    <h5 class="m-0 fw-bold text-white font-serif" style="font-size: 0.95rem;">package/ Price  </h5>
+                </div>
+            </div>
+            <div class="p-3 pt-4 bg-white">
+               <button class="btn btn-sm px-4 fw-bold rounded-pill btn-theme-gold">START NOW</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Card 4 -->
+    <div class="col-md-6">
+        <div class="custom-profile-card rounded-4 overflow-hidden shadow-sm border">
+            <div class="card-banner banner-4 p-3 text-white">
+                <div class="avatar-title-wrapper d-flex align-items-center gap-3">
+        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" class="profile-avatar" alt="Avatar">
+                    <h5 class="m-0 fw-bold text-white font-serif">Settings</h5>
+                </div>
+            </div>
+            <div class="p-3 pt-4 bg-white">
+               <button class="btn btn-sm px-4 fw-bold rounded-pill btn-theme-gold">START NOW</button>
+            </div>
+        </div>
+    </div>
+</div>
 
         </div>
 
@@ -271,40 +259,76 @@
             
             <!-- Promote My Business Card -->
             <div class="promote-card p-4 rounded-4 text-white position-relative overflow-hidden shadow-sm mb-4" style="background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=400') center/cover;">
-                <h4 class="fw-bold font-serif mb-2">Promote My Business</h4>
+                <h4 class="fw-bold font-serif mb-2"> Create Memories </h4>
                 <p class="small text-white-50 mb-3" style="font-size: 0.8rem;">Your listing show at the top of the recommended category page</p>
                 <button class="btn btn-warning btn-sm px-4 fw-bold rounded-pill text-dark" style="background-color: #ffb700; border: none;">START NOW</button>
             </div>
 
-            <!-- Your Points Card -->
-            <!-- <div class="points-card bg-white p-4 rounded-4 shadow-sm border mb-4 text-center">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h6 class="fw-bold m-0 font-serif">YOUR POINTS</h6>
-                    <i class="bi bi-trophy-fill text-warning fs-3"></i>
-                </div>
-                <h1 class="display-4 fw-bold text-dark my-2 font-serif">0</h1>
-                <hr class="text-muted opacity-25">
-                <div class="text-start mt-3">
-                    <h6 class="fw-bold text-dark mb-1" style="font-size: 0.9rem;">Earn more credit points</h6>
-                    <p class="text-muted small mb-3" style="font-size: 0.78rem;">Use this points to promote your listing. <a href="#" class="text-primary text-decoration-underline">Click Here..</a></p>
-                    <button class="btn btn-primary btn-sm w-100 fw-bold rounded-pill py-2" style="background-color: #483d8b; border: none;">BUY POINTS</button>
-                </div>
-            </div> -->
-
+          
             <!-- Community Members Card -->
             <div class="community-card p-4 rounded-4 text-white position-relative overflow-hidden shadow-sm" style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1477959858617-67f30bc75b82?w=400') center/cover;">
-                <h4 class="fw-bold font-serif mb-2">Community Members</h4>
+                <h4 class="fw-bold font-serif mb-2">Support </h4>
                 <p class="small text-white-50 mb-3" style="font-size: 0.8rem;">Follow your favorite business coach and grow your status in grow network.</p>
-                <button class="btn btn-warning btn-sm px-4 fw-bold rounded-pill text-dark" style="background-color: #ffb700; border: none;">COMMUNITY</button>
+                <button class="btn btn-warning btn-sm px-4 fw-bold rounded-pill text-dark" style="background-color: #ffb700; border: none;">Contact Us</button>
             </div>
-
         </div>
+        <!-- Footer -->
+<footer class="bg-memorial-dark text-white pt-5 pb-3 border-top border-secondary">
+  <div class="container">
+    <div class="row g-4 mb-4">
+      <div class="col-lg-4 col-md-6">
+        <h5 class="text-gold fw-bold mb-3"><i class="bi bi-fire me-1"></i> Forever Missed</h5>
+        <p class="small text-light-tan leading-relaxed">
+          A dignified digital platform dedicated to preserving legacies, connecting families, and honoring cherished memories forever.
+        </p>
+      </div>
+
+      <div class="col-lg-2 col-md-6">
+        <h6 class="text-gold fw-bold mb-3">Quick Links</h6>
+        <ul class="list-unstyled small d-flex flex-column gap-2 text-light-tan">
+          <li><a href="index.html" class="text-light-tan text-decoration-none">Home</a></li>
+          <li><a href="all_memories.html" class="text-light-tan text-decoration-none">Memories</a></li>
+          <li><a href="about.html" class="text-light-tan text-decoration-none">About Us</a></li>
+          <li><a href="contact.html" class="text-light-tan text-decoration-none">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <h6 class="text-gold fw-bold mb-3">Contact Support</h6>
+        <ul class="list-unstyled small d-flex flex-column gap-2 text-light-tan">
+          <li><i class="bi bi-telephone-fill text-gold me-2"></i>+1 (800) 555-0199</li>
+          <li><i class="bi bi-envelope-fill text-gold me-2"></i>support@forevermissed.com</li>
+          <li><i class="bi bi-geo-alt-fill text-gold me-2"></i>Global Headquarters</li>
+        </ul>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <h6 class="text-gold fw-bold mb-3">Follow Us</h6>
+        <div class="d-flex gap-2">
+          <a href="#" class="btn btn-outline-light btn-sm rounded-circle footer-social-btn"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="btn btn-outline-light btn-sm rounded-circle footer-social-btn"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" class="btn btn-outline-light btn-sm rounded-circle footer-social-btn"><i class="bi bi-instagram"></i></a>
+        </div>
+      </div>
     </div>
+
+    <hr class="border-secondary">
+
+    <div class="text-center small text-white-50 pt-2">
+      <p class="mb-0">&copy; 2026 Forever Missed Memorial Directory. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+        
+    </div>
+</div>
 </div>
 
 
-        </div>
-    </div>
+
+</div>
+
+    
 
     <!-- Bootstrap JS and Responsive Toggle Script -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
