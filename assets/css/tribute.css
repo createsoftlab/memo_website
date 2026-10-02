@@ -375,8 +375,8 @@ html { scroll-behavior: smooth; }
 /* --- Custom Tabs Styling --- */
 .custom-tribute-tabs .nav-link {
     color: #6c757d;
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
+    background-color: #fdfaf1;
+    border: 1px solid #fccc66;
     transition: all 0.2s ease-in-out;
 }
 .custom-tribute-tabs .nav-link.active {
@@ -385,3 +385,297 @@ html { scroll-behavior: smooth; }
     border-color: var(--memorial-color) !important;
 }
 .cursor-pointer { cursor: pointer; }
+
+
+
+/* Profile Stats Card */
+.profile-stats-card {
+    border: 1px solid #fef3c7;
+    background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+}
+.profile-main-avatar img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #854d0e;
+}
+
+/* Tribute User Profile Picture */
+.tribute-user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid #e2e8f0;
+    flex-shrink: 0;
+}
+
+/* Fallback Initials Avatar */
+.tribute-user-initials {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.15);
+}
+
+/* Modern Tribute Card Styling & Animation */
+.modern-tribute-card {
+    border-left: 4px solid #854d0e !important;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUpTribute 0.6s ease forwards;
+}
+
+.modern-tribute-card:nth-child(1) { animation-delay: 0.1s; }
+.modern-tribute-card:nth-child(2) { animation-delay: 0.2s; }
+.modern-tribute-card:nth-child(3) { animation-delay: 0.3s; }
+
+.modern-tribute-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(133, 77, 14, 0.1) !important;
+    border-color: #d97706 !important;
+}
+
+@keyframes fadeInUpTribute {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- LRG & HIGHLIGHTED ICON BOXES --- */
+.highlighted-icon-box {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    transition: transform 0.3s ease;
+}
+
+.modern-tribute-card:hover .highlighted-icon-box {
+    transform: scale(1.08) rotate(3deg);
+}
+
+.flower-glow-bg {
+    background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+    border: 1px solid #fecdd3;
+}
+
+.candle-glow-bg {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 1px solid #fcd34d;
+}
+
+.thought-glow-bg {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border: 1px solid #bbf7d0;
+}
+
+/* Enhanced Animated Flower Bounce */
+@keyframes enhancedFlowerBounce {
+    0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
+    50% { transform: translateY(-5px) scale(1.2) rotate(12deg); }
+}
+.animated-flower-item {
+    display: inline-block;
+    animation: enhancedFlowerBounce 2.2s ease-in-out infinite;
+    filter: drop-shadow(0 2px 4px rgba(225, 29, 72, 0.3));
+}
+
+/* Enhanced Candle & Flame Highlight */
+.user-candle-icon-wrapper {
+    position: relative;
+    width: 20px;
+    height: 30px;
+    display: inline-block;
+    flex-shrink: 0;
+}
+.mini-flame {
+    width: 8px;
+    height: 14px;
+    background: linear-gradient(to top, #f59e0b, #ef4444, #fef08a);
+    border-radius: 50% 50% 20% 20%;
+    position: absolute;
+    top: 0;
+    left: 6px;
+    animation: intenseFlameFlicker 0.7s infinite alternate ease-in-out;
+}
+.mini-body {
+    width: 14px;
+    height: 16px;
+    background: #cbd5e1;
+    border-radius: 4px;
+    position: absolute;
+    bottom: 0;
+    left: 3px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+@keyframes intenseFlameFlicker {
+    0% { transform: scale(1) rotate(-3deg); opacity: 0.85; filter: drop-shadow(0 0 3px #f59e0b); }
+    100% { transform: scale(1.25) rotate(3deg); opacity: 1; filter: drop-shadow(0 0 8px #fef08a); }
+}
+
+/* Pagination Navigation & Dots */
+.tribute-nav-btn {
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #4b5563;
+    transition: all 0.2s ease;
+}
+.tribute-nav-btn:hover {
+    background: #854d0e;
+    color: #fff;
+    border-color: #854d0e;
+}
+.tribute-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #cbd5e1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.tribute-dot.active {
+    width: 22px;
+    border-radius: 4px;
+    background-color: #854d0e;
+}
+
+.tiny-time { font-size: 0.7rem; }
+.tribute-text { font-size: 0.85rem; }
+
+
+
+.custom-tab-btn {
+    background: #f1c37c;
+    color: #475569;
+    border: 2px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover Effect - Lift & Color Glow */
+.custom-tab-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(133, 77, 14, 0.12);
+    border-color: #cbd5e1;
+    color: #1e293b;
+}
+
+/* --- ACTIVE STYLES FOR EACH TAB WITH UNIQUE GRADIENT COLORS --- */
+
+/* 1. Flower Tab Active Style */
+.flower-tab-btn.active {
+    background: linear-gradient(135deg, #e99517 0%, #8b5606 100%) !important;
+    color: #ffffff !important;
+    border-color: #f4b53f !important;
+    box-shadow: 0 6px 20px rgba(225, 29, 72, 0.35) !important;
+}
+
+/* 2. Candle Tab Active Style */
+.candle-tab-btn.active {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
+    color: #ffffff !important;
+    border-color: #f59e0b !important;
+    box-shadow: 0 6px 20px rgba(217, 119, 6, 0.35) !important;
+}
+
+/* 3. Memory Tab Active Style */
+.memory-tab-btn.active {
+    background: linear-gradient(135deg, #854d0e 0%, #653603 100%) !important;
+    color: #ffffff !important;
+    border-color: #a16207 !important;
+    box-shadow: 0 6px 20px rgba(133, 77, 14, 0.35) !important;
+}
+
+/* --- ICONS ANIMATIONS INSIDE BUTTONS --- */
+@keyframes tabIconBounce {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.2) rotate(10deg); }
+}
+
+.custom-tab-btn .animated-icon, 
+.custom-tab-btn .animated-flame-icon,
+.custom-tab-btn i {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+/* Hover කරද්දී අයිකනයක් තවත් සජීවී වීම */
+.custom-tab-btn:hover .animated-icon, 
+.custom-tab-btn:hover .animated-flame-icon,
+.custom-tab-btn:hover i {
+    animation: tabIconBounce 1.2s infinite ease-in-out;
+}
+
+/* Active වෙලා තියෙන tab එකේ අයිකන සඳහා නිරන්තර සජීවීකරණය */
+.flower-tab-btn.active .animated-icon {
+    animation: tabIconBounce 2s infinite ease-in-out;
+}
+
+.candle-tab-btn.active .animated-flame-icon {
+    animation: flameFlicker 0.7s infinite alternate ease-in-out;
+}
+
+
+
+/* Base Button Styling */
+.btn-tribute {
+    background: linear-gradient(135deg, #53360f 0%, #8b5a0f 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover Effect - Lift up & Glow shadow */
+.btn-tribute:hover {
+    transform: translateY(-3px) scale(1.01);
+    background: linear-gradient(135deg, #574a13 0%, #745911 100%) !important;
+    box-shadow: 0 8px 22px rgba(225, 29, 72, 0.35) !important;
+    color: #ffe4e6 !important;
+}
+
+/* Active / Click Effect */
+.btn-tribute:active {
+    transform: translateY(-1px) scale(1);
+}
+
+/* Icon Animation Inside Button on Hover */
+@keyframes tributeIconPulse {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.25) rotate(8deg); }
+}
+
+.btn-tribute .tribute-btn-icon {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.btn-tribute:hover .tribute-btn-icon {
+    animation: tributeIconPulse 1s infinite ease-in-out;
+    }

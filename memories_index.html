@@ -188,7 +188,7 @@
     </div>
 
     <!-- Live Location Map Section -->
-    <div class="p-3 bg-white rounded shadow-sm border mb-4 reveal-init">
+    <div class="p-3 sidebar-card rounded shadow-sm border mb-4 reveal-init">
         <h5 class="fw-bold text-dark mb-3"><i class="bi bi-map-fill text-memorial me-2"></i>Live Location Map</h5>
         <div class="overflow-hidden rounded border" style="height: 220px;">
             <iframe 
@@ -231,34 +231,41 @@
 <div class="tribute-card p-4 rounded-4 shadow-sm bg-white border border-light mb-4 reveal-init">
     <h5 class="fw-bold mb-3 text-brown font-serif">Leave a Tribute</h5>
     
-    <ul class="nav nav-pills custom-tribute-tabs mb-4 gap-2" id="tributeTab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active rounded-pill px-3 py-2 fw-semibold d-flex align-items-center gap-2" id="flower-tab" data-bs-toggle="pill" data-bs-target="#flowerTabContent" type="button" role="tab">
-                <span class="animated-icon">🌸</span> Flower
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link rounded-pill px-3 py-2 fw-semibold d-flex align-items-center gap-2" id="candle-tab" data-bs-toggle="pill" data-bs-target="#candleTabContent" type="button" role="tab">
-                <span class="animated-flame-icon">🕯️</span> Candle
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link rounded-pill px-3 py-2 fw-semibold d-flex align-items-center gap-2" id="memory-tab" data-bs-toggle="pill" data-bs-target="#memoryTabContent" type="button" role="tab">
-                <i class="bi bi-chat-heart"></i> 💭 Share a Memory
-            </button>
-        </li>
-    </ul>
+   <ul class="nav nav-pills custom-tribute-tabs mb-4 gap-3 justify-content-center" id="tributeTab" role="tablist">
+    
+    <!-- Flower Tab -->
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active custom-tab-btn flower-tab-btn rounded-pill px-4 py-2.5 fw-bold d-flex align-items-center gap-2" id="flower-tab" data-bs-toggle="pill" data-bs-target="#flowerTabContent" type="button" role="tab">
+            <span class="fs-5 animated-icon">🌸</span> Flower
+        </button>
+    </li>
+    
+    <!-- Candle Tab -->
+    <li class="nav-item" role="presentation">
+        <button class="nav-link custom-tab-btn candle-tab-btn rounded-pill px-4 py-2.5 fw-bold d-flex align-items-center gap-2" id="candle-tab" data-bs-toggle="pill" data-bs-target="#candleTabContent" type="button" role="tab">
+            <span class="fs-5 animated-flame-icon">🕯️️</span> Candle
+        </button>
+    </li>
+    
+    <!-- Share a Memory Tab -->
+    <li class="nav-item" role="presentation">
+        <button class="nav-link custom-tab-btn memory-tab-btn rounded-pill px-4 py-2.5 fw-bold d-flex align-items-center gap-2" id="memory-tab" data-bs-toggle="pill" data-bs-target="#memoryTabContent" type="button" role="tab">
+            <i class="bi bi-chat-heart fs-5"></i> Share a Memory
+        </button>
+    </li>
+
+</ul>
 
     <div class="tab-content" id="tributeTabContent">
         <div class="tab-pane fade show active" id="flowerTabContent" role="tabpanel">
             <form id="flowerTributeForm">
-                <label class="form-label small fw-bold text-muted mb-2">Choose a flower bouquet & type:</label>
+                <label class="form-label small fw-bold text-muted mb-2">Choose a flower bouquet :</label>
                 <div class="d-flex gap-3 mb-3 fs-3">
                     <label class="flower-option cursor-pointer"><input type="radio" name="flowerChoice" value="🌹" checked class="d-none"> <span class="flower-icon p-2 rounded-circle border d-inline-block">🌹</span></label>
-                    <label class="flower-option cursor-pointer"><input type="radio" name="flowerChoice" value="🌷" class="d-none"> <span class="flower-icon p-2 rounded-circle border d-inline-block">🌷</span></label>
+                    <!-- <label class="flower-option cursor-pointer"><input type="radio" name="flowerChoice" value="🌷" class="d-none"> <span class="flower-icon p-2 rounded-circle border d-inline-block">🌷</span></label>
                     <label class="flower-option cursor-pointer"><input type="radio" name="flowerChoice" value="🌻" class="d-none"> <span class="flower-icon p-2 rounded-circle border d-inline-block">🌻</span></label>
                     <label class="flower-option cursor-pointer"><input type="radio" name="flowerChoice" value="🪷" class="d-none"> <span class="flower-icon p-2 rounded-circle border d-inline-block">🪷</span></label>
-                    <label class="flower-option cursor-pointer"><input type="radio" name="flowerChoice" value="💐" class="d-none"> <span class="flower-icon p-2 rounded-circle border d-inline-block">💐</span></label>
+                    <label class="flower-option cursor-pointer"><input type="radio" name="flowerChoice" value="💐" class="d-none"> <span class="flower-icon p-2 rounded-circle border d-inline-block">💐</span></label> -->
                 </div>
                 
                 <div class="mb-3">
@@ -300,9 +307,9 @@
                             <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="insertEmoji('❤️')">❤️</button>
                             <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="insertEmoji('🕊️')">🕊️</button>
                             <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="insertEmoji('🙏')">🙏</button>
-                            <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3 d-flex align-items-center gap-1" id="voiceRecordBtn">
+                            <!-- <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3 d-flex align-items-center gap-1" id="voiceRecordBtn">
                                 <i class="bi bi-mic-fill"></i> Voice Message
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                 </div>
@@ -312,44 +319,112 @@
     </div>
 </div>
 
-<!-- Recent Tributes Stream Section -->
+
+
+<!-- Recent Tributes Stream & Profile Stats Section -->
 <div id="tributesStream" class="mt-4">
-    <h5 class="fw-bold mb-3 text-brown font-serif reveal-left">Recent Tributes</h5>
     
-    <div class="card border-0 shadow-sm p-3 mb-2 rounded-3 bg-white tribute-item reveal-init">
-        <div class="d-flex align-items-start gap-3">
-            <span class="fs-3 animated-flower-item">🌹</span>
-            <div>
-                <p class="mb-1 text-dark fst-italic">“You will always be remembered in our prayers and thoughts.”</p>
-                <small class="text-muted">— Nimal <span class="ms-2 text-secondary">• 10 minutes ago</span></small>
-            </div>
-        </div>
-    </div>
-
-    <div class="card border-0 shadow-sm p-3 mb-2 rounded-3 bg-white tribute-item reveal-init">
+    <!-- Profile Stats / Followers & Tributes Header Card -->
+    <div class="profile-stats-card p-3 rounded-4 shadow-sm bg-white mb-4 d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center gap-3">
-            <div class="user-candle-icon">
-                <div class="mini-flame"></div>
-                <div class="mini-body"></div>
+            <div class="profile-main-avatar">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" alt="Profile">
             </div>
             <div>
-                <p class="mb-1 text-dark fw-medium">Candle lit in loving memory.</p>
-                <small class="text-muted">— Kasun <span class="ms-2 text-secondary">• 2 hours ago</span></small>
+                <h6 class="fw-bold text-dark mb-0">Memorial Space</h6>
+                <span class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-people-fill me-1"></i> 142 Followers / Contributors</span>
             </div>
+        </div>
+        <div class="text-end">
+            <span class="badge px-2.5 py-1.5 fw-semibold" style="background-color: #854d0e; color: #fff; font-size: 0.75rem;">Active Memorial</span>
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm p-3 mb-2 rounded-3 bg-white tribute-item reveal-init">
-        <div class="d-flex align-items-start gap-3">
-            <span class="fs-3">💭</span>
-            <div>
-                <p class="mb-1 text-dark fst-italic">“I remember the beautiful times we spent together during our school days. Rest in peace.”</p>
-                <small class="text-muted">— Amal <span class="ms-2 text-secondary">• Yesterday</span></small>
+    <!-- Section Title & Pagination -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold mb-0 text-brown font-serif reveal-left">Recent Tributes</h5>
+        <div class="tribute-pagination-btns d-flex gap-1">
+            <button type="button" class="btn btn-sm tribute-nav-btn" id="prevTribute"><i class="bi bi-chevron-left"></i></button>
+            <button type="button" class="btn btn-sm tribute-nav-btn" id="nextTribute"><i class="bi bi-chevron-right"></i></button>
+        </div>
+    </div>
+    
+    <!-- Tributes Cards Container -->
+    <div class="tributes-container d-flex flex-column gap-3">
+
+        <!-- Tribute Card 1 (Large Highlighted Rose Tribute) -->
+        <div class="card border-0 shadow-sm p-3 rounded-4 bg-white modern-tribute-card">
+            <div class="d-flex align-items-start gap-3">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="Nimal" class="tribute-user-avatar">
+                
+                <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="fw-bold text-dark small">Nimal</span>
+                        <span class="text-muted tiny-time">• 10 mins ago</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <!-- Enlarged & Highlighted Animated Flower Icon -->
+                        <div class="highlighted-icon-box flower-glow-bg">
+                            <span class="fs-2 animated-flower-item">🌹</span>
+                        </div>
+                        <p class="mb-0 text-dark fw-medium tribute-text">“You will always be remembered in our prayers.”</p>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <!-- Tribute Card 2 (Large Highlighted Candle Tribute) -->
+        <div class="card border-0 shadow-sm p-3 rounded-4 bg-white modern-tribute-card">
+            <div class="d-flex align-items-start gap-3">
+                <div class="tribute-user-initials" style="background-color: #854d0e;">KA</div>
+                
+                <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="fw-bold text-dark small">Kasun</span>
+                        <span class="text-muted tiny-time">• 2 hours ago</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <!-- Enlarged & Highlighted Animated Candle Icon -->
+                        <div class="highlighted-icon-box candle-glow-bg">
+                            <div class="user-candle-icon-wrapper">
+                                <div class="mini-flame"></div>
+                                <div class="mini-body"></div>
+                            </div>
+                        </div>
+                        <p class="mb-0 text-dark fw-medium tribute-text">Candle lit in loving memory.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tribute Card 3 (Thought / Message Tribute) -->
+        <div class="card border-0 shadow-sm p-3 rounded-4 bg-white modern-tribute-card">
+            <div class="d-flex align-items-start gap-3">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" alt="Amal" class="tribute-user-avatar">
+                
+                <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="fw-bold text-dark small">Amal</span>
+                        <span class="text-muted tiny-time">• Yesterday</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="highlighted-icon-box thought-glow-bg">
+                            <span class="fs-3">💭</span>
+                        </div>
+                        <p class="mb-0 text-dark fw-medium tribute-text">“I remember the beautiful times we spent together...”</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Pagination Dots Indicator -->
+    <div class="tribute-dots-container d-flex justify-content-center gap-2 mt-3">
+        <span class="tribute-dot active" data-page="1"></span>
+        <span class="tribute-dot" data-page="2"></span>
     </div>
 </div>
-
 
 
 
@@ -382,8 +457,6 @@
     </div>
   </div>
 </div>
-
-
       </div>
 
 
@@ -397,16 +470,23 @@
       <i class="bi bi-person-add fs-4 text-muted"></i>
     </div>
   
-    <!-- Invite Button -->
-<button class="btn btn-invite w-100 py-2 mb-2">
-  <i class="bi bi-person-plus me-1"></i> Invite now
+          <!-- Invite Button -->
+      <button class="btn btn-invite w-100 py-2 mb-2">
+        <i class="bi bi-person-plus me-1"></i> Invite now
+      </button>
+
+       <!-- Donate Button -->
+<button class="btn btn-donate w-100 py-2 mb-2">
+    <i class="bi bi-heart-fill me-1"></i> Donate now
 </button>
 
-<!-- Donate Button -->
-<button class="btn btn-donate w-100 py-2">
-  <i class="bi bi-heart-fill me-1"></i> Donate now
+<!-- Add Tribute Button -->
+<button class="btn btn-tribute w-100 py-2" onclick="document.getElementById('tributeTabContent').scrollIntoView({behavior: 'smooth'});">
+    <i class="bi bi-chat-heart-fill me-1"></i> Add Tribute
 </button>
   </div>
+
+  
 
   <!-- Share on Facebook Button -->
   <button class="btn btn-facebook w-100 py-2 d-flex align-items-center justify-content-center gap-2" id="shareFbBtn">
@@ -579,7 +659,7 @@ document.getElementById('flowerTributeForm').addEventListener('submit', function
 });
 </script>
 
-<script>
+<!-- <script>
   // Handle Candle Form Submission
 document.getElementById('candleTributeForm').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -603,7 +683,7 @@ document.getElementById('candleTributeForm').addEventListener('submit', function
     tributesStream.insertBefore(newCard, tributesStream.children[1]);
     this.reset();
 });
-</script>
+</script> -->
 
 
 <script>
