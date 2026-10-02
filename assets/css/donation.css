@@ -328,3 +328,65 @@
     opacity: 1;
     transform: translateY(0) rotateX(0deg);
 }
+
+
+
+
+/* Grid Container Setup (Desktop එකේ 2 Column ලෙසත්, Mobile එකේ 1 Column ලෙසත් පෙන්වයි) */
+.donor-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+}
+
+/* Modern Donor Card Styling */
+.modern-donor-card {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUpCard 0.6s ease forwards;
+}
+
+/* Staggered Delay සඳහා කාඩ්ස් වලට වෙනස් වේලාවන් ලබා දීම */
+.modern-donor-card:nth-child(1) { animation-delay: 0.1s; }
+.modern-donor-card:nth-child(2) { animation-delay: 0.2s; }
+.modern-donor-card:nth-child(3) { animation-delay: 0.3s; }
+.modern-donor-card:nth-child(4) { animation-delay: 0.4s; }
+.modern-donor-card:nth-child(5) { animation-delay: 0.5s; }
+
+/* Hover කරද්දී කාඩ් එක උඩට මතුවන විදිහට (Modern Elevation Effect) */
+.modern-donor-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(133, 77, 14, 0.1) !important;
+    border-color: #fde68a;
+}
+
+/* Entrance Animation Keyframes */
+@keyframes fadeInUpCard {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Donor Avatar Styling */
+.donor-avatar {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, #854d0e 0%, #a16207 100%);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 8px rgba(133, 77, 14, 0.25);
+    flex-shrink: 0;
+}
+
+.tiny-date {
+    font-size: 0.75rem;
+}

@@ -85,7 +85,7 @@
 
 /* Sidebar Custom Styling */
 .sidebar-card {
-  background-color: #f7ebe1;
+  background-color: #f5dbbf;
   border: 1px solid #ebd3c2 !important;
 }
 
@@ -127,4 +127,233 @@
 
 .text-memorial-accent {
   color: #8c4c2d !important;
+}
+
+
+
+ /* CSS FOR AI GENERTION BUTTON*/
+
+.btn-ai-generate {
+    background: linear-gradient(135deg, #6d5105 0%, #3f2d11 100%); /* AI / Tech පාටක් වන Cyan සිට Indigo දක්වා */
+    border: none;
+    border-radius: 50px; /* Modern Rounded Look එකක් සඳහා */
+    box-shadow: 0 4px 15px rgba(199, 147, 6, 0.35);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 1;
+}
+
+/* Mouse  */
+.btn-ai-generate:hover {
+    background: linear-gradient(135deg, #532e10 0%, #b8922b 100%);
+    transform: translateY(-2px); /* උඩට මතුවන ස්වභාවය */
+    box-shadow: 0 8px 25px rgba(73, 60, 2, 0.45);
+    color: #ffffff !important;
+}
+
+/* Click */
+.btn-ai-generate:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 10px rgba(39, 34, 9, 0.3);
+}
+
+
+.ai-sparkles-icon {
+    font-size: 1.15rem;
+    transition: transform 0.4s ease;
+}
+
+/* Hover animated */
+.btn-ai-generate:hover .ai-sparkles-icon {
+    transform: rotate(20deg) scale(1.25);
+}
+
+
+.story-submit-btn {
+    background: #3d2408; /* Warm Brown / Dark Amber පාටක් (Coffee Theme සඳහා) */
+    border: 1px solid #724f1b;
+    border-radius: 6px; /* ඔබ ඉල්ලූ පරිදි රවුම් වැඩි නැති කොටු හැඩය */
+    transition: all 0.3s ease-in-out;
+    font-family: inherit; /* අකුරු theme එකට අනුව */
+}
+
+/* Mouse එක උඩින් ගෙන ගිය විට (Hover Effect) */
+.story-submit-btn:hover {
+    background: #a16207; /* Hover කළ විට තව ටිකක් ළා දුඹුරු පාටක් */
+    border-color: #ca8a04;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(133, 77, 14, 0.3);
+}
+
+/* Click කරන විට (Active Effect) */
+.story-submit-btn:active {
+    transform: translateY(0);
+    background: #713f12; /* Click කළ විට තද දුඹුරු පාටක් */
+    border-color: #854d0e;
+    box-shadow: none;
+}
+
+/* Icon එකේ style එක */
+.submit-icon {
+    font-size: 0.9rem; /* අකුරු වලට සාපේක්ෂව Icon එකේ ප්‍රමාණය */
+    transition: transform 0.3s ease;
+}
+
+/* Hover කළ විට Icon එක පොඩ්ඩක් ඉස්සරහට යන animation එකක් */
+.story-submit-btn:hover .submit-icon {
+    transform: translateX(2px);
+}
+
+
+
+
+/* Modern Container & Brown Theme touch */
+.sidebar-card {
+    background: #f7ebe1;
+    border: 1px solid #f3e8ff;
+}
+
+/* Custom Scrollbar for smooth scrolling */
+.stories-feed-container::-webkit-scrollbar {
+    width: 5px;
+}
+.stories-feed-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+.stories-feed-container::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+}
+.stories-feed-container::-webkit-scrollbar-thumb:hover {
+    background: #cbd5e1;
+}
+
+/* Card Styling & Entrance Animation */
+.story-animate-card {
+    border-radius: 12px;
+    border-left: 4px solid #854d0e !important; /* Brown Accent bar */
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUpStagger 0.6s ease forwards;
+}
+
+/* Staggered Animation Delay for each card so they appear one by one nicely */
+.story-animate-card:nth-child(1) { animation-delay: 0.1s; }
+.story-animate-card:nth-child(2) { animation-delay: 0.2s; }
+.story-animate-card:nth-child(3) { animation-delay: 0.3s; }
+
+.story-animate-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(133, 77, 14, 0.12) !important;
+}
+
+@keyframes fadeInUpStagger {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Badges styling */
+.badge-friend { background-color: #0ea5e9; font-size: 0.7rem; }
+.badge-family { background-color: #854d0e; font-size: 0.7rem; }
+.badge-partner { background-color: #a855f7; font-size: 0.7rem; }
+
+
+/* Sidebar Card Theme */
+.sidebar-card {
+    background: #f7ebe1;
+    border: 1px solid #f3e8ff;
+}
+
+/* Card Styling & Entrance Animation */
+.story-page-item {
+    border-radius: 12px;
+    border-left: 4px solid #854d0e !important;
+    transition: all 0.3s ease;
+}
+
+.story-page-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(133, 77, 14, 0.1) !important;
+}
+
+/* Profile Picture (Image) Style */
+.story-user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid #e2e8f0;
+}
+
+/* Fallback Initials Avatar (जब p共に pic එකක් නැති විට) */
+.story-user-initials {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+}
+
+/* Badges styling */
+.badge-friend { background-color: #0ea5e9; font-size: 0.65rem; }
+.badge-family { background-color: #854d0e; font-size: 0.65rem; }
+.badge-partner { background-color: #a855f7; font-size: 0.65rem; }
+
+/* Pagination Footer Styles */
+.story-dot-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #64748b;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.story-dot-btn.active, .story-dot-btn:hover {
+    background: #854d0e;
+    color: #ffffff;
+    border-color: #854d0e;
+}
+
+.story-pagination-nav button {
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 0.75rem;
+}
+
+
+/* මුලින් කාඩ්ස් සම්පූර්ණයෙන්ම කුඩා වී (Scale 0.95) සහ පෙනෙන්නේ නැතිව (Opacity 0) තබයි */
+.story-page-item {
+    opacity: 0;
+    transform: translateY(25px) scale(0.98);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+
+/* Scroll කරද්දී Screen එකට ආවම JS මඟින් මෙම class එක එකතු වේ */
+.story-page-item.scroll-animated {
+    opacity: 1;
+    transform: translateY(0) scale(1);
 }
