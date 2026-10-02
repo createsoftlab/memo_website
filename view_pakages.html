@@ -32,17 +32,17 @@
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <div class="dashboard-wrapper">
-        <!-- Sidebar -->
+       <!-- Sidebar -->
         <nav id="sidebar" class="sidebar">
             <div class="sidebar-profile p-3 d-flex align-items-center gap-3">
-                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?fit=crop&w=100&h=100" class="rounded-circle border border-warning" width="45" height="45" alt="Profile">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?fit=crop&w=100&h=100" class="rounded-circle" width="45" height="45" alt="Profile">
                 <div>
-                    <h6 class="m-0 text-white fw-bold profile-name">M.A.N. Lakshan</h6>
-                    <small class="text-gold profile-date">Joined 02 Jun 2026</small>
+                    <h6 class="m-0 text-white fw-bold" style="font-size: 0.9rem;">M.A.N.Lakshan</h6>
+                    <small class="text-gold" style="font-size: 0.75rem;">Joined 02 Jun 2026</small>
                 </div>
             </div>
 
-            <ul class="nav flex-column py-2">
+            <ul class="nav flex-column py-3">
                 <li class="nav-item">
                     <a href="dashbord_index.html" class="nav-link">
                         <span><i class="bi bi-speedometer2 me-2"></i> My Dashboard</span>
@@ -51,13 +51,16 @@
 
                 <!-- All Memories Dropdown -->
                 <li class="nav-item">
-                    <a href="#memoriesSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle d-flex justify-content-between align-items-center collapsed" aria-expanded="false">
+                    <a href="#memoriesSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle active d-flex justify-content-between align-items-center">
                         <span><i class="bi bi-collection me-2"></i> All Memories</span>
                         <i class="bi bi-chevron-down small dropdown-arrow"></i>
                     </a>
                     <ul class="collapse list-unstyled submenu" id="memoriesSubmenu">
                         <li>
-                            <a href="#" class="nav-link sub-link">My Memories</a>
+                            <a href="create-memory.html" class="nav-link sub-link">My Memories</a>
+                        </li>
+                           <li>
+                            <a href="all_memories.html" class="nav-link sub-link">All Memories </a>
                         </li>
                         <li>
                             <a href="create-memory.html" class="nav-link sub-link">Create Memories</a>
@@ -65,21 +68,26 @@
                     </ul>
                 </li>
 
-                <!-- Events Dropdown -->
+                         <!-- All Events  Dropdown -->
                 <li class="nav-item">
-                    <a href="#eventsSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle d-flex justify-content-between align-items-center" aria-expanded="true">
-                        <span><i class="bi bi-calendar-event me-2"></i> Events</span>
+                    <a href="#eventSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle active d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-collection me-2"></i> Events</span>
                         <i class="bi bi-chevron-down small dropdown-arrow"></i>
                     </a>
-                    <ul class="collapse show list-unstyled submenu" id="eventsSubmenu">
+                    <ul class="collapse list-unstyled submenu" id="eventSubmenu">
                         <li>
-                            <a href="my_events.html" class="nav-link sub-link active">My Events</a>
+                            <a href="my_events.html" class="nav-link sub-link">My Events</a>
+                        </li>
+                           <li>
+                            <a href="all_events.html" class="nav-link sub-link">All Events</a>
                         </li>
                         <li>
-                            <a href="create_my_event.html" class="nav-link sub-link">Create Events</a>
+                            <a href="create_my_event.html" class="nav-link sub-link">Create Events </a>
                         </li>
                     </ul>
                 </li>
+
+
 
                 <li class="nav-item">
                     <a href="#" class="nav-link">
@@ -87,12 +95,28 @@
                         <i class="bi bi-chevron-right small"></i>
                     </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="#" class="nav-link">
                         <span><i class="bi bi-currency-dollar me-2"></i> Payment & Promo</span>
                         <i class="bi bi-chevron-right small"></i>
                     </a>
-                </li>
+                </li> -->
+
+<li class="nav-item">
+    <a href="#packagesSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle d-flex justify-content-between align-items-center" aria-expanded="false">
+        <span><i class="bi bi-box-seam me-2"></i> Packages</span>
+        <i class="bi bi-chevron-down small dropdown-arrow"></i>
+    </a>
+    <ul class="collapse list-unstyled submenu" id="packagesSubmenu">
+        <li>
+            <a href="my_package.html" class="nav-link sub-link">My Packages</a>
+        </li>
+        <li>
+            <a href="create_package.html" class="nav-link sub-link">Create Package</a>
+        </li>
+    </ul>
+</li>
+    
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                         <span><i class="bi bi-person-badge me-2"></i> Profile Pages</span>
@@ -429,6 +453,36 @@
 
                 document.getElementById('formSection').scrollIntoView({ behavior: 'smooth' });
             });
+        });
+    </script>
+
+       <!--mobile slidebr script  -->
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        if(sidebarToggle) {
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('show');
+                sidebarOverlay.classList.toggle('show');
+            });
+        }
+
+        if(sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', () => {
+                sidebar.classList.remove('show');
+                sidebarOverlay.classList.remove('show');
+            });
+        }
+
+        // Force initialize default active tab securely
+        document.addEventListener('DOMContentLoaded', function () {
+            const defaultTabEl = document.querySelector('#memorialTabs a[href="#tab-basic"]');
+            if (defaultTabEl) {
+                const tab = new bootstrap.Tab(defaultTabEl);
+                tab.show();
+            }
         });
     </script>
 </body>
