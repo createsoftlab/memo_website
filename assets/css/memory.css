@@ -1,0 +1,61 @@
+/* Memorial About & AI Button Styles */
+.memorial-about-container textarea {
+  resize: vertical;
+}
+
+.btn-generate-ai {
+  background: linear-gradient(135deg, var(--gold-accent), var(--gold-hover));
+  color: var(--text-brown);
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-generate-ai:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  background: var(--gold-hover);
+  color: var(--text-brown);
+}
+
+.btn-generate-ai i {
+  font-size: 0.9rem;
+}
+
+
+/* Live Broadcast Pulsing Animation Icon */
+.live-pulse-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.live-pulse-icon::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(13, 110, 253, 0.4);
+  border-radius: 50%;
+  animation: livePulseAnim 1.5s infinite ease-out;
+}
+
+@keyframes livePulseAnim {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}

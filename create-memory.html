@@ -10,25 +10,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
     <!-- Custom External Dashboard CSS -->
     <link rel="stylesheet" href="assets/css/dashboard-main.css">
+     <link rel="stylesheet" href="assets/css/memory.css">
     
-    <style>
-        /* Fix for Tab Overlapping / Yatin load wena issue */
-        .tab-content > .tab-pane {
-            display: none !important;
-        }
-        .tab-content > .tab-pane.active {
-            display: block !important;
-        }
-        .tab-pane.fade {
-            opacity: 0;
-            transition: opacity 0.15s linear;
-        }
-        .tab-pane.fade.show {
-            opacity: 1;
-        }
-    </style>
+
 </head>
 <body>
 
@@ -55,7 +44,7 @@
 
                 <!-- All Memories Dropdown -->
                 <li class="nav-item">
-                    <a href="#memoriesSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle active d-flex justify-content-between align-items-center">
+                    <a href="#memoriesSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle  d-flex justify-content-between align-items-center">
                         <span><i class="bi bi-collection me-2"></i> All Memories</span>
                         <i class="bi bi-chevron-down small dropdown-arrow"></i>
                     </a>
@@ -67,14 +56,14 @@
                             <a href="all_memories.html" class="nav-link sub-link">All Memories </a>
                         </li>
                         <li>
-                            <a href="create-memory.html" class="nav-link sub-link">Create Memories</a>
+                            <a href="create-memory.html" class="nav-link sub-link active">Create Memories</a>
                         </li>
                     </ul>
                 </li>
 
                          <!-- All Events  Dropdown -->
                 <li class="nav-item">
-                    <a href="#eventSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle active d-flex justify-content-between align-items-center">
+                    <a href="#eventSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle  d-flex justify-content-between align-items-center">
                         <span><i class="bi bi-collection me-2"></i> Events</span>
                         <i class="bi bi-chevron-down small dropdown-arrow"></i>
                     </a>
@@ -139,26 +128,36 @@
                         <i class="bi bi-chevron-right small"></i>
                     </a>
                 </li>
+
+<!-- Logout Button (Sidebar eke podi karaala) -->
+<li class="mt-4 px-3">
+    <a href="#" class="btn btn-warning w-100 fw-bold text-dark py-1 px-3 rounded-pill shadow-sm d-flex align-items-center justify-content-center gap-2" style="font-size: 0.85rem;">
+        <i class="bi bi-box-arrow-right fs-6"></i>
+        <span>Logout</span>
+    </a>
+</li>
+</ul>
             </ul>
         </nav>
 
         <!-- Main Content -->
         <div class="main-content">
             <!-- Top Navbar -->
-            <nav class="navbar navbar-dark top-navbar px-3 py-2">
-                <div class="container-fluid">
-                    <div class="d-flex align-items-center gap-2">
-                        <button class="btn btn-outline-light d-lg-none btn-sm" id="sidebarToggle">
-                            <i class="bi bi-list fs-5"></i>
-                        </button>
-                        <span class="navbar-brand mb-0 h6 text-gold font-serif ms-1">Memorial Information & Settings</span>
-                    </div>
-                    <div class="d-flex align-items-center gap-3">
-                        <span class="text-white small d-none d-sm-inline">M.A.N. Lakshan</span>
-                        <a href="#" class="btn btn-sm btn-warning fw-bold text-dark px-3">Logout</a>
-                    </div>
-                </div>
-            </nav>
+         <nav class="navbar navbar-dark top-navbar px-3 py-2">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-outline-light d-lg-none btn-sm" id="sidebarToggle">
+                <i class="bi bi-list fs-5"></i>
+            </button>
+            <span class="navbar-brand mb-0 h6 text-gold font-serif ms-1">Memorial Informations</span>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <span class="text-white small d-none d-sm-inline">M.A.N. Lakshan</span>
+            <!-- Mobile wala hide wela desktop wala witharak pennanawa -->
+            <a href="#" class="btn btn-sm btn-warning fw-bold text-dark px-3 d-none d-md-inline-block">Logout</a>
+        </div>
+    </div>
+</nav>
 
             <!-- Dashboard Body Content with Tabs -->
             <div class="container-fluid p-4">
@@ -172,58 +171,150 @@
 
                             <!-- Tab Content Panes -->
                             <div class="tab-content" id="memorialTabContent">
+
+                           <div>
+  
+</div>
                                 
                                 <!-- Tab 1: Basic Details & Info -->
-                                <div class="tab-pane fade show active" id="tab-basic" role="tabpanel">
+                                <div class="tab-pane fade show active mt-3" id="tab-basic" role="tabpanel">
+                                        <button type="button" class="btn btn-theme-gold px-4 fw-bold rounded-pill mb-4" onclick="scrollToContents()">
+        Go to Memorial Contents
+    </button>
                                     <form>
                                         <h6 class="fw-bold text-brown mb-3 border-bottom pb-2">1. Basic Details</h6>
-                                        <div class="row g-3 mb-4">
-                                            <div class="col-md-4">
-                                                <label class="form-label small fw-bold">First Name *</label>
-                                                <input type="text" class="form-control" value="Lallan" required>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label small fw-bold">Middle Name</label>
-                                                <input type="text" class="form-control" placeholder="Middle name">
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label small fw-bold">Last Name *</label>
-                                                <input type="text" class="form-control" value="Writer" required>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label small fw-bold">Country *</label>
-                                                <input type="text" class="form-control" value="Sri Lanka">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label small fw-bold">City / Town *</label>
-                                                <input type="text" class="form-control" value="Kalutara">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label small fw-bold">Birth Date</label>
-                                                <input type="date" class="form-control" value="1959-01-15">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label small fw-bold">Passed Away Date</label>
-                                                <input type="date" class="form-control" value="2026-08-18">
-                                            </div>
-                                        </div>
+                                 
+                                <div class="row g-3 mb-4">
+            <!-- Memorial Status Dropdown -->
+            <div class="col-12 col-md-6">
+                <label class="form-label small fw-bold">Memorial Status *</label>
+                <select class="form-select" required>
+                    <option value="" selected disabled>Select status</option>
+                    <option value="passed_away">Passed Away</option>
+                    <option value="living_memory">Living Memory</option>
+                </select>
+            </div>
 
-                                        <h6 class="fw-bold text-brown mb-3 border-bottom pb-2">2. Memorial Page Contents</h6>
+                   <!-- Reson  Dropdown -->
+            <div class="col-12 col-md-6">
+                <label class="form-label small fw-bold">Passed Away  Reason *</label>
+                <select class="form-select" required>
+                    <option value="" selected disabled>Select Catogory </option>
+                    <option value="COVID-19 victims"> COVID-19 victims</option>
+                    <option value="Cancer victims">Cancer victims</option>
+                    <option value="Cancer victims">Victims of an accident</option>
+                </select>
+            </div>
+            
+            <div class="col-12"></div> <!-- Clear row spacing if needed -->
+
+            <div class="col-md-4">
+                <label class="form-label small fw-bold">First Name *</label>
+                <input type="text" class="form-control" value="Lallan" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label small fw-bold">Middle Name</label>
+                <input type="text" class="form-control" placeholder="Middle name">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label small fw-bold">Last Name *</label>
+                <input type="text" class="form-control" value="Writer" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label small fw-bold">Country *</label>
+                <input type="text" class="form-control" value="Sri Lanka">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label small fw-bold">City / Town *</label>
+                <input type="text" class="form-control" value="Kalutara">
+            </div>
+
+               <div class="col-md-6">
+                <label class="form-label small fw-bold">Living Address *</label>
+                <input type="text" class="form-control" value="N045 Main street New York ">
+            </div>
+
+                <div class="col-md-6">
+                <label class="form-label small fw-bold">zip code  *</label>
+                <input type="text" class="form-control" value="4567 ">
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label small fw-bold">Birth Date</label>
+                <input type="date" class="form-control" value="1959-01-15">
+            </div>
+
+                <div class="col-md-6">
+                <label class="form-label small fw-bold">Birth Location </label>
+                <input type="text" class="form-control" value="N045 Main street New York ">
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label small fw-bold">Passed Away Date</label>
+                <input type="date" class="form-control" value="2026-08-18">
+            </div>
+
+                <div class="col-md-6">
+                <label class="form-label small fw-bold"> Passed Away Location </label>
+                <input type="text" class="form-control" value="N045 Main street New York ">
+            </div>
+                                   </div>
+                                        <h6 class="fw-bold text-brown mb-3 border-bottom pb-2" id="memorial-contents" >2. Memorial Page Contents</h6>
                                         <div class="mb-3">
                                             <label class="form-label small fw-bold">Main Tribute Quote</label>
                                             <input type="text" class="form-control" value="Let the memory of Lallan be with us forever.">
                                         </div>
+                                   
+
+                                       <!-- Memorial About (with Generate with AI button below) -->
+<div class="mb-3 memorial-about-container">
+    <label class="form-label small fw-bold">Memorial About</label>
+    <textarea class="form-control mb-2" rows="4" placeholder="Write a brief overview or summary about the memorial..."></textarea>
+    
+    <!-- Button placed below textarea (aligned to right using d-flex and justify-content-end) -->
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn-generate-ai" onclick="generateMemorialAboutAI()">
+            <i class="bi bi-stars"></i> Generate with AI
+        </button>
+    </div>
+</div>
+
+
                                         <div class="row g-3 mb-4">
                                             <div class="col-md-6">
                                                 <label class="form-label small fw-bold">Funeral & Wake Location Name</label>
                                                 <input type="text" class="form-control" value="Jayaratne Funeral Parlour">
                                             </div>
+                                            
                                             <div class="col-md-6">
                                                 <label class="form-label small fw-bold">Family Contact Number</label>
                                                 <input type="text" class="form-control" value="+94 77 123 4567">
                                             </div>
                                         </div>
+<!-- Funeral & Wake Location & Live Broadcast Fields -->
+<div class="row g-3 mb-4">
+    <!-- Funeral & Wake Location / Address -->
+    <div class="col-md-6">
+        <label class="form-label small fw-bold">Funeral & Wake Location / Address</label>
+        <div class="input-group">
+            <span class="input-group-text bg-white border-end-0 text-muted">
+                <i class="bi bi-geo-alt-fill text-danger"></i>
+            </span>
+            <input type="text" class="form-control border-start-0 ps-0" placeholder="Enter venue name, address or map link">
+        </div>
+    </div>
 
+    <!-- Funeral Live Broadcast Link -->
+    <div class="col-md-6">
+        <label class="form-label small fw-bold">Live Broadcast Link</label>
+        <div class="input-group">
+            <span class="input-group-text bg-white border-end-0 text-muted">
+                <i class="bi bi-broadcast text-primary"></i>
+            </span>
+            <input type="url" class="form-control border-start-0 ps-0" placeholder="Paste YouTube, Zoom, or streaming link">
+        </div>
+    </div>
+</div>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <button type="submit" class="btn btn-warning fw-bold text-dark px-4 rounded-pill">Save Memorial Details</button>
                                             <a href="#" class="text-danger small text-decoration-none">Delete Memorial</a>
@@ -981,8 +1072,61 @@
 
                 </div>
             </div>
+
+              <!-- Footer -->
+<footer class="bg-memorial-dark text-white pt-5 pb-3 border-top border-secondary">
+  <div class="container">
+    <div class="row g-4 mb-4">
+      <div class="col-lg-4 col-md-6">
+        <h5 class="text-gold fw-bold mb-3"><i class="bi bi-fire me-1"></i> Forever Missed</h5>
+        <p class="small text-light-tan leading-relaxed">
+          A dignified digital platform dedicated to preserving legacies, connecting families, and honoring cherished memories forever.
+        </p>
+      </div>
+
+      <div class="col-lg-2 col-md-6">
+        <h6 class="text-gold fw-bold mb-3">Quick Links</h6>
+        <ul class="list-unstyled small d-flex flex-column gap-2 text-light-tan">
+          <li><a href="index.html" class="text-light-tan text-decoration-none">Home</a></li>
+          <li><a href="all_memories.html" class="text-light-tan text-decoration-none">Memories</a></li>
+          <li><a href="about.html" class="text-light-tan text-decoration-none">About Us</a></li>
+          <li><a href="contact.html" class="text-light-tan text-decoration-none">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <h6 class="text-gold fw-bold mb-3">Contact Support</h6>
+        <ul class="list-unstyled small d-flex flex-column gap-2 text-light-tan">
+          <li><i class="bi bi-telephone-fill text-gold me-2"></i>+1 (800) 555-0199</li>
+          <li><i class="bi bi-envelope-fill text-gold me-2"></i>support@forevermissed.com</li>
+          <li><i class="bi bi-geo-alt-fill text-gold me-2"></i>Global Headquarters</li>
+        </ul>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <h6 class="text-gold fw-bold mb-3">Follow Us</h6>
+        <div class="d-flex gap-2">
+          <a href="#" class="btn btn-outline-light btn-sm rounded-circle footer-social-btn"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="btn btn-outline-light btn-sm rounded-circle footer-social-btn"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" class="btn btn-outline-light btn-sm rounded-circle footer-social-btn"><i class="bi bi-instagram"></i></a>
         </div>
+      </div>
     </div>
+
+    <hr class="border-secondary">
+
+    <div class="text-center small text-white-50 pt-2">
+      <p class="mb-0">&copy; 2026 Forever Missed Memorial Directory. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+        </div>
+
+
+        
+    </div>
+
+    
 
     <!-- Bootstrap 5 JS and Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1442,6 +1586,18 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+<script>
 
+    function scrollToContents() {
+    const targetElement = document.getElementById('memorial-contents');
+    if (targetElement) {
+        targetElement.scrollIntoView({ 
+            behavior: 'smooth', // Smoothly scroll wenawa
+            block: 'start'      // Screen eke udata ma align wenawa
+        });
+    }
+}
+    
+</script>
 </body>
 </html>

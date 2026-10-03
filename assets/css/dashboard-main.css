@@ -726,3 +726,96 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   color: var(--text-brown) !important;
   border-color: var(--gold-accent) !important;
 }
+
+
+
+
+
+/* 1. Global Box-Sizing & Overflow Prevention */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body, html {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* 2. Container safety */
+.container, .container-fluid {
+  width: 100%;
+  padding-right: 12px;
+  padding-left: 12px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* ==========================================
+   Responsive Media Queries for All Devices
+   ========================================== */
+
+/* Extra Small Devices (Phones - portrait, less than 576px) */
+@media (max-width: 576px) {
+  .custom-profile-card {
+    margin-bottom: 15px;
+  }
+  
+  /* Form inputs mobile wala zoom wena eka walanwata 16px font size eka */
+  .form-control, .form-select {
+    font-size: 16px !important;
+  }
+
+  .card-banner {
+    height: 100px !important;
+  }
+}
+
+/* Small Devices & Tablets (576px to 768px) */
+@media (min-width: 576px) and (max-width: 768px) {
+  .custom-profile-card {
+    margin-bottom: 20px;
+  }
+}
+
+/* Medium Devices (Tablets & small laptops, 768px to 992px) */
+@media (min-width: 768px) and (max-width: 992px) {
+  /* Tablet specific adjustments */
+}
+
+/* Large Devices (Desktops, 992px and up) */
+@media (min-width: 992px) {
+  /* Desktop specific adjustments */
+}
+
+
+        /* Fix for Tab Overlapping */
+        .tab-content > .tab-pane {
+            display: none !important;
+        }
+        .tab-content > .tab-pane.active {
+            display: block !important;
+        }
+        .tab-pane.fade {
+            opacity: 0;
+            transition: opacity 0.15s linear;
+        }
+        .tab-pane.fade.show {
+            opacity: 1;
+        }
+
+
+        /* Mobile Swipeable / Scrollable Navbar Right Container */
+@media (max-width: 767.98px) {
+  .navbar-scroll-right {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none; /* Firefox walata scrollbar eka hide karanawa */
+    -ms-overflow-style: none;  /* IE/Edge walata scrollbar eka hide karanawa */
+    max-width: 180px; /* Mobile eke penna oona pramanaya limit karanawa */
+  }
+  
+  .navbar-scroll-right::-webkit-scrollbar {
+    display: none; /* Chrome/Safari walata scrollbar eka hide karanawa */
+  }
+}
