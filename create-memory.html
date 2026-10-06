@@ -814,33 +814,12 @@
                                 </div>
 
                                 <!-- Tab 2: Life Story Tab -->
-                                <!-- <div class="tab-pane fade" id="tab-lifestory" role="tabpanel">
-                                    <h6 class="fw-bold text-brown mb-3 border-bottom pb-2"><i class="bi bi-heart-fill me-2 text-danger"></i> Edit Life Story Tab</h6>
-                                    <form>
-                                        <div class="mb-3">
-                                            <label class="form-label small fw-bold">Story Type</label>
-                                            <input type="text" class="form-control" placeholder="Enter story type (e.g., Early Life)">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label small fw-bold">Story Title</label>
-                                            <input type="text" class="form-control" placeholder="Enter story title (e.g., Birth & Childhood)">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label small fw-bold">Story / Biography Content</label>
-                                            <textarea class="form-control" rows="6">This memorial website was created in memory of our loved one, Lallan Writer, 65 years old, born on January 15, 1959, and passed away on August 18, 2026. Add more details about their career, hobbies, passions, and legacy here...</textarea>
-                                        </div>
-                                        <button type="submit" class="btn btn-warning fw-bold text-dark px-4 rounded-pill">Save Life Story</button>
-                                    </form>
-                                </div> -->
-
-
-                                <!-- Tab 2: Life Story Tab -->
                                 <div class="tab-pane fade" id="tab-lifestory" role="tabpanel">
                                     <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
-                                        <h6 class="fw-bold text-brown m-0"><i class="bi bi-heart-fill me-2 text-danger"></i> Edit Life Story </h6>
+                                        <h6 class="fw-bold text-brown m-0"><i class="bi bi-heart-fill me-2 text-danger"></i>  Life Story </h6>
                                         <!-- Add New Form Button with Plus Mark -->
-                                        <button type="button" class="btn btn-sm btn-outline-dark fw-bold" id="addStoryBtn">
-                                            <i class="bi bi-plus-circle me-1 text-primary"></i> Add Another Story
+                                        <button type="button" class="btn btn-sm btn-outline-dark fw-bold btn-custom-add" id="addStoryBtn">
+                                            <i class="bi bi-plus"></i> Add Another Story
                                         </button>
                                     </div>
                                     <p class="text-muted small">Add multiple chapters or sections to the loved one's life story.</p>
@@ -850,7 +829,7 @@
                                         <!-- Default Initial Form Card -->
                                         <div class="card border-0 shadow-sm bg-light p-3 mb-3 story-item">
                                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                                <span class="badge bg-secondary">Story #1</span>
+                                                <span class="badge bg-secondary">Story 01</span>
                                                 <!-- Delete Button (Hidden for the first default form if you want, or kept active) -->
                                                 <button type="button" class="btn btn-sm text-danger delete-story-btn" title="Delete Form">
                                                     <i class="bi bi-trash fs-6"></i>
@@ -874,7 +853,7 @@
                                     </div>
 
                                     <!-- Save All Button -->
-                                    <button type="button" class="btn btn-warning fw-bold text-dark px-4 rounded-pill mt-2">Save All Life Stories</button>
+                                    <button type="button" class="btn btn-warning fw-bold text-dark px-4 rounded-pill mt-2 " id="StoryBtn">Save All Life Stories</button>
                                 </div>
 
                                 <!-- Tab 3: Gallery Photos Tab -->
@@ -923,9 +902,7 @@
                                                     <i class="bi bi-plus-circle me-1 text-primary"></i> Add photos
                                                     <input type="file" id="photoUploadInput" class="d-none" accept="image/*" multiple>
                                                 </label>
-                                                <button type="button" class="btn btn-outline-secondary btn-sm fw-bold">
-                                                    <i class="bi bi-play-circle me-1"></i> Start slideshow
-                                                </button>
+                                           
                                             </div>
 
                                             <!-- Photo Grid Preview Container -->
@@ -954,7 +931,7 @@
 
                                                 <br>
                                                     <button type="submit" class="btn btn-warning fw-bold text-dark px-4 rounded-pill">
-                                                        <i class="bi bi-check2-circle me-1"></i> Save videos
+                                                        <i class="bi bi-check2-circle me-1"></i> Save Photos
                                                     </button>
                                                 
                                         </div>
@@ -987,7 +964,7 @@
                                                 
                                             </div>
                                                          <button type="submit" class="btn btn-warning fw-bold text-dark px-4 rounded-pill">
-                                                        <i class="bi bi-check2-circle me-1"></i> Save Photos
+                                                        <i class="bi bi-check2-circle me-1"></i> Save Videos
                                                     </button>
                                         </div>
 
@@ -1019,7 +996,7 @@
                                             </div>
 <br>
                                                      <button type="submit" class="btn btn-warning fw-bold text-dark px-4 rounded-pill">
-                                                        <i class="bi bi-check2-circle me-1"></i> Save videos
+                                                        <i class="bi bi-check2-circle me-1"></i> Save Audio <Audio></Audio>
                                                     </button>
                                                 
                                         </div>
@@ -1516,8 +1493,8 @@
 
                         <!-- Navigation Action Buttons wired up as Tab Triggers -->
                         <div class="sidebar-card p-4 shadow-sm bg-white">
-                            <h6 class="fw-bold text-brown mb-3 font-serif">Add & Edit Page Sections</h6>
-                            <p class="text-muted small mb-3">Click any section below to manage public page contents:</p>
+                            <h6 class="fw-bold text-brown mb-3 font-serif">Manage Memory</h6>
+                            <p class="text-muted small mb-3">Click any section below to manage Memory </p>
                             
                             <div class="list-group list-group-flush gap-2" id="memorialTabs" role="tablist">
                                 <a href="#tab-basic" data-bs-toggle="tab" role="tab" class="btn-outline-dark-custom btn-sm text-start text-decoration-none d-flex justify-content-between align-items-center p-2 rounded">
@@ -1525,7 +1502,7 @@
                                     <i class="bi bi-chevron-right text-primary"></i>
                                 </a>
                                 <a href="#tab-lifestory" data-bs-toggle="tab" role="tab" class="btn-outline-dark-custom btn-sm text-start text-decoration-none d-flex justify-content-between align-items-center p-2 rounded">
-                                    <span><i class="bi bi-heart-fill me-2 text-danger"></i> Edit Life Story Tab</span>
+                                    <span><i class="bi bi-heart-fill me-2 text-danger"></i> Add Life Story </span>
                                     <i class="bi bi-plus-circle text-primary"></i>
                                 </a>
                                 <a href="#tab-gallery" data-bs-toggle="tab" role="tab" class="btn-outline-dark-custom btn-sm text-start text-decoration-none d-flex justify-content-between align-items-center p-2 rounded">

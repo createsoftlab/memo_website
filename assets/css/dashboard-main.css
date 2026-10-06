@@ -994,3 +994,73 @@ body, html {
                 border-bottom: none !important;
             }
         }
+
+
+        /* Custom Styling for Add Story Button */
+        .btn-custom-add {
+            background-color: #fdf8f5;
+            color: #8B4511;
+            border: 1px solid #e5d3c5;
+            transition: all 0.25s ease-in-out;
+            font-size: 0.85rem;
+            padding: 7px 14px;
+            border-radius: 0.5rem;
+        }
+        
+        .btn-custom-add i {
+            color: #d97706; /* Icon initial color */
+            transition: color 0.25s ease-in-out;
+        }
+
+        .btn-custom-add:hover {
+            background-color: #8B4511;
+            color: #ffffff;
+            border-color: #8B4511;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 69, 17, 0.15);
+        }
+
+        .btn-custom-add:hover i {
+            color: #ffffff !important; /* Changes icon to white on hover */
+        }
+
+        /* Custom Add Button Style */
+        .btn-custom-add {
+            background-color: #fdf8f5;
+            color: #8B4511;
+            border: 1px solid #e5d3c5;
+            transition: all 0.25s ease-in-out;
+            font-size: 0.85rem;
+            padding: 7px 14px;
+            border-radius: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        /* Icon Container / Background styling */
+        .btn-custom-add .icon-box {
+            background-color: #fff4eb; 
+            color: #d97706;  
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;     
+            margin-right: 8px;
+            transition: all 0.25s ease-in-out;
+        }
+
+        /* Hover Effect */
+        .btn-custom-add:hover {
+            background-color: #8B4511;
+            color: #ffffff;
+            border-color: #8B4511;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 69, 17, 0.15);
+        }
+
+        .btn-custom-add:hover .icon-box {
+            background-color: #ffffff; 
+            color: #8B4511;            
+        }
