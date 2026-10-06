@@ -174,17 +174,288 @@
 
                            <div>
   
-</div>
+                        </div>
+
+                        
                                 
                                 <!-- Tab 1: Basic Details & Info -->
                                 <div class="tab-pane fade show active mt-3" id="tab-basic" role="tabpanel">
                                         <button type="button" class="btn btn-theme-gold px-4 fw-bold rounded-pill mb-4" onclick="scrollToContents()">
-        Go to Memorial Contents
-    </button>
+                                        Go to Memorial Contents
+                                     </button>
                                     <form>
-                                        <h6 class="fw-bold text-brown mb-3 border-bottom pb-2">1. Basic Details</h6>
-                                 
-                                <div class="row g-3 mb-4">
+<!-- =====================================================
+     PROFILE & MEDIA SETTINGS
+====================================================== -->
+
+<h6 class="fw-bold text-brown mb-3 border-bottom pb-2 mt-5">
+    <i class="bi bi-person-bounding-box me-2 text-primary"></i>
+    Profile & Media Settings
+</h6>
+
+<p class="text-muted small mb-4">
+    Manage the profile picture, memorial background image, and background music.
+</p>
+
+
+<!-- ================= PROFILE PICTURE ================= -->
+
+<div class="card border-0 shadow-sm bg-light p-3 mb-4">
+
+    <div class="row align-items-center g-4">
+
+        <!-- Preview -->
+        <div class="col-md-4 text-center">
+
+            <div class="position-relative d-inline-block">
+
+                <img
+                    id="profileImagePreview"
+                    src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300"
+                    class="rounded-circle border border-4 border-warning shadow-sm"
+                    width="140"
+                    height="140"
+                    style="object-fit: cover;"
+                    alt="Profile Preview"
+                >
+
+                <button
+                    type="button"
+                    id="removeProfileImage"
+                    class="btn btn-danger btn-sm rounded-circle position-absolute top-0 end-0"
+                    style="width:30px;height:30px;padding:0;"
+                    title="Remove"
+                >
+                    <i class="bi bi-x"></i>
+                </button>
+
+            </div>
+
+            <small class="text-muted d-block mt-2">
+                Profile Picture Preview
+            </small>
+
+        </div>
+
+
+        <!-- Upload -->
+        <div class="col-md-8">
+
+            <label class="form-label small fw-bold">
+                Profile Picture
+            </label>
+
+            <input
+                type="file"
+                class="form-control"
+                id="profileImageInput"
+                accept="image/*"
+            >
+
+            <div class="form-text">
+                JPG, PNG or WEBP. Recommended: 500 × 500px.
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ================= BACKGROUND IMAGE ================= -->
+
+<div class="card border-0 shadow-sm bg-light p-3 mb-4">
+
+    <label class="form-label small fw-bold">
+        <i class="bi bi-image me-1 text-warning"></i>
+        Memorial Background Image
+    </label>
+
+    <!-- Background Preview -->
+    <div
+        id="backgroundImagePreview"
+        class="rounded-3 mb-3 position-relative overflow-hidden"
+        style="
+            height:220px;
+            background-image:url('https://images.unsplash.com/photo-1500534623283-312aade485b7?w=1200');
+            background-size:cover;
+            background-position:center;
+        "
+    >
+
+        <!-- Dark Overlay -->
+        <div
+            class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+            style="background:rgba(0,0,0,0.25);"
+        >
+            <span class="text-white fw-bold">
+                <i class="bi bi-image me-1"></i>
+                Background Preview
+            </span>
+        </div>
+
+
+        <!-- Remove -->
+        <button
+            type="button"
+            id="removeBackgroundImage"
+            class="btn btn-danger btn-sm rounded-circle position-absolute top-0 end-0 m-2"
+            style="width:32px;height:32px;padding:0;"
+            title="Remove"
+        >
+            <i class="bi bi-x"></i>
+        </button>
+
+    </div>
+
+
+    <input
+        type="file"
+        class="form-control"
+        id="backgroundImageInput"
+        accept="image/*"
+    >
+
+    <div class="form-text">
+        Recommended: 1920 × 1080px or higher.
+    </div>
+
+</div>
+
+
+
+<!-- ================= BACKGROUND MUSIC ================= -->
+
+<div class="card border-0 shadow-sm bg-light p-3 mb-4">
+
+    <label class="form-label small fw-bold">
+        <i class="bi bi-music-note-beamed me-1 text-success"></i>
+        Background Music
+    </label>
+
+
+    <!-- Audio Preview -->
+    <div class="bg-white border rounded-3 p-3 mb-3">
+
+        <div class="d-flex align-items-center gap-3">
+
+            <div
+                class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center flex-shrink-0"
+                style="width:45px;height:45px;"
+            >
+                <i class="bi bi-music-note fs-5"></i>
+            </div>
+
+            <div class="flex-grow-1">
+
+                <div
+                    id="musicFileName"
+                    class="small fw-bold text-dark mb-2"
+                >
+                    No music selected
+                </div>
+
+                <audio
+                    id="backgroundMusicPreview"
+                    controls
+                    class="w-100"
+                    style="height:38px;"
+                >
+                    Your browser does not support the audio element.
+                </audio>
+
+            </div>
+
+            <button
+                type="button"
+                id="removeBackgroundMusic"
+                class="btn btn-outline-danger btn-sm rounded-circle"
+                title="Remove Music"
+            >
+                <i class="bi bi-trash"></i>
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <input
+        type="file"
+        class="form-control"
+        id="backgroundMusicInput"
+        accept="audio/*"
+    >
+
+    <div class="form-text">
+        MP3, WAV and other supported audio formats.
+    </div>
+
+</div>
+
+
+
+<!-- ================= MEDIA OPTIONS ================= -->
+
+<div class="row g-3 mb-4">
+
+    <!-- Music Enable -->
+    <!-- <div class="col-md-6">
+
+        <div class="form-check form-switch p-3 bg-light rounded border">
+
+            <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="enableBackgroundMusic"
+                checked
+            >
+
+            <label
+                class="form-check-label small fw-bold"
+                for="enableBackgroundMusic"
+            >
+                Enable Background Music
+            </label>
+
+        </div>
+
+    </div> -->
+
+
+    <!-- Background Enable -->
+    <!-- <div class="col-md-6">
+
+        <div class="form-check form-switch p-3 bg-light rounded border">
+
+            <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="enableBackgroundImage"
+                checked
+            >
+
+            <label
+                class="form-check-label small fw-bold"
+                for="enableBackgroundImage"
+            >
+                Use Background Image
+            </label>
+
+        </div>
+
+    </div> -->
+
+</div>
+      <h6 class="fw-bold text-brown mb-3 border-bottom pb-2">1. Basic Details</h6>
+            <div class="row g-3 mb-4">
+
+                                    
+                                    
             <!-- Memorial Status Dropdown -->
             <div class="col-12 col-md-6">
                 <label class="form-label small fw-bold">Memorial Status *</label>
@@ -314,6 +585,203 @@
             <input type="url" class="form-control border-start-0 ps-0" placeholder="Paste YouTube, Zoom, or streaming link">
         </div>
     </div>
+</div>
+
+
+<!-- =====================================================
+     PRIVACY OPTIONS
+====================================================== -->
+
+<div class="mt-5">
+
+    <h5 class="font-serif text-brown mb-2">
+        Privacy Options
+    </h5>
+
+    <p class="text-muted small mb-4">
+        Control who can view and contribute to this memorial space.
+    </p>
+
+    <!-- PUBLIC MEMORIAL -->
+    <div class="form-check mb-3">
+        <input class="form-check-input"
+               type="radio"
+               name="memorialPrivacy"
+               id="publicMemorial"
+               value="public">
+
+        <label class="form-check-label fw-bold" for="publicMemorial">
+            Public Memorial
+        </label>
+
+        <div class="small text-muted ms-4">
+            Anyone can find and view this memorial website.
+        </div>
+    </div>
+
+    <!-- PRIVATE MEMORIAL -->
+    <div class="form-check mb-3">
+        <input class="form-check-input"
+               type="radio"
+               name="memorialPrivacy"
+               id="privateMemorial"
+               value="private"
+               checked>
+
+        <label class="form-check-label fw-bold" for="privateMemorial">
+            Private (Password Protected)
+        </label>
+
+        <div class="small text-muted ms-4">
+            Only people with the password can access the memorial.
+        </div>
+    </div>
+
+
+    <!-- PRIVATE ACCESS DETAILS -->
+    <div id="privateAccessBox"
+         class="border rounded-3 bg-light p-3 mb-4">
+
+        <!-- ACCESS USERNAME -->
+        <div class="mb-3">
+
+            <label for="accessUsername"
+                   class="form-label small fw-bold">
+                Access Username
+            </label>
+
+            <div class="input-group">
+
+                <input type="text"
+                       class="form-control"
+                       id="accessUsername"
+                       value="AnonymousUser245"
+                       placeholder="Enter username">
+
+                <button type="button"
+                        class="btn btn-outline-secondary"
+                        id="randomUsernameBtn">
+                    <i class="bi bi-shuffle me-1"></i>
+                    Random
+                </button>
+
+            </div>
+
+            <div class="form-text">
+                You can type a custom username or click 'Random'
+                if you don't want to show your real name.
+            </div>
+
+        </div>
+
+
+        <!-- ACCESS PASSWORD -->
+        <div class="mb-0">
+
+            <label for="accessPassword"
+                   class="form-label small fw-bold">
+                Access Password
+            </label>
+
+            <div class="input-group">
+
+                <input type="password"
+                       class="form-control"
+                       id="accessPassword"
+                       value="Sp3RuRkDre"
+                       placeholder="Enter password">
+
+                <button type="button"
+                        class="btn btn-outline-secondary"
+                        id="randomPasswordBtn"
+                        title="Generate Random Password">
+                    <i class="bi bi-shuffle"></i>
+                    Random
+                </button>
+
+                <button type="button"
+                        class="btn btn-outline-primary"
+                        id="copyPasswordBtn"
+                        title="Copy Password">
+                    <i class="bi bi-copy"></i>
+                    Copy
+                </button>
+
+                <button type="button"
+                        class="btn btn-outline-success"
+                        id="sharePasswordBtn"
+                        title="Share Password">
+                    <i class="bi bi-share"></i>
+                    Share
+                </button>
+
+            </div>
+
+            <div class="form-text">
+                Type your own custom password or generate a random secure one.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MEMORIAL PUBLICATION STATUS
+    ====================================================== -->
+
+    <div class="border rounded-3 p-3 mb-4">
+
+        <h6 class="fw-bold text-brown mb-3">
+            Memorial Publication Status
+        </h6>
+
+        <!-- PUBLISH NOW -->
+        <div class="form-check mb-3">
+
+            <input class="form-check-input"
+                   type="radio"
+                   name="publicationStatus"
+                   id="publishNow"
+                   value="published"
+                   checked>
+
+            <label class="form-check-label fw-bold"
+                   for="publishNow">
+                <i class="bi bi-globe text-success me-1"></i>
+                Publish Now
+            </label>
+
+            <div class="small text-muted ms-4">
+                The memorial website will be live and accessible immediately.
+            </div>
+
+        </div>
+
+
+        <!-- SAVE AS DRAFT -->
+        <div class="form-check">
+
+            <input class="form-check-input"
+                   type="radio"
+                   name="publicationStatus"
+                   id="saveAsDraft"
+                   value="draft">
+
+            <label class="form-check-label fw-bold"
+                   for="saveAsDraft">
+                <i class="bi bi-file-earmark-text text-secondary me-1"></i>
+                Save as Draft
+            </label>
+
+            <div class="small text-muted ms-4">
+                Save your progress. Only you can view and edit this later.
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <button type="submit" class="btn btn-warning fw-bold text-dark px-4 rounded-pill">Save Memorial Details</button>
@@ -1599,5 +2067,316 @@ document.addEventListener('DOMContentLoaded', function() {
 }
     
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* ================= PROFILE IMAGE ================= */
+
+    const profileInput = document.getElementById("profileImageInput");
+    const profilePreview = document.getElementById("profileImagePreview");
+    const removeProfile = document.getElementById("removeProfileImage");
+
+    const defaultProfile =
+        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300";
+
+    profileInput?.addEventListener("change", function () {
+
+        const file = this.files[0];
+
+        if (!file) return;
+
+        if (!file.type.startsWith("image/")) {
+            alert("Please select an image file.");
+            this.value = "";
+            return;
+        }
+
+        profilePreview.src = URL.createObjectURL(file);
+    });
+
+    removeProfile?.addEventListener("click", function () {
+
+        profilePreview.src = defaultProfile;
+        profileInput.value = "";
+
+    });
+
+
+
+    /* ================= BACKGROUND IMAGE ================= */
+
+    const backgroundInput =
+        document.getElementById("backgroundImageInput");
+
+    const backgroundPreview =
+        document.getElementById("backgroundImagePreview");
+
+    const removeBackground =
+        document.getElementById("removeBackgroundImage");
+
+    const defaultBackground =
+        "https://images.unsplash.com/photo-1500534623283-312aade485b7?w=1200";
+
+    backgroundInput?.addEventListener("change", function () {
+
+        const file = this.files[0];
+
+        if (!file) return;
+
+        if (!file.type.startsWith("image/")) {
+            alert("Please select an image file.");
+            this.value = "";
+            return;
+        }
+
+        backgroundPreview.style.backgroundImage =
+            `url("${URL.createObjectURL(file)}")`;
+
+    });
+
+    removeBackground?.addEventListener("click", function () {
+
+        backgroundPreview.style.backgroundImage =
+            `url("${defaultBackground}")`;
+
+        backgroundInput.value = "";
+
+    });
+
+
+
+    /* ================= BACKGROUND MUSIC ================= */
+
+    const musicInput =
+        document.getElementById("backgroundMusicInput");
+
+    const musicPreview =
+        document.getElementById("backgroundMusicPreview");
+
+    const musicFileName =
+        document.getElementById("musicFileName");
+
+    const removeMusic =
+        document.getElementById("removeBackgroundMusic");
+
+
+    musicInput?.addEventListener("change", function () {
+
+        const file = this.files[0];
+
+        if (!file) return;
+
+        if (!file.type.startsWith("audio/")) {
+            alert("Please select an audio file.");
+            this.value = "";
+            return;
+        }
+
+        musicPreview.src = URL.createObjectURL(file);
+
+        musicFileName.textContent = file.name;
+
+        musicPreview.load();
+
+    });
+
+
+    removeMusic?.addEventListener("click", function () {
+
+        musicPreview.removeAttribute("src");
+
+        musicPreview.load();
+
+        musicFileName.textContent = "No music selected";
+
+        musicInput.value = "";
+
+    });
+
+});
+</script>
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* =====================================================
+       PRIVACY - PUBLIC / PRIVATE
+    ====================================================== */
+
+    const publicMemorial = document.getElementById("publicMemorial");
+    const privateMemorial = document.getElementById("privateMemorial");
+    const privateAccessBox = document.getElementById("privateAccessBox");
+
+    function updatePrivacyVisibility() {
+
+        if (privateMemorial.checked) {
+            privateAccessBox.style.display = "block";
+        } else {
+            privateAccessBox.style.display = "none";
+        }
+
+    }
+
+    publicMemorial.addEventListener("change", updatePrivacyVisibility);
+    privateMemorial.addEventListener("change", updatePrivacyVisibility);
+
+    updatePrivacyVisibility();
+
+
+    /* =====================================================
+       RANDOM USERNAME
+    ====================================================== */
+
+    const usernameInput =
+        document.getElementById("accessUsername");
+
+    const randomUsernameBtn =
+        document.getElementById("randomUsernameBtn");
+
+    randomUsernameBtn.addEventListener("click", function () {
+
+        const randomNumber =
+            Math.floor(100 + Math.random() * 900);
+
+        usernameInput.value =
+            "AnonymousUser" + randomNumber;
+
+    });
+
+
+    /* =====================================================
+       RANDOM PASSWORD
+    ====================================================== */
+
+    const passwordInput =
+        document.getElementById("accessPassword");
+
+    const randomPasswordBtn =
+        document.getElementById("randomPasswordBtn");
+
+    function generatePassword(length = 10) {
+
+        const characters =
+            "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+
+        let password = "";
+
+        for (let i = 0; i < length; i++) {
+            password += characters.charAt(
+                Math.floor(Math.random() * characters.length)
+            );
+        }
+
+        return password;
+    }
+
+    randomPasswordBtn.addEventListener("click", function () {
+
+        passwordInput.value = generatePassword(10);
+
+    });
+
+
+    /* =====================================================
+       COPY PASSWORD
+    ====================================================== */
+
+    const copyPasswordBtn =
+        document.getElementById("copyPasswordBtn");
+
+    copyPasswordBtn.addEventListener("click", async function () {
+
+        if (!passwordInput.value) {
+            alert("No password available.");
+            return;
+        }
+
+        try {
+
+            await navigator.clipboard.writeText(
+                passwordInput.value
+            );
+
+            const original =
+                copyPasswordBtn.innerHTML;
+
+            copyPasswordBtn.innerHTML =
+                '<i class="bi bi-check2"></i> Copied';
+
+            setTimeout(function () {
+                copyPasswordBtn.innerHTML = original;
+            }, 1500);
+
+        } catch (error) {
+
+            alert("Unable to copy password.");
+
+        }
+
+    });
+
+
+    /* =====================================================
+       SHARE PASSWORD
+    ====================================================== */
+
+    const sharePasswordBtn =
+        document.getElementById("sharePasswordBtn");
+
+    sharePasswordBtn.addEventListener("click", async function () {
+
+        const username = usernameInput.value;
+        const password = passwordInput.value;
+
+        const shareText =
+            "Memorial Access Details\n\n" +
+            "Username: " + username + "\n" +
+            "Password: " + password;
+
+        if (navigator.share) {
+
+            try {
+
+                await navigator.share({
+                    title: "Memorial Access Details",
+                    text: shareText
+                });
+
+            } catch (error) {
+                // User cancelled share
+            }
+
+        } else {
+
+            await navigator.clipboard.writeText(shareText);
+
+            alert(
+                "Sharing is not supported on this browser. " +
+                "Access details have been copied."
+            );
+
+        }
+
+    });
+
+});
+</script>
+
 </body>
 </html>
