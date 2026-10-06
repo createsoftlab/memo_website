@@ -859,3 +859,62 @@ body, html {
     background-color: #f8f9fa !important;
     border-color: #e5d3c5 !important;
 }
+
+
+/* Responsive Permissions Table for Mobile Screens */
+@media screen and (max-width: 768px) {
+    .permissions-table thead {
+        display: none !important;
+    }
+
+    .permissions-table, 
+    .permissions-table tbody, 
+    .permissions-table tr, 
+    .permissions-table td {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    .permissions-table tr {
+        margin-bottom: 1.2rem !important;
+        background: #ffffff !important;
+        border: 1px solid #e5d3c5 !important;
+        border-radius: 0.75rem !important;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05) !important;
+        padding: 12px !important;
+    }
+
+    .permissions-table td {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 10px 12px !important;
+        border: none !important;
+        border-bottom: 1px solid #f1ede6 !important;
+        color: #333333 !important;
+        font-size: 0.9rem !important;
+    }
+
+    .permissions-table td:last-child {
+        border-bottom: none !important;
+    }
+
+    /* මෙන්න මේකෙන් තමයි View, Add වගේ Labels ටික Screen එකේ වම් පැත්තට ගෙන්නේ */
+    .permissions-table td:not(:first-child)::before {
+        content: attr(data-label);
+        font-weight: 600 !important;
+        color: #555555 !important;
+        text-align: left !important;
+    }
+
+    /* Module Name එක කාඩ් එකේ උඩින්ම වෙනම පෙන්වීම */
+    .permissions-table td:first-child {
+        background-color: #fdf8f5 !important;
+        font-weight: bold !important;
+        border-radius: 0.5rem !important;
+        margin-bottom: 8px !important;
+        justify-content: flex-start !important;
+        color: #8B4511 !important;
+        font-size: 0.95rem !important;
+    }
+}
