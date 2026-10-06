@@ -819,3 +819,43 @@ body, html {
     display: none; /* Chrome/Safari walata scrollbar eka hide karanawa */
   }
 }
+
+
+.text-user-card{
+    color: #111111 !important; /* SaddleBrown wage brown color ekak */
+}
+
+.icon-user-card {
+    color: #8B4511 !important;
+}
+
+
+
+/* Custom Pagination Styling */
+.custom-pagination .page-link {
+    color: #8B4511 !important; /* Normal text/icon color (Brown) */
+    background-color: #fff !important;
+    border-color: #e5d3c5 !important; /* Soft brown border */
+    transition: all 0.2s ease-in-out;
+}
+
+/* Hover State (Mouse eka udata gaddi) */
+.custom-pagination .page-link:hover {
+    color: #fff !important;
+    background-color: #A0522D !important; /* Lighter brown */
+    border-color: #A0522D !important;
+}
+
+/* Active Page State (Dan inna page eka) */
+.custom-pagination .page-item.active .page-link {
+    color: #fff !important;
+    background-color: #8B4511 !important; /* Main Brown color */
+    border-color: #8B4511 !important;
+}
+
+/* Disabled State (Previous/Next disable wunaama) */
+.custom-pagination .page-item.disabled .page-link {
+    color: #b0a399 !important;
+    background-color: #f8f9fa !important;
+    border-color: #e5d3c5 !important;
+}
