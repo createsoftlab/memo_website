@@ -1009,7 +1009,7 @@
 
 
                                 <!-- Tab 4: Stories & Tributes Tab -->
-                                <div class="tab-pane fade" id="tab-stories" role="tabpanel">
+                                <!-- <div class="tab-pane fade" id="tab-stories" role="tabpanel">
                                     <h6 class="fw-bold text-brown mb-3 border-bottom pb-2"><i class="bi bi-journal-richtext me-2 text-success"></i> Add Stories & Tributes</h6>
                                     <p class="text-muted small">Publish family tributes, eulogies, or cherished memories shared by friends.</p>
                                     <form>
@@ -1023,7 +1023,227 @@
                                         </div>
                                         <button type="submit" class="btn btn-warning fw-bold text-dark px-4 rounded-pill">Publish Tribute</button>
                                     </form>
-                                </div>
+                                </div> -->
+
+
+<!-- Tab 4: Stories & Tributes Tab with Category Switcher -->
+<div class="tab-pane fade" id="tab-stories" role="tabpanel">
+    <h6 class="fw-bold text-brown mb-3 border-bottom pb-2">
+        <i class="bi bi-journal-richtext me-2 text-success"></i> Manage Stories & Tributes
+    </h6>
+    <p class="text-muted small mb-4">Review, approve, or reject user-submitted tributes (flowers, candles, messages) and full life stories or eulogies.</p>
+
+    <!-- Main Category Navigation Pills (Tributes vs Stories) -->
+    <ul class="nav nav-pills mb-4 gap-2 bg-light p-2 rounded-4" id="manageSubTab" role="tablist">
+        <li class="nav-item flex-fill text-center" role="presentation">
+            <button class="nav-link active fw-bold py-2 rounded-pill w-100 shadow-sm" id="sub-tributes-tab" data-bs-toggle="pill" data-bs-target="#sub-tributes" type="button" role="tab">
+                <i class="bi bi-heart-fill me-1 text-danger"></i> Tributes <span class="badge bg-danger ms-1">3</span>
+            </button>
+        </li>
+        <li class="nav-item flex-fill text-center" role="presentation">
+            <button class="nav-link fw-bold py-2 rounded-pill w-100 text-dark" id="sub-stories-tab" data-bs-toggle="pill" data-bs-target="#sub-stories" type="button" role="tab">
+                <i class="bi bi-journal-text me-1 text-success"></i> Stories & Eulogies <span class="badge bg-success ms-1">2</span>
+            </button>
+        </li>
+    </ul>
+
+    <!-- Sub Tab Content Container -->
+    <div class="tab-content" id="manageSubTabContent">
+        
+        <!-- ================= 1. TRIBUTES SECTION (Candles, Flowers, Messages) ================= -->
+        <div class="tab-pane fade show active" id="sub-tributes" role="tabpanel">
+            <div class="d-flex flex-column gap-3">
+
+  <!-- Flower Tribute Card (Updated Layout) -->
+<div class="card border-0 shadow-sm rounded-4 p-3 bg-white border-start border-4 border-danger tribute-card">
+    <div class="d-flex flex-column gap-3">
+        
+        <!-- Top: Profile Info & Timestamp -->
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120" class="rounded-circle border border-2 border-warning shadow-sm flex-shrink-0 profile-img" width="45" height="45" alt="Nimal">
+                <div>
+                    <h6 class="fw-bold mb-0 text-dark">Nimal</h6>
+                    <span class="badge bg-danger-subtle text-danger px-2 py-1 rounded-pill mt-1" style="font-size: 0.7rem;"><i class="bi bi-flower1 me-1"></i> Flower Tribute</span>
+                </div>
+            </div>
+            <small class="text-muted tribute-time" style="font-size: 0.75rem;">10 mins ago</small>
+        </div>
+
+        <!-- Middle: Text Message Box with Margin/Background -->
+        <div class="bg-light p-3 rounded-3 text-muted small">
+            <p class="mb-0">“You will always be remembered in our prayers.You will always be remembered in our prayers.You will always be remembered in our prayers.You will always be remembered in our prayers.”</p>
+        </div>
+
+        <!-- Bottom: Approve & Reject Buttons (Aligned to the bottom right) -->
+        <div class="d-flex justify-content-end align-items-center gap-2 pt-1 border-top border-light action-btns">
+            <button type="button" class="btn btn-outline-success btn-sm rounded-pill px-3 py-1">
+                <i class="bi bi-check-lg me-1"></i> Approve
+            </button>
+            <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1">
+                <i class="bi bi-x-lg me-1"></i> Reject
+            </button>
+        </div>
+
+    </div>
+</div>
+
+              <!-- 1. Candle Tribute Card (Updated Layout) -->
+<div class="card border-0 shadow-sm rounded-4 p-3 bg-white border-start border-4 border-warning tribute-card mb-3">
+    <div class="d-flex flex-column gap-3">
+        
+        <!-- Top: Profile Info & Timestamp -->
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center fw-bold flex-shrink-0 shadow-sm" style="width: 45px; height: 45px; font-size: 0.9rem;">
+                    KA
+                </div>
+                <div>
+                    <h6 class="fw-bold mb-0 text-dark">Kasun</h6>
+                    <span class="badge bg-warning-subtle text-warning-emphasis px-2 py-1 rounded-pill mt-1" style="font-size: 0.7rem;"><i class="bi bi-fire me-1"></i> Candle Tribute</span>
+                </div>
+            </div>
+            <small class="text-muted tribute-time" style="font-size: 0.75rem;">2 hours ago</small>
+        </div>
+
+        <!-- Middle: Text Message Box with Margin/Background -->
+        <div class="bg-light p-3 rounded-3 text-muted small">
+            <p class="mb-0">Candle lit in loving memory.</p>
+        </div>
+
+        <!-- Bottom: Approve & Reject Buttons -->
+        <div class="d-flex justify-content-end align-items-center gap-2 pt-1 border-top border-light action-btns">
+            <button type="button" class="btn btn-outline-success btn-sm rounded-pill px-3 py-1">
+                <i class="bi bi-check-lg me-1"></i> Approve
+            </button>
+            <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1">
+                <i class="bi bi-x-lg me-1"></i> Reject
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!-- 2. Memory Message Tribute Card (Updated Layout) -->
+<div class="card border-0 shadow-sm rounded-4 p-3 bg-white border-start border-4 border-success tribute-card">
+    <div class="d-flex flex-column gap-3">
+        
+        <!-- Top: Profile Info & Timestamp -->
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120" class="rounded-circle border border-2 border-success shadow-sm flex-shrink-0 profile-img" width="45" height="45" alt="Amal">
+                <div>
+                    <h6 class="fw-bold mb-0 text-dark">Amal</h6>
+                    <span class="badge bg-success-subtle text-success px-2 py-1 rounded-pill mt-1" style="font-size: 0.7rem;"><i class="bi bi-chat-heart me-1"></i> Memory Message</span>
+                </div>
+            </div>
+            <small class="text-muted tribute-time" style="font-size: 0.75rem;">Yesterday</small>
+        </div>
+
+        <!-- Middle: Text Message Box with Margin/Background -->
+        <div class="bg-light p-3 rounded-3 text-muted small">
+            <p class="mb-0">“I remember the beautiful times we spent together...”</p>
+        </div>
+
+        <!-- Bottom: Approve & Reject Buttons -->
+        <div class="d-flex justify-content-end align-items-center gap-2 pt-1 border-top border-light action-btns">
+            <button type="button" class="btn btn-outline-success btn-sm rounded-pill px-3 py-1">
+                <i class="bi bi-check-lg me-1"></i> Approve
+            </button>
+            <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1">
+                <i class="bi bi-x-lg me-1"></i> Reject
+            </button>
+        </div>
+
+    </div>
+</div>
+            </div>
+        </div>
+
+        <!-- ================= 2. STORIES & EULOGIES SECTION ================= -->
+        <div class="tab-pane fade" id="sub-stories" role="tabpanel">
+            <div class="d-flex flex-column gap-3">
+
+        <!-- Story Card 1 (Updated Layout) -->
+<div class="card border-0 shadow-sm rounded-4 p-3 bg-white border-start border-4 border-primary mb-3">
+    <div class="d-flex flex-column gap-3">
+        
+        <!-- Top: Profile Info & Timestamp -->
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120" class="rounded-circle border border-2 border-primary shadow-sm flex-shrink-0 profile-img" width="45" height="45" alt="Sunil">
+                <div>
+                    <h6 class="fw-bold mb-0 text-dark">Sunil Perera</h6>
+                    <span class="badge bg-primary-subtle text-primary px-2 py-1 rounded-pill mt-1" style="font-size: 0.7rem;"><i class="bi bi-journal-richtext me-1"></i> Life Story / Eulogy</span>
+                </div>
+            </div>
+            <small class="text-muted tribute-time" style="font-size: 0.75rem;">3 days ago</small>
+        </div>
+
+        <!-- Middle: Title & Text Message Box with Margin/Background -->
+        <div class="bg-light p-3 rounded-3 text-muted small">
+            <h6 class="fw-bold text-dark small mb-1">A Loving Father and Mentor</h6>
+            <p class="mb-0">"He was always there to guide us through difficult times with a calm smile. His dedication to the family and community will never be forgotten..."</p>
+        </div>
+
+        <!-- Bottom: Approve Story & Reject Buttons -->
+        <div class="d-flex justify-content-end align-items-center gap-2 pt-1 border-top border-light action-btns">
+            <button type="button" class="btn btn-outline-success btn-sm rounded-pill px-3 py-1">
+                <i class="bi bi-check-lg me-1"></i> Approve Story
+            </button>
+            <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1">
+                <i class="bi bi-x-lg me-1"></i> Reject
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!-- Story Card 2 (Updated Layout) -->
+<div class="card border-0 shadow-sm rounded-4 p-3 bg-white border-start border-4 border-info">
+    <div class="d-flex flex-column gap-3">
+        
+        <!-- Top: Profile Info & Timestamp -->
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center fw-bold flex-shrink-0 shadow-sm" style="width: 45px; height: 45px; font-size: 0.9rem;">
+                    CH
+                </div>
+                <div>
+                    <h6 class="fw-bold mb-0 text-dark">Chandra Silva</h6>
+                    <span class="badge bg-info-subtle text-info-emphasis px-2 py-1 rounded-pill mt-1" style="font-size: 0.7rem;"><i class="bi bi-journal-richtext me-1"></i> Cherished Memory</span>
+                </div>
+            </div>
+            <small class="text-muted tribute-time" style="font-size: 0.75rem;">5 days ago</small>
+        </div>
+
+        <!-- Middle: Title & Text Message Box with Margin/Background -->
+        <div class="bg-light p-3 rounded-3 text-muted small">
+            <h6 class="fw-bold text-dark small mb-1">The Days at School</h6>
+            <p class="mb-0">"I still remember how we used to walk together after school hours. He always shared his lunch and treated everyone with absolute kindness..."</p>
+        </div>
+
+        <!-- Bottom: Approve Story & Reject Buttons -->
+        <div class="d-flex justify-content-end align-items-center gap-2 pt-1 border-top border-light action-btns">
+            <button type="button" class="btn btn-outline-success btn-sm rounded-pill px-3 py-1">
+                <i class="bi bi-check-lg me-1"></i> Approve Story
+            </button>
+            <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1">
+                <i class="bi bi-x-lg me-1"></i> Reject
+            </button>
+        </div>
+
+    </div>
+</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
 
                                 <!-- Tab 5: Timeline Events Tab -->
                                 <!-- <div class="tab-pane fade" id="tab-timeline" role="tabpanel">
@@ -1035,10 +1255,10 @@
 <div class="tab-pane fade" id="tab-timeline" role="tabpanel">
     <form id="timelineForm">
         <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
-            <h6 class="fw-bold text-brown m-0"><i class="bi bi-clock-history me-2 text-info"></i> Manage Timeline Events</h6>
+            <h6 class="fw-bold text-brown m-0"><i class="bi bi-clock-history me-2 text-info"></i> Manage Timeline </h6>
             <!-- Add New Milestone Button -->
             <button type="button" class="btn btn-sm btn-outline-dark fw-bold" id="addTimelineBtn">
-                <i class="bi bi-plus-circle me-1 text-primary"></i> Add New Milestone
+                <i class="bi bi-plus-circle me-1 text-primary"></i> Add New Timeline
             </button>
         </div>
         <p class="text-muted small">Highlight key milestones throughout their life journey (e.g., Birth, Graduation, Marriage) with custom icons and images.</p>
@@ -1049,7 +1269,7 @@
             <!-- Default Initial Timeline Form Card -->
             <div class="card border-0 shadow-sm bg-light p-3 mb-3 timeline-item">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="badge bg-secondary">Milestone #1</span>
+                    <span class="badge bg-secondary">Timeline #1</span>
                     <button type="button" class="btn btn-sm text-danger delete-timeline-btn" title="Delete Milestone">
                         <i class="bi bi-trash fs-6"></i>
                     </button>
@@ -1058,7 +1278,7 @@
                 <div class="row">
                     <!-- Event Title -->
                     <div class="col-md-7 mb-3">
-                        <label class="form-label small fw-bold">Milestone Title</label>
+                        <label class="form-label small fw-bold">Timeline Title</label>
                         <input type="text" class="form-control" placeholder="e.g., Graduated from high school" required>
                     </div>
 
@@ -1083,7 +1303,7 @@
                     </div> -->
  
  <div class="col-md-5 mb-3">
-    <label class="form-label small fw-bold">Event Icon</label>
+    <label class="form-label small fw-bold">Timeline Icon</label>
     
     <!-- Custom Dropdown Container -->
     <div class="dropdown custom-icon-dropdown">
@@ -1136,7 +1356,7 @@
 
                 <!-- Image Upload -->
                 <div class="mb-2">
-                    <label class="form-label small fw-bold">Upload Event Image (Optional)</label>
+                    <label class="form-label small fw-bold">Upload Image (Optional)</label>
                     <input type="file" class="form-control" accept="image/*">
                 </div>
             </div>
@@ -1149,7 +1369,7 @@
         <label class="form-check-label small fw-bold text-dark mb-0" for="privacySwitch1">
             <i class="bi bi-lock-fill me-1 text-warning"></i> Make this Timeline Private
         </label>
-        <div class="text-muted" style="font-size: 0.75rem;">If private, this event will only be visible to only you.</div>
+        <div class="text-muted" style="font-size: 0.75rem;">If private, this Timeline will only be visible to only you.</div>
     </div>
     <input class="form-check-input fs-5 m-0" type="checkbox" role="switch" id="privacySwitch1" name="is_private" value="1">
 </div>
@@ -1157,7 +1377,7 @@
         <!-- Save Timeline Button -->
         <div class="mt-4 pt-3 border-top">
             <button type="submit" class="btn btn-warning fw-bold text-dark px-4 rounded-pill">
-                <i class="bi bi-check2-circle me-1"></i> Save Timeline Events
+                <i class="bi bi-check2-circle me-1"></i> Save Timeline 
             </button>
         </div>
     </form>
@@ -1306,7 +1526,10 @@
         </div>
     </form>
 </div>
-                               <!-- Tab 7: Donations Tab -->
+
+
+
+     <!-- Tab 7: Donations Tab -->
     <div class="tab-pane fade" id="tab-donations" role="tabpanel">
         <h6 class="fw-bold text-brown mb-3 border-bottom pb-2"><i class="bi bi-gift-fill me-2 text-warning"></i> Configure Donations</h6>
         <p class="text-muted small">Set up charity preferences or memorial fund details for contributions.</p>
@@ -1510,17 +1733,25 @@
                                     <i class="bi bi-plus-circle text-primary"></i>
                                 </a>
                                 <a href="#tab-stories" data-bs-toggle="tab" role="tab" class="btn-outline-dark-custom btn-sm text-start text-decoration-none d-flex justify-content-between align-items-center p-2 rounded">
-                                    <span><i class="bi bi-journal-richtext me-2 text-success"></i> Add Stories & Tributes</span>
+                                    <span><i class="bi bi-journal-richtext me-2 text-success"></i> Stories & Tributes</span>
                                     <i class="bi bi-plus-circle text-primary"></i>
                                 </a>
                                 <a href="#tab-timeline" data-bs-toggle="tab" role="tab" class="btn-outline-dark-custom btn-sm text-start text-decoration-none d-flex justify-content-between align-items-center p-2 rounded">
-                                    <span><i class="bi bi-clock-history me-2 text-info"></i> Manage Timeline Events</span>
+                                    <span><i class="bi bi-clock-history me-2 text-info"></i> Add Timeline </span>
                                     <i class="bi bi-plus-circle text-primary"></i>
                                 </a>
-                                <a href="#tab-events" data-bs-toggle="tab" role="tab" class="btn-outline-dark-custom btn-sm text-start text-decoration-none d-flex justify-content-between align-items-center p-2 rounded">
-                                    <span><i class="bi bi-calendar-event me-2" style="color: #6f42c1;"></i> Add Upcoming Events</span>
+                                <!-- <a href="#tab-events" data-bs-toggle="tab" role="tab" class="btn-outline-dark-custom btn-sm text-start text-decoration-none d-flex justify-content-between align-items-center p-2 rounded">
+                                    <span><i class="bi bi-calendar-event me-2" style="color: #6f42c1;"></i> Add Events</span>
+                                    <i class="bi bi-plus-circle text-primary"></i>
+                                    
+                                </a> -->
+
+                                <a  href="create_my_event.html"  class="btn-outline-dark-custom btn-sm text-start text-decoration-none d-flex justify-content-between align-items-center p-2 rounded"> 
+                                      <span><i class="bi bi-calendar-event me-2" style="color: #6f42c1;"></i> Events</span>
                                     <i class="bi bi-plus-circle text-primary"></i>
                                 </a>
+
+                                
                                 <a href="#tab-donations" data-bs-toggle="tab" role="tab" class="btn-outline-dark-custom btn-sm text-start text-decoration-none d-flex justify-content-between align-items-center p-2 rounded">
                                     <span><i class="bi bi-gift-fill me-2 text-warning"></i> Configure Donations</span>
                                     <i class="bi bi-plus-circle text-primary"></i>
