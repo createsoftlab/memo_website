@@ -1,0 +1,109 @@
+:root {
+    --primary-color: #4e73df;
+    --success-color: #1cc88a;
+    --warning-color: #f6c23e;
+    --danger-color: #e74a3b;
+    --info-color: #36b9cc;
+    --dark-color: #2e384d;
+    --light-bg: #f8f9fc;
+}
+
+body {
+    background-color: var(--light-bg);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #5a5c69;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+    background: linear-gradient(135deg, #2e384d 0%, #1d2331 100%);
+    color: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+}
+
+/* Summary Cards */
+.stat-card {
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.08);
+    transition: transform 0.2s ease-in-out;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.stat-icon {
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 1.4rem;
+}
+
+/* Tables & Sections */
+.report-card {
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.08);
+    background-color: #ffffff;
+    margin-bottom: 1.5rem;
+}
+
+.report-card .card-header {
+    background-color: transparent;
+    border-bottom: 1px solid #e3e6f0;
+    padding: 1.2rem 1.5rem;
+    font-weight: 700;
+    color: var(--dark-color);
+}
+
+.table-custom th {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #b7b9cc;
+    background-color: #f8f9fc;
+    border-bottom: 2px solid #e3e6f0;
+}
+
+.table-custom td {
+    vertical-align: middle;
+    font-size: 0.95rem;
+    color: #6e707e;
+}
+
+/* Country Flag / Badge style */
+.country-badge {
+    font-weight: 600;
+    padding: 0.35em 0.65em;
+    font-size: 0.8rem;
+}
+
+
+
+
+/* Chart container එක mobile වලදී කැඩී යාම වැළැක්වීමට */
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 250px; /* Desktop එකට */
+}
+
+@media (max-width: 768px) {
+    .chart-container {
+        height: 200px; /* Mobile screens වලදී height එක අඩුවෙන් තබා ගැනීමට */
+    }
+    
+    /* Card header එක mobile වලදී උඩ යට පෙළගැස්වීම (Optional) */
+    .report-card .card-header {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 10px;
+    }
+}
