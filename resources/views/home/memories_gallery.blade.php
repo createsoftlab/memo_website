@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery - Lallan Writer Memorial</title>
+  
+  <!-- Bootstrap 5 CSS & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <!-- Custom Stylesheets -->
+  <link rel="stylesheet" href="{{ asset('memo_website_dev_frontend/assets/css/main.css') }}">
+  <link rel="stylesheet" href="{{ asset('memo_website_dev_frontend/assets/css/gallery.css') }}">
+</head>
+<body class="bg-memorial-light">
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-memorial-dark px-3 py-2">
+    <div class="container-fluid">
+      <a class="navbar-brand text-warning fs-6 fw-bold" href="{{ url('/') }}">
+        <i class="bi bi-fire me-1"></i> Forever Missed
+      </a>
+      <button class="navbar-toggler border-0 d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="offcanvas offcanvas-end bg-memorial-dark text-white" tabindex="-1" id="offcanvasNavbar">
+        <div class="offcanvas-header border-bottom border-secondary d-lg-none">
+          <h5 class="offcanvas-title text-warning"><i class="bi bi-fire me-1"></i> Navigation</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column flex-lg-row align-items-lg-center justify-content-lg-between w-100">
+          <ul class="navbar-nav text-uppercase small gap-lg-3 me-lg-auto mb-3 mb-lg-0">
+            <li class="nav-item"><a class="nav-link py-2" href="{{ url('/') }}"><i class="bi bi-house-door me-1"></i> Home</a></li>
+                  <li class="nav-item">
+  <a class="nav-link" href="{{ url('/all_memories') }}">
+    <i class="bi bi-heart-fill"></i> Memories
+  </a>
+            <li class="nav-item"><a class="nav-link py-2" href="{{ url('/') }}"><i class="bi bi-info-circle me-1"></i> About Us</a></li>
+            <li class="nav-item"><a class="nav-link py-2" href="#"><i class="bi bi-envelope me-1"></i> Contact Us</a></li>
+          </ul>
+          <div id="authButtons" class="d-flex flex-column flex-lg-row gap-2">
+            <a href="#" class="btn btn-outline-light btn-sm text-uppercase" id="loginBtn"><i class="bi bi-box-arrow-in-right me-1"></i> Login</a>
+            <a href="#" class="btn btn-warning btn-sm text-uppercase fw-semibold" id="signupBtn"><i class="bi bi-person-plus me-1"></i> Sign Up</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Header -->
+  <header class="memorial-hero d-flex align-items-end">
+    <div class="container py-4">
+      <div class="row align-items-center">
+        <div class="col-8">
+          <h1 class="memorial-title text-white mb-0">Lallan Writer</h1>
+          <p class="fs-4 text-white-50 font-serif mb-0">1945 - 2021</p>
+        </div>
+        <div class="col-4 text-end">
+          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?fit=crop&w=300&h=300" class="memorial-avatar rounded-3 shadow" alt="Lallan Writer">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs Bar -->
+  <div class="memorial-tabs-bar sticky-top">
+    <div class="container">
+      <ul class="nav nav-tabs border-0">
+        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_index') }}">ABOUT</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_life') }}">LIFE</a></li>
+        <li class="nav-item"><a class="nav-link active" href="{{ url('/memories_gallery') }}">GALLERY</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_stories') }}">STORIES</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_timeline') }}">TIMELINE</a></li>
+                <li class="nav-item"><a class="nav-link " href="{{ url('/memories_event') }}">EVENTS</a></li>
+
+                                                <li class="nav-item"><a class="nav-link " href="{{ url('/memories_donation') }}">DONATIONS</a></li>
+
+
+      </ul>
+    </div>
+  </div>
+
+  <!-- Main Content Layout -->
+  <main class="container my-4">
+    <div class="row g-4">
+      
+      <!-- Left Column: Gallery Tabs & Upload Section -->
+      <div class="col-lg-8 d-flex flex-column gap-4">
+
+        <!-- Main Gallery Container Card -->
+        <div class="sidebar-card p-4 rounded shadow-sm bg-memorial-card">
+          
+          <!-- Inner Sub-Tabs Header (PHOTO, MOVIE, AUDIO) -->
+          <ul class="nav nav-tabs border-bottom border-secondary-subtle mb-4 flex-nowrap justify-content-around text-uppercase fw-bold text-center" id="gallerySubTabs" role="tablist">
+            <li class="nav-item flex-fill" role="presentation">
+              <button class="nav-link active sub-tab-link w-100" id="photo-tab" data-bs-toggle="tab" data-bs-target="#photo-tab-pane" type="button" role="tab">PHOTO</button>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+              <button class="nav-link sub-tab-link w-100" id="movie-tab" data-bs-toggle="tab" data-bs-target="#movie-tab-pane" type="button" role="tab">MOVIE</button>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+              <button class="nav-link sub-tab-link w-100" id="audio-tab" data-bs-toggle="tab" data-bs-target="#audio-tab-pane" type="button" role="tab">AUDIO</button>
+            </li>
+          </ul>
+
+          <!-- Tab Content Area -->
+          <div class="tab-content" id="gallerySubTabContent">
+            
+            <!-- PHOTO TAB -->
+            <div class="tab-pane fade show active" id="photo-tab-pane" role="tabpanel" tabindex="0">
+              <!-- Action Control Buttons -->
+              <div class="d-flex gap-2 mb-4">
+             <button class="btn btn-add-photos btn-sm font-monospace fw-semibold d-inline-flex align-items-center gap-1 shadow-sm px-3 py-2" onclick="document.getElementById('upload-section').scrollIntoView({behavior: 'smooth'});">
+    <i class="bi bi-image-fill me-1"></i> Add photos
+</button>
+                <!-- <button class="btn btn-outline-memorial-dark btn-sm font-monospace fw-semibold">
+                  <i class="bi bi-play-circle me-1"></i> Start slideshow
+                </button> -->
+              </div>
+
+              <!-- Photos Grid (Responsive 3 Columns) -->
+              <div class="row g-3">
+                <div class="col-6 col-sm-4">
+                  <div class="gallery-item-wrapper rounded overflow-hidden shadow-sm position-relative">
+                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1 uppercase-badge">NEW</span>
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=400&h=400" class="img-fluid gallery-thumb" alt="Photo 1">
+                  </div>
+                </div>
+                <div class="col-6 col-sm-4">
+                  <div class="gallery-item-wrapper rounded overflow-hidden shadow-sm position-relative">
+                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1 uppercase-badge">NEW</span>
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?fit=crop&w=400&h=400" class="img-fluid gallery-thumb" alt="Photo 2">
+                  </div>
+                </div>
+                <div class="col-6 col-sm-4">
+                  <div class="gallery-item-wrapper rounded overflow-hidden shadow-sm position-relative">
+                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1 uppercase-badge">NEW</span>
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?fit=crop&w=400&h=400" class="img-fluid gallery-thumb" alt="Photo 3">
+                  </div>
+                </div>
+                <div class="col-6 col-sm-4">
+                  <div class="gallery-item-wrapper rounded overflow-hidden shadow-sm position-relative">
+                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1 uppercase-badge">NEW</span>
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?fit=crop&w=400&h=400" class="img-fluid gallery-thumb" alt="Photo 4">
+                  </div>
+                </div>
+                <div class="col-6 col-sm-4">
+                  <div class="gallery-item-wrapper rounded overflow-hidden shadow-sm position-relative">
+                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1 uppercase-badge">NEW</span>
+                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?fit=crop&w=400&h=400" class="img-fluid gallery-thumb" alt="Photo 5">
+                  </div>
+                </div>
+                
+              </div>
+
+
+              <br>
+ <!-- Add Media Dynamic Upload Section Box -->
+<div class="sidebar-card p-4 rounded-4 shadow-sm bg-white border border-light reveal-card mb-4" id="upload-section">
+  <h5 class="fw-bold text-dark mb-3" id="upload-section-title">Add Photos</h5>
+
+  <!-- Upgrade Banner Notice -->
+  <div class="upgrade-banner p-3 rounded-3 mb-4 d-flex align-items-center gap-2 bg-light border">
+    <i class="bi bi-star-fill text-warning fs-5"></i>
+    <div class="small text-secondary">
+      Upgrade your website to enable unlimited gallery uploads. <a href="#" class="text-memorial-accent text-decoration-none fw-semibold">View benefits and pricing</a>
+    </div>
+  </div>
+
+  <!-- Drag and Drop Dropzone -->
+  <div class="upload-dropzone rounded-4 p-4 text-center mb-3 d-flex flex-column align-items-center justify-content-center border border-2 border-dashed position-relative" id="dropzoneArea">
+    <input type="file" id="mediaFileInput" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" multiple accept="image/*" style="cursor: pointer;">
+    <div class="dropzone-content py-3">
+      <i class="bi bi-cloud-arrow-up fs-1 text-memorial mb-2"></i>
+      <p class="small text-muted mb-0">
+        <span class="text-memorial fw-bold">Choose photo files</span> or drag and drop to upload
+      </p>
+    </div>
+  </div>
+
+  <!-- Loading State (Hidden by default) -->
+  <div id="uploadLoader" class="text-center py-3 d-none">
+    <div class="spinner-border text-memorial spinner-border-sm me-2" role="status"></div>
+    <span class="small text-muted fw-semibold">Uploading photos to space...</span>
+  </div>
+
+  <!-- Preview Grid for Selected Images -->
+  <div id="imagePreviewContainer" class="row g-2 mb-3 row-cols-3 row-cols-sm-4">
+    <!-- Image previews will appear here dynamically -->
+  </div>
+
+  <!-- Single Centered Submit Button -->
+  <div class="text-center mt-3">
+    <button type="button" class="btn btn-memorial px-5 py-2 fw-bold rounded-pill shadow-sm opacity-50" id="submitImagesBtn" disabled>
+      <i class="bi bi-check2-circle me-1"></i> Add Image
+    </button>
+  </div>
+</div>
+</div>
+
+
+            <!-- MOVIE TAB -->
+            <div class="tab-pane fade" id="movie-tab-pane" role="tabpanel" tabindex="0">
+              <div class="d-flex gap-2 mb-4">
+                <button class="btn btn-add-photos btn-sm font-monospace fw-semibold d-inline-flex align-items-center gap-1 shadow-sm px-3 py-2" onclick="document.getElementById('videoupload-section').scrollIntoView({behavior: 'smooth'});">
+                  <i class="bi bi-plus-square me-1"></i> Add Video 
+                </button>
+              </div>
+              <div class="text-center py-5 text-muted bg-white rounded border border-dashed">
+                <i class="bi bi-film fs-1 d-block mb-2 text-memorial-accent"></i>
+                <p class="mb-0 fw-semibold">No videos uploaded yet.</p>
+                <span class="small text-muted">Upload memorial movies using the section below.</span>
+              </div>
+
+              <br>
+
+  <!-- Add Video Dynamic Upload Section Box -->
+<div class="sidebar-card p-4 rounded-4 shadow-sm bg-white border border-light reveal-card mb-4" id="videoupload-section">
+  <h5 class="fw-bold text-dark mb-3" id="upload-section-title">Add videos</h5>
+
+  <!-- Upgrade Banner Notice -->
+  <div class="upgrade-banner p-3 rounded-3 mb-4 d-flex align-items-center gap-2 bg-light border">
+    <i class="bi bi-star-fill text-warning fs-5"></i>
+    <div class="small text-secondary">
+      Upgrade your website to enable unlimited gallery uploads. <a href="#" class="text-memorial-accent text-decoration-none fw-semibold">View benefits and pricing</a>
+    </div>
+  </div>
+
+  <!-- Drag and Drop Dropzone (Video specific IDs) -->
+  <div class="upload-dropzone rounded-4 p-4 text-center mb-3 d-flex flex-column align-items-center justify-content-center border border-2 border-dashed position-relative" id="videoDropzoneArea">
+    <input type="file" id="videoFileInput" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" multiple accept="video/*" style="cursor: pointer;">
+    <div class="dropzone-content py-3">
+      <i class="bi bi-cloud-arrow-up fs-1 text-memorial mb-2"></i>
+      <p class="small text-muted mb-0">
+        <span class="text-memorial fw-bold">Choose video files</span> or drag and drop to upload
+      </p>
+    </div>
+  </div>
+
+  <!-- Loading State (Hidden by default) -->
+  <div id="videoUploadLoader" class="text-center py-3 d-none">
+    <div class="spinner-border text-memorial spinner-border-sm me-2" role="status"></div>
+    <span class="small text-muted fw-semibold">Uploading video to space...</span>
+  </div>
+
+  <!-- Preview Grid for Selected Videos -->
+  <div id="videoPreviewContainer" class="row g-2 mb-3 row-cols-3 row-cols-sm-4">
+    <!-- Video previews will appear here dynamically -->
+  </div>
+
+  <!-- Single Centered Submit Button -->
+  <div class="text-center mt-3">
+    <button type="button" class="btn btn-memorial px-5 py-2 fw-bold rounded-pill shadow-sm opacity-50" id="submitVideoBtn" disabled>
+      <i class="bi bi-check2-circle me-1"></i> Add Video 
+    </button>
+  </div>
+</div>
+            </br>
+
+            </div>
+
+       <!-- AUDIO TAB -->
+<div class="tab-pane fade" id="audio-tab-pane" role="tabpanel" tabindex="0">
+  
+  <!-- Add Audio Top Button -->
+  <div class="d-flex gap-2 mb-4">
+    <button class="btn btn-add-photos btn-sm font-monospace fw-semibold d-inline-flex align-items-center gap-1 shadow-sm px-3 py-2" onclick="document.getElementById('audio-upload-section').scrollIntoView({behavior: 'smooth'});">
+      <i class="bi bi-music-note-beamed me-1"></i> Add audio
+    </button>
+  </div>
+
+  <!-- Empty State Box -->
+  <div class="text-center py-5 text-muted bg-white rounded border border-dashed mb-4" id="emptyAudioState">
+    <i class="bi bi-music-note-beamed fs-1 d-block mb-2 text-memorial-accent"></i>
+    <p class="mb-0 fw-semibold">No audio files uploaded yet.</p>
+    <span class="small text-muted">Upload voice recordings or music tracks using the section below.</span>
+  </div>
+
+  <!-- Add Audio Dynamic Upload Section Box -->
+  <div class="sidebar-card p-4 rounded-4 shadow-sm bg-white border border-light reveal-card mb-4" id="audio-upload-section">
+    <h5 class="fw-bold text-dark mb-3" id="audio-section-title">Add audio</h5>
+
+    <!-- Upgrade Banner Notice -->
+    <div class="upgrade-banner p-3 rounded-3 mb-4 d-flex align-items-center gap-2 bg-light border">
+      <i class="bi bi-star-fill text-warning fs-5"></i>
+      <div class="small text-secondary">
+        Upgrade your website to enable unlimited audio uploads. <a href="#" class="text-memorial-accent text-decoration-none fw-semibold">View benefits and pricing</a>
+      </div>
+    </div>
+
+    <!-- Drag and Drop Dropzone (Audio specific IDs) -->
+    <div class="upload-dropzone rounded-4 p-4 text-center mb-3 d-flex flex-column align-items-center justify-content-center border border-2 border-dashed position-relative" id="audioDropzoneArea">
+      <input type="file" id="audioFileInput" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" multiple accept="audio/*" style="cursor: pointer;">
+      <div class="dropzone-content py-3">
+        <i class="bi bi-cloud-arrow-up fs-1 text-memorial mb-2"></i>
+        <p class="small text-muted mb-0">
+          <span class="text-memorial fw-bold">Choose audio files</span> or drag and drop to upload
+        </p>
+      </div>
+    </div>
+
+    <!-- Loading State (Hidden by default) -->
+    <div id="audioUploadLoader" class="text-center py-3 d-none">
+      <div class="spinner-border text-memorial spinner-border-sm me-2" role="status"></div>
+      <span class="small text-muted fw-semibold">Uploading audio to space...</span>
+    </div>
+
+    <!-- Preview Grid for Selected Audio Files -->
+    <div id="audioPreviewContainer" class="row g-2 mb-3 row-cols-1 row-cols-sm-2">
+      <!-- Audio previews/players will appear here dynamically -->
+    </div>
+
+    <!-- Single Centered Submit Button -->
+    <div class="text-center mt-3">
+      <button type="button" class="btn btn-memorial px-5 py-2 fw-bold rounded-pill shadow-sm opacity-50" id="submitAudioBtn" disabled>
+        <i class="bi bi-check2-circle me-1"></i> Add Audio 
+      </button>
+    </div>
+  </div>
+
+</div>
+     
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Right Column: Sidebar Panels -->
+      <div class="col-lg-4 d-flex flex-column gap-3">
+
+        <!-- Invite & Donate Card -->
+        <div class="main-content-card p-3 rounded">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <h6 class="fw-bold mb-0 me-2 text-dark">Invite Lallan's family and friends</h6>
+            <i class="bi bi-person-add fs-4 text-muted"></i>
+          </div>
+          <button class="btn btn-invite w-100 py-2 mb-2">
+            <i class="bi bi-person-plus me-1"></i> Invite now
+          </button>
+          <button class="btn btn-donate w-100 py-2">
+            <i class="bi bi-heart-fill me-1"></i> Donate now
+          </button>
+        </div>
+
+        <!-- Share Button -->
+        <button class="btn btn-facebook w-100 py-2 d-flex align-items-center justify-content-center gap-2" id="shareFbBtn">
+          <i class="bi bi-facebook fs-5 text-primary"></i>
+          <span>Share on Facebook</span>
+        </button>
+
+        <!-- Notification Preferences Card -->
+        <!-- <div class="sidebar-card p-3 rounded">
+          <h6 class="fw-bold mb-1 text-dark">Notification preferences</h6>
+          <p class="small text-muted mb-3" id="subStatus">You are not subscribed</p>
+          <button class="btn btn-outline-memorial-dark w-100 py-2" id="subscribeBtn">Subscribe</button>
+        </div> -->
+
+        <!-- Photos Spotlight Card -->
+        <div class="main-content-card p-3 rounded">
+          <h6 class="fw-bold mb-3 text-dark">5 Photos</h6>
+          <div class="mb-3 rounded overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=400&h=300" class="img-fluid rounded w-100" alt="Spotlight Photo">
+          </div>
+        </div>
+
+        <!-- Recent Updates Card -->
+        <!-- <div class="sidebar-card p-3 rounded">
+          <h6 class="fw-bold mb-2 text-dark">Recent updates</h6>
+          <p class="small text-muted mb-2">Friday, August 14</p>
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <i class="bi bi-journal-text fs-5 text-muted"></i>
+            <span class="small text-dark"><strong>Connor Graham</strong> added 4 life story chapters.</span>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-image fs-5 text-muted"></i>
+            <span class="small text-dark"><strong>Connor Graham</strong> added 5 photos.</span>
+          </div>
+        </div> -->
+
+        <!-- Page Views Info -->
+        <div class="main-content-card  p-3 rounded">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <i class="bi bi-eye fs-5 text-dark"></i>
+            <h6 class="fw-bold mb-0 text-dark">14 Views</h6>
+          </div>
+          <div class="d-flex align-items-center gap-2 small text-muted pt-2 border-top border-secondary-subtle">
+            <i class="bi bi-globe"></i>
+            <span>Open access</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+
+  
+   <!-- Footer -->
+  <footer class="bg-memorial-dark text-white pt-5 pb-3 border-top border-secondary">
+    <div class="container">
+      <div class="row g-4 mb-4">
+        <div class="col-lg-4 col-md-6">
+          <h5 class="text-warning fw-bold mb-3"><i class="bi bi-fire me-1"></i> Forever Missed</h5>
+          <p class="small text-light-tan leading-relaxed">
+            A dignified digital platform dedicated to preserving legacies, connecting families, and honoring cherished memories forever.
+          </p>
+        </div>
+
+        <div class="col-lg-2 col-md-6">
+          <h6 class="text-gold fw-bold mb-3">Quick Links</h6>
+          <ul class="list-unstyled small d-flex flex-column gap-2 text-light-tan">
+            <li><a href="{{ url('/') }}" class="text-light-tan text-decoration-none">Home</a></li>
+            <li><a href="{{ url('/all_memories') }}" class="text-light-tan text-decoration-none">Memories</a></li>
+            <li><a href="{{ url('/about') }}" class="text-light-tan text-decoration-none">About Us</a></li>
+            <li><a href="{{ url('/contact') }}" class="text-light-tan text-decoration-none">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <h6 class="text-gold fw-bold mb-3">Contact Support</h6>
+          <ul class="list-unstyled small d-flex flex-column gap-2 text-light-tan">
+            <li><i class="bi bi-telephone-fill text-gold me-2"></i>+1 (800) 555-0199</li>
+            <li><i class="bi bi-envelope-fill text-gold me-2"></i>support@forevermissed.com</li>
+            <li><i class="bi bi-geo-alt-fill text-gold me-2"></i>Global Headquarters</li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <h6 class="text-gold fw-bold mb-3">Follow Us</h6>
+          <div class="d-flex gap-2">
+            <a href="#" class="btn btn-outline-light btn-sm rounded-circle"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="btn btn-outline-light btn-sm rounded-circle"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" class="btn btn-outline-light btn-sm rounded-circle"><i class="bi bi-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <hr class="border-secondary">
+
+      <div class="text-center small text-white-50 pt-2">
+        <p class="mb-0">&copy; 2026 Forever Missed Memorial Directory. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript Files -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ asset('memo_website_dev_frontend/assets/js/main.js') }}"></script>
+  
+  <!-- Dynamic Sub-Tab Handler Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const tabLinks = document.querySelectorAll('#gallerySubTabs button[data-bs-toggle="tab"]');
+      const uploadTitle = document.getElementById('upload-section-title');
+      const chooseFilesLink = document.getElementById('choose-files-link');
+      const importButtons = document.getElementById('import-buttons-wrapper');
+
+      tabLinks.forEach(tab => {
+        tab.addEventListener('shown.bs.tab', function (e) {
+          const targetId = e.target.id;
+          
+          if (targetId === 'photo-tab') {
+            uploadTitle.textContent = 'Add Photos';
+            chooseFilesLink.textContent = 'Choose photo files';
+            importButtons.classList.remove('d-none');
+          } else if (targetId === 'movie-tab') {
+            uploadTitle.textContent = 'Add Movies / Videos';
+            chooseFilesLink.textContent = 'Choose video files';
+            importButtons.classList.add('d-none');
+          } else if (targetId === 'audio-tab') {
+            uploadTitle.textContent = 'Add Audio Tracks';
+            chooseFilesLink.textContent = 'Choose audio files';
+            importButtons.classList.add('d-none');
+          }
+        });
+      });
+    });
+  </script>
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const fileInput = document.getElementById("mediaFileInput");
+    const previewContainer = document.getElementById("imagePreviewContainer");
+    const submitBtn = document.getElementById("submitImagesBtn");
+    const uploadLoader = document.getElementById("uploadLoader");
+    
+    let selectedFiles = [];
+
+    if (fileInput) {
+        fileInput.addEventListener("change", function (e) {
+            const files = Array.from(e.target.files);
+            
+            files.forEach(file => {
+                if (file.type.startsWith("image/")) {
+                    selectedFiles.push(file);
+                }
+            });
+
+            renderPreviews();
+            fileInput.value = ""; // Reset input so same files can be re-selected if needed
+        });
+    }
+
+    function renderPreviews() {
+        previewContainer.innerHTML = "";
+
+        if (selectedFiles.length > 0) {
+            submitBtn.removeAttribute("disabled");
+            submitBtn.classList.remove("opacity-50");
+        } else {
+            submitBtn.setAttribute("disabled", "true");
+            submitBtn.classList.add("opacity-50");
+        }
+
+        selectedFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const col = document.createElement("div");
+                col.className = "col";
+                col.innerHTML = `
+                    <div class="preview-thumb-card shadow-sm">
+                        <img src="${e.target.result}" alt="Preview">
+                        <button type="button" class="delete-thumb-btn" data-index="${index}" title="Remove">
+                            <i class="bi bi-x"></i>
+                        </button>
+                    </div>
+                `;
+                previewContainer.appendChild(col);
+
+                // Attach delete event
+                col.querySelector(".delete-thumb-btn").addEventListener("click", function () {
+                    const idx = parseInt(this.getAttribute("data-index"));
+                    selectedFiles.splice(idx, 1);
+                    renderPreviews();
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Submit / Upload trigger simulation
+    if (submitBtn) {
+        submitBtn.addEventListener("click", function () {
+            if (selectedFiles.length === 0) return;
+
+            // Show loading state ("uploading to space")
+            uploadLoader.classList.remove("d-none");
+            submitBtn.setAttribute("disabled", "true");
+
+            setTimeout(() => {
+                // Simulate completion
+                uploadLoader.classList.add("d-none");
+                alert(`${selectedFiles.length} photo(s) successfully uploaded to space!`);
+                selectedFiles = [];
+                renderPreviews();
+            }, 2000);
+        });
+    }
+});
+</script>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const fileInput = document.getElementById("videoFileInput");
+    const previewContainer = document.getElementById("videoPreviewContainer");
+    const submitBtn = document.getElementById("submitVideoBtn");
+    const uploadLoader = document.getElementById("videoUploadLoader");
+    
+    let selectedFiles = [];
+
+    if (fileInput) {
+        fileInput.addEventListener("change", function (e) {
+            const files = Array.from(e.target.files);
+            
+            files.forEach(file => {
+                // Video files witharak filter karagannawa
+                if (file.type.startsWith("video/")) {
+                    selectedFiles.push(file);
+                }
+            });
+
+            renderPreviews();
+            fileInput.value = ""; // Input eka reset karanawa ayeth e file ma select karanna puluwan wenna
+        });
+    }
+
+    function renderPreviews() {
+        previewContainer.innerHTML = "";
+
+        if (selectedFiles.length > 0) {
+            submitBtn.removeAttribute("disabled");
+            submitBtn.classList.remove("opacity-50");
+        } else {
+            submitBtn.setAttribute("disabled", "true");
+            submitBtn.classList.add("opacity-50");
+        }
+
+        selectedFiles.forEach((file, index) => {
+            // Video file eka preview karann object URL ekak hadanawa
+            const videoUrl = URL.createObjectURL(file);
+            const col = document.createElement("div");
+            col.className = "col";
+            col.innerHTML = `
+                <div class="preview-thumb-card shadow-sm position-relative" style="background:#000; aspect-ratio:1; border-radius:8px; overflow:hidden;">
+                    <video src="${videoUrl}" muted style="width: 100%; height: 100%; object-fit: cover; opacity: 0.85;"></video>
+                    <i class="bi bi-play-circle-fill text-white position-absolute top-50 start-50 translate-middle fs-3" style="pointer-events: none;"></i>
+                    <button type="button" class="delete-thumb-btn" data-index="${index}" title="Remove">
+                        <i class="bi bi-x"></i>
+                    </button>
+                </div>
+            `;
+            previewContainer.appendChild(col);
+
+            // Delete button click event eka
+            col.querySelector(".delete-thumb-btn").addEventListener("click", function () {
+                const idx = parseInt(this.getAttribute("data-index"));
+                selectedFiles.splice(idx, 1);
+                renderPreviews();
+            });
+        });
+    }
+
+    // Submit / Upload trigger simulation
+    if (submitBtn) {
+        submitBtn.addEventListener("click", function () {
+            if (selectedFiles.length === 0) return;
+
+            // Loading state eka pennanawa
+            uploadLoader.classList.remove("d-none");
+            submitBtn.setAttribute("disabled", "true");
+
+            setTimeout(() => {
+                // Upload complete unata passe
+                uploadLoader.classList.add("d-none");
+                alert(`${selectedFiles.length} video(s) successfully uploaded to space!`);
+                selectedFiles = [];
+                renderPreviews();
+            }, 2000);
+        });
+    }
+});
+</script>
+
+
+
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const audioFileInput = document.getElementById("audioFileInput");
+    const audioPreviewContainer = document.getElementById("audioPreviewContainer");
+    const submitAudioBtn = document.getElementById("submitAudioBtn");
+    const audioUploadLoader = document.getElementById("audioUploadLoader");
+    
+    let selectedAudioFiles = [];
+
+    if (audioFileInput) {
+        audioFileInput.addEventListener("change", function (e) {
+            const files = Array.from(e.target.files);
+            
+            files.forEach(file => {
+                // Audio files witharak filter karagannawa
+                if (file.type.startsWith("audio/")) {
+                    selectedAudioFiles.push(file);
+                }
+            });
+
+            renderAudioPreviews();
+            audioFileInput.value = ""; // Input eka reset karanawa
+        });
+    }
+
+    function renderAudioPreviews() {
+        audioPreviewContainer.innerHTML = "";
+
+        if (selectedAudioFiles.length > 0) {
+            submitAudioBtn.removeAttribute("disabled");
+            submitAudioBtn.classList.remove("opacity-50");
+        } else {
+            submitAudioBtn.setAttribute("disabled", "true");
+            submitAudioBtn.classList.add("opacity-50");
+        }
+
+        selectedAudioFiles.forEach((file, index) => {
+            const audioUrl = URL.createObjectURL(file);
+            const col = document.createElement("div");
+            col.className = "col";
+            col.innerHTML = `
+                <div class="p-3 border rounded-3 bg-light shadow-sm position-relative d-flex flex-column gap-2">
+                    <div class="d-flex align-items-center gap-2 pe-4">
+                        <i class="bi bi-file-earmark-music-fill text-memorial fs-4"></i>
+                        <span class="small fw-semibold text-truncate text-dark" style="max-width: 200px;" title="${file.name}">${file.name}</span>
+                    </div>
+                    <audio controls src="${audioUrl}" class="w-100" style="height: 35px;"></audio>
+                    <button type="button" class="delete-thumb-btn" data-index="${index}" title="Remove" style="top: 10px; right: 10px;">
+                        <i class="bi bi-x"></i>
+                    </button>
+                </div>
+            `;
+            audioPreviewContainer.appendChild(col);
+
+            // Delete button event eka
+            col.querySelector(".delete-thumb-btn").addEventListener("click", function () {
+                const idx = parseInt(this.getAttribute("data-index"));
+                selectedAudioFiles.splice(idx, 1);
+                renderAudioPreviews();
+            });
+        });
+    }
+
+    // Submit / Upload trigger simulation for Audio
+    if (submitAudioBtn) {
+        submitAudioBtn.addEventListener("click", function () {
+            if (selectedAudioFiles.length === 0) return;
+
+            // Loading state eka pennanawa
+            audioUploadLoader.classList.remove("d-none");
+            submitAudioBtn.setAttribute("disabled", "true");
+
+            setTimeout(() => {
+                // Upload complete unata passe
+                audioUploadLoader.classList.add("d-none");
+                alert(`${selectedAudioFiles.length} audio file(s) successfully uploaded to space!`);
+                selectedAudioFiles = [];
+                renderAudioPreviews();
+            }, 2000);
+        });
+    }
+});
+</script>
+
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.15 // Image eken 15% k screen ekata visible unama trigger wei
+    };
+
+    const galleryObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('reveal');
+                observer.unobserve(entry.target); // Eka sarayak animation eka unata passe observe karana eka nawaththanawa
+            }
+        });
+    }, observerOptions);
+
+    // Gallery items okkoma observe karanna danna
+    document.querySelectorAll('.gallery-item-wrapper').forEach(item => {
+        galleryObserver.observe(item);
+    });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forever Missed - Memorial Directory</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="assets/css/memories.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+
+  <!-- Navigation Bar with Mobile Offcanvas Slide Menu -->
+  <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand me-4" href="#">
+        <i class="bi bi-fire"></i> Forever Missed
+      </a>
+      
+      <!-- Offcanvas Mobile Trigger Button -->
+      <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+        <i class="bi bi-list text-white fs-2"></i>
+      </button>
+
+      <!-- Slide Drawer (Offcanvas) for Mobile & Standard Navbar for Desktop -->
+      <div class="offcanvas offcanvas-end offcanvas-memorial" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header border-bottom border-secondary pb-3">
+          <h5 class="offcanvas-title text-warning fw-bold" id="offcanvasNavbarLabel">
+            <i class="bi bi-fire me-1"></i> Forever Missed
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+
+        <div class="offcanvas-body d-flex flex-column flex-lg-row justify-content-between align-items-lg-center">
+          <ul class="navbar-nav me-auto mb-3 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" href="index.html"><i class="bi bi-house-door"></i> HOME</a>
+            </li>
+            <!-- <li class="nav-item">
+              <a class="nav-link" href="all_memories.html"><i class="bi bi-envelope"></i> Memories </a>
+            </li> -->
+            <li class="nav-item">
+  <a class="nav-link" href="all_memories.html">
+    <i class="bi bi-heart-fill"></i> Memories
+  </a>
+</li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.html"><i class="bi bi-info-circle"></i> ABOUT US</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contact.html"><i class="bi bi-envelope"></i> CONTACT US</a>
+            </li>
+
+            
+          </ul>
+          
+          <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-2 mt-auto mt-lg-0 pt-3 pt-lg-0 border-top border-lg-0 border-secondary">
+            <a href="#" class="btn btn-nav-login text-center"><i class="bi bi-box-arrow-in-right"></i> LOGIN</a>
+            <a href="#" class="btn btn-nav-signup text-center"><i class="bi bi-person-plus"></i> SIGN UP</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+
+<!-- Hero Header -->
+
+
+<!-- Hero Header with Background Music & Toggle Button -->
+<header class="memorial-hero d-flex align-items-center text-white mb-4 position-relative">
+    <div class="container py-3">
+        
+        <!-- Top Row: Breadcrumb & Audio Control Button -->
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <!-- Breadcrumb Navigation -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 small">
+                    <li class="breadcrumb-item"><a href="index.html" class="text-warning text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a href="all_memories.html" class="text-warning text-decoration-none">All Memories</a></li>
+                    <!-- <li class="breadcrumb-item active text-white-50" aria-current="page">Memory Name</li> -->
+                </ol>
+            </nav>
+
+            <!-- Background Music Toggle Button -->
+            <button id="audioToggleBtn" class="btn btn-outline-warning btn-sm rounded-pill px-3 py-1 d-flex align-items-center gap-2 bg-dark bg-opacity-50" onclick="toggleBackgroundMusic()" title="Toggle Background Music">
+                <i id="audioIcon" class="bi bi-volume-up-fill fs-6 text-warning"></i>
+                <span id="audioText" class="small">Mute Music</span>
+            </button>
+        </div>
+
+        <!-- Header Content -->
+        <div class="text-center text-lg-start">
+            <h3 class="fw-bold mb-1">United States</h3>
+            <span class="badge bg-warning text-dark mt-1">Crime Victims</span>
+        </div>
+
+    </div>
+
+    <!-- Hidden HTML5 Audio Element (Autoplay without muted) -->
+    <audio id="memorialAudio" autoplay loop>
+        <source src="assets/audio/sad.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+</header>
+
+
+
+  <!-- Main Content -->
+  <main class="container pb-5">
+    <div class="tab-content" id="memorialTabsContent">
+
+      <!-- Directory Tab -->
+      <div class="tab-pane fade show active" id="directory" role="tabpanel">
+        <div class="card p-4 rounded-3 shadow-sm border-0 bg-white">
+
+          <!-- Filter Section -->
+       
+<!-- Filter Section -->
+<div class="border-bottom pb-4 mb-4">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="fw-bold text-dark mb-0">
+      <i class="bi bi-person-lines-fill me-2 text-warning"></i>Memorial Directory
+    </h4>
+    <span class="badge rounded-pill bg-warning text-dark px-3 py-2 fw-semibold">24 Records</span>
+  </div>
+
+  <div class="row g-2">
+    <!-- Search Input -->
+    <div class="col-12 col-lg-5">
+      <div class="input-group">
+        <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control border-start-0 ps-0" placeholder="Search by name...">
+      </div>
+    </div>
+    
+    <!-- Category Custom Dropdown -->
+    <div class="col-12 col-md-6 col-lg-3">
+      <div class="dropdown w-100">
+        <button class="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center text-secondary bg-white border" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <span>Crime Victims</span>
+          <i class="bi bi-chevron-down"></i>
+        </button>
+        <ul class="dropdown-menu w-100 shadow-sm">
+          <li><a class="dropdown-item" href="#">All Categories</a></li>
+          <li><a class="dropdown-item active" href="#">Crime Victims</a></li>
+          <li><a class="dropdown-item" href="#">Military & Veterans</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Country Custom Dropdown -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="dropdown w-100">
+        <button class="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center text-secondary bg-white border" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <span>All Countries</span>
+          <i class="bi bi-chevron-down"></i>
+        </button>
+        <ul class="dropdown-menu w-100 shadow-sm">
+          <li><a class="dropdown-item active" href="#">All Countries</a></li>
+          <li><a class="dropdown-item" href="#">United States</a></li>
+          <li><a class="dropdown-item" href="#">Sri Lanka</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<section class="py-5">
+  <div class="container">
+    
+    <!-- Row 1 (Cards 1, 2, 3) - First Scroll Animation -->
+    <div class="row g-4 scroll-animate mb-4">
+      
+      <!-- Card 1 -->
+      <div class="col-lg-4 col-md-6 grid-item" style="--i: 1;">
+        <div class="card h-100 border-0 shadow-sm memorial-grid-card">
+          <div class="position-relative overflow-hidden rounded-top">
+            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?fit=crop&w=500&h=300" class="card-img-top memorial-grid-img" alt="Ivan E Ramirez">
+            <span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2">Crime Victims</span>
+          </div>
+          <div class="card-body p-3 d-flex flex-column">
+            <h6 class="fw-bold text-dark mb-1">Ivan E Ramirez</h6>
+            <p class="small text-muted mb-2">1952 - 2026 • United States</p>
+            <a href="#" class="small text-warning text-decoration-none text-truncate mb-2">
+              <i class="bi bi-link-45deg"></i> ivan-e-ramirez.forevermissed.com
+            </a>
+            <p class="small text-secondary mb-3 text-truncate-3">
+              Online memorial was created in memory of our loved one. Always cherished and remembered...
+            </p>
+            <a href="memories_index.html" class="btn btn-outline-memorial btn-sm mt-auto w-100 fw-semibold">View Memorial</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="col-lg-4 col-md-6 grid-item" style="--i: 2;">
+        <div class="card h-100 border-0 shadow-sm memorial-grid-card">
+          <div class="position-relative overflow-hidden rounded-top">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=500&h=300" class="card-img-top memorial-grid-img" alt="Joshua Brian">
+            <span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2">Military</span>
+          </div>
+          <div class="card-body p-3 d-flex flex-column">
+            <h6 class="fw-bold text-dark mb-1">Joshua Brian Griener</h6>
+            <p class="small text-muted mb-2">1999 - 2020 • United States</p>
+            <a href="#" class="small text-warning text-decoration-none text-truncate mb-2">
+              <i class="bi bi-link-45deg"></i> joshua-brian.forevermissed.com
+            </a>
+            <p class="small text-secondary mb-3 text-truncate-3">
+              Joshua passed away peacefully. Honoring his courage and service to the country...
+            </p>
+            <a href="#" class="btn btn-outline-memorial btn-sm mt-auto w-100 fw-semibold">View Memorial</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="col-lg-4 col-md-6 grid-item" style="--i: 3;">
+        <div class="card h-100 border-0 shadow-sm memorial-grid-card">
+          <div class="position-relative overflow-hidden rounded-top">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?fit=crop&w=500&h=300" class="card-img-top memorial-grid-img" alt="Tonya Lynn">
+            <span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2">Accidents</span>
+          </div>
+          <div class="card-body p-3 d-flex flex-column">
+            <h6 class="fw-bold text-dark mb-1">Tonya Lynn Swink</h6>
+            <p class="small text-muted mb-2">1985 - 2020 • Canada</p>
+            <a href="#" class="small text-warning text-decoration-none text-truncate mb-2">
+              <i class="bi bi-link-45deg"></i> tonya-lynn.forevermissed.com
+            </a>
+            <p class="small text-secondary mb-3 text-truncate-3">
+              A loving mother and sister whose kindness and larger-than-life personality touched everyone...
+            </p>
+            <a href="#" class="btn btn-outline-memorial btn-sm mt-auto w-100 fw-semibold">View Memorial</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Row 2 (Cards 4, 5, 6, Private Card) - Second Scroll Animation -->
+    <div class="row g-4 scroll-animate">
+      
+      <!-- Card 4 -->
+      <div class="col-lg-4 col-md-6 grid-item" style="--i: 1;">
+        <div class="card h-100 border-0 shadow-sm memorial-grid-card">
+          <div class="position-relative overflow-hidden rounded-top">
+            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?fit=crop&w=500&h=300" class="card-img-top memorial-grid-img" alt="Robert Miller">
+            <span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2">Natural Causes</span>
+          </div>
+          <div class="card-body p-3 d-flex flex-column">
+            <h6 class="fw-bold text-dark mb-1">Robert Vance Miller</h6>
+            <p class="small text-muted mb-2">1945 - 2023 • United Kingdom</p>
+            <a href="#" class="small text-warning text-decoration-none text-truncate mb-2">
+              <i class="bi bi-link-45deg"></i> robert-miller.forevermissed.com
+            </a>
+            <p class="small text-secondary mb-3 text-truncate-3">
+              In devoted memory of Robert who lived a fulfilled life filled with joy, wisdom, and love...
+            </p>
+            <a href="#" class="btn btn-outline-memorial btn-sm mt-auto w-100 fw-semibold">View Memorial</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="col-lg-4 col-md-6 grid-item" style="--i: 2;">
+        <div class="card h-100 border-0 shadow-sm memorial-grid-card">
+          <div class="position-relative overflow-hidden rounded-top">
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?fit=crop&w=500&h=300" class="card-img-top memorial-grid-img" alt="Sarah Connor">
+            <span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2">Crime Victims</span>
+          </div>
+          <div class="card-body p-3 d-flex flex-column">
+            <h6 class="fw-bold text-dark mb-1">Sarah Jane Connor</h6>
+            <p class="small text-muted mb-2">1988 - 2025 • Sri Lanka</p>
+            <a href="#" class="small text-warning text-decoration-none text-truncate mb-2">
+              <i class="bi bi-link-45deg"></i> sarah-connor.forevermissed.com
+            </a>
+            <p class="small text-secondary mb-3 text-truncate-3">
+              In loving remembrance of Sarah, whose light continue to illuminate our lives forever...
+            </p>
+            <a href="#" class="btn btn-outline-memorial btn-sm mt-auto w-100 fw-semibold">View Memorial</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="col-lg-4 col-md-6 grid-item" style="--i: 3;">
+        <div class="card h-100 border-0 shadow-sm memorial-grid-card">
+          <div class="position-relative overflow-hidden rounded-top">
+            <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?fit=crop&w=500&h=300" class="card-img-top memorial-grid-img" alt="David Smith">
+            <span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2">Military</span>
+          </div>
+          <div class="card-body p-3 d-flex flex-column">
+            <h6 class="fw-bold text-dark mb-1">David Arthur Smith</h6>
+            <p class="small text-muted mb-2">1960 - 2024 • Australia</p>
+            <a href="#" class="small text-warning text-decoration-none text-truncate mb-2">
+              <i class="bi bi-link-45deg"></i> david-smith.forevermissed.com
+            </a>
+            <p class="small text-secondary mb-3 text-truncate-3">
+              Remembering a great leader, mentor and father. His legacy will remain in our hearts...
+            </p>
+            <a href="#" class="btn btn-outline-memorial btn-sm mt-auto w-100 fw-semibold">View Memorial</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- Demo Modal -->
+<div class="modal fade" id="demoModal" tabindex="-1" aria-labelledby="demoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold text-dark" id="demoModalLabel">
+          <i class="bi bi-shield-lock text-warning me-2"></i>Private Access
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body text-center py-4">
+        <div class="mb-3">
+          <i class="bi bi-lock text-warning display-4"></i>
+        </div>
+        <h6 class="fw-bold mb-1">David Arthur Smith</h6>
+        <p class="small text-muted mb-4">Do you have permission to view this memorial?</p>
+
+        <!-- <form onsubmit="event.preventDefault(); checkDemoPassword();">
+          <div class="mb-3 text-start">
+            <label class="form-label small fw-semibold text-secondary">Enter Passcode</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light"><i class="bi bi-key"></i></span>
+              <input type="password" id="demoPassword" class="form-control" placeholder="Enter password (Try: 1234)" required>
+              
+            </div>
+            <div id="demoError" class="form-text text-danger d-none">Incorrect password. Try "1234" for demo.</div>
+          </div>
+          
+          <button type="submit" class="btn btn-warning w-100 fw-bold py-2 mt-2">
+            Access Memorial <i class="bi bi-arrow-right-short"></i>
+          </button>
+        </form> -->
+
+        <form onsubmit="event.preventDefault(); checkDemoPassword();">
+  <div class="mb-3 text-start">
+    <label class="form-label small fw-semibold text-secondary">Enter Passcode</label>
+    
+    <div class="input-group">
+      <!-- Key Icon (Left) -->
+      <span class="input-group-text bg-light"><i class="bi bi-key"></i></span>
+      
+      <!-- Password Field -->
+      <input type="password" id="demoPassword" class="form-control border-end-0" placeholder="Enter password (Try: 1234)" required>
+      
+      <!-- Eye Icon Button (Right) -->
+      <button class="btn btn-outline-secondary bg-white border-start-0 text-muted" type="button" onclick="togglePasswordVisibility()">
+        <i class="bi bi-eye-slash" id="toggleIcon"></i>
+      </button>
+    </div>
+    
+    <div id="demoError" class="form-text text-danger d-none">Incorrect password. Try "1234" for demo.</div>
+  </div>
+  
+  <button type="submit" class="btn btn-warning w-100 fw-bold py-2 mt-2">
+    Access Memorial <i class="bi bi-arrow-right-short"></i>
+  </button>
+</form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Password Access Modal -->
+<div class="modal fade" id="privateMemorialModal" tabindex="-1" aria-labelledby="privateMemorialModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold text-dark" id="privateMemorialModalLabel">
+          <i class="bi bi-shield-lock text-warning me-2"></i>Private Access Required
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body text-center py-4">
+        <div class="mb-3">
+          <i class="bi bi-lock text-warning display-4"></i>
+        </div>
+        <h6 class="fw-bold mb-1">David Arthur Smith</h6>
+        <p class="small text-muted mb-4">Do you have permission to view this memorial?</p>
+
+        <form id="privateAccessForm" onsubmit="event.preventDefault(); accessMemorial();">
+          <div class="mb-3 text-start">
+            <label for="memorialPassword" class="form-label small fw-semibold text-secondary">Enter Passcode</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light"><i class="bi bi-key"></i></span>
+              <input type="password" class="form-control" id="memorialPassword" placeholder="Enter password..." required>
+            </div>
+            <div id="passwordError" class="form-text text-danger d-none">Incorrect password. Please try again.</div>
+          </div>
+          
+          <button type="submit" class="btn btn-warning w-100 fw-bold py-2 mt-2">
+            Access Memorial <i class="bi bi-arrow-right-short"></i>
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+          </div>
+
+          <!-- Pagination -->
+          <nav class="d-flex flex-column flex-sm-row justify-content-between align-items-center mt-5 pt-3 border-top gap-3" aria-label="Memorial Directory Pagination">
+            <span class="small text-muted">Showing <strong>1 - 6</strong> of <strong>24</strong> Memorials</span>
+            <ul class="pagination pagination-sm mb-0">
+              <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Previous">&laquo;</a>
+              </li>
+              <li class="page-item active"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">4</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">&raquo;</a>
+              </li>
+            </ul>
+          </nav>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+  <!-- Footer -->
+  <footer class="bg-memorial-dark text-white pt-5 pb-3 border-top border-secondary">
+    <div class="container">
+      <div class="row g-4 mb-4">
+        <div class="col-lg-4 col-md-6">
+          <h5 class="text-gold fw-bold mb-3"><i class="bi bi-fire me-1"></i> Forever Missed</h5>
+          <p class="small text-light-tan leading-relaxed">
+            A dignified digital platform dedicated to preserving legacies, connecting families, and honoring cherished memories forever.
+          </p>
+        </div>
+
+        <div class="col-lg-2 col-md-6">
+          <h6 class="text-gold fw-bold mb-3">Quick Links</h6>
+          <ul class="list-unstyled small d-flex flex-column gap-2 text-light-tan">
+            <li><a href="index.html" class="text-light-tan text-decoration-none">Home</a></li>
+            <li><a href="all_memories.html" class="text-light-tan text-decoration-none">Memories</a></li>
+            <li><a href="about.html" class="text-light-tan text-decoration-none">About Us</a></li>
+            <li><a href="contact.html" class="text-light-tan text-decoration-none">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <h6 class="text-gold fw-bold mb-3">Contact Support</h6>
+          <ul class="list-unstyled small d-flex flex-column gap-2 text-light-tan">
+            <li><i class="bi bi-telephone-fill text-gold me-2"></i>+1 (800) 555-0199</li>
+            <li><i class="bi bi-envelope-fill text-gold me-2"></i>support@forevermissed.com</li>
+            <li><i class="bi bi-geo-alt-fill text-gold me-2"></i>Global Headquarters</li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <h6 class="text-gold fw-bold mb-3">Follow Us</h6>
+          <div class="d-flex gap-2">
+            <a href="#" class="btn btn-outline-light btn-sm rounded-circle"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="btn btn-outline-light btn-sm rounded-circle"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" class="btn btn-outline-light btn-sm rounded-circle"><i class="bi bi-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <hr class="border-secondary">
+
+      <div class="text-center small text-white-50 pt-2">
+        <p class="mb-0">&copy; 2026 Forever Missed Memorial Directory. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- 
+  <script>
+  function createFlower() {
+    const flower = document.createElement('div');
+    flower.classList.add('falling-flower');
+    
+    // මල් සඳහා භාවිත කළ හැකි Emoji (නැතහොත් පින්තූරයක් භාවිත කළ හැක)
+    const flowers = ['🌸', '🌺', '🌹', '🌼', '🌷'];
+    flower.innerText = flowers[Math.floor(Math.random() * flowers.length)];
+
+    // Random ස්ථානයක් සහ ප්‍රමාණය තීරණය කිරීම
+    flower.style.left = Math.random() * 100 + 'vw';
+    flower.style.animationDuration = Math.random() * 3 + 2 + 's'; // තත්පර 2-5 අතර වේගය
+    flower.style.fontSize = Math.random() * 10 + 15 + 'px'; // ප්‍රමාණය 15px-25px
+
+    document.body.appendChild(flower);
+
+    // වැටී අවසන් වූ පසු DOM එකෙන් ඉවත් කිරීම
+    setTimeout(() => {
+      flower.remove();
+    }, 5000);
+  }
+
+  // තත්පර 0.3 කට වරක් අලුත් මලක් සෑදීම
+  setInterval(createFlower, 300);
+</script> -->
+
+
+<script>
+  function startFlowerEffect() {
+    
+    const flowerInterval = setInterval(createFlower, 300);
+
+  
+    setTimeout(() => {
+      clearInterval(flowerInterval);
+    }, 5000);
+  }
+
+  function createFlower() {
+    const flower = document.createElement('div');
+    flower.classList.add('falling-flower');
+    
+    
+    const flowers = ['🌸', '🌺', '🌹', '🌼', '🌷'];
+    flower.innerText = flowers[Math.floor(Math.random() * flowers.length)];
+
+
+    flower.style.left = Math.random() * 100 + 'vw';
+    flower.style.animationDuration = Math.random() * 3 + 2 + 's'; 
+    flower.style.fontSize = Math.random() * 10 + 15 + 'px';
+
+    document.body.appendChild(flower);
+
+
+    setTimeout(() => {
+      flower.remove();
+    }, 5000);
+  }
+
+
+  window.addEventListener('DOMContentLoaded', startFlowerEffect);
+</script>
+
+
+<!--password check script -->
+
+
+<script>
+  function checkDemoPassword() {
+    const pwd = document.getElementById('demoPassword').value;
+    const err = document.getElementById('demoError');
+    
+    // Demo Password
+    if(pwd === '1234') {
+      err.classList.add('d-none');
+      window.location.href = 'memories_index.html'; // Click move to page 
+    } else {
+      err.classList.remove('d-none');
+    }
+  }
+
+  function togglePasswordVisibility() {
+  const passwordInput = document.getElementById('demoPassword');
+  const toggleIcon = document.getElementById('toggleIcon');
+
+  if (passwordInput.type === 'password') {
+    passwordInput.type = 'text';
+    toggleIcon.classList.replace('bi-eye-slash', 'bi-eye');
+  } else {
+    passwordInput.type = 'password';
+    toggleIcon.classList.replace('bi-eye', 'bi-eye-slash');
+  }
+}
+</script>
+
+<!--ply music -->
+
+<!-- <script>
+    function toggleBackgroundMusic() {
+        const audio = document.getElementById('memorialAudio');
+        const audioIcon = document.getElementById('audioIcon');
+        const audioText = document.getElementById('audioText');
+
+        if (audio.paused) {
+            audio.play().then(() => {
+        
+                audioIcon.className = "bi bi-volume-up-fill fs-6 text-warning";
+                audioText.innerText = "Mute Music";
+            }).catch(error => {
+                console.log("Audio autoplay restricted by browser:", error);
+            });
+        } else {
+            audio.pause();
+            
+            audioIcon.className = "bi bi-volume-mute-fill fs-6";
+            audioText.innerText = "Play Music";
+        }
+    }
+</script> -->
+
+
+<!-- audio script -->
+
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const audio = document.getElementById('memorialAudio');
+        const audioIcon = document.getElementById('audioIcon');
+        const audioText = document.getElementById('audioText');
+
+        const isMuted = localStorage.getItem('memorialAudioMuted');
+
+        if (isMuted === 'false') {
+            
+            audio.muted = false;
+            audio.play().catch(error => console.log("Autoplay restricted"));
+            audioIcon.className = "bi bi-volume-up-fill fs-6 text-warning";
+            audioText.innerText = "Mute Music";
+        } else {
+            
+            audio.muted = true;
+            audio.play().catch(error => console.log("Autoplay restricted"));
+            audioIcon.className = "bi bi-volume-mute-fill fs-6";
+            audioText.innerText = "Play Music";
+        }
+    });
+
+
+    function toggleBackgroundMusic() {
+        const audio = document.getElementById('memorialAudio');
+        const audioIcon = document.getElementById('audioIcon');
+        const audioText = document.getElementById('audioText');
+
+        if (audio.muted) {
+            audio.muted = false;
+            audio.play();
+            audioIcon.className = "bi bi-volume-up-fill fs-6 text-warning";
+            audioText.innerText = "Mute Music";
+            localStorage.setItem('memorialAudioMuted', 'false'); 
+        } else {
+            audio.muted = true;
+            audioIcon.className = "bi bi-volume-mute-fill fs-6";
+            audioText.innerText = "Play Music";
+            localStorage.setItem('memorialAudioMuted', 'true'); 
+        }
+    }
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.40 // s
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("active");
+                observer.unobserve(entry.target); // end observe
+            }
+        });
+    }, observerOptions);
+
+    // .scroll-animate class එක තියෙන හැම section එකක්ම එකතු කරගන්නවා
+    const animatedSections = document.querySelectorAll(".scroll-animate");
+    animatedSections.forEach(sec => observer.observe(sec));
+});
+</script>
+</body>
+</html>

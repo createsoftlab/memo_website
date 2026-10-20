@@ -1,0 +1,529 @@
+/* ==========================================================================
+   PRICING & COMPARISON PAGE STYLING
+   ========================================================================== */
+
+/* Main Background */
+.pricing-section {
+  background-color: #f7f5f0;
+  min-height: 100vh;
+}
+
+.text-brown {
+  color: #3b281c;
+}
+
+/* Billing Toggle Switch */
+.pricing-toggle-wrapper {
+  background-color: #eae3d9;
+  border: 1px solid #d9d0c3;
+}
+
+.pricing-toggle-wrapper .btn-toggle {
+  border: none;
+  border-radius: 20px;
+  padding: 0.4rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #59473c;
+  transition: all 0.3s ease;
+}
+
+.pricing-toggle-wrapper .btn-toggle.active {
+  background-color: #3b281c;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.badge-discount {
+  background-color: #d4af37;
+  color: #1a0f08;
+  font-weight: 600;
+}
+
+/* Pricing Cards Styling */
+.pricing-card {
+  position: relative;
+  background-color: #ffffff;
+  border: 1px solid #e3ded6;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(45, 30, 20, 0.04);
+  transition: all 0.35s ease;
+}
+
+.pricing-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(45, 30, 20, 0.08);
+}
+
+.pricing-card.card-featured {
+  border: 2px solid #d4af37;
+  background: linear-gradient(180deg, #ffffff 0%, #fdfbf7 100%);
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.15);
+}
+
+.popular-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #d4af37;
+  color: #1a0f08;
+  font-size: 0.75rem;
+  font-weight: 700;
+
+  padding: 0.25rem 1rem;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+}
+
+.price-wrapper .currency {
+  font-size: 1.5rem;
+  font-weight: 700;
+  vertical-align: top;
+  color: #3b281c;
+}
+
+.text-gold {
+  color: #997a15;
+}
+
+.text-gold-dark {
+  color: #8c7355;
+}
+
+/* Buttons */
+.btn-gold {
+  background-color: #d4af37;
+  color: #1a0f08;
+  border: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-gold:hover {
+  background-color: #b89528;
+  color: #ffffff;
+}
+
+.btn-outline-gold {
+  border: 1.5px solid #d4af37;
+  color: #8c7355;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-gold:hover {
+  background-color: #d4af37;
+  color: #1a0f08;
+}
+
+.btn-outline-brown {
+  border: 1.5px solid #3b281c;
+  color: #3b281c;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-brown:hover {
+  background-color: #3b281c;
+  color: #ffffff;
+}
+
+/* Comparison Table Styling */
+.comparison-wrapper {
+  background-color: #ffffff;
+  border: 1px solid #e3ded6;
+  box-shadow: 0 4px 20px rgba(45, 30, 20, 0.03);
+}
+
+.pricing-table tbody tr {
+  border-bottom: 1px solid #f2ede6;
+}
+
+.pricing-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.pricing-table td {
+  padding: 1.1rem 0.75rem;
+}
+
+.bg-gold-light {
+  background-color: #f7edd4;
+}
+
+
+/* ==========================================================================
+   2. NAVBAR & SLIDE OFFCANVAS (MOBILE MENU)
+   ========================================================================== */
+.navbar-custom {
+  background-color: var(--nav-bg) !important;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-custom .navbar-brand {
+  color: var(--gold-accent) !important;
+  font-weight: 800;
+  font-size: 1.35rem;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar-custom .nav-link {
+  color: var(--nav-text) !important;
+  font-weight: 600;
+  font-size: 0.88rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s ease-in-out;
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link.active {
+  color: var(--nav-hover) !important;
+}
+
+/* Offcanvas Mobile Drawer Styling */
+.offcanvas-memorial {
+  background-color: var(--nav-bg) !important;
+  color: #ffffff;
+}
+
+.offcanvas-memorial .btn-close {
+  filter: invert(1);
+}
+
+.btn-nav-login {
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  background-color: transparent;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.4rem 1.1rem;
+  border-radius: 4px;
+}
+
+.btn-nav-login:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-nav-signup {
+  background-color: var(--gold-accent);
+  color: #000000 !important;
+  border: none;
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 0.45rem 1.2rem;
+  border-radius: 4px;
+}
+
+.btn-nav-signup:hover {
+  background-color: var(--gold-hover);
+}
+
+/* ==========================================================================
+   3. HERO & ABOUT SECTION STYLING
+   ========================================================================== */
+.price-hero {
+  background: linear-gradient(180deg, rgba(33, 18, 8, 0.75) 0%, rgba(33, 18, 8, 0.95) 100%), 
+              url('https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?fit=crop&w=1400&h=450') center/cover no-repeat;
+  min-height: 220px;
+  border-bottom: 4px solid var(--btn-submit-bg);
+}
+
+.stat-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-card);
+}
+
+.floating-stat-badge {
+  position: absolute;
+  bottom: -20px;
+  left: 20px;
+  width: calc(100% - 40px);
+}
+
+.icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==========================================================================
+   PRICING & COMPARISON PAGE STYLING
+   ========================================================================== */
+
+.pricing-section {
+  background-color: #f7f5f0;
+  min-height: 100vh;
+}
+
+.text-brown {
+  color: #3b281c;
+}
+
+.tiny-note {
+  font-size: 0.75rem;
+}
+
+/* Billing Toggle Switch */
+.pricing-toggle-wrapper {
+  background-color: #eae3d9;
+  border: 1px solid #d9d0c3;
+}
+
+.pricing-toggle-wrapper .btn-toggle {
+  border: none;
+  border-radius: 20px;
+  padding: 0.4rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #59473c;
+  transition: all 0.3s ease;
+}
+
+.pricing-toggle-wrapper .btn-toggle.active {
+  background-color: #3b281c;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.badge-discount {
+  background-color: #d4af37;
+  color: #1a0f08;
+  font-weight: 600;
+}
+
+/* Pricing Cards Styling */
+.pricing-card {
+  position: relative;
+  background-color: #ffffff;
+  border: 1px solid #e3ded6;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(45, 30, 20, 0.04);
+  transition: all 0.35s ease;
+}
+
+.pricing-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(45, 30, 20, 0.08);
+}
+
+.pricing-card.card-featured {
+  border: 2px solid #d4af37;
+  background: linear-gradient(180deg, #ffffff 0%, #fdfbf7 100%);
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.15);
+}
+
+.popular-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #d4af37;
+  color: #1a0f08;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.25rem 1rem;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+}
+
+.price-wrapper .currency {
+  font-size: 1.5rem;
+  font-weight: 700;
+  vertical-align: top;
+  color: #3b281c;
+}
+
+.text-gold {
+  color: #997a15;
+}
+
+.text-gold-dark {
+  color: #8c7355;
+}
+
+/* Buttons */
+.btn-gold {
+  background-color: #5c8374; /* Matching soft green theme from reference screenshot */
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-gold:hover {
+  background-color: #496b5e;
+  color: #ffffff;
+}
+
+.btn-outline-gold {
+  border: 1.5px solid #d4af37;
+  color: #8c7355;
+  background-color: transparent;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-gold:hover {
+  background-color: #d4af37;
+  color: #1a0f08;
+}
+
+.btn-outline-brown {
+  border: 1.5px solid #3b281c;
+  color: #3b281c;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-brown:hover {
+  background-color: #3b281c;
+  color: #ffffff;
+}
+
+/* Comparison Table Styling */
+.comparison-wrapper {
+  background-color: #ffffff;
+  border: 1px solid #e3ded6;
+  box-shadow: 0 4px 20px rgba(45, 30, 20, 0.03);
+}
+
+.pricing-table tbody tr {
+  border-bottom: 1px solid #f2ede6;
+}
+
+.pricing-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.pricing-table td {
+  padding: 1.1rem 0.75rem;
+}
+
+.bg-gold-light {
+  background-color: #f7edd4;
+}
+
+.ssl-badge-box {
+  background-color: #faf8f5 !important;
+  border-color: #e3ded6 !important;
+}
+
+/* Responsive Custom Table Scroll Container */
+.table-responsive-custom {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Table styling to ensure proper width on mobile and desktop */
+.pricing-table {
+  width: 100%;
+  min-width: 700px; /* Forces smooth horizontal scrolling on smaller mobile viewports */
+}
+
+.pricing-table th, 
+.pricing-table td {
+  vertical-align: middle;
+}
+
+/* Fixing Feature column and plan column widths inside table */
+.feature-col-header, .feature-col {
+  min-width: 260px;
+  text-align: left !important;
+}
+
+.plan-col-header {
+  min-width: 130px;
+}
+
+/* Styling for table footer action wrappers */
+.table-col-action {
+  background-color: #faf8f5;
+  border: 1px solid #f2ede6;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.highlight-table-action {
+  background-color: #ffffff;
+  border: 1.5px solid #d4af37;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.12);
+}
+
+.table-action-row-tr {
+  background-color: #ffffff;
+}
+
+
+
+ .body {
+            background-color: #fdfbf7;
+            font-family: 'Poppins', sans-serif;
+        }
+        .admin-form-card {
+            background: #ffffff;
+            border: 1px solid #e8e1d5;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+        }
+        .form-section-title {
+            color: #3b281a;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            border-bottom: 2px solid #f2ece1;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .nav-pills .nav-link.active {
+            background-color: #3b281a;
+            color: #fff;
+        }
+        .nav-pills .nav-link {
+            color: #5c4033;
+            font-weight: 600;
+        }
+
+
+
+         
+        /* Navbar & General Styling Fixes */
+        .top-navbar {
+            background-color: #2c1e12 !important;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        .dashboard-wrapper {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .main-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .text-gold {
+            color: #d4af37 !important;
+        }
+        .admin-form-card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.08);
+        }
+    

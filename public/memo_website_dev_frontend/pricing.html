@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing Plans - Memorial Space</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+   
+  <link rel="stylesheet" href="assets/css/main.css">
+  <!-- Custom Pricing CSS -->
+  <link rel="stylesheet" href="assets/css/pricing.css">
+</head>
+<body>
+
+  <!-- Navigation Bar with Mobile Offcanvas Slide Menu -->
+  <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand me-4" href="#">
+        <i class="bi bi-fire"></i> Forever Missed
+      </a>
+      
+      <!-- Offcanvas Mobile Trigger Button -->
+      <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+        <i class="bi bi-list text-white fs-2"></i>
+      </button>
+
+      <!-- Slide Drawer (Offcanvas) -->
+      <div class="offcanvas offcanvas-end offcanvas-memorial" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header border-bottom border-secondary pb-3">
+          <h5 class="offcanvas-title text-warning fw-bold" id="offcanvasNavbarLabel">
+            <i class="bi bi-fire me-1"></i> Forever Missed
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+
+        <div class="offcanvas-body d-flex flex-column flex-lg-row justify-content-between align-items-lg-center">
+          <ul class="navbar-nav me-auto mb-3 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html"><i class="bi bi-house-door"></i> HOME</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="all_memories.html"><i class="bi bi-heart-fill"></i> Memories</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.html"><i class="bi bi-info-circle"></i> ABOUT US</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="contact.html"><i class="bi bi-envelope"></i> CONTACT US</a>
+            </li>
+          </ul>
+          
+          <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-2 mt-auto mt-lg-0 pt-3 pt-lg-0 border-top border-lg-0 border-secondary">
+            <a href="#" class="btn btn-nav-login text-center"><i class="bi bi-box-arrow-in-right"></i> LOGIN</a>
+            <a href="#" class="btn btn-nav-signup text-center"><i class="bi bi-person-plus"></i> SIGN UP</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Header -->
+  <header class="price-hero d-flex align-items-center text-white mb-5">
+    <div class="container py-4 text-center text-lg-start">
+      <span class="badge bg-gold text-dark fw-bold mb-2 uppercase tracking-wide">Get In Touch</span>
+      <h1 class="font-serif display-5 fw-bold mb-2">We Are Here For You</h1>
+      <p class="lead mb-0 text-light-tan">Have questions or need assistance? Reach out to our dedicated support team anytime.</p>
+    </div>
+  </header>
+
+  <!-- Pricing Section -->
+  <section class="pricing-section py-5">
+    <div class="container-fluid px-md-5 px-3">
+      
+      <!-- Section Title & Toggle Switch -->
+      <div class="text-center mb-5">
+        <h2 class="font-serif text-brown fw-bold display-6 mb-2 text-uppercase">Choose Your Memorial Plan</h2>
+        <p class="text-muted small uppercase tracking-wide mb-4">Honor your loved ones with dedicated, permanent spaces</p>
+        
+        <!-- Plan Billing Toggle Switch -->
+        <div class="pricing-toggle-wrapper mx-auto d-inline-flex align-items-center p-1 rounded-pill">
+          <button type="button" class="btn btn-toggle active" id="btn-monthly" onclick="switchBilling('monthly')">Monthly</button>
+          <button type="button" class="btn btn-toggle" id="btn-yearly" onclick="switchBilling('yearly')">
+            Yearly <span class="badge badge-discount ms-1">Save 15%</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Pricing Cards Grid -->
+      <div class="row g-4 justify-content-center mb-5">
+        
+        <!-- Basic Plan -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="pricing-card h-100 d-flex flex-column p-4 text-center">
+            <span class="plan-subtitle text-uppercase font-serif text-muted">Basic</span>
+            <div class="price-wrapper my-3">
+              <span class="price-val fw-bold display-5">Free</span>
+            </div>
+            <p class="text-muted small mb-4">Create a meaningful memorial at no cost. Essential core features to honor your loved one.</p>
+            <a href="#" class="btn btn-outline-brown w-100 mt-auto py-2 fw-bold text-uppercase">Select Plan</a>
+          </div>
+        </div>
+
+        <!-- Premium Plan (Highlighted) -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="pricing-card card-featured h-100 d-flex flex-column p-4 text-center">
+            <span class="popular-badge">Most Popular</span>
+            <span class="plan-subtitle text-uppercase font-serif">Premium</span>
+            <div class="price-wrapper my-3">
+              <span class="currency">$</span>
+              <span class="price-val fw-bold display-5" id="premium-price">79.95</span>
+              <span class="period text-muted" id="premium-period">/yr</span>
+            </div>
+            <span class="trial-note small text-gold mb-3 fw-semibold">14-day free trial</span>
+            <p class="text-muted small mb-4">Include photo, video, and music galleries. Unlimited uploads with premium features for 14 days.</p>
+            <a href="#" class="btn btn-gold w-100 mt-auto py-2 fw-bold text-uppercase shadow-sm">Start Free Trial</a>
+            <span class="d-block text-muted tiny-note mt-2"><i class="bi bi-shield-check me-1"></i>No credit card required</span>
+          </div>
+        </div>
+
+        <!-- Lifetime Plan -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="pricing-card h-100 d-flex flex-column p-4 text-center">
+            <span class="plan-subtitle text-uppercase font-serif text-muted">Lifetime</span>
+            <div class="price-wrapper my-3">
+              <span class="currency">$</span>
+              <span class="price-val fw-bold display-5">159.95</span>
+            </div>
+            <span class="trial-note small text-gold mb-3 fw-semibold">14-day trial</span>
+            <p class="text-muted small mb-4">Keep this memorial online permanently with a single payment. No expiration or renewal fees.</p>
+            <a href="#" class="btn btn-outline-gold w-100 mt-auto py-2 fw-bold text-uppercase">Start Free Trial</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Features Comparison Table -->
+      <div class="comparison-wrapper rounded-4 p-3 p-md-5">
+        <h3 class="font-serif text-brown text-center mb-4 fs-4 fw-bold">Compare Features & Capabilities</h3>
+        
+        <!-- Mobile Swipe Indicator Helper -->
+        <div class="d-block d-md-none text-center text-muted small mb-2 fst-italic">
+          <i class="bi bi-arrow-left-right me-1"></i> Swipe table horizontally to view all plans
+        </div>
+
+        <!-- Responsive Table Container with Horizontal Scroll Support -->
+        <div class="table-responsive-custom">
+          <table class="table table-borderless text-center align-middle pricing-table mb-0">
+            <thead>
+              <tr class="border-bottom">
+                <th class="text-start fs-6 font-serif text-brown pb-3 feature-col-header">Website Features</th>
+                <th class="pb-3 text-muted plan-col-header" style="width: 20%;">Basic</th>
+                <th class="pb-3 text-gold-dark fw-bold plan-col-header" style="width: 20%;">Premium</th>
+                <th class="pb-3 text-brown fw-bold plan-col-header" style="width: 20%;">Lifetime</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-start feature-col">
+                  <strong class="d-block text-dark">No Ads</strong>
+                  <span class="text-muted small">Preserved memorial space completely ad-free.</span>
+                </td>
+                <td><i class="bi bi-check-circle-fill text-gold"></i></td>
+                <td><i class="bi bi-check-circle-fill text-gold"></i></td>
+                <td><i class="bi bi-check-circle-fill text-gold"></i></td>
+              </tr>
+
+              <tr>
+                <td class="text-start feature-col">
+                  <strong class="d-block text-dark">Beautiful Themes</strong>
+                  <span class="text-muted small">Access full library of themes to personalize pages.</span>
+                </td>
+                <td><i class="bi bi-check-circle-fill text-gold"></i></td>
+                <td><i class="bi bi-check-circle-fill text-gold"></i></td>
+                <td><i class="bi bi-check-circle-fill text-gold"></i></td>
+              </tr>
+
+              <tr>
+                <td class="text-start feature-col">
+                  <strong class="d-block text-dark">Photo Gallery</strong>
+                  <span class="text-muted small">Add photos from phone, Google Photos, or computer.</span>
+                </td>
+                <td><span class="badge bg-light text-dark fw-normal">5 Photos</span></td>
+                <td><span class="badge bg-gold-light text-dark fw-semibold">Unlimited</span></td>
+                <td><span class="badge bg-gold-light text-dark fw-semibold">Unlimited</span></td>
+              </tr>
+
+              <tr>
+                <td class="text-start feature-col">
+                  <strong class="d-block text-dark">Background Music & Video Galleries</strong>
+                  <span class="text-muted small">Embed media clips and custom audio tracks.</span>
+                </td>
+                <td><i class="bi bi-dash-lg text-muted"></i></td>
+                <td><i class="bi bi-check-circle-fill text-gold"></i></td>
+                <td><i class="bi bi-check-circle-fill text-gold"></i></td>
+              </tr>
+
+              <tr>
+                <td class="text-start feature-col">
+                  <strong class="d-block text-dark">Advanced Privacy Controls</strong>
+                  <span class="text-muted small">Keep memorials private or invite selected contributors.</span>
+                </td>
+                <td><i class="bi bi-check-circle-fill text-gold"></i></td>
+                <td><i class="bi bi-check-circle-fill text-gold"></i></td>
+                <td><i class="bi bi-check-circle-fill text-gold"></i></td>
+              </tr>
+
+              <!-- Never Expires Row -->
+              <tr class="border-top">
+                <td class="text-start pt-4 feature-col">
+                  <strong class="d-block text-dark">Never Expires</strong>
+                  <span class="text-muted small">Make a one-time payment to keep your memorial online permanently - no expiration date or extra fees.</span>
+                </td>
+                <td class="pt-4"><i class="bi bi-dash-lg text-muted"></i></td>
+                <td class="pt-4"><i class="bi bi-dash-lg text-muted"></i></td>
+                <td class="pt-4"><i class="bi bi-check-circle-fill text-gold fs-5"></i></td>
+              </tr>
+            </tbody>
+
+            <!-- Table Foot Inside Table (Aligns exact columns under Basic, Premium, Lifetime) -->
+            <tfoot>
+              <tr class="border-top table-action-row-tr">
+                <td class="text-start pt-4 feature-col align-top">
+                  <span class="d-block fw-bold text-brown font-serif">Get Started</span>
+                  <span class="text-muted small">Choose the right plan to proceed</span>
+                </td>
+                
+                <!-- Basic Plan Column Footer -->
+                <td class="pt-4 align-top">
+                  <div class="table-col-action p-2">
+                    <span class="d-block text-muted small">Get started for free</span>
+                    <span class="fs-4 fw-bold text-dark d-block my-1">Free</span>
+                    <div class="mt-2">
+                      <a href="#" class="btn btn-secondary btn-sm w-100 fw-semibold text-uppercase py-2">Select</a>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Premium Plan Column Footer -->
+                <td class="pt-4 align-top">
+                  <div class="table-col-action highlight-table-action p-3 rounded-3">
+                    <span class="d-block text-gold small fw-bold">14-day trial</span>
+                    <span class="fs-4 fw-bold text-brown d-block my-1">$79.<span class="fs-6">95</span><span class="small text-muted fw-normal">/yr</span></span>
+                    <div class="mt-2">
+                      <a href="#" class="btn btn-gold btn-sm w-100 fw-semibold text-uppercase py-2 shadow-sm">Start Trial</a>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Lifetime Plan Column Footer -->
+                <td class="pt-4 align-top">
+                  <div class="table-col-action p-2">
+                    <span class="d-block text-muted small">14-day trial</span>
+                    <span class="fs-4 fw-bold text-brown d-block my-1">$159.<span class="fs-6">95</span></span>
+                    <div class="mt-2">
+                      <a href="#" class="btn btn-outline-gold btn-sm w-100 fw-semibold text-uppercase py-2">Start Trial</a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tfoot>
+
+          </table>
+        </div>
+
+        <!-- Guarantee and Security Footer Section -->
+        <div class="row mt-5 pt-4 border-top align-items-center g-4">
+          <div class="col-12 col-lg-5">
+            <h6 class="font-serif text-brown fw-bold text-uppercase mb-2" style="font-size: 0.85rem; letter-spacing: 0.5px;">30-Day Money-Back Guarantee</h6>
+            <p class="text-muted small mb-0">We want you to be completely satisfied with your memorial. If you wish to cancel your Premium or Lifetime plan for any reason within the first 30 days, we will issue a full refund.</p>
+          </div>
+
+          <div class="col-12 col-lg-4">
+            <h6 class="font-serif text-brown fw-bold text-uppercase mb-2" style="font-size: 0.85rem; letter-spacing: 0.5px;">Purchase with Confidence</h6>
+            <p class="text-muted small mb-0">Protects the security of your information with the latest encryption techniques and Secure Socket Layer (SSL) transmission protocol.</p>
+          </div>
+
+          <div class="col-12 col-lg-3 text-lg-end text-center">
+            <div class="ssl-badge-box d-inline-flex align-items-center justify-content-center p-2 rounded bg-light border">
+              <i class="bi bi-shield-lock-fill text-warning fs-4 me-2"></i>
+              <div class="text-start">
+                <span class="d-block fw-bold text-dark" style="font-size: 0.75rem; line-height: 1;">SSL SECURE</span>
+                <span class="text-muted" style="font-size: 0.65rem;">PROTECTED CONNECTION</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- JavaScript for Toggle Functionality -->
+  <script>
+    function switchBilling(type) {
+      const btnMonthly = document.getElementById('btn-monthly');
+      const btnYearly = document.getElementById('btn-yearly');
+      const priceVal = document.getElementById('premium-price');
+      const periodVal = document.getElementById('premium-period');
+
+      if (type === 'yearly') {
+        btnYearly.classList.add('active');
+        btnMonthly.classList.remove('active');
+        priceVal.textContent = '79.95';
+        periodVal.textContent = '/yr';
+      } else {
+        btnMonthly.classList.add('active');
+        btnYearly.classList.remove('active');
+        priceVal.textContent = '8.99';
+        periodVal.textContent = '/mo';
+      }
+    }
+  </script>
+
+</body>
+</html>
