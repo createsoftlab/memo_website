@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All  Users - Memorial Dashboard</title>
+    <title>All Employe - Memorial Dashboard</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -11,159 +11,17 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <!-- Custom External Dashboard CSS -->
-    <link rel="stylesheet" href="assets/css/dashboard-main.css">
+    <link rel="stylesheet" href="{{ asset('memo_website_dev_dashbord/assets/css/dashboard-main.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Mobile Sidebar Overlay -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-    <div class="dashboard-wrapper">
-       <!-- Sidebar -->
-        <nav id="sidebar" class="sidebar">
-            <div class="sidebar-profile p-3 d-flex align-items-center gap-3">
-                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?fit=crop&w=100&h=100" class="rounded-circle" width="45" height="45" alt="Profile">
-                <div>
-                    <h6 class="m-0 text-white fw-bold" style="font-size: 0.9rem;">M.A.N.Lakshan</h6>
-                    <small class="text-gold" style="font-size: 0.75rem;">Joined 02 Jun 2026</small>
-                </div>
-            </div>
-
-            <ul class="nav flex-column py-3">
-                <li class="nav-item">
-                    <a href="dashbord_index.html" class="nav-link">
-                        <span><i class="bi bi-speedometer2 me-2"></i> My Dashboard</span>
-                    </a>
-                </li>
-
-                <!-- All Memories Dropdown -->
-                <li class="nav-item">
-                    <a href="#memoriesSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle active d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-collection me-2"></i> All Memories</span>
-                        <i class="bi bi-chevron-down small dropdown-arrow"></i>
-                    </a>
-                    <ul class="collapse list-unstyled submenu" id="memoriesSubmenu">
-                        <li>
-                            <a href="create-memory.html" class="nav-link sub-link">My Memories</a>
-                        </li>
-                           <li>
-                            <a href="all_memories.html" class="nav-link sub-link">All Memories </a>
-                        </li>
-                        <li>
-                            <a href="create-memory.html" class="nav-link sub-link">Create Memories</a>
-                        </li>
-                    </ul>
-                </li>
-
-                         <!-- All Events  Dropdown -->
-                <li class="nav-item">
-                    <a href="#eventSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle active d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-collection me-2"></i> Events</span>
-                        <i class="bi bi-chevron-down small dropdown-arrow"></i>
-                    </a>
-                    <ul class="collapse list-unstyled submenu" id="eventSubmenu">
-                        <li>
-                            <a href="my_events.html" class="nav-link sub-link">My Events</a>
-                        </li>
-                           <li>
-                            <a href="all_events.html" class="nav-link sub-link">All Events</a>
-                        </li>
-                        <li>
-                            <a href="create_my_event.html" class="nav-link sub-link">Create Events </a>
-                        </li>
-                    </ul>
-                </li>
-
-
-
-                <!-- <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <span><i class="bi bi-heart me-2"></i> Leads & Enquiry</span>
-                        <i class="bi bi-chevron-right small"></i>
-                    </a>
-                </li> -->
-           <!-- All Users  Dropdown -->
-                <li class="nav-item">
-                    <a href="#usersSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle  d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-person small user-management-icon"></i> User Management</span>
-                        <i class="bi bi-chevron-down small dropdown-arrow"></i>
-                    </a>
-                    <ul class="collapse list-unstyled submenu" id="usersSubmenu">
-                        <li>
-                            <a href="all_users.html" class="nav-link sub-link active">All Users</a>
-                        </li>
-                           <li>
-                            <a href="#" class="nav-link sub-link">Add Employe</a>
-                        </li>
-                        <li>
-                            <a href="create_my_event.html" class="nav-link sub-link">View employe </a>
-                        </li>
-                    </ul>
-                </li>
-
-
-                <li class="nav-item">
-                    <a href="payments.html" class="nav-link">
-                        <span><i class="bi bi-currency-dollar me-2"></i> Payments</span>
-                        <i class="bi bi-chevron-right small"></i>
-                    </a>
-                </li>
-
-<li class="nav-item">
-    <a href="#packagesSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle d-flex justify-content-between align-items-center" aria-expanded="false">
-        <span><i class="bi bi-box-seam me-2"></i> Packages</span>
-        <i class="bi bi-chevron-down small dropdown-arrow"></i>
-    </a>
-    <ul class="collapse list-unstyled submenu" id="packagesSubmenu">
-        <li>
-            <a href="my_package.html" class="nav-link sub-link">My Packages</a>
-        </li>
-        <li>
-            <a href="create_package.html" class="nav-link sub-link">Create Package</a>
-        </li>
-    </ul>
-</li>
-    
-                <li class="nav-item">
-                    <a href="profile_settings.html" class="nav-link">
-                        <span><i class="bi bi-person-badge me-2"></i> Profile Pages</span>
-                        <i class="bi bi-chevron-right small"></i>
-                    </a>
-                </li>
-          <li class="nav-item">
-                    <a href="reports.html" class="nav-link">
-                        <span><i class="bi bi-activity me-2"></i> Reports</span>
-                        <i class="bi bi-chevron-right small"></i>
-                    </a>
-                </li>
-                
-                <li class="nav-item mt-4">
-                    <a href="#" class="nav-link text-warning">
-                        <span><i class="bi bi-gear me-2"></i> Setting</span>
-                        <i class="bi bi-chevron-right small"></i>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+    @include('admin.sidebar')
 
         <!-- Main Content -->
         <div class="main-content">
             <!-- Top Navbar -->
-            <nav class="navbar navbar-dark top-navbar px-3 py-2">
-                <div class="container-fluid">
-                    <div class="d-flex align-items-center gap-2">
-                        <button class="btn btn-outline-light d-lg-none btn-sm" id="sidebarToggle">
-                            <i class="bi bi-list fs-5"></i>
-                        </button>
-                        <span class="navbar-brand mb-0 h6 text-gold font-serif ms-1">All  Users</span>
-                    </div>
-                    <div class="d-flex align-items-center gap-3">
-                        <span class="text-white small d-none d-sm-inline">M.A.N. Lakshan</span>
-                        <a href="#" class="btn btn-sm btn-warning fw-bold text-dark px-3">Logout</a>
-                    </div>
-                </div>
-            </nav>
+    @include('admin.header')
 
             <!-- Page Body -->
             <div class="container-fluid py-4 overflow-hidden">
@@ -172,9 +30,9 @@
                 <div class="row align-items-center mb-4 g-3">
                     <div class="col-xl-4 col-lg-4 col-12">
                         <h4 class="fw-bold text-dark m-0 font-serif">
-                            <i class="bi bi-calendar-check text-warning me-2"></i> All Users 
+                            <i class="bi bi-calendar-check text-warning me-2"></i> All Employes
                         </h4>
-                        <p class="text-muted small m-0">View and manage all Users' here.</p>
+                        <p class="text-muted small m-0">View and manage all Employes' here.</p>
                     </div>
 
                     <!-- Custom Filter & Search Bar -->
@@ -184,7 +42,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
                                 <div class="input-group input-group-sm shadow-sm w-100">
                                     <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                                    <input type="text" class="form-control border-start-0 ps-0" placeholder="Search events...">
+                                    <input type="text" class="form-control border-start-0 ps-0" placeholder="Search employe...">
                                 </div>
                             </div>
 
@@ -206,13 +64,13 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6">
                                 <div class="dropdown w-100">
                                     <button class="btn btn-sm btn-white bg-white border w-100 d-flex justify-content-between align-items-center shadow-sm text-muted dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 0.85rem; padding: 6px 10px;">
-                                        <span>Filter Privacy</span>
+                                        <span>Filter Employe</span>
                                     </button>
                                     <ul class="dropdown-menu w-100 shadow border-0" style="font-size: 0.85rem;">
                                         <li><a class="dropdown-item py-1" href="#" data-value="">All Privacy</a></li>
-                                        <li><a class="dropdown-item py-1" href="#" data-value="public">Active </a></li>
-                                        <li><a class="dropdown-item py-1" href="#" data-value="private">Band </a></li>
-                                        <li><a class="dropdown-item py-1" href="#" data-value="private">Suspend </a></li>
+                                        <li><a class="dropdown-item py-1" href="#" data-value="public">manager  </a></li>
+                                        <li><a class="dropdown-item py-1" href="#" data-value="private"> co-admin</a></li>
+                                        <li><a class="dropdown-item py-1" href="#" data-value="private">moderator </a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -387,7 +245,7 @@
 
 
                         <!-- Edit -->
-                        <a href="#"
+                        <a href="{{ url('admin/edit_employe') }}"
                            class="btn btn-sm btn-light border text-warning rounded-circle d-flex align-items-center justify-content-center"
                            style="width: 32px; height: 32px;"
                            title="Edit Memory">
@@ -1377,10 +1235,10 @@
       <div class="col-lg-2 col-md-6">
         <h6 class="text-gold fw-bold mb-3">Quick Links</h6>
         <ul class="list-unstyled small d-flex flex-column gap-2 text-light-tan">
-          <li><a href="index.html" class="text-light-tan text-decoration-none">Home</a></li>
-          <li><a href="all_memories.html" class="text-light-tan text-decoration-none">Memories</a></li>
-          <li><a href="about.html" class="text-light-tan text-decoration-none">About Us</a></li>
-          <li><a href="contact.html" class="text-light-tan text-decoration-none">Contact Us</a></li>
+          <li><a href="{{ url('admin/index') }}" class="text-light-tan text-decoration-none">Home</a></li>
+          <li><a href="{{ url('admin/all_memories') }}" class="text-light-tan text-decoration-none">Memories</a></li>
+          <li><a href="{{ url('admin/about') }}" class="text-light-tan text-decoration-none">About Us</a></li>
+          <li><a href="{{ url('admin/contact') }}" class="text-light-tan text-decoration-none">Contact Us</a></li>
         </ul>
       </div>
 
@@ -1415,13 +1273,10 @@
     </div>
 
 
-    
 
 
-
-
-    <!-- =====================================================
-     VIEW MEMORY DETAILS MODAL
+        <!-- =====================================================
+     VIEW  DETAILS MODAL
 ====================================================== -->
 
 <div class="modal fade"
@@ -1731,6 +1586,8 @@
     </div>
 
 </div>
+
+
 
     <!-- Bootstrap 5 JS and Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

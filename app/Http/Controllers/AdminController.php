@@ -17,17 +17,17 @@ class AdminController extends Controller
     /**
      * Display the admin dashboard index view.
      */
-    public function dashbordIndex(): View
-    {
-        return view('admin.dashbord_index');
-    }
+    // public function dashbordIndex(): View
+    // {
+    //     return view('admin.dashbord_index');
+    // }
 
     /**
      * Display the add employee view.
      */
-    public function addEmploye(): View
+    public function addEmployee(): View
     {
-        return view('admin.add_employe');
+        return view('admin.add_employee');
     }
 
     /**
@@ -97,9 +97,9 @@ class AdminController extends Controller
     /**
      * Display the edit employee view.
      */
-    public function editEmploye(): View
+    public function editEmployee(): View
     {
-        return view('admin.edit_employe');
+        return view('admin.edit_employee');
     }
 
     /**
@@ -153,9 +153,9 @@ class AdminController extends Controller
     /**
      * Display view employee view.
      */
-    public function viewEmploye(): View
+    public function viewEmployee(): View
     {
-        return view('admin.view_employe');
+        return view('admin.view_employee');
     }
 
     /**

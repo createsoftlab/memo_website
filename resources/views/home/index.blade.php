@@ -104,8 +104,8 @@
           </ul>
           
           <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-2 mt-auto mt-lg-0 pt-3 pt-lg-0 border-top border-lg-0 border-secondary">
-            <a href="{{ url('/login') }}" class="btn btn-nav-login text-center"><i class="bi bi-box-arrow-in-right"></i> LOGIN</a>
-            <a href="#" class="btn btn-nav-signup text-center"><i class="bi bi-person-plus"></i> SIGN UP</a>
+            <a href="{{ url('login') }}" class="btn btn-nav-login text-center"><i class="bi bi-box-arrow-in-right"></i> LOGIN</a>
+            <a href="{{ url('register') }}" class="btn btn-nav-signup text-center"><i class="bi bi-person-plus"></i> SIGN UP</a>
           </div>
         </div>
       </div>

@@ -12,261 +12,208 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <!-- Custom External Dashboard CSS -->
     <link rel="stylesheet" href="{{ asset('memo_website_dev_dashbord/assets/css/dashboard-main.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Mobile Sidebar Overlay -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    @include('admin.sidebar')
 
-    <div class="dashboard-wrapper">
-       <!-- Sidebar -->
-        <nav id="sidebar" class="sidebar">
-            <div class="sidebar-profile p-3 d-flex align-items-center gap-3">
-                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?fit=crop&w=100&h=100" class="rounded-circle" width="45" height="45" alt="Profile">
-                <div>
-                    <h6 class="m-0 text-white fw-bold" style="font-size: 0.9rem;">M.A.N.Lakshan</h6>
-                    <small class="text-gold" style="font-size: 0.75rem;">Joined 02 Jun 2026</small>
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navbar -->
+        @include('admin.header')
+
+        <!-- Page Body -->
+        <div class="container-fluid py-4 overflow-hidden">
+
+            <!-- Flash Alerts -->
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            <!-- Section Header & Filter Bar Container -->
+            <div class="row align-items-center mb-4 g-3">
+                <div class="col-xl-4 col-lg-4 col-12">
+                    <h4 class="fw-bold text-dark m-0 font-serif">
+                        <i class="bi bi-calendar-check text-warning me-2"></i> All Events
+                    </h4>
+                    <p class="text-muted small m-0">View and manage all users' events across the system.</p>
+                </div>
+
+                <!-- Custom Filter & Search Bar -->
+                <div class="col-xl-8 col-lg-8 col-12">
+                    <form action="{{ route('admin.events.all') }}" method="GET" class="row g-2 justify-content-lg-end align-items-center">
+                        <!-- Search Box -->
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                            <div class="input-group input-group-sm shadow-sm w-100">
+                                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                                <input type="text" name="search" class="form-control border-start-0 ps-0" placeholder="Search events..." value="{{ request('search') }}">
+                            </div>
+                        </div>
+
+                        <!-- Status Filter Dropdown -->
+                        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6">
+                            <select name="status" class="form-select form-select-sm shadow-sm" onchange="this.form.submit()">
+                                <option value="">All Status</option>
+                                <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>Approved</option>
+                                <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>Rejected</option>
+                            </select>
+                        </div>
+
+                        <!-- Privacy Filter Dropdown -->
+                        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6">
+                            <select name="privacy" class="form-select form-select-sm shadow-sm" onchange="this.form.submit()">
+                                <option value="">All Privacy</option>
+                                <option value="public" {{ request('privacy') === 'public' ? 'selected' : '' }}>Public</option>
+                                <option value="private" {{ request('privacy') === 'private' ? 'selected' : '' }}>Private</option>
+                            </select>
+                        </div>
+
+                        <!-- Create Action -->
+                        <div class="col-auto">
+                            <a href="{{ route('admin.events.create') }}" class="btn btn-warning btn-sm fw-bold text-dark shadow-sm px-3">
+                                <i class="bi bi-plus-lg me-1"></i> New Event
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </div>
 
-            <ul class="nav flex-column py-3">
-                <li class="nav-item">
-                    <a href="{{ url('admin/dashbord_index') }}" class="nav-link">
-                        <span><i class="bi bi-speedometer2 me-2"></i> My Dashboard</span>
-                    </a>
-                </li>
-
-                <!-- All Memories Dropdown -->
-                <li class="nav-item">
-                    <a href="#memoriesSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle  d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-collection me-2"></i> All Memories</span>
-                        <i class="bi bi-chevron-down small dropdown-arrow"></i>
-                    </a>
-                    <ul class="collapse list-unstyled submenu" id="memoriesSubmenu">
-                        <li>
-                            <a href="{{ url('admin/create-memory') }}" class="nav-link sub-link">My Memories</a>
-                        </li>
-                           <li>
-                            <a href="{{ url('admin/all_memories') }}" class="nav-link sub-link">All Memories </a>
-                        </li>
-                        <li>
-                            <a href="{{ url('admin/create-memory') }}" class="nav-link sub-link">Create Memories</a>
-                        </li>
-                    </ul>
-                </li>
-
-                         <!-- All Events  Dropdown -->
-                <li class="nav-item">
-                    <a href="#eventSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle active d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-collection me-2"></i> Events</span>
-                        <i class="bi bi-chevron-down small dropdown-arrow"></i>
-                    </a>
-                    <ul class="collapse list-unstyled submenu" id="eventSubmenu">
-                        <li>
-                            <a href="{{ url('admin/my_events') }}" class="nav-link sub-link">My Events</a>
-                        </li>
-                           <li>
-                            <a href="{{ url('admin/all_events') }}" class="nav-link sub-link active ">All Events</a>
-                        </li>
-                        <li>
-                            <a href="{{ url('admin/create_my_event') }}" class="nav-link sub-link">Create Events </a>
-                        </li>
-                    </ul>
-                </li>
-
-
-
-                <!-- <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <span><i class="bi bi-heart me-2"></i> Leads & Enquiry</span>
-                        <i class="bi bi-chevron-right small"></i>
-                    </a>
-                </li> -->
-
-
-                    <!-- All Users  Dropdown -->
-                <li class="nav-item">
-                    <a href="#usersSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle  d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-person small user-management-icon"></i> User Management</span>
-                        <i class="bi bi-chevron-down small dropdown-arrow"></i>
-                    </a>
-                    <ul class="collapse list-unstyled submenu" id="usersSubmenu">
-                        <li>
-                            <a href="{{ url('admin/all_users') }}" class="nav-link sub-link ">All Users</a>
-                        </li>
-                           <li>
-                            <a href="{{ url('admin/add_employe') }}" class="nav-link sub-link ">Add Employe</a>
-                        </li>
-                        <li>
-                            <a href="{{ url('admin/view_employe') }}" class="nav-link sub-link">View employe </a>
-                        </li>
-                    </ul>
-                </li>
-
-
-                <li class="nav-item">
-                    <a href="{{ url('admin/payments') }}" class="nav-link">
-                        <span><i class="bi bi-currency-dollar me-2"></i> Payments</span>
-                        <i class="bi bi-chevron-right small"></i>
-                    </a>
-                </li>
-
-<li class="nav-item">
-    <a href="#packagesSubmenu" data-bs-toggle="collapse" class="nav-link dropdown-toggle d-flex justify-content-between align-items-center" aria-expanded="false">
-        <span><i class="bi bi-box-seam me-2"></i> Packages</span>
-        <i class="bi bi-chevron-down small dropdown-arrow"></i>
-    </a>
-    <ul class="collapse list-unstyled submenu" id="packagesSubmenu">
-        <li>
-            <a href="{{ url('admin/my_package') }}" class="nav-link sub-link">My Packages</a>
-        </li>
-        <li>
-            <a href="{{ url('admin/create_package') }}" class="nav-link sub-link">Create Package</a>
-        </li>
-    </ul>
-</li>
-    
-                <li class="nav-item">
-                    <a href="{{ url('admin/profile_settings') }}" class="nav-link">
-                        <span><i class="bi bi-person-badge me-2"></i> Profile Pages</span>
-                        <i class="bi bi-chevron-right small"></i>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ url('admin/reports') }}" class="nav-link">
-                        <span><i class="bi bi-activity me-2"></i> Reports</span>
-                        <i class="bi bi-chevron-right small"></i>
-                    </a>
-                </li>
-                
-                <li class="nav-item mt-4">
-                    <a href="#" class="nav-link text-warning">
-                        <span><i class="bi bi-gear me-2"></i> Setting</span>
-                        <i class="bi bi-chevron-right small"></i>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Top Navbar -->
-            <nav class="navbar navbar-dark top-navbar px-3 py-2">
-                <div class="container-fluid">
-                    <div class="d-flex align-items-center gap-2">
-                        <button class="btn btn-outline-light d-lg-none btn-sm" id="sidebarToggle">
-                            <i class="bi bi-list fs-5"></i>
-                        </button>
-                        <span class="navbar-brand mb-0 h6 text-gold font-serif ms-1">All  Events</span>
-                    </div>
-                    <div class="d-flex align-items-center gap-3">
-                        <span class="text-white small d-none d-sm-inline">M.A.N. Lakshan</span>
-                        <a href="#" class="btn btn-sm btn-warning fw-bold text-dark px-3">Logout</a>
-                    </div>
-                </div>
-            </nav>
-
-            <!-- Page Body -->
-            <div class="container-fluid py-4 overflow-hidden">
-                
-                <!-- Section Header & Filter Bar Container -->
-                <div class="row align-items-center mb-4 g-3">
-                    <div class="col-xl-4 col-lg-4 col-12">
-                        <h4 class="fw-bold text-dark m-0 font-serif">
-                            <i class="bi bi-calendar-check text-warning me-2"></i> All Events
-                        </h4>
-                        <p class="text-muted small m-0">View and manage all Users's  events here.</p>
-                    </div>
-
-                    <!-- Custom Filter & Search Bar -->
-                    <div class="col-xl-8 col-lg-8 col-12">
-                        <div class="row g-2 justify-content-lg-end">
-                            <!-- Search Box -->
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                                <div class="input-group input-group-sm shadow-sm w-100">
-                                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                                    <input type="text" class="form-control border-start-0 ps-0" placeholder="Search events...">
-                                </div>
-                            </div>
-
-                            <!-- Status Filter Dropdown -->
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6">
-                                <div class="dropdown w-100">
-                                    <button class="btn btn-sm btn-white bg-white border w-100 d-flex justify-content-between align-items-center shadow-sm text-muted dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 0.85rem; padding: 6px 10px;">
-                                        <span>Filter Status</span>
-                                    </button>
-                                    <ul class="dropdown-menu w-100 shadow border-0" style="font-size: 0.85rem;">
-                                        <li><a class="dropdown-item py-1" href="#" data-value="">All Status</a></li>
-                                        <li><a class="dropdown-item py-1" href="#" data-value="approved">Approved</a></li>
-                                        <li><a class="dropdown-item py-1" href="#" data-value="pending">Pending</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <!-- Privacy Filter Dropdown -->
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6">
-                                <div class="dropdown w-100">
-                                    <button class="btn btn-sm btn-white bg-white border w-100 d-flex justify-content-between align-items-center shadow-sm text-muted dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 0.85rem; padding: 6px 10px;">
-                                        <span>Filter Privacy</span>
-                                    </button>
-                                    <ul class="dropdown-menu w-100 shadow border-0" style="font-size: 0.85rem;">
-                                        <li><a class="dropdown-item py-1" href="#" data-value="">All Privacy</a></li>
-                                        <li><a class="dropdown-item py-1" href="#" data-value="public">Public</a></li>
-                                        <li><a class="dropdown-item py-1" href="#" data-value="private">Private</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Events Card Grid Section -->
-                <div class="row g-4">
-                    
-                    <!-- Card Item 1 -->
+            <!-- Events Card Grid Section -->
+            <div class="row g-4">
+                @forelse($events as $event)
                     <div class="col-xxl-3 col-xl-4 col-md-6 col-12">
                         <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 bg-white event-card">
                             <div class="position-relative">
-                                <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?fit=crop&w=500&h=300" class="card-img-top object-fit-cover" style="height: 180px;" alt="Event Image">
+                                <img src="{{ $event->banner_image ? asset($event->banner_image) : 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?fit=crop&w=500&h=300' }}" 
+                                     class="card-img-top object-fit-cover" 
+                                     style="height: 180px;" 
+                                     alt="{{ $event->title }}">
+                                
                                 <!-- Status Badge -->
-                                <span class="badge bg-success position-absolute top-0 start-0 m-2 shadow-sm px-2 py-1">
-                                    <i class="bi bi-check-circle me-1"></i> Approved
-                                </span>
+                                @if($event->status === 'approved')
+                                    <span class="badge bg-success position-absolute top-0 start-0 m-2 shadow-sm px-2 py-1">
+                                        <i class="bi bi-check-circle me-1"></i> Approved
+                                    </span>
+                                @elseif($event->status === 'rejected')
+                                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 shadow-sm px-2 py-1">
+                                        <i class="bi bi-x-circle me-1"></i> Rejected
+                                    </span>
+                                @else
+                                    <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2 shadow-sm px-2 py-1">
+                                        <i class="bi bi-hourglass-split me-1"></i> Pending
+                                    </span>
+                                @endif
+
                                 <!-- Privacy Badge -->
-                                <span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2 shadow-sm px-2 py-1">
-                                    <i class="bi bi-globe me-1"></i> Public
-                                </span>
+                                @if($event->is_private)
+                                    <span class="badge bg-secondary position-absolute top-0 end-0 m-2 shadow-sm px-2 py-1">
+                                        <i class="bi bi-lock me-1"></i> Private
+                                    </span>
+                                @else
+                                    <span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2 shadow-sm px-2 py-1">
+                                        <i class="bi bi-globe me-1"></i> Public
+                                    </span>
+                                @endif
                             </div>
 
                             <div class="card-body p-3 d-flex flex-column justify-content-between">
                                 <div>
-                                    <h6 class="fw-bold text-dark mb-1 text-truncate">Annual Memorial Alms Giving</h6>
-                                    <p class="text-muted small mb-2"><i class="bi bi-calendar-event me-1 text-warning"></i> Oct 25, 2026 | 10:00 AM</p>
-                                    <p class="text-muted small mb-3 text-truncate" style="font-size: 0.8rem;"><i class="bi bi-geo-alt me-1 text-danger"></i> Memorial Hall, Colombo</p>
+                                    <h6 class="fw-bold text-dark mb-1 text-truncate" title="{{ $event->title }}">
+                                        {{ $event->title }}
+                                    </h6>
+                                    <p class="text-muted small mb-1">
+                                        <i class="bi bi-person me-1 text-primary"></i> By: {{ $event->user?->name ?? 'System' }}
+                                    </p>
+                                    <p class="text-muted small mb-1">
+                                        <i class="bi bi-calendar-event me-1 text-warning"></i> 
+                                        {{ $event->start_date ? $event->start_date->format('M d, Y') : 'Date not set' }}
+                                        @if($event->start_time)
+                                            | {{ date('h:i A', strtotime($event->start_time)) }}
+                                        @endif
+                                    </p>
+                                    <p class="text-muted small mb-2 text-truncate" style="font-size: 0.8rem;">
+                                        <i class="bi bi-geo-alt me-1 text-danger"></i> 
+                                        {{ $event->location ?? 'Online / Unspecified Location' }}
+                                    </p>
                                 </div>
 
                                 <!-- Card Actions: Approve, Reject, Delete & View/Edit -->
                                 <div>
                                     <div class="d-flex align-items-center justify-content-between mb-2">
-                                        <span class="text-muted small" style="font-size: 0.75rem;"><i class="bi bi-heart-fill text-danger me-1"></i> Donations On</span>
+                                        <span class="text-muted small" style="font-size: 0.75rem;">
+                                            @if($event->allow_donation)
+                                                <i class="bi bi-heart-fill text-danger me-1"></i> Donations On
+                                            @else
+                                                <i class="bi bi-heart text-muted me-1"></i> Donations Off
+                                            @endif
+                                        </span>
+                                        <span class="badge bg-light text-secondary border" style="font-size: 0.7rem;">
+                                            {{ ucfirst($event->event_type) }}
+                                        </span>
                                     </div>
 
-                                    <!-- Quick Action Buttons Bar (Responsive) -->
+                                    <!-- Quick Action Buttons Bar -->
                                     <div class="d-flex flex-wrap gap-1 mb-2">
-                                        <button class="btn btn-xs btn-outline-success flex-fill py-1" style="font-size: 0.75rem;"><i class="bi bi-check-lg"></i> Approve</button>
-                                        <button class="btn btn-xs btn-outline-warning text-dark flex-fill py-1" style="font-size: 0.75rem;"><i class="bi bi-x-lg"></i> Reject</button>
-                                        <button class="btn btn-xs btn-outline-danger flex-fill py-1" style="font-size: 0.75rem;"><i class="bi bi-trash"></i> Delete</button>
+                                        @if($event->status !== 'approved')
+                                            <form action="{{ route('admin.events.status', $event->id) }}" method="POST" class="flex-fill">
+                                                @csrf
+                                                @method('PATCH')
+                                                <input type="hidden" name="status" value="approved">
+                                                <button type="submit" class="btn btn-xs btn-outline-success w-100 py-1" style="font-size: 0.75rem;" title="Approve Event">
+                                                    <i class="bi bi-check-lg"></i> Approve
+                                                </button>
+                                            </form>
+                                        @endif
+
+                                        @if($event->status !== 'rejected')
+                                            <form action="{{ route('admin.events.status', $event->id) }}" method="POST" class="flex-fill">
+                                                @csrf
+                                                @method('PATCH')
+                                                <input type="hidden" name="status" value="rejected">
+                                                <button type="submit" class="btn btn-xs btn-outline-warning text-dark w-100 py-1" style="font-size: 0.75rem;" title="Reject Event">
+                                                    <i class="bi bi-x-lg"></i> Reject
+                                                </button>
+                                            </form>
+                                        @endif
+
+                                        <form action="{{ route('admin.events.destroy', $event->id) }}" method="POST" class="flex-fill" onsubmit="return confirm('Are you sure you want to delete this event?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-xs btn-outline-danger w-100 py-1" style="font-size: 0.75rem;" title="Delete Event">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </button>
+                                        </form>
                                     </div>
 
                                     <div class="d-flex align-items-center justify-content-between border-top pt-2">
-                                        <span class="text-muted small" style="font-size: 0.7rem;">ID: #EVT-001</span>
+                                        <span class="text-muted small" style="font-size: 0.7rem;">ID: #EVT-{{ str_pad($event->id, 3, '0', STR_PAD_LEFT) }}</span>
                                         <div class="d-flex gap-2">
                                             <!-- View Button (Triggers Modal) -->
-                                            <button type="button" class="btn btn-sm btn-light border text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" data-bs-toggle="modal" data-bs-target="#viewEventModal1" title="View Event">
+                                            <button type="button"
+                                                class="btn btn-sm btn-light border text-primary rounded-circle d-flex align-items-center justify-content-center"
+                                                style="width: 32px; height: 32px;" 
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#viewEventModal{{ $event->id }}" 
+                                                title="View Event">
                                                 <i class="bi bi-eye"></i>
                                             </button>
                                             <!-- Edit Button -->
-                                            <a href="{{ url('admin/edit_my_event') }}" class="btn btn-sm btn-light border text-warning rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" title="Edit Event">
+                                            <a href="{{ route('admin.events.edit', $event->id) }}"
+                                                class="btn btn-sm btn-light border text-warning rounded-circle d-flex align-items-center justify-content-center"
+                                                style="width: 32px; height: 32px;" 
+                                                title="Edit Event">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
                                         </div>
@@ -276,155 +223,133 @@
                         </div>
                     </div>
 
-                    <!-- Card Item 2 (Pending & Private Example) -->
-                    <div class="col-xxl-3 col-xl-4 col-md-6 col-12">
-                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 bg-white event-card">
-                            <div class="position-relative">
-                                <img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?fit=crop&w=500&h=300" class="card-img-top object-fit-cover" style="height: 180px;" alt="Event Image">
-                                <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2 shadow-sm px-2 py-1">
-                                    <i class="bi bi-hourglass-split me-1"></i> Pending
-                                </span>
-                                <span class="badge bg-secondary position-absolute top-0 end-0 m-2 shadow-sm px-2 py-1">
-                                    <i class="bi bi-lock me-1"></i> Private
-                                </span>
-                            </div>
-
-                            <div class="card-body p-3 d-flex flex-column justify-content-between">
-                                <div>
-                                    <h6 class="fw-bold text-dark mb-1 text-truncate">Family Remembrance Gathering</h6>
-                                    <p class="text-muted small mb-2"><i class="bi bi-calendar-event me-1 text-warning"></i> Nov 12, 2026 | 03:00 PM</p>
-                                    <p class="text-muted small mb-3 text-truncate" style="font-size: 0.8rem;"><i class="bi bi-geo-alt me-1 text-danger"></i> Private Residence</p>
+                    <!-- ========================================== -->
+                    <!-- VIEW EVENT MODAL FOR THIS EVENT            -->
+                    <!-- ========================================== -->
+                    <div class="modal fade" id="viewEventModal{{ $event->id }}" tabindex="-1" aria-labelledby="viewEventModalLabel{{ $event->id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content border-0 shadow-lg rounded-4">
+                                <div class="modal-header bg-dark text-white">
+                                    <h5 class="modal-title font-serif" id="viewEventModalLabel{{ $event->id }}">
+                                        <i class="bi bi-info-circle text-warning me-2"></i> Event Details: {{ $event->title }}
+                                    </h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
+                                <div class="modal-body p-4">
+                                    <div class="row g-4">
+                                        <div class="col-md-5">
+                                            <img src="{{ $event->banner_image ? asset($event->banner_image) : 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?fit=crop&w=500&h=300' }}" 
+                                                 class="img-fluid rounded-3 shadow-sm object-fit-cover w-100" 
+                                                 style="max-height: 250px;" 
+                                                 alt="{{ $event->title }}">
+                                            
+                                            <div class="mt-3 p-3 bg-light rounded-3 border">
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <span class="small text-muted">Created By:</span>
+                                                    <span class="small fw-bold">{{ $event->user?->name ?? 'System' }}</span>
+                                                </div>
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <span class="small text-muted">Status:</span>
+                                                    <span class="badge {{ $event->status === 'approved' ? 'bg-success' : ($event->status === 'rejected' ? 'bg-danger' : 'bg-warning text-dark') }}">{{ ucfirst($event->status) }}</span>
+                                                </div>
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <span class="small text-muted">Visibility:</span>
+                                                    <span class="small fw-bold">{{ $event->is_private ? 'Private' : 'Public' }}</span>
+                                                </div>
+                                                <div class="d-flex justify-content-between">
+                                                    <span class="small text-muted">Donations:</span>
+                                                    <span class="small fw-bold">{{ $event->allow_donation ? 'Allowed' : 'Disabled' }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                <div>
-                                    <div class="d-flex align-items-center justify-content-between mb-2">
-                                        <span class="text-muted small" style="font-size: 0.75rem;"><i class="bi bi-heart text-muted me-1"></i> Donations Off</span>
-                                    </div>
+                                        <div class="col-md-7">
+                                            <h4 class="fw-bold font-serif text-dark mb-2">{{ $event->title }}</h4>
+                                            
+                                            <div class="d-flex flex-column gap-2 mb-3">
+                                                <div>
+                                                    <i class="bi bi-calendar-event text-warning me-2"></i>
+                                                    <strong>Date:</strong> 
+                                                    {{ $event->start_date ? $event->start_date->format('M d, Y') : 'N/A' }}
+                                                    @if($event->end_date)
+                                                        to {{ $event->end_date->format('M d, Y') }}
+                                                    @endif
+                                                </div>
+                                                <div>
+                                                    <i class="bi bi-clock text-warning me-2"></i>
+                                                    <strong>Time:</strong> 
+                                                    {{ $event->start_time ? date('h:i A', strtotime($event->start_time)) : 'N/A' }}
+                                                    @if($event->end_time)
+                                                        - {{ date('h:i A', strtotime($event->end_time)) }}
+                                                    @endif
+                                                </div>
+                                                <div>
+                                                    <i class="bi bi-geo-alt text-danger me-2"></i>
+                                                    <strong>Location:</strong> {{ $event->location ?? 'Not specified' }}
+                                                </div>
+                                                @if($event->live_stream_url)
+                                                    <div>
+                                                        <i class="bi bi-camera-video text-danger me-2"></i>
+                                                        <strong>Broadcast:</strong> <a href="{{ $event->live_stream_url }}" target="_blank" rel="noopener">Open Stream</a>
+                                                    </div>
+                                                @endif
+                                            </div>
 
-                                    <!-- Quick Action Buttons Bar (Responsive) -->
-                                    <div class="d-flex flex-wrap gap-1 mb-2">
-                                        <button class="btn btn-xs btn-outline-success flex-fill py-1" style="font-size: 0.75rem;"><i class="bi bi-check-lg"></i> Approve</button>
-                                        <button class="btn btn-xs btn-outline-warning text-dark flex-fill py-1" style="font-size: 0.75rem;"><i class="bi bi-x-lg"></i> Reject</button>
-                                        <button class="btn btn-xs btn-outline-danger flex-fill py-1" style="font-size: 0.75rem;"><i class="bi bi-trash"></i> Delete</button>
-                                    </div>
+                                            <div class="mb-3">
+                                                <h6 class="fw-bold text-dark mb-1">Description:</h6>
+                                                <p class="text-muted small" style="white-space: pre-line;">{{ $event->description ?: 'No detailed description provided.' }}</p>
+                                            </div>
 
-                                    <div class="d-flex align-items-center justify-content-between border-top pt-2">
-                                        <span class="text-muted small" style="font-size: 0.7rem;">ID: #EVT-002</span>
-                                        <div class="d-flex gap-2">
-                                            <!-- View Button (Triggers Modal) -->
-                                            <button type="button" class="btn btn-sm btn-light border text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" data-bs-toggle="modal" data-bs-target="#viewEventModal2" title="View Event">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <a href="{{ url('admin/edit_my_event') }}" class="btn btn-sm btn-light border text-warning rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" title="Edit Event">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </a>
+                                            @if($event->map_link)
+                                                <div class="mb-2">
+                                                    <h6 class="fw-bold text-dark mb-1">Map / Location Link:</h6>
+                                                    <a href="{{ $event->map_link }}" target="_blank" class="small text-primary text-truncate d-block">
+                                                        <i class="bi bi-box-arrow-up-right me-1"></i> View on Google Maps
+                                                    </a>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
+                                <div class="modal-footer bg-light">
+                                    <a href="{{ route('admin.events.edit', $event->id) }}" class="btn btn-warning btn-sm fw-bold px-3">
+                                        <i class="bi bi-pencil-square me-1"></i> Edit Event
+                                    </a>
+                                    <button type="button" class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Close</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- VIEW EVENT MODAL FOR CARD 1                -->
-    <!-- ========================================== -->
-    <div class="modal fade" id="viewEventModal1" tabindex="-1" aria-labelledby="viewEventModalLabel1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content border-0 shadow-lg rounded-4">
-                <div class="modal-header bg-dark text-white">
-                    <h5 class="modal-title font-serif" id="viewEventModalLabel1"><i class="bi bi-info-circle text-warning me-2"></i> Event Details</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <div class="row g-4">
-                        <!-- Event Image -->
-                        <div class="col-md-5">
-                            <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?fit=crop&w=500&h=300" class="img-fluid rounded-3 shadow-sm object-fit-cover w-100" style="height: 220px;" alt="Event Image">
-                            <div class="d-flex gap-2 mt-3">
-                                <span class="badge bg-success flex-fill py-2"><i class="bi bi-check-circle me-1"></i> Approved</span>
-                                <span class="badge bg-dark flex-fill py-2"><i class="bi bi-globe me-1"></i> Public</span>
+                @empty
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm p-5 text-center bg-white rounded-4">
+                            <i class="bi bi-calendar-x text-muted display-4 mb-3"></i>
+                            <h5 class="fw-bold text-dark font-serif">No Events Found</h5>
+                            <p class="text-muted small mb-3">There are no events registered across the platform matching your criteria.</p>
+                            <div>
+                                <a href="{{ route('admin.events.create') }}" class="btn btn-warning fw-bold text-dark px-4 rounded-pill">
+                                    <i class="bi bi-plus-lg me-1"></i> Create First Event
+                                </a>
                             </div>
                         </div>
-                        <!-- Event Information -->
-                        <div class="col-md-7">
-                            <h4 class="fw-bold text-dark mb-2">Annual Memorial Alms Giving</h4>
-                            <p class="text-muted small mb-3">Detailed description of the memorial event goes here. Commemorating loved ones with sacred rituals and family gatherings.</p>
-                            
-                            <ul class="list-unstyled small text-muted mb-3">
-                                <li class="mb-2"><i class="bi bi-calendar-event text-warning me-2 fw-bold"></i><strong>Date & Time:</strong> Oct 25, 2026 | 10:00 AM</li>
-                                <li class="mb-2"><i class="bi bi-geo-alt text-danger me-2 fw-bold"></i><strong>Location:</strong> Memorial Hall, Colombo</li>
-                                <li class="mb-2"><i class="bi bi-heart-fill text-danger me-2"></i><strong>Donations:</strong> Enabled (Allowed)</li>
-                                <li class="mb-2"><i class="bi bi-camera-video text-primary me-2"></i><strong>Live Stream:</strong> <a href="#" target="_blank" class="text-decoration-underline">View Broadcast</a></li>
-                            </ul>
-                        </div>
                     </div>
-                </div>
-                <div class="modal-footer bg-light px-4 py-3 d-flex justify-content-between">
-                    <span class="text-muted small">Event ID: #EVT-001</span>
-                    <div class="d-flex gap-2">
-                        <button type="button" class="btn btn-outline-success btn-sm"><i class="bi bi-check-lg"></i> Approve</button>
-                        <button type="button" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i> Delete</button>
-                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
+                @endforelse
             </div>
-        </div>
-    </div>
 
-    <!-- ========================================== -->
-    <!-- VIEW EVENT MODAL FOR CARD 2                -->
-    <!-- ========================================== -->
-    <div class="modal fade" id="viewEventModal2" tabindex="-1" aria-labelledby="viewEventModalLabel2" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content border-0 shadow-lg rounded-4">
-                <div class="modal-header bg-dark text-white">
-                    <h5 class="modal-title font-serif" id="viewEventModalLabel2"><i class="bi bi-info-circle text-warning me-2"></i> Event Details</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <!-- Pagination -->
+            @if($events->hasPages())
+                <div class="mt-4 d-flex justify-content-center">
+                    {{ $events->links('pagination::bootstrap-5') }}
                 </div>
-                <div class="modal-body p-4">
-                    <div class="row g-4">
-                        <!-- Event Image -->
-                        <div class="col-md-5">
-                            <img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?fit=crop&w=500&h=300" class="img-fluid rounded-3 shadow-sm object-fit-cover w-100" style="height: 220px;" alt="Event Image">
-                            <div class="d-flex gap-2 mt-3">
-                                <span class="badge bg-warning text-dark flex-fill py-2"><i class="bi bi-hourglass-split me-1"></i> Pending</span>
-                                <span class="badge bg-secondary flex-fill py-2"><i class="bi bi-lock me-1"></i> Private</span>
-                            </div>
-                        </div>
-                        <!-- Event Information -->
-                        <div class="col-md-7">
-                            <h4 class="fw-bold text-dark mb-2">Family Remembrance Gathering</h4>
-                            <p class="text-muted small mb-3">A private family gathering to remember and honor relatives in a quiet, intimate setting.</p>
-                            
-                            <ul class="list-unstyled small text-muted mb-3">
-                                <li class="mb-2"><i class="bi bi-calendar-event text-warning me-2 fw-bold"></i><strong>Date & Time:</strong> Nov 12, 2026 | 03:00 PM</li>
-                                <li class="mb-2"><i class="bi bi-geo-alt text-danger me-2 fw-bold"></i><strong>Location:</strong> Private Residence</li>
-                                <li class="mb-2"><i class="bi bi-heart text-muted me-2"></i><strong>Donations:</strong> Disabled (Off)</li>
-                                <li class="mb-2"><i class="bi bi-camera-video text-muted me-2"></i><strong>Live Stream:</strong> None</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer bg-light px-4 py-3 d-flex justify-content-between">
-                    <span class="text-muted small">Event ID: #EVT-002</span>
-                    <div class="d-flex gap-2">
-                        <button type="button" class="btn btn-outline-success btn-sm"><i class="bi bi-check-lg"></i> Approve</button>
-                        <button type="button" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i> Delete</button>
-                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
+            @endif
+
         </div>
     </div>
 
     <!-- Bootstrap 5 JS and Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-       <!--mobile slidebr script  -->
+
+    <!-- Mobile sidebar script -->
     <script>
         const sidebar = document.getElementById('sidebar');
         const sidebarToggle = document.getElementById('sidebarToggle');
@@ -443,16 +368,6 @@
                 sidebarOverlay.classList.remove('show');
             });
         }
-
-        // Force initialize default active tab securely
-        document.addEventListener('DOMContentLoaded', function () {
-            const defaultTabEl = document.querySelector('#memorialTabs a[href="#tab-basic"]');
-            if (defaultTabEl) {
-                const tab = new bootstrap.Tab(defaultTabEl);
-                tab.show();
-            }
-        });
     </script>
-    
 </body>
 </html>
