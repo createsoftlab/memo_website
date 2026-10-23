@@ -25,9 +25,9 @@ class AdminController extends Controller
     /**
      * Display the add employee view.
      */
-    public function addEmployee(): View
+    public function addEmployee()
     {
-        return view('admin.add_employee');
+        return redirect()->route('admin.employees.create');
     }
 
     /**
@@ -49,9 +49,9 @@ class AdminController extends Controller
     /**
      * Display all users view.
      */
-    public function allUsers(): View
+    public function allUsers()
     {
-        return view('admin.all_users');
+        return redirect()->route('admin.users.index');
     }
 
     /**
@@ -97,9 +97,9 @@ class AdminController extends Controller
     /**
      * Display the edit employee view.
      */
-    public function editEmployee(): View
+    public function editEmployee()
     {
-        return view('admin.edit_employee');
+        return redirect()->route('admin.employees.index');
     }
 
     /**
@@ -137,9 +137,9 @@ class AdminController extends Controller
     /**
      * Display profile settings view.
      */
-    public function profileSettings(): View
+    public function profileSettings()
     {
-        return view('admin.profile_settings');
+        return redirect()->route('admin.profile_settings');
     }
 
     /**
@@ -153,9 +153,9 @@ class AdminController extends Controller
     /**
      * Display view employee view.
      */
-    public function viewEmployee(): View
+    public function viewEmployee()
     {
-        return view('admin.view_employee');
+        return redirect()->route('admin.employees.index');
     }
 
     /**

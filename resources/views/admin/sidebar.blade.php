@@ -16,10 +16,10 @@
 
             <div>
                 <h6 class="m-0 text-white fw-bold" style="font-size: 0.9rem;">
-                    {{ $user?->name ?? 'Guest' }}
+                    {{ auth()->user()?->name ?? $user?->name ?? 'User' }}
                 </h6>
                 <small class="text-gold" style="font-size: 0.75rem;">
-                    {{ $user?->created_at?->format('d M Y') ?? '' }}
+                    {{ auth()->user()?->roles->first()?->name ?? auth()->user()?->created_at?->format('d M Y') ?? '' }}
                 </small>
             </div>
         </div>
@@ -137,6 +137,8 @@
             <!-- User Management Dropdown -->
             @php
                 $usersActive = request()->is('admin/all_users')
+                    || request()->is('admin/users*')
+                    || request()->is('admin/employees*')
                     || request()->is('admin/add_employee')
                     || request()->is('admin/view_employee')
                     || request()->is('admin/bulkemail');
@@ -160,25 +162,27 @@
                     id="usersSubmenu">
 
                     <li>
-                        <a href="{{ url('admin/all_users') }}"
-                            class="nav-link sub-link {{ request()->is('admin/all_users') ? 'active' : '' }}">
+                        <a href="{{ route('admin.users.index') }}"
+                            class="nav-link sub-link {{ request()->is('admin/users*') || request()->is('admin/all_users') ? 'active' : '' }}">
                             All Users
                         </a>
                     </li>
 
-                    <li>
-                        <a href="{{ url('admin/add_employee') }}"
-                            class="nav-link sub-link {{ request()->is('admin/add_employee') ? 'active' : '' }}">
-                            Add Employee
-                        </a>
-                    </li>
+                    @if(!auth()->check() || auth()->user()->can('manage-admins') || auth()->user()->isSuperAdmin())
+                        <li>
+                            <a href="{{ route('admin.employees.create') }}"
+                                class="nav-link sub-link {{ request()->is('admin/employees/create') || request()->is('admin/add_employee') ? 'active' : '' }}">
+                                Add Employee
+                            </a>
+                        </li>
 
-                    <li>
-                        <a href="{{ url('admin/view_employee') }}"
-                            class="nav-link sub-link {{ request()->is('admin/view_employee') ? 'active' : '' }}">
-                            View Employee
-                        </a>
-                    </li>
+                        <li>
+                            <a href="{{ route('admin.employees.index') }}"
+                                class="nav-link sub-link {{ (request()->is('admin/employees') && !request()->is('admin/employees/create')) || request()->is('admin/view_employee') ? 'active' : '' }}">
+                                View Employee
+                            </a>
+                        </li>
+                    @endif
 
                     <li>
                         <a href="{{ url('admin/bulkemail') }}"
