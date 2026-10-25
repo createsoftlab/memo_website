@@ -2,62 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Profile\UpdatePasswordRequest;
-use App\Http\Requests\Profile\UpdateProfileRequest;
+use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
     /**
-     * Display the admin profile settings view.
-     */
-    public function settings(Request $request): View
-    {
-        return view('admin.profile_settings', [
-            'user' => $request->user(),
-        ]);
-    }
-
-    /**
-     * Display the Breeze default profile form.
+     * Display the user's profile form.
      */
     public function edit(Request $request): View
     {
-        return view('admin.profile_settings', [
+        return view('profile.edit', [
             'user' => $request->user(),
         ]);
     }
 
     /**
-     * Update basic user info (name, country, state).
+     * Update the user's profile information.
      */
-    public function update(UpdateProfileRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $user = $request->user();
+        $request->user()->fill($request->validated());
 
-        $user->fill($request->validated());
-        $user->save();
+        if ($request->user()->isDirty('email')) {
+            $request->user()->email_verified_at = null;
+        }
 
-        return back()->with('success', 'Profile information updated successfully.');
-    }
+        $request->user()->save();
 
-    /**
-     * Update user password requiring current password verification.
-     */
-    public function updatePassword(UpdatePasswordRequest $request): RedirectResponse
-    {
-        $user = $request->user();
-
-        $user->update([
-            'password' => Hash::make($request->password),
-        ]);
-
-        return back()->with('password_success', 'Your password has been changed securely.');
+        return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
     /**
@@ -70,10 +47,6 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
-
-        if ($user->id === 1 || $user->hasRole('Super Admin')) {
-            return back()->withErrors(['error' => 'Super Administrator account cannot be self-deleted.']);
-        }
 
         Auth::logout();
 

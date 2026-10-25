@@ -1,25 +1,208 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-    </div>
+<!DOCTYPE html>
+<html lang="en">
 
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgot Password - Forever Missed Memorial Directory</title>
 
-    <form method="POST" action="{{ route('password.email') }}">
-        @csrf
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+    <!-- Custom CSS Files -->
+    <link rel="stylesheet" href="{{ asset('memo_website_dev_frontend/assets/css/index.css') }}">
+    <link rel="stylesheet" href="{{ asset('memo_website_dev_frontend/assets/css/main.css') }}">
+    <!-- Reusing Login/Signup custom styles for uniform card design -->
+    <link rel="stylesheet" href="{{ asset('memo_website_dev_frontend/assets/css/login.css') }}">
+</head>
+
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+    <!-- Navigation Bar with Mobile Offcanvas Slide Menu -->
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand me-4" href="{{ url('/') }}">
+                <i class="bi bi-fire"></i> Forever Missed
+            </a>
+
+            <!-- Offcanvas Mobile Trigger Button -->
+            <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                <i class="bi bi-list text-white fs-2"></i>
+            </button>
+
+            <!-- Slide Drawer (Offcanvas) -->
+            <div class="offcanvas offcanvas-end offcanvas-memorial" tabindex="-1" id="offcanvasNavbar"
+                aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header border-bottom border-secondary pb-3">
+                    <h5 class="offcanvas-title text-gold fw-bold" id="offcanvasNavbarLabel">
+                        <i class="bi bi-fire me-1"></i> Forever Missed
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+
+                <div
+                    class="offcanvas-body d-flex flex-column flex-lg-row justify-content-between align-items-lg-center">
+                    <ul class="navbar-nav me-auto mb-3 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/') }}"><i class="bi bi-house-door"></i> HOME</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/all_memories') }}"><i class="bi bi-heart-fill"></i>
+                                Memories</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/about') }}"><i class="bi bi-info-circle"></i> ABOUT
+                                US</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/contact') }}"><i class="bi bi-envelope"></i> CONTACT
+                                US</a>
+                        </li>
+                    </ul>
+
+                    <div
+                        class="d-flex flex-column flex-lg-row align-items-lg-center gap-2 mt-auto mt-lg-0 pt-3 pt-lg-0 border-top border-lg-0 border-secondary">
+                        <a href="{{ url('login') }}" class="btn btn-nav-login text-center"><i
+                                class="bi bi-box-arrow-in-right"></i> LOGIN</a>
+                        <a href="{{ url('register') }}" class="btn btn-nav-signup text-center"><i
+                                class="bi bi-person-plus"></i> SIGN UP</a>
+                    </div>
+                </div>
+            </div>
         </div>
+    </nav>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
+    <!-- Main Content (Forgot Password Section) -->
+    <main class="flex-grow-1 d-flex align-items-center py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-5">
+
+                    <!-- Forgot Password Card -->
+                    <div class="login-card p-4 p-md-5">
+                        <div class="text-center mb-4">
+                            <div class="mb-3">
+                                <span
+                                    class="d-inline-flex align-items-center justify-content-center bg-light-gold text-memorial-accent rounded-circle fs-2"
+                                    style="width: 60px; height: 60px; background-color: #f5efe6;">
+                                    <i class="bi bi-key"></i>
+                                </span>
+                            </div>
+                            <h2 class="font-serif fw-bold text-brown">Forgot Password?</h2>
+                            <p class="text-muted small">No worries! Enter your registered email address and we'll send
+                                you instructions to reset your password.</p>
+                        </div>
+
+                        <form action="{{ route('password.email') }}" method="POST">
+                            @csrf
+                            <!-- Email Field -->
+                            <div class="mb-3">
+                                @if (session('status'))
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        <i class="bi bi-check-circle-fill me-2"></i>
+                                        {{ __(session('status')) }}
+
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                            aria-label="Close"></button>
+                                    </div>
+                                @endif
+                                <label for="email" class="form-label fw-bold small">Email Address *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0 text-muted" id="email-addon">
+                                        <i class="bi bi-envelope"></i>
+                                    </span>
+                                    <input type="email" class="form-control py-2 border-start-0 ps-0" id="email"
+                                        name="email" placeholder="name@example.com" aria-describedby="email-addon">
+                                </div>
+                                @error('email')
+                                    <div class="text-danger small mt-1">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-grid mb-3 mt-4">
+                                <button type="submit" class="btn btn-gold-action py-2 fw-bold">SEND RESET
+                                    LINK</button>
+                            </div>
+
+                            <!-- Back to Login Link -->
+                            <div class="text-center mt-4">
+                                <p class="small text-muted mb-0">Remember your password? <a
+                                        href="{{ url('login') }}"
+                                        class="text-memorial-accent fw-bold text-decoration-none"><i
+                                            class="bi bi-arrow-left me-1"></i> Back to Sign in</a></p>
+                            </div>
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
         </div>
-    </form>
-</x-guest-layout>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-memorial-dark text-white pt-5 pb-3 border-top border-secondary">
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="text-gold fw-bold mb-3"><i class="bi bi-fire me-1"></i> Forever Missed</h5>
+                    <p class="small text-light-tan leading-relaxed">
+                        A dignified digital platform dedicated to preserving legacies, connecting families, and honoring
+                        cherished memories forever.
+                    </p>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="text-gold fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled small d-flex flex-column gap-2 text-light-tan">
+                        <li><a href="{{ url('/') }}" class="text-light-tan text-decoration-none">Home</a></li>
+                        <li><a href="{{ url('/all_memories') }}"
+                                class="text-light-tan text-decoration-none">Memories</a></li>
+                        <li><a href="{{ url('/about') }}" class="text-light-tan text-decoration-none">About Us</a>
+                        </li>
+                        <li><a href="{{ url('/contact') }}" class="text-light-tan text-decoration-none">Contact
+                                Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="text-gold fw-bold mb-3">Contact Support</h6>
+                    <ul class="list-unstyled small d-flex flex-column gap-2 text-light-tan">
+                        <li><i class="bi bi-telephone-fill text-gold me-2"></i>+1 (800) 555-0199</li>
+                        <li><i class="bi bi-envelope-fill text-gold me-2"></i>support@forevermissed.com</li>
+                        <li><i class="bi bi-geo-alt-fill text-gold me-2"></i>Global Headquarters</li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="text-gold fw-bold mb-3">Follow Us</h6>
+                    <div class="d-flex gap-2">
+                        <a href="#" class="btn btn-outline-light btn-sm rounded-circle"
+                            aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="btn btn-outline-light btn-sm rounded-circle" aria-label="Twitter"><i
+                                class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="btn btn-outline-light btn-sm rounded-circle"
+                            aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-secondary">
+
+            <div class="text-center small text-white-50 pt-2">
+                <p class="mb-0">&copy; 2026 Forever Missed Memorial Directory. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

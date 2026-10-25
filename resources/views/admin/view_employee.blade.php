@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Directory & RBAC - Memorial Dashboard</title>
+    <title>All Employe - Memorial Dashboard</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -18,355 +18,1608 @@
 
     @include('admin.sidebar')
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Top Navbar -->
-        @include('admin.header')
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Navbar -->
+    @include('admin.header')
 
-        <!-- Page Body -->
-        <div class="container-fluid py-4 overflow-hidden">
-            
-            <!-- Section Header & Action -->
-            <div class="row align-items-center mb-4 g-3">
-                <div class="col-xl-8 col-lg-7 col-12">
-                    <h4 class="fw-bold text-dark m-0 font-serif">
-                        <i class="bi bi-people-fill text-warning me-2"></i> Staff Directory & RBAC
-                    </h4>
-                    <p class="text-muted small m-0">Provision, monitor, and regulate platform administrators and operational employees.</p>
-                </div>
-                <div class="col-xl-4 col-lg-5 col-12 text-lg-end">
-                    <a href="{{ route('admin.employees.create') }}" class="btn btn-warning text-dark fw-bold px-3 py-2 shadow-sm rounded-3">
-                        <i class="bi bi-person-plus-fill me-1"></i> Provision New Staff
-                    </a>
-                </div>
-            </div>
+            <!-- Page Body -->
+            <div class="container-fluid py-4 overflow-hidden">
+                
+                <!-- Section Header & Filter Bar Container -->
+                <div class="row align-items-center mb-4 g-3">
+                    <div class="col-xl-4 col-lg-4 col-12">
+                        <h4 class="fw-bold text-dark m-0 font-serif">
+                            <i class="bi bi-calendar-check text-warning me-2"></i> All Employes
+                        </h4>
+                        <p class="text-muted small m-0">View and manage all Employes' here.</p>
+                    </div>
 
-            <!-- Credentials Alert Banner (if newly created or reset) -->
-            @if(session('temporary_credentials'))
-                @php $creds = session('temporary_credentials'); @endphp
-                <div class="card border-0 shadow-sm rounded-4 bg-dark text-white mb-4">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-start justify-content-between flex-wrap gap-3">
-                            <div class="d-flex align-items-start gap-3">
-                                <div class="p-2 rounded-circle bg-warning text-dark">
-                                    <i class="bi bi-shield-lock-fill fs-4"></i>
-                                </div>
-                                <div>
-                                    <h5 class="fw-bold text-gold mb-1">Temporary Staff Credentials Generated</h5>
-                                    <p class="text-light small mb-2">
-                                        These credentials have been dispatched via queued notification to the user's email. You may also securely copy them now:
-                                    </p>
-                                    <div class="d-flex flex-wrap gap-2 align-items-center">
-                                        <span class="badge bg-secondary p-2">Email: <strong class="text-white">{{ $creds['email'] }}</strong></span>
-                                        <span class="badge bg-warning text-dark p-2 font-monospace">Password: <strong>{{ $creds['password'] }}</strong></span>
-                                        <span class="badge bg-info text-dark p-2">Role: {{ $creds['role'] }}</span>
-                                    </div>
+                    <!-- Custom Filter & Search Bar -->
+                    <div class="col-xl-8 col-lg-8 col-12">
+                        <div class="row g-2 justify-content-lg-end">
+                            <!-- Search Box -->
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                                <div class="input-group input-group-sm shadow-sm w-100">
+                                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0" placeholder="Search employe...">
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-sm btn-outline-warning" onclick="copyPasswordText('{{ $creds['password'] }}')">
-                                <i class="bi bi-clipboard me-1"></i> Copy Password
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            @endif
 
-            <!-- Standard Flash Notifications -->
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show shadow-sm rounded-3 mb-4" role="alert">
-                    <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
+                            <!-- Status Filter Dropdown -->
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="dropdown w-100">
+                                    <button class="btn btn-sm btn-white bg-white border w-100 d-flex justify-content-between align-items-center shadow-sm text-muted dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 0.85rem; padding: 6px 10px;">
+                                        <span>Filter Status</span>
+                                    </button>
+                                    <ul class="dropdown-menu w-100 shadow border-0" style="font-size: 0.85rem;">
+                                        <li><a class="dropdown-item py-1" href="#" data-value="">All Status</a></li>
+                                        <li><a class="dropdown-item py-1" href="#" data-value="approved">Approved</a></li>
+                                        <li><a class="dropdown-item py-1" href="#" data-value="pending">Pending</a></li>
+                                    </ul>
+                                </div>
+                            </div>
 
-            @if($errors->any())
-                <div class="alert alert-danger alert-dismissible fade show shadow-sm rounded-3 mb-4" role="alert">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ $errors->first() }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <!-- Privacy Filter Dropdown -->
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="dropdown w-100">
+                                    <button class="btn btn-sm btn-white bg-white border w-100 d-flex justify-content-between align-items-center shadow-sm text-muted dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 0.85rem; padding: 6px 10px;">
+                                        <span>Filter Employe</span>
+                                    </button>
+                                    <ul class="dropdown-menu w-100 shadow border-0" style="font-size: 0.85rem;">
+                                        <li><a class="dropdown-item py-1" href="#" data-value="">All Privacy</a></li>
+                                        <li><a class="dropdown-item py-1" href="#" data-value="public">manager  </a></li>
+                                        <li><a class="dropdown-item py-1" href="#" data-value="private"> co-admin</a></li>
+                                        <li><a class="dropdown-item py-1" href="#" data-value="private">moderator </a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            @endif
 
-            <!-- Staff Statistics Cards -->
-            <div class="row g-3 mb-4">
-                <div class="col-xl-3 col-sm-6 col-12">
-                    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="p-3 bg-primary-subtle text-primary rounded-4">
-                                <i class="bi bi-person-badge fs-4"></i>
-                            </div>
-                            <div>
-                                <small class="text-muted fw-semibold d-block">Total Staff</small>
-                                <h4 class="fw-bold text-dark m-0">{{ $stats['total'] ?? $employees->total() }}</h4>
-                            </div>
-                        </div>
+               
+                <!-- users Card Grid Section -->
+                <div class="row g-4">
+                    
+              <!-- Card Item 1 -->
+<div class="col-xxl-3 col-xl-4 col-md-6 col-12">
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 bg-white memory-card">
+
+        <!-- Profile Image -->
+        <div class="position-relative text-center pt-4 bg-light">
+
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?fit=crop&w=150&h=150"
+                 class="rounded-circle border border-3 border-white shadow-sm object-fit-cover"
+                 style="width: 90px; height: 90px;"
+                 alt="Profile Picture">
+
+            <!-- Status -->
+            <span class="badge bg-success position-absolute top-0 start-0 m-2 shadow-sm px-2 py-1">
+                <i class="bi bi-check-circle me-1"></i>
+                Active
+            </span>
+
+            <!-- Privacy -->
+            <!-- <span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2 shadow-sm px-2 py-1">
+                <i class="bi bi-globe me-1"></i>
+                Public
+            </span> -->
+
+        </div>
+
+
+        <!-- Card Body -->
+        <div class="card-body p-3 d-flex flex-column justify-content-between text-center">
+
+            <div>
+
+                <!-- User  Name -->
+                <h6 class="fw-bold text-dark mb-1 text-truncate">
+                    Late Lallan Writer
+                </h6>
+
+                <!-- Date -->
+                <!-- <p class="text-muted small mb-2">
+                    <i class="bi bi-calendar-event me-1 text-warning"></i>
+                    1945 - 2026
+                </p> -->
+
+                <!-- Location -->
+                <p class="text-muted small mb-3 text-truncate"
+                   style="font-size: 0.8rem;">
+                    <i class="bi bi-geo-alt me-1 text-danger"></i>
+                    Colombo, Sri Lanka
+                </p>
+
+
+                <!-- User Details -->
+                <div class="border-top border-bottom py-2 mb-3 text-start">
+
+                    <!-- Email -->
+                    <div class="d-flex align-items-center mb-2">
+
+                        <i class="bi bi-envelope text-primary  icon-user-card me-2"></i>
+
+                        <!-- <a href="mailto:lakshan@example.com"
+                           class="small text-decoration-none text-truncate"
+                           title="Send Email">
+                            lakshan@example.com
+                        </a> -->
+
+                        <a href="mailto:lakshan@example.com"
+   class="small text-decoration-none text-truncate text-user-card"
+   title="Send Email">
+    lakshan@example.com
+</a>
+
                     </div>
-                </div>
-                <div class="col-xl-3 col-sm-6 col-12">
-                    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="p-3 bg-info-subtle text-info rounded-4">
-                                <i class="bi bi-shield-check fs-4"></i>
-                            </div>
-                            <div>
-                                <small class="text-muted fw-semibold d-block">Administrators</small>
-                                <h4 class="fw-bold text-dark m-0">{{ $stats['admins'] ?? 0 }}</h4>
-                            </div>
-                        </div>
+
+                    <!-- Contact -->
+                    <div class="d-flex align-items-center">
+
+                        <i class="bi bi-telephone text-success  icon-user-card me-2"></i>
+
+                        <a href="tel:+94771234567"
+                           class="small text-decoration-none text-user-card"
+                           title="Call User ">
+                            +94 77 123 4567
+                        </a>
+
                     </div>
+
                 </div>
-                <div class="col-xl-3 col-sm-6 col-12">
-                    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="p-3 bg-warning-subtle text-warning rounded-4">
-                                <i class="bi bi-person-workspace fs-4"></i>
-                            </div>
-                            <div>
-                                <small class="text-muted fw-semibold d-block">Employees</small>
-                                <h4 class="fw-bold text-dark m-0">{{ $stats['employees'] ?? 0 }}</h4>
-                            </div>
-                        </div>
-                    </div>
+
+
+                <!-- Tributes -->
+                <div class="d-flex align-items-center justify-content-center mb-2">
+
+                    <span class="text-muted small"
+                          style="font-size: 0.75rem;">
+
+                        <i class=" text-danger me-1"></i>
+                     Account Settings 
+
+                    </span>
+
                 </div>
-                <div class="col-xl-3 col-sm-6 col-12">
-                    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="p-3 bg-success-subtle text-success rounded-4">
-                                <i class="bi bi-check-circle-fill fs-4"></i>
-                            </div>
-                            <div>
-                                <small class="text-muted fw-semibold d-block">Active Status</small>
-                                <h4 class="fw-bold text-dark m-0">{{ $stats['active'] ?? 0 }}</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
 
-            <!-- Filter & Search Bar Container -->
-            <div class="card border-0 shadow-sm rounded-4 bg-white p-3 mb-4">
-                <form method="GET" action="{{ route('admin.employees.index') }}" class="row g-2 align-items-center">
-                    <!-- Search Field -->
-                    <div class="col-lg-5 col-md-12">
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                            <input type="text" name="search" class="form-control border-start-0 ps-0"
-                                placeholder="Search by name or email..." value="{{ request('search') }}">
-                        </div>
-                    </div>
 
-                    <!-- Role Filter -->
-                    <div class="col-lg-3 col-md-4 col-6">
-                        <select name="role" class="form-select form-select-sm" onchange="this.form.submit()">
-                            <option value="">All Roles</option>
-                            <option value="Super Admin" {{ request('role') === 'Super Admin' ? 'selected' : '' }}>Super Admin</option>
-                            <option value="Admin" {{ request('role') === 'Admin' ? 'selected' : '' }}>Admin</option>
-                            <option value="Employee" {{ request('role') === 'Employee' ? 'selected' : '' }}>Employee</option>
-                        </select>
-                    </div>
+            <!-- Quick Actions -->
+            <div>
 
-                    <!-- Status Filter -->
-                    <div class="col-lg-3 col-md-4 col-6">
-                        <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
-                            <option value="">All Statuses</option>
-                            <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="suspended" {{ request('status') === 'suspended' ? 'selected' : '' }}>Suspended</option>
-                            <option value="banned" {{ request('status') === 'banned' ? 'selected' : '' }}>Banned</option>
-                        </select>
-                    </div>
+                <div class="d-flex flex-wrap gap-1 mb-2">
 
-                    <!-- Reset & Submit Buttons -->
-                    <div class="col-lg-1 col-md-4 col-12 d-flex gap-1">
-                        <button type="submit" class="btn btn-sm btn-dark w-100"><i class="bi bi-funnel"></i></button>
-                        @if(request()->hasAny(['search', 'role', 'status']))
-                            <a href="{{ route('admin.employees.index') }}" class="btn btn-sm btn-outline-secondary" title="Clear Filters">
-                                <i class="bi bi-arrow-counterclockwise"></i>
-                            </a>
-                        @endif
-                    </div>
-                </form>
-            </div>
+                    <button class="btn btn-xs btn-outline-success flex-fill py-1"
+                            style="font-size: 0.75rem;">
 
-            <!-- Staff Listing Table Card -->
-            <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light small text-muted text-uppercase">
-                            <tr>
-                                <th class="ps-4">Staff Member</th>
-                                <th>Role</th>
-                                <th>Assigned Permissions</th>
-                                <th>Account Status</th>
-                                <th>Joined</th>
-                                <th class="text-end pe-4">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="small">
-                            @forelse($employees as $emp)
-                                <tr>
-                                    <!-- User Avatar & Info -->
-                                    <td class="ps-4">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div class="rounded-circle bg-warning-subtle text-dark fw-bold d-flex align-items-center justify-content-center"
-                                                style="width: 42px; height: 42px; font-size: 0.95rem;">
-                                                {{ strtoupper(substr($emp->name, 0, 2)) }}
-                                            </div>
-                                            <div>
-                                                <div class="fw-bold text-dark">{{ $emp->name }}</div>
-                                                <div class="text-muted small">{{ $emp->email }}</div>
-                                                @if($emp->country || $emp->state)
-                                                    <span class="text-muted" style="font-size: 0.75rem;">
-                                                        <i class="bi bi-geo-alt"></i> {{ implode(', ', array_filter([$emp->state, $emp->country])) }}
-                                                    </span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </td>
+                        <i class="bi bi-check-lg"></i>
+                        Active 
 
-                                    <!-- Role -->
-                                    <td>
-                                        @php $roleName = $emp->roles->first()?->name ?? 'Staff'; @endphp
-                                        @if($roleName === 'Super Admin')
-                                            <span class="badge bg-purple text-white px-3 py-2 rounded-pill shadow-sm" style="background-color: #6f42c1;">
-                                                <i class="bi bi-stars me-1"></i> Super Admin
-                                            </span>
-                                        @elseif($roleName === 'Admin')
-                                            <span class="badge bg-primary text-white px-3 py-2 rounded-pill">
-                                                <i class="bi bi-shield-lock me-1"></i> Admin
-                                            </span>
-                                        @else
-                                            <span class="badge bg-info text-dark px-3 py-2 rounded-pill">
-                                                <i class="bi bi-person me-1"></i> Employee
-                                            </span>
-                                        @endif
-                                    </td>
+                    </button>
 
-                                    <!-- Permissions -->
-                                    <td>
-                                        @php
-                                            $directCount = $emp->permissions->count();
-                                            $totalPerms = $emp->getAllPermissions()->count();
-                                        @endphp
-                                        <div class="d-flex flex-wrap gap-1 align-items-center">
-                                            <span class="badge bg-light text-dark border">
-                                                {{ $totalPerms }} Total Capabilities
-                                            </span>
-                                            @if($directCount > 0)
-                                                <span class="badge bg-warning-subtle text-dark border">
-                                                    +{{ $directCount }} Custom Direct
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </td>
+                    <button class="btn btn-xs btn-outline-warning text-dark flex-fill py-1"
+                            style="font-size: 0.75rem;">
 
-                                    <!-- Status -->
-                                    <td>
-                                        @if($emp->isActive())
-                                            <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">
-                                                <i class="bi bi-check-circle-fill me-1"></i> Active
-                                            </span>
-                                        @elseif($emp->isSuspended())
-                                            <span class="badge bg-warning-subtle text-warning px-3 py-2 rounded-pill">
-                                                <i class="bi bi-pause-circle-fill me-1"></i> Suspended
-                                            </span>
-                                        @elseif($emp->isBanned())
-                                            <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill">
-                                                <i class="bi bi-x-circle-fill me-1"></i> Banned
-                                            </span>
-                                        @endif
-                                    </td>
+                        <i class="bi bi-x-lg"></i>
+                        Band 
 
-                                    <!-- Joined Date -->
-                                    <td class="text-muted">
-                                        {{ $emp->created_at?->format('M d, Y') ?? 'N/A' }}
-                                    </td>
+                    </button>
 
-                                    <!-- Actions -->
-                                    <td class="text-end pe-4">
-                                        <div class="dropdown">
-                                            <button class="btn btn-sm btn-light border dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                Actions
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2">
-                                                <li>
-                                                    <a class="dropdown-item py-1" href="{{ route('admin.employees.edit', $emp->id) }}">
-                                                        <i class="bi bi-pencil me-2 text-primary"></i> Edit Privileges
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <form method="POST" action="{{ route('admin.employees.resend_credentials', $emp->id) }}"
-                                                        onsubmit="return confirm('Generate and dispatch new temporary credentials to {{ $emp->email }}?');">
-                                                        @csrf
-                                                        <button type="submit" class="dropdown-item py-1">
-                                                            <i class="bi bi-send me-2 text-warning"></i> Reset & Email Password
-                                                        </button>
-                                                    </form>
-                                                </li>
-                                                @if($emp->id !== auth()->id() && !$emp->hasRole('Super Admin'))
-                                                    <li><hr class="dropdown-divider"></li>
-                                                    <li>
-                                                        <form method="POST" action="{{ route('admin.employees.destroy', $emp->id) }}"
-                                                            onsubmit="return confirm('Are you sure you want to permanently revoke and delete this staff account?');">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="dropdown-item py-1 text-danger">
-                                                                <i class="bi bi-trash me-2"></i> Revoke Account
-                                                            </button>
-                                                        </form>
-                                                    </li>
-                                                @endif
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="text-center py-5 text-muted">
-                                        <i class="bi bi-people display-6 d-block mb-2 text-muted"></i>
-                                        No staff accounts found matching your criteria.
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                    <button class="btn btn-xs btn-outline-danger flex-fill py-1"
+                            style="font-size: 0.75rem;">
+
+                        <i class="bi bi-trash"></i>
+                        Suspend
+
+                    </button>
+
                 </div>
 
-                <!-- Pagination -->
-                @if($employees->hasPages())
-                    <div class="card-footer bg-white py-3 px-4 border-top">
-                        {{ $employees->links('pagination::bootstrap-5') }}
+
+                <!-- Bottom -->
+                <div class="d-flex align-items-center justify-content-between border-top pt-2">
+
+                    <span class="text-muted small"
+                          style="font-size: 0.7rem;">
+                        ID: #MEM-001
+                    </span>
+
+
+                    <div class="d-flex gap-2">
+
+                        <!-- View Details -->
+                        <button type="button"
+                                class="btn btn-sm btn-light border text-primary rounded-circle d-flex align-items-center justify-content-center"
+                                style="width: 32px; height: 32px;"
+                                data-bs-toggle="modal"
+                                data-bs-target="#viewMemoryModal1"
+                                title="View Memory">
+
+                            <i class="bi bi-eye"></i>
+
+                        </button>
+
+
+                        <!-- Edit -->
+                        <a href="{{ url('admin/edit_employe') }}"
+                           class="btn btn-sm btn-light border text-warning rounded-circle d-flex align-items-center justify-content-center"
+                           style="width: 32px; height: 32px;"
+                           title="Edit Memory">
+
+                            <i class="bi bi-pencil-square"></i>
+
+                        </a>
+
                     </div>
-                @endif
+
+                </div>
+
             </div>
 
         </div>
 
-        <!-- Footer -->
-        <footer class="bg-memorial-dark text-white pt-5 pb-3 border-top border-secondary mt-5">
-            <div class="container">
-                <div class="row g-4 mb-4">
-                    <div class="col-lg-4 col-md-6">
-                        <h5 class="text-gold fw-bold mb-3"><i class="bi bi-fire me-1"></i> Forever Missed</h5>
-                        <p class="small text-light-tan leading-relaxed">
-                            A dignified digital platform dedicated to preserving legacies, connecting families, and honoring cherished memories forever.
-                        </p>
+    </div>
+</div>
+
+                    <!-- Card Item 2 -->
+
+                  <div class="col-xxl-3 col-xl-4 col-md-6 col-12">
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 bg-white memory-card">
+
+        <!-- Profile Image -->
+        <div class="position-relative text-center pt-4 bg-light">
+
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?fit=crop&w=150&h=150"
+                 class="rounded-circle border border-3 border-white shadow-sm object-fit-cover"
+                 style="width: 90px; height: 90px;"
+                 alt="Profile Picture">
+
+            <!-- Status -->
+            <span class="badge bg-success position-absolute top-0 start-0 m-2 shadow-sm px-2 py-1">
+                <i class="bi bi-check-circle me-1"></i>
+                Active
+            </span>
+
+            <!-- Privacy -->
+            <!-- <span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2 shadow-sm px-2 py-1">
+                <i class="bi bi-globe me-1"></i>
+                Public
+            </span> -->
+
+        </div>
+
+
+        <!-- Card Body -->
+        <div class="card-body p-3 d-flex flex-column justify-content-between text-center">
+
+            <div>
+
+                <!-- User  Name -->
+                <h6 class="fw-bold text-dark mb-1 text-truncate">
+                    Late Lallan Writer
+                </h6>
+
+                <!-- Date -->
+                <!-- <p class="text-muted small mb-2">
+                    <i class="bi bi-calendar-event me-1 text-warning"></i>
+                    1945 - 2026
+                </p> -->
+
+                <!-- Location -->
+                <p class="text-muted small mb-3 text-truncate"
+                   style="font-size: 0.8rem;">
+                    <i class="bi bi-geo-alt me-1 text-danger"></i>
+                    Colombo, Sri Lanka
+                </p>
+
+
+                <!-- User Details -->
+                <div class="border-top border-bottom py-2 mb-3 text-start">
+
+                    <!-- Email -->
+                    <div class="d-flex align-items-center mb-2">
+
+                        <i class="bi bi-envelope text-primary  icon-user-card me-2"></i>
+
+                        <!-- <a href="mailto:lakshan@example.com"
+                           class="small text-decoration-none text-truncate"
+                           title="Send Email">
+                            lakshan@example.com
+                        </a> -->
+
+                        <a href="mailto:lakshan@example.com"
+   class="small text-decoration-none text-truncate text-user-card"
+   title="Send Email">
+    lakshan@example.com
+</a>
+
                     </div>
+
+                    <!-- Contact -->
+                    <div class="d-flex align-items-center">
+
+                        <i class="bi bi-telephone text-success  icon-user-card me-2"></i>
+
+                        <a href="tel:+94771234567"
+                           class="small text-decoration-none text-user-card"
+                           title="Call User ">
+                            +94 77 123 4567
+                        </a>
+
+                    </div>
+
                 </div>
-                <div class="border-top border-secondary pt-3 text-center small text-light-tan">
-                    &copy; {{ date('Y') }} Memorial Portal. All rights reserved.
+
+
+                <!-- Tributes -->
+                <div class="d-flex align-items-center justify-content-center mb-2">
+
+                    <span class="text-muted small"
+                          style="font-size: 0.75rem;">
+
+                        <i class=" text-danger me-1"></i>
+                     Account Settings 
+
+                    </span>
+
                 </div>
+
             </div>
-        </footer>
+
+
+            <!-- Quick Actions -->
+            <div>
+
+                <div class="d-flex flex-wrap gap-1 mb-2">
+
+                    <button class="btn btn-xs btn-outline-success flex-fill py-1"
+                            style="font-size: 0.75rem;">
+
+                        <i class="bi bi-check-lg"></i>
+                        Active 
+
+                    </button>
+
+                    <button class="btn btn-xs btn-outline-warning text-dark flex-fill py-1"
+                            style="font-size: 0.75rem;">
+
+                        <i class="bi bi-x-lg"></i>
+                        Band 
+
+                    </button>
+
+                    <button class="btn btn-xs btn-outline-danger flex-fill py-1"
+                            style="font-size: 0.75rem;">
+
+                        <i class="bi bi-trash"></i>
+                        Suspend
+
+                    </button>
+
+                </div>
+
+
+                <!-- Bottom -->
+                <div class="d-flex align-items-center justify-content-between border-top pt-2">
+
+                    <span class="text-muted small"
+                          style="font-size: 0.7rem;">
+                        ID: #MEM-001
+                    </span>
+
+
+                    <div class="d-flex gap-2">
+
+                        <!-- View Details -->
+                        <button type="button"
+                                class="btn btn-sm btn-light border text-primary rounded-circle d-flex align-items-center justify-content-center"
+                                style="width: 32px; height: 32px;"
+                                data-bs-toggle="modal"
+                                data-bs-target="#viewMemoryModal1"
+                                title="View Memory">
+
+                            <i class="bi bi-eye"></i>
+
+                        </button>
+
+
+                        <!-- Edit -->
+                        <a href="#"
+                           class="btn btn-sm btn-light border text-warning rounded-circle d-flex align-items-center justify-content-center"
+                           style="width: 32px; height: 32px;"
+                           title="Edit Memory">
+
+                            <i class="bi bi-pencil-square"></i>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<div class="col-xxl-3 col-xl-4 col-md-6 col-12">
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 bg-white memory-card">
+
+        <!-- Profile Image -->
+        <div class="position-relative text-center pt-4 bg-light">
+
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?fit=crop&w=150&h=150"
+                 class="rounded-circle border border-3 border-white shadow-sm object-fit-cover"
+                 style="width: 90px; height: 90px;"
+                 alt="Profile Picture">
+
+            <!-- Status -->
+            <span class="badge bg-success position-absolute top-0 start-0 m-2 shadow-sm px-2 py-1">
+                <i class="bi bi-check-circle me-1"></i>
+                Active
+            </span>
+
+            <!-- Privacy -->
+            <!-- <span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2 shadow-sm px-2 py-1">
+                <i class="bi bi-globe me-1"></i>
+                Public
+            </span> -->
+
+        </div>
+
+
+        <!-- Card Body -->
+        <div class="card-body p-3 d-flex flex-column justify-content-between text-center">
+
+            <div>
+
+                <!-- User  Name -->
+                <h6 class="fw-bold text-dark mb-1 text-truncate">
+                    Late Lallan Writer
+                </h6>
+
+                <!-- Date -->
+                <!-- <p class="text-muted small mb-2">
+                    <i class="bi bi-calendar-event me-1 text-warning"></i>
+                    1945 - 2026
+                </p> -->
+
+                <!-- Location -->
+                <p class="text-muted small mb-3 text-truncate"
+                   style="font-size: 0.8rem;">
+                    <i class="bi bi-geo-alt me-1 text-danger"></i>
+                    Colombo, Sri Lanka
+                </p>
+
+
+                <!-- User Details -->
+                <div class="border-top border-bottom py-2 mb-3 text-start">
+
+                    <!-- Email -->
+                    <div class="d-flex align-items-center mb-2">
+
+                        <i class="bi bi-envelope text-primary  icon-user-card me-2"></i>
+
+                        <!-- <a href="mailto:lakshan@example.com"
+                           class="small text-decoration-none text-truncate"
+                           title="Send Email">
+                            lakshan@example.com
+                        </a> -->
+
+                        <a href="mailto:lakshan@example.com"
+   class="small text-decoration-none text-truncate text-user-card"
+   title="Send Email">
+    lakshan@example.com
+</a>
+
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="d-flex align-items-center">
+
+                        <i class="bi bi-telephone text-success  icon-user-card me-2"></i>
+
+                        <a href="tel:+94771234567"
+                           class="small text-decoration-none text-user-card"
+                           title="Call User ">
+                            +94 77 123 4567
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Tributes -->
+                <div class="d-flex align-items-center justify-content-center mb-2">
+
+                    <span class="text-muted small"
+                          style="font-size: 0.75rem;">
+
+                        <i class=" text-danger me-1"></i>
+                     Account Settings 
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Quick Actions -->
+            <div>
+
+                <div class="d-flex flex-wrap gap-1 mb-2">
+
+                    <button class="btn btn-xs btn-outline-success flex-fill py-1"
+                            style="font-size: 0.75rem;">
+
+                        <i class="bi bi-check-lg"></i>
+                        Active 
+
+                    </button>
+
+                    <button class="btn btn-xs btn-outline-warning text-dark flex-fill py-1"
+                            style="font-size: 0.75rem;">
+
+                        <i class="bi bi-x-lg"></i>
+                        Band 
+
+                    </button>
+
+                    <button class="btn btn-xs btn-outline-danger flex-fill py-1"
+                            style="font-size: 0.75rem;">
+
+                        <i class="bi bi-trash"></i>
+                        Suspend
+
+                    </button>
+
+                </div>
+
+
+                <!-- Bottom -->
+                <div class="d-flex align-items-center justify-content-between border-top pt-2">
+
+                    <span class="text-muted small"
+                          style="font-size: 0.7rem;">
+                        ID: #MEM-001
+                    </span>
+
+
+                    <div class="d-flex gap-2">
+
+                        <!-- View Details -->
+                        <button type="button"
+                                class="btn btn-sm btn-light border text-primary rounded-circle d-flex align-items-center justify-content-center"
+                                style="width: 32px; height: 32px;"
+                                data-bs-toggle="modal"
+                                data-bs-target="#viewMemoryModal1"
+                                title="View Memory">
+
+                            <i class="bi bi-eye"></i>
+
+                        </button>
+
+
+                        <!-- Edit -->
+                        <a href="#"
+                           class="btn btn-sm btn-light border text-warning rounded-circle d-flex align-items-center justify-content-center"
+                           style="width: 32px; height: 32px;"
+                           title="Edit Memory">
+
+                            <i class="bi bi-pencil-square"></i>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<div class="col-xxl-3 col-xl-4 col-md-6 col-12">
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 bg-white memory-card">
+
+        <!-- Profile Image -->
+        <div class="position-relative text-center pt-4 bg-light">
+
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?fit=crop&w=150&h=150"
+                 class="rounded-circle border border-3 border-white shadow-sm object-fit-cover"
+                 style="width: 90px; height: 90px;"
+                 alt="Profile Picture">
+
+            <!-- Status -->
+            <span class="badge bg-success position-absolute top-0 start-0 m-2 shadow-sm px-2 py-1">
+                <i class="bi bi-check-circle me-1"></i>
+                Active
+            </span>
+
+            <!-- Privacy -->
+            <!-- <span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2 shadow-sm px-2 py-1">
+                <i class="bi bi-globe me-1"></i>
+                Public
+            </span> -->
+
+        </div>
+
+
+        <!-- Card Body -->
+        <div class="card-body p-3 d-flex flex-column justify-content-between text-center">
+
+            <div>
+
+                <!-- User  Name -->
+                <h6 class="fw-bold text-dark mb-1 text-truncate">
+                    Late Lallan Writer
+                </h6>
+
+                <!-- Date -->
+                <!-- <p class="text-muted small mb-2">
+                    <i class="bi bi-calendar-event me-1 text-warning"></i>
+                    1945 - 2026
+                </p> -->
+
+                <!-- Location -->
+                <p class="text-muted small mb-3 text-truncate"
+                   style="font-size: 0.8rem;">
+                    <i class="bi bi-geo-alt me-1 text-danger"></i>
+                    Colombo, Sri Lanka
+                </p>
+
+
+                <!-- User Details -->
+                <div class="border-top border-bottom py-2 mb-3 text-start">
+
+                    <!-- Email -->
+                    <div class="d-flex align-items-center mb-2">
+
+                        <i class="bi bi-envelope text-primary  icon-user-card me-2"></i>
+
+                        <!-- <a href="mailto:lakshan@example.com"
+                           class="small text-decoration-none text-truncate"
+                           title="Send Email">
+                            lakshan@example.com
+                        </a> -->
+
+                        <a href="mailto:lakshan@example.com"
+   class="small text-decoration-none text-truncate text-user-card"
+   title="Send Email">
+    lakshan@example.com
+</a>
+
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="d-flex align-items-center">
+
+                        <i class="bi bi-telephone text-success  icon-user-card me-2"></i>
+
+                        <a href="tel:+94771234567"
+                           class="small text-decoration-none text-user-card"
+                           title="Call User ">
+                            +94 77 123 4567
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Tributes -->
+                <div class="d-flex align-items-center justify-content-center mb-2">
+
+                    <span class="text-muted small"
+                          style="font-size: 0.75rem;">
+
+                        <i class=" text-danger me-1"></i>
+                     Account Settings 
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Quick Actions -->
+            <div>
+
+                <div class="d-flex flex-wrap gap-1 mb-2">
+
+                    <button class="btn btn-xs btn-outline-success flex-fill py-1"
+                            style="font-size: 0.75rem;">
+
+                        <i class="bi bi-check-lg"></i>
+                        Active 
+
+                    </button>
+
+                    <button class="btn btn-xs btn-outline-warning text-dark flex-fill py-1"
+                            style="font-size: 0.75rem;">
+
+                        <i class="bi bi-x-lg"></i>
+                        Band 
+
+                    </button>
+
+                    <button class="btn btn-xs btn-outline-danger flex-fill py-1"
+                            style="font-size: 0.75rem;">
+
+                        <i class="bi bi-trash"></i>
+                        Suspend
+
+                    </button>
+
+                </div>
+
+
+                <!-- Bottom -->
+                <div class="d-flex align-items-center justify-content-between border-top pt-2">
+
+                    <span class="text-muted small"
+                          style="font-size: 0.7rem;">
+                        ID: #MEM-001
+                    </span>
+
+
+                    <div class="d-flex gap-2">
+
+                        <!-- View Details -->
+                        <button type="button"
+                                class="btn btn-sm btn-light border text-primary rounded-circle d-flex align-items-center justify-content-center"
+                                style="width: 32px; height: 32px;"
+                                data-bs-toggle="modal"
+                                data-bs-target="#viewMemoryModal1"
+                                title="View Memory">
+
+                            <i class="bi bi-eye"></i>
+
+                        </button>
+
+
+                        <!-- Edit -->
+                        <a href="#"
+                           class="btn btn-sm btn-light border text-warning rounded-circle d-flex align-items-center justify-content-center"
+                           style="width: 32px; height: 32px;"
+                           title="Edit Memory">
+
+                            <i class="bi bi-pencil-square"></i>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="col-xxl-3 col-xl-4 col-md-6 col-12">
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 bg-white memory-card">
+
+        <!-- Profile Image -->
+        <div class="position-relative text-center pt-4 bg-light">
+
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?fit=crop&w=150&h=150"
+                 class="rounded-circle border border-3 border-white shadow-sm object-fit-cover"
+                 style="width: 90px; height: 90px;"
+                 alt="Profile Picture">
+
+            <!-- Status -->
+            <span class="badge bg-success position-absolute top-0 start-0 m-2 shadow-sm px-2 py-1">
+                <i class="bi bi-check-circle me-1"></i>
+                Active
+            </span>
+
+            <!-- Privacy -->
+            <!-- <span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2 shadow-sm px-2 py-1">
+                <i class="bi bi-globe me-1"></i>
+                Public
+            </span> -->
+
+        </div>
+
+
+        <!-- Card Body -->
+        <div class="card-body p-3 d-flex flex-column justify-content-between text-center">
+
+            <div>
+
+                <!-- User  Name -->
+                <h6 class="fw-bold text-dark mb-1 text-truncate">
+                    Late Lallan Writer
+                </h6>
+
+                <!-- Date -->
+                <!-- <p class="text-muted small mb-2">
+                    <i class="bi bi-calendar-event me-1 text-warning"></i>
+                    1945 - 2026
+                </p> -->
+
+                <!-- Location -->
+                <p class="text-muted small mb-3 text-truncate"
+                   style="font-size: 0.8rem;">
+                    <i class="bi bi-geo-alt me-1 text-danger"></i>
+                    Colombo, Sri Lanka
+                </p>
+
+
+                <!-- User Details -->
+                <div class="border-top border-bottom py-2 mb-3 text-start">
+
+                    <!-- Email -->
+                    <div class="d-flex align-items-center mb-2">
+
+                        <i class="bi bi-envelope text-primary  icon-user-card me-2"></i>
+
+                        <!-- <a href="mailto:lakshan@example.com"
+                           class="small text-decoration-none text-truncate"
+                           title="Send Email">
+                            lakshan@example.com
+                        </a> -->
+
+                        <a href="mailto:lakshan@example.com"
+   class="small text-decoration-none text-truncate text-user-card"
+   title="Send Email">
+    lakshan@example.com
+</a>
+
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="d-flex align-items-center">
+
+                        <i class="bi bi-telephone text-success  icon-user-card me-2"></i>
+
+                        <a href="tel:+94771234567"
+                           class="small text-decoration-none text-user-card"
+                           title="Call User ">
+                            +94 77 123 4567
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Tributes -->
+                <div class="d-flex align-items-center justify-content-center mb-2">
+
+                    <span class="text-muted small"
+                          style="font-size: 0.75rem;">
+
+                        <i class=" text-danger me-1"></i>
+                     Account Settings 
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Quick Actions -->
+            <div>
+
+                <div class="d-flex flex-wrap gap-1 mb-2">
+
+                    <button class="btn btn-xs btn-outline-success flex-fill py-1"
+                            style="font-size: 0.75rem;">
+
+                        <i class="bi bi-check-lg"></i>
+                        Active 
+
+                    </button>
+
+                    <button class="btn btn-xs btn-outline-warning text-dark flex-fill py-1"
+                            style="font-size: 0.75rem;">
+
+                        <i class="bi bi-x-lg"></i>
+                        Band 
+
+                    </button>
+
+                    <button class="btn btn-xs btn-outline-danger flex-fill py-1"
+                            style="font-size: 0.75rem;">
+
+                        <i class="bi bi-trash"></i>
+                        Suspend
+
+                    </button>
+
+                </div>
+
+
+                <!-- Bottom -->
+                <div class="d-flex align-items-center justify-content-between border-top pt-2">
+
+                    <span class="text-muted small"
+                          style="font-size: 0.7rem;">
+                        ID: #MEM-001
+                    </span>
+
+
+                    <div class="d-flex gap-2">
+
+                        <!-- View Details -->
+                        <button type="button"
+                                class="btn btn-sm btn-light border text-primary rounded-circle d-flex align-items-center justify-content-center"
+                                style="width: 32px; height: 32px;"
+                                data-bs-toggle="modal"
+                                data-bs-target="#viewMemoryModal1"
+                                title="View Memory">
+
+                            <i class="bi bi-eye"></i>
+
+                        </button>
+
+
+                        <!-- Edit -->
+                        <a href="#"
+                           class="btn btn-sm btn-light border text-warning rounded-circle d-flex align-items-center justify-content-center"
+                           style="width: 32px; height: 32px;"
+                           title="Edit Memory">
+
+                            <i class="bi bi-pencil-square"></i>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="col-xxl-3 col-xl-4 col-md-6 col-12">
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 bg-white memory-card">
+
+        <!-- Profile Image -->
+        <div class="position-relative text-center pt-4 bg-light">
+
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?fit=crop&w=150&h=150"
+                 class="rounded-circle border border-3 border-white shadow-sm object-fit-cover"
+                 style="width: 90px; height: 90px;"
+                 alt="Profile Picture">
+
+            <!-- Status -->
+            <span class="badge bg-success position-absolute top-0 start-0 m-2 shadow-sm px-2 py-1">
+                <i class="bi bi-check-circle me-1"></i>
+                Active
+            </span>
+
+            <!-- Privacy -->
+            <!-- <span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2 shadow-sm px-2 py-1">
+                <i class="bi bi-globe me-1"></i>
+                Public
+            </span> -->
+
+        </div>
+
+
+        <!-- Card Body -->
+        <div class="card-body p-3 d-flex flex-column justify-content-between text-center">
+
+            <div>
+
+                <!-- User  Name -->
+                <h6 class="fw-bold text-dark mb-1 text-truncate">
+                    Late Lallan Writer
+                </h6>
+
+                <!-- Date -->
+                <!-- <p class="text-muted small mb-2">
+                    <i class="bi bi-calendar-event me-1 text-warning"></i>
+                    1945 - 2026
+                </p> -->
+
+                <!-- Location -->
+                <p class="text-muted small mb-3 text-truncate"
+                   style="font-size: 0.8rem;">
+                    <i class="bi bi-geo-alt me-1 text-danger"></i>
+                    Colombo, Sri Lanka
+                </p>
+
+
+                <!-- User Details -->
+                <div class="border-top border-bottom py-2 mb-3 text-start">
+
+                    <!-- Email -->
+                    <div class="d-flex align-items-center mb-2">
+
+                        <i class="bi bi-envelope text-primary  icon-user-card me-2"></i>
+
+                        <!-- <a href="mailto:lakshan@example.com"
+                           class="small text-decoration-none text-truncate"
+                           title="Send Email">
+                            lakshan@example.com
+                        </a> -->
+
+                        <a href="mailto:lakshan@example.com"
+   class="small text-decoration-none text-truncate text-user-card"
+   title="Send Email">
+    lakshan@example.com
+</a>
+
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="d-flex align-items-center">
+
+                        <i class="bi bi-telephone text-success  icon-user-card me-2"></i>
+
+                        <a href="tel:+94771234567"
+                           class="small text-decoration-none text-user-card"
+                           title="Call User ">
+                            +94 77 123 4567
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Tributes -->
+                <div class="d-flex align-items-center justify-content-center mb-2">
+
+                    <span class="text-muted small"
+                          style="font-size: 0.75rem;">
+
+                        <i class=" text-danger me-1"></i>
+                     Account Settings 
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Quick Actions -->
+            <div>
+
+                <div class="d-flex flex-wrap gap-1 mb-2">
+
+                    <button class="btn btn-xs btn-outline-success flex-fill py-1"
+                            style="font-size: 0.75rem;">
+
+                        <i class="bi bi-check-lg"></i>
+                        Active 
+
+                    </button>
+
+                    <button class="btn btn-xs btn-outline-warning text-dark flex-fill py-1"
+                            style="font-size: 0.75rem;">
+
+                        <i class="bi bi-x-lg"></i>
+                        Band 
+
+                    </button>
+
+                    <button class="btn btn-xs btn-outline-danger flex-fill py-1"
+                            style="font-size: 0.75rem;">
+
+                        <i class="bi bi-trash"></i>
+                        Suspend
+
+                    </button>
+
+                </div>
+
+
+                <!-- Bottom -->
+                <div class="d-flex align-items-center justify-content-between border-top pt-2">
+
+                    <span class="text-muted small"
+                          style="font-size: 0.7rem;">
+                        ID: #MEM-001
+                    </span>
+
+
+                    <div class="d-flex gap-2">
+
+                        <!-- View Details -->
+                        <button type="button"
+                                class="btn btn-sm btn-light border text-primary rounded-circle d-flex align-items-center justify-content-center"
+                                style="width: 32px; height: 32px;"
+                                data-bs-toggle="modal"
+                                data-bs-target="#viewMemoryModal1"
+                                title="View Memory">
+
+                            <i class="bi bi-eye"></i>
+
+                        </button>
+
+
+                        <!-- Edit -->
+                        <a href="#"
+                           class="btn btn-sm btn-light border text-warning rounded-circle d-flex align-items-center justify-content-center"
+                           style="width: 32px; height: 32px;"
+                           title="Edit Memory">
+
+                            <i class="bi bi-pencil-square"></i>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+</div>
+</div>
+
+
+<!-- Pagination Container -->
+<div class="row mt-4">
+    <div class="col-12 d-flex justify-content-center">
+        <nav aria-label="Page navigation">
+            <ul class="pagination custom-pagination shadow-sm">
+                
+                <!-- Previous Button -->
+                <li class="page-item">
+                    <a class="page-link rounded-start-pill px-3" href="#">
+                        <i class="bi bi-chevron-left me-1"></i> Previous
+                    </a>
+                </li>
+
+                <!-- Page Numbers -->
+                <li class="page-item active">
+                    <a class="page-link" href="#">1</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="#">2</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="#">3</a>
+                </li>
+
+                <!-- Next Button -->
+                <li class="page-item">
+                    <a class="page-link rounded-end-pill px-3" href="#">
+                        Next <i class="bi bi-chevron-right ms-1"></i>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+<!-- Footer -->
+<footer class="bg-memorial-dark text-white pt-5 pb-3 border-top border-secondary">
+  <div class="container">
+    <div class="row g-4 mb-4">
+      <div class="col-lg-4 col-md-6">
+        <h5 class="text-gold fw-bold mb-3"><i class="bi bi-fire me-1"></i> Forever Missed</h5>
+        <p class="small text-light-tan leading-relaxed">
+          A dignified digital platform dedicated to preserving legacies, connecting families, and honoring cherished memories forever.
+        </p>
+      </div>
+
+      <div class="col-lg-2 col-md-6">
+        <h6 class="text-gold fw-bold mb-3">Quick Links</h6>
+        <ul class="list-unstyled small d-flex flex-column gap-2 text-light-tan">
+          <li><a href="{{ url('admin/index') }}" class="text-light-tan text-decoration-none">Home</a></li>
+          <li><a href="{{ url('admin/all_memories') }}" class="text-light-tan text-decoration-none">Memories</a></li>
+          <li><a href="{{ url('admin/about') }}" class="text-light-tan text-decoration-none">About Us</a></li>
+          <li><a href="{{ url('admin/contact') }}" class="text-light-tan text-decoration-none">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <h6 class="text-gold fw-bold mb-3">Contact Support</h6>
+        <ul class="list-unstyled small d-flex flex-column gap-2 text-light-tan">
+          <li><i class="bi bi-telephone-fill text-gold me-2"></i>+1 (800) 555-0199</li>
+          <li><i class="bi bi-envelope-fill text-gold me-2"></i>support@forevermissed.com</li>
+          <li><i class="bi bi-geo-alt-fill text-gold me-2"></i>Global Headquarters</li>
+        </ul>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <h6 class="text-gold fw-bold mb-3">Follow Us</h6>
+        <div class="d-flex gap-2">
+          <a href="#" class="btn btn-outline-light btn-sm rounded-circle footer-social-btn"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="btn btn-outline-light btn-sm rounded-circle footer-social-btn"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" class="btn btn-outline-light btn-sm rounded-circle footer-social-btn"><i class="bi bi-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <hr class="border-secondary">
+
+    <div class="text-center small text-white-50 pt-2">
+      <p class="mb-0">&copy; 2026 Forever Missed Memorial Directory. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+        </div>
+    </div>
+
+
+
+
+        <!-- =====================================================
+     VIEW  DETAILS MODAL
+====================================================== -->
+
+<div class="modal fade"
+     id="viewMemoryModal1"
+     tabindex="-1"
+     aria-labelledby="viewMemoryModalLabel1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+
+
+            <!-- Modal Header -->
+            <div class="modal-header bg-light border-0">
+
+                <div>
+                    <h5 class="modal-title font-serif text-brown fw-bold"
+                        id="viewMemoryModalLabel1">
+
+                        <i class="bi bi-person-vcard me-2 text-warning"></i>
+                        Memorial Details
+
+                    </h5>
+
+                    <small class="text-muted">
+                        Memory ID: #MEM-001
+                    </small>
+                </div>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+
+            </div>
+
+
+            <!-- Modal Body -->
+            <div class="modal-body p-4">
+
+                <!-- Profile -->
+                <div class="text-center mb-4">
+
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?fit=crop&w=300&h=300"
+                         class="rounded-circle border border-4 border-warning shadow"
+                         style="width: 120px; height: 120px; object-fit: cover;"
+                         alt="Profile">
+
+                    <h5 class="fw-bold text-dark mt-3 mb-1">
+                        Late Lallan Writer
+                    </h5>
+
+                    <span class="badge bg-success">
+                        <i class="bi bi-check-circle me-1"></i>
+                        Active
+                    </span>
+
+                    <span class="badge bg-dark ms-1">
+                        <i class="bi bi-globe me-1"></i>
+                        Approved
+                    </span>
+
+                </div>
+
+
+                <!-- User Information -->
+                <div class="card border-0 bg-light rounded-3 mb-3">
+
+                    <div class="card-body">
+
+                        <h6 class="fw-bold text-brown mb-3">
+                            <i class="bi bi-person-badge me-2"></i>
+                            User Information
+                        </h6>
+
+
+                        <div class="row g-3">
+
+                            <!-- Name -->
+                            <div class="col-md-6">
+
+                                <div class="small text-muted mb-1">
+                                    User Name
+                                </div>
+
+                                <div class="fw-semibold">
+                                    <i class="bi bi-person me-2 text-primary"></i>
+                                    M.A.N. Lakshan
+                                </div>
+
+                            </div>
+
+
+                            <!-- Email -->
+                            <div class="col-md-6">
+
+                                <div class="small text-muted mb-1">
+                                    Email Address
+                                </div>
+
+                                <a href="mailto:lakshan@example.com"
+                                   class="fw-semibold text-primary text-decoration-none">
+
+                                    <i class="bi bi-envelope me-2"></i>
+                                    lakshan@example.com
+
+                                </a>
+
+                            </div>
+
+
+                            <!-- Contact -->
+                            <div class="col-md-6">
+
+                                <div class="small text-muted mb-1">
+                                    Contact Number
+                                </div>
+
+                                <a href="tel:+94771234567"
+                                   class="fw-semibold text-success text-decoration-none">
+
+                                    <i class="bi bi-telephone me-2"></i>
+                                    +94 77 123 4567
+
+                                </a>
+
+                            </div>
+
+
+                            <!-- Joined -->
+                            <div class="col-md-6">
+
+                                <div class="small text-muted mb-1">
+                                    Joined Date
+                                </div>
+
+                                <div class="fw-semibold">
+                                    <i class="bi bi-calendar3 me-2 text-warning"></i>
+                                    02 June 2026
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Memorial Information -->
+                <div class="card border-0 bg-light rounded-3 mb-3">
+
+                    <div class="card-body">
+
+                        <h6 class="fw-bold text-brown mb-3">
+                            <i class="bi bi-heart me-2 text-danger"></i>
+                            Memorial Information
+                        </h6>
+
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+
+                                <small class="text-muted d-block">
+                                    Full Name
+                                </small>
+
+                                <strong>
+                                    Late Lallan Writer
+                                </strong>
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <small class="text-muted d-block">
+                                    Life Period
+                                </small>
+
+                                <strong>
+                                    1945 - 2026
+                                </strong>
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <small class="text-muted d-block">
+                                    Location
+                                </small>
+
+                                <strong>
+                                    <i class="bi bi-geo-alt text-danger me-1"></i>
+                                    Colombo, Sri Lanka
+                                </strong>
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <small class="text-muted d-block">
+                                    Tributes
+                                </small>
+
+                                <strong class="text-success">
+                                    <i class="bi bi-heart-fill me-1"></i>
+                                    Open
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Account / Privacy -->
+                <div class="card border-0 bg-light rounded-3">
+
+                    <div class="card-body">
+
+                        <h6 class="fw-bold text-brown mb-3">
+                            <i class="bi bi-shield-lock me-2"></i>
+                            Account & Privacy
+                        </h6>
+
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+
+                                <small class="text-muted d-block">
+                                    Visibility
+                                </small>
+
+                                <span class="badge bg-dark">
+                                    <i class="bi bi-globe me-1"></i>
+                                    Approved 
+                                </span>
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <small class="text-muted d-block">
+                                    Publication Status
+                                </small>
+
+                                <span class="badge bg-success">
+                                    Published
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Modal Footer -->
+            <div class="modal-footer border-0 bg-light">
+
+                <!-- Email User -->
+                <a href="mailto:lakshan@example.com"
+                   class="btn btn-outline-primary">
+
+                    <i class="bi bi-envelope me-1"></i>
+                    Email User
+
+                </a>
+
+
+                <!-- Call User -->
+                <a href="tel:+94771234567"
+                   class="btn btn-outline-success">
+
+                    <i class="bi bi-telephone me-1"></i>
+                    Call User
+
+                </a>
+
+
+                <button type="button"
+                        class="btn btn-dark"
+                        data-bs-dismiss="modal">
+
+                    Close
+
+                </button>
+
+            </div>
+
+        </div>
 
     </div>
 
-    <!-- Bootstrap 5 JS -->
+</div>
+
+
+
+    <!-- Bootstrap 5 JS and Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+       <!--mobile slidebr script  -->
     <script>
-        function copyPasswordText(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Temporary password copied to clipboard!');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        if(sidebarToggle) {
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('show');
+                sidebarOverlay.classList.toggle('show');
             });
         }
+
+        if(sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', () => {
+                sidebar.classList.remove('show');
+                sidebarOverlay.classList.remove('show');
+            });
+        }
+
+        // Force initialize default active tab securely
+        document.addEventListener('DOMContentLoaded', function () {
+            const defaultTabEl = document.querySelector('#memorialTabs a[href="#tab-basic"]');
+            if (defaultTabEl) {
+                const tab = new bootstrap.Tab(defaultTabEl);
+                tab.show();
+            }
+        });
     </script>
+    
 </body>
 </html>

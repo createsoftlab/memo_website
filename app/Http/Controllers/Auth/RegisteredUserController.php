@@ -40,20 +40,12 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'registration_ip' => $request->ip(),
-            'status' => User::STATUS_ACTIVE,
-            'role' => 'General User',
-            'is_memory_creator' => false,
         ]);
-
-        if (\Spatie\Permission\Models\Role::where('name', 'General User')->exists()) {
-            $user->assignRole('General User');
-        }
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('admin.dashboard', absolute: false));
+        return redirect(route('dashboard', absolute: false));
     }
 }

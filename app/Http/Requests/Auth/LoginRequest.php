@@ -50,19 +50,6 @@ class LoginRequest extends FormRequest
             ]);
         }
 
-        $user = Auth::user();
-        if ($user && ! $user->isActive()) {
-            $status = $user->status;
-            Auth::guard('web')->logout();
-            $message = $status === 'banned'
-                ? 'Your account has been permanently banned. Access is denied.'
-                : 'Your account is currently suspended. Please contact support.';
-
-            throw ValidationException::withMessages([
-                'email' => $message,
-            ]);
-        }
-
         RateLimiter::clear($this->throttleKey());
     }
 

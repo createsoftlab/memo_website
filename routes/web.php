@@ -1,9 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\EventController;
-use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -17,96 +15,37 @@ require __DIR__.'/auth.php';
 
 /*
 |--------------------------------------------------------------------------
-| Frontend / Public Routes
+| Dashboard & Profile Routes (Breeze / Default)
 |--------------------------------------------------------------------------
 */
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/about', [HomeController::class, 'about'])->name('home.about');
-Route::get('/all_memories', [HomeController::class, 'allMemories'])->name('home.all_memories');
-Route::get('/card', [HomeController::class, 'card'])->name('home.card');
-Route::get('/contact', [HomeController::class, 'contact'])->name('home.contact');
-Route::get('/create_memory', [HomeController::class, 'createMemory'])->name('home.create_memory');
-Route::get('/donation_form', [HomeController::class, 'donationForm'])->name('home.donation_form');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/memories_donation', [HomeController::class, 'memoriesDonation'])->name('home.memories_donation');
-Route::get('/memories_event', [HomeController::class, 'memoriesEvent'])->name('home.memories_event');
-Route::get('/memories_gallery', [HomeController::class, 'memoriesGallery'])->name('home.memories_gallery');
-Route::get('/memories_index', [HomeController::class, 'memoriesIndex'])->name('home.memories_index');
-Route::get('/memories_life', [HomeController::class, 'memoriesLife'])->name('home.memories_life');
-Route::get('/memories_stories', [HomeController::class, 'memoriesStories'])->name('home.memories_stories');
-Route::get('/memories_timeline', [HomeController::class, 'memoriesTimeline'])->name('home.memories_timeline');
-Route::get('/pricing', [HomeController::class, 'pricing'])->name('home.pricing');
-
-// Auth helper routes
-Route::get('/reset_password', [HomeController::class, 'resetPassword'])->name('home.reset_password');
-Route::get('/forgot_password', [HomeController::class, 'forgotPassword'])->name('home.forgot_password');
+// Route::middleware('auth')->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// });
 
 /*
 |--------------------------------------------------------------------------
-| Protected Admin & Dashboard Routes
-| All routes require active authenticated status via EnsureAccountIsActive
+| Admin Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'account.active'])->prefix('admin')->name('admin.')->group(function () {
-
-    // General Staff Dashboard (Super Admin, Admin, Employee)
+Route::prefix('admin')->name('admin.')->group(function () {
+    // Landing / Dashboard Routes
+    // Route::get('/', [AdminController::class, 'dashboard'])->name('index'); 
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    // Route::get('/dashbord_index', [AdminController::class, 'dashbordIndex'])->name('dashbord_index');
+    // Route::get('/dashbord-index', [AdminController::class, 'dashbordIndex'])->name('dashbord-index');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Super Admin - Admin & Employee Provisioning
-    | Protected by Super Admin role or manage-admins permission
-    |--------------------------------------------------------------------------
-    */
-    Route::middleware(['permission:manage-admins'])->group(function () {
-        Route::get('/employees', [AdminUserController::class, 'index'])->name('employees.index');
-        Route::get('/employees/create', [AdminUserController::class, 'create'])->name('employees.create');
-        Route::post('/employees', [AdminUserController::class, 'store'])->name('employees.store');
-        Route::get('/employees/{employee}/edit', [AdminUserController::class, 'edit'])->name('employees.edit');
-        Route::put('/employees/{employee}', [AdminUserController::class, 'update'])->name('employees.update');
-        Route::delete('/employees/{employee}', [AdminUserController::class, 'destroy'])->name('employees.destroy');
-        Route::post('/employees/{employee}/resend-credentials', [AdminUserController::class, 'resendCredentials'])->name('employees.resend_credentials');
+    // Employee Management
+    Route::get('/add_employee', [AdminController::class, 'addEmployee'])->name('add_employee');
+    Route::get('/edit_employee', [AdminController::class, 'editEmployee'])->name('edit_employee');
+    Route::get('/view_employee', [AdminController::class, 'viewEmployee'])->name('view_employee');
 
-        // Backward compatibility route aliases
-        Route::get('/add_employee', [AdminUserController::class, 'create'])->name('add_employee');
-        Route::get('/edit_employee', function () {
-            $first = \App\Models\User::staff()->where('id', '!=', auth()->id())->first() ?? auth()->user();
-            return redirect()->route('admin.employees.edit', $first->id);
-        })->name('edit_employee');
-        Route::get('/view_employee', [AdminUserController::class, 'index'])->name('view_employee');
-    });
-
-    /*
-    |--------------------------------------------------------------------------
-    | User Management & Moderation
-    | Protected by view-users / moderate-users permissions
-    |--------------------------------------------------------------------------
-    */
-    Route::middleware(['permission:view-users'])->group(function () {
-        Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
-        Route::get('/all_users', [UserManagementController::class, 'index'])->name('all_users');
-    });
-
-    Route::middleware(['permission:moderate-users'])->group(function () {
-        Route::patch('/users/{user}/status', [UserManagementController::class, 'updateStatus'])->name('users.status');
-        Route::post('/users/{user}/toggle-memory-creator', [UserManagementController::class, 'toggleMemoryCreator'])->name('users.toggle_memory_creator');
-        Route::delete('/users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
-    });
-
-    /*
-    |--------------------------------------------------------------------------
-    | Authenticated User Profile & Security Self-Service
-    |--------------------------------------------------------------------------
-    */
-    Route::get('/profile_settings', [ProfileController::class, 'settings'])->name('profile_settings');
-    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
-
-    /*
-    |--------------------------------------------------------------------------
-    | Events Management
-    |--------------------------------------------------------------------------
-    */
+    // Events Management
     Route::prefix('events')->name('events.')->group(function () {
         Route::get('/all', [EventController::class, 'allEvents'])->name('all');
         Route::get('/my', [EventController::class, 'myEvents'])->name('my');
@@ -130,30 +69,51 @@ Route::middleware(['auth', 'account.active'])->prefix('admin')->name('admin.')->
     })->name('edit_my_event');
     Route::get('/view_my_event', [AdminController::class, 'viewMyEvent'])->name('view_my_event');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Memories Management
-    |--------------------------------------------------------------------------
-    */
+    // Memories Management
     Route::get('/all_memories', [AdminController::class, 'allMemories'])->name('all_memories');
     Route::get('/create_memory', [AdminController::class, 'createMemory'])->name('create_memory');
     Route::get('/edit_memory', [AdminController::class, 'editMemory'])->name('edit_memory');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Packages & Payments
-    |--------------------------------------------------------------------------
-    */
+    // Users Management
+    Route::get('/all_users', [AdminController::class, 'allUsers'])->name('all_users');
+
+    // Packages Management
     Route::get('/my_package', [AdminController::class, 'myPackage'])->name('my_package');
     Route::get('/create_package', [AdminController::class, 'createPackage'])->name('create_package');
     Route::get('/view_pakages', [AdminController::class, 'viewPakages'])->name('view_pakages');
-    Route::get('/payments', [AdminController::class, 'payments'])->name('payments');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Communications & Reports
-    |--------------------------------------------------------------------------
-    */
+    // Other Admin Modules
     Route::get('/bulkemail', [AdminController::class, 'bulkemail'])->name('bulkemail');
+    Route::get('/payments', [AdminController::class, 'payments'])->name('payments');
+    Route::get('/profile_settings', [AdminController::class, 'profileSettings'])->name('profile_settings');
     Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes - Frontend / Home
+|--------------------------------------------------------------------------
+*/
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/about', [HomeController::class, 'about'])->name('home.about');
+Route::get('/all_memories', [HomeController::class, 'allMemories'])->name('home.all_memories');
+Route::get('/card', [HomeController::class, 'card'])->name('home.card');
+Route::get('/contact', [HomeController::class, 'contact'])->name('home.contact');
+Route::get('/create_memory', [HomeController::class, 'createMemory'])->name('home.create_memory');
+Route::get('/donation_form', [HomeController::class, 'donationForm'])->name('home.donation_form');
+
+
+Route::get('/memories_donation', [HomeController::class, 'memoriesDonation'])->name('home.memories_donation');
+Route::get('/memories_event', [HomeController::class, 'memoriesEvent'])->name('home.memories_event');
+Route::get('/memories_gallery', [HomeController::class, 'memoriesGallery'])->name('home.memories_gallery');
+Route::get('/memories_index', [HomeController::class, 'memoriesIndex'])->name('home.memories_index');
+Route::get('/memories_life', [HomeController::class, 'memoriesLife'])->name('home.memories_life');
+Route::get('/memories_stories', [HomeController::class, 'memoriesStories'])->name('home.memories_stories');
+Route::get('/memories_timeline', [HomeController::class, 'memoriesTimeline'])->name('home.memories_timeline');
+Route::get('/pricing', [HomeController::class, 'pricing'])->name('home.pricing');
+
+
+//auth routes 
+Route::get('/reset_password', [HomeController::class, 'resetPassword'])->name('home.reset_password');
+
+Route::get('/forgot_password', [HomeController::class, 'forgotPassword'])->name('home.forgot_password');

@@ -105,11 +105,6 @@
                                     placeholder="name@example.com">
                             </div>
 
-                           <!-- Country -->
-                            <div class="mb-3">
-                                <label for="country" class="form-label fw-bold small">Country *</label>
-                                <input type="text" class="form-control py-2" id="country" name="country" value="{{ $visitorIp }}">
-                            </div>
 
                             <div class="row mb-3">
                                 <!-- 1. Country Custom Dropdown -->
@@ -153,8 +148,7 @@
                                 <div class="col-12 col-md-6">
                                     <label class="form-label fw-bold" id="regionLabel">City / Town *</label>
                                     <input type="text" name="state_province" id="stateProvinceInput"
-                                        class="form-control w-100 py-2"
-                                        placeholder="Enter your District , Province or state " required>
+                                        class="form-control w-100 py-2" value="{{ $visitorState ?? 'Not found' }}">
                                 </div>
                             </div>
 
