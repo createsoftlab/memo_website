@@ -22,7 +22,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('*', function ($view) {
-        $view->with('user', Auth::user());
+            if (!array_key_exists('user', $view->getData())) {
+                $view->with('user', Auth::user());
+            }
+            $view->with('authUser', Auth::user());
         });
 
         View::share('visitorIp', request()->ip());

@@ -106,7 +106,12 @@
                             <div class="mb-3">
                                 <label for="email" class="form-label fw-bold small">Email Address *</label>
                                 <input type="email" class="form-control py-2" id="email" name="email"
-                                    placeholder="name@example.com" required>
+                                    placeholder="name@example.com" >
+                                @error('email')
+                                        <div class="text-danger small mt-1">
+                                            {{ $message }}
+                                        </div>
+                                @enderror
                             </div>
 
                             <!-- Password Field with Eye Toggle -->
@@ -116,6 +121,11 @@
                                     <a href="{{ route('password.request') }}"
                                         class="small text-decoration-none text-memorial-accent fw-semibold">Forgot
                                         password?</a>
+                                @error('password')
+                                        <div class="text-danger small mt-1">
+                                            {{ $message }}
+                                        </div>
+                                @enderror
                                 </div>
                                 <div class="input-group mt-1">
                                     <input type="password" class="form-control py-2" id="passwordInput"

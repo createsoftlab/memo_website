@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
       User::updateOrCreate(
-            ['email' => 'superadmin@example.com'],
+            ['email' => 'dpmalinda99@gmail.com'],
             [
                 'name' => 'Super Admin',
                 'role' => 'super_admin',

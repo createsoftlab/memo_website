@@ -14,8 +14,15 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('username', 100)->unique()->nullable();
             $table->string('email')->unique();
-            $table->string('role')->default('role');
+            $table->string('phone', 30)->nullable();
+            $table->string('country', 100)->nullable();
+            $table->string('state', 100)->nullable();
+            $table->enum('role', ['super_admin', 'admin', 'employee', 'memory_user', 'general_user'])->default('general_user');
+            $table->enum('status', ['active', 'suspended', 'banned'])->default('active');
+            $table->json('permissions')->nullable();
+            $table->string('avatar')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

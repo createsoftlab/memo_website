@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -18,32 +19,47 @@ require __DIR__.'/auth.php';
 | Dashboard & Profile Routes (Breeze / Default)
 |--------------------------------------------------------------------------
 */
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', function () {
+    return redirect()->route('admin.dashboard');
+})->middleware(['auth'])->name('dashboard');
 
-// Route::middleware('auth')->group(function () {
-//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-// });
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
 /*
 |--------------------------------------------------------------------------
 | Admin Routes
 |--------------------------------------------------------------------------
 */
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
     // Landing / Dashboard Routes
     // Route::get('/', [AdminController::class, 'dashboard'])->name('index'); 
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     // Route::get('/dashbord_index', [AdminController::class, 'dashbordIndex'])->name('dashbord_index');
     // Route::get('/dashbord-index', [AdminController::class, 'dashbordIndex'])->name('dashbord-index');
 
-    // Employee Management
-    Route::get('/add_employee', [AdminController::class, 'addEmployee'])->name('add_employee');
-    Route::get('/edit_employee', [AdminController::class, 'editEmployee'])->name('edit_employee');
+    // User Directory & Employee Provisioning
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/employees/create', [UserController::class, 'createEmployee'])->name('employees.create');
+    Route::post('/employees', [UserController::class, 'storeEmployee'])->name('employees.store');
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::patch('/users/{user}/status', [UserController::class, 'updateStatus'])->name('users.status');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+
+    // Legacy Route Aliases for User & Employee Management
+    Route::get('/add_employee', [UserController::class, 'createEmployee'])->name('add_employee');
+    Route::get('/edit_employee', function () {
+        $firstUser = \App\Models\User::first();
+        return $firstUser
+            ? redirect()->route('admin.users.edit', $firstUser->id)
+            : redirect()->route('admin.users.index');
+    })->name('edit_employee');
     Route::get('/view_employee', [AdminController::class, 'viewEmployee'])->name('view_employee');
+    Route::get('/all_users', [UserController::class, 'index'])->name('all_users');
 
     // Events Management
     Route::prefix('events')->name('events.')->group(function () {
@@ -73,9 +89,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/all_memories', [AdminController::class, 'allMemories'])->name('all_memories');
     Route::get('/create_memory', [AdminController::class, 'createMemory'])->name('create_memory');
     Route::get('/edit_memory', [AdminController::class, 'editMemory'])->name('edit_memory');
-
-    // Users Management
-    Route::get('/all_users', [AdminController::class, 'allUsers'])->name('all_users');
 
     // Packages Management
     Route::get('/my_package', [AdminController::class, 'myPackage'])->name('my_package');

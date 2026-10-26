@@ -23,7 +23,7 @@
     @include('admin.sidebar')
 
     <!-- Main Content -->
-    
+
         <div class="main-content">
 
     <!-- Top Navbar -->
@@ -45,10 +45,38 @@
                 </div>
 
                 <!-- Add Employee Form Card -->
-                <div class="row  justify-content-center">
+                <div class="row justify-content-center">
                     <div class="col-xl-9 col-lg-10 col-12 ">
+
+                        @if(session('success'))
+                            <div class="alert alert-success alert-dismissible fade show rounded-3 mb-4 shadow-sm" role="alert">
+                                <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
+
+                        @if(session('error'))
+                            <div class="alert alert-danger alert-dismissible fade show rounded-3 mb-4 shadow-sm" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ session('error') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
+
+                        @if($errors->any())
+                            <div class="alert alert-danger alert-dismissible fade show rounded-3 mb-4 shadow-sm" role="alert">
+                                <strong><i class="bi bi-exclamation-triangle me-1"></i> Please correct the errors below:</strong>
+                                <ul class="mb-0 mt-2 small">
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
+
                         <div class="card border-0 shadow-sm rounded-4 bg-white p-4">
-                            <form>
+                            <form method="POST" action="{{ route('admin.employees.store') }}">
+                                @csrf
 
                                 <!-- Basic Info Section -->
                                 <h6 class="fw-bold text-brown mb-3 pb-2 border-bottom">
@@ -59,40 +87,53 @@
                                     <!-- Full Name -->
                                     <div class="col-md-6">
                                         <label class="form-label small fw-semibold text-muted">Full Name</label>
-                                        <input type="text" class="form-control rounded-3"
+                                        <input type="text" name="name" value="{{ old('name') }}"
+                                            class="form-control rounded-3 @error('name') is-invalid @enderror"
                                             placeholder="Enter employee full name" required>
+                                        @error('name')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
 
                                     <!-- Username -->
                                     <div class="col-md-6">
                                         <label class="form-label small fw-semibold text-muted">Username</label>
-                                        <input type="text" class="form-control rounded-3"
+                                        <input type="text" name="username" value="{{ old('username') }}"
+                                            class="form-control rounded-3 @error('username') is-invalid @enderror"
                                             placeholder="e.g., lakshan_admin" required>
+                                        @error('username')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
 
                                     <!-- Email with Copy Option -->
                                     <div class="col-md-6">
                                         <label class="form-label small fw-semibold text-muted">Email Address</label>
                                         <div class="input-group">
-                                            <input type="email" id="empEmail" class="form-control rounded-start-3"
+                                            <input type="email" name="email" id="empEmail" value="{{ old('email') }}"
+                                                class="form-control rounded-start-3 @error('email') is-invalid @enderror"
                                                 placeholder="employee@example.com" required>
                                             <button class="btn btn-outline-secondary border" type="button"
                                                 onclick="copyText('empEmail')" title="Copy Email">
                                                 <i class="bi bi-clipboard"></i>
                                             </button>
+                                            @error('email')
+                                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
 
                                     <!-- Role Selection -->
                                     <div class="col-md-6">
                                         <label class="form-label small fw-semibold text-muted">Assigned Role</label>
-                                        <select class="form-select rounded-3">
-                                            <option selected disabled>Choose Role...</option>
-                                            <option value="moderator">Moderator</option>
-                                            <option value="editor">Content Editor</option>
-                                            <option value="manager">Manager</option>
-                                            <option value="support">Support Agent</option>
+                                        <select name="role" class="form-select rounded-3 @error('role') is-invalid @enderror" required>
+                                            <option value="" disabled {{ old('role') ? '' : 'selected' }}>Choose Role...</option>
+                                            <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                                            {{-- <option value="employee" {{ old('role') == 'employee' ? 'selected' : '' }}>Employee</option> --}}
                                         </select>
+                                        @error('role')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
 
@@ -107,9 +148,9 @@
                                         <label class="form-label small fw-semibold text-muted">Temporary
                                             Password</label>
                                         <div class="input-group">
-                                            <!-- Input එක readonly නැති නිසා type කරන්නත් පුළුවන් -->
-                                            <input type="text" id="empPassword"
-                                                class="form-control rounded-start-3"
+                                            <!-- Input editable so it can be typed or generated -->
+                                            <input type="text" name="password" id="empPassword" value="{{ old('password') }}"
+                                                class="form-control rounded-start-3 @error('password') is-invalid @enderror"
                                                 placeholder="Type password or generate..." required>
 
                                             <!-- Auto-Generate Button -->
@@ -125,6 +166,9 @@
                                                 title="Copy Password">
                                                 <i class="bi bi-clipboard"></i>
                                             </button>
+                                            @error('password')
+                                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                         <div class="form-text small text-muted">Type manually or click generate to
                                             create a secure password.</div>
@@ -148,78 +192,107 @@
                                                 <th>Delete</th>
                                                 <th>Approve </th>
                                                 <th>Reject</th>
-
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <!-- Events Management -->
                                             <tr>
-                                                <td class="text-start fw-semibold text-dark"><i
-                                                        class="bi bi-calendar-event me-2 text-warning"></i> Events
-                                                    Management</td>
+                                                <td class="text-start fw-semibold text-dark">
+                                                    <i class="bi bi-calendar-event me-2 text-warning"></i> Events Management
+                                                </td>
+                                                <td data-label="View">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[events][view]" value="1" {{ old('permissions.events.view', '1') ? 'checked' : '' }}>
+                                                </td>
+                                                <td data-label="Add">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[events][add]" value="1" {{ old('permissions.events.add') ? 'checked' : '' }}>
+                                                </td>
+                                                <td data-label="Edit">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[events][edit]" value="1" {{ old('permissions.events.edit') ? 'checked' : '' }}>
+                                                </td>
+                                                <td data-label="Delete">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[events][delete]" value="1" {{ old('permissions.events.delete') ? 'checked' : '' }}>
+                                                </td>
+                                                <td data-label="Approve">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[events][approve]" value="1" {{ old('permissions.events.approve') ? 'checked' : '' }}>
+                                                </td>
+                                                <td data-label="Reject">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[events][reject]" value="1" {{ old('permissions.events.reject') ? 'checked' : '' }}>
+                                                </td>
+                                            </tr>
 
-                                                <td data-label="View"><input class="form-check-input" type="checkbox"
-                                                        checked></td>
-                                                <td data-label="Add"><input class="form-check-input" type="checkbox">
-                                                </td>
-                                                <td data-label="Edit"><input class="form-check-input"
-                                                        type="checkbox"></td>
-                                                <td data-label="Delete"><input class="form-check-input"
-                                                        type="checkbox"></td>
-                                                <td data-label="Approve"><input class="form-check-input"
-                                                        type="checkbox"></td>
-                                                <td data-label="Reject"><input class="form-check-input"
-                                                        type="checkbox"></td>
-                                            </tr>
+                                            <!-- Memories Directory -->
                                             <tr>
-                                                <td class="text-start fw-semibold text-dark"><i
-                                                        class="bi bi-heart me-2 text-danger"></i> Memories Directory
+                                                <td class="text-start fw-semibold text-dark">
+                                                    <i class="bi bi-heart me-2 text-danger"></i> Memories Directory
                                                 </td>
-                                                <td data-label="View"><input class="form-check-input" type="checkbox"
-                                                        checked></td>
-                                                <td data-label="Add"><input class="form-check-input" type="checkbox">
+                                                <td data-label="View">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[memories][view]" value="1" {{ old('permissions.memories.view', '1') ? 'checked' : '' }}>
                                                 </td>
-                                                <td data-label="Edit"><input class="form-check-input"
-                                                        type="checkbox"></td>
-                                                <td data-label="Delete"><input class="form-check-input"
-                                                        type="checkbox"></td>
-                                                <td data-label="Approve"><input class="form-check-input"
-                                                        type="checkbox"></td>
-                                                <td data-label="Reject"><input class="form-check-input"
-                                                        type="checkbox"></td>
+                                                <td data-label="Add">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[memories][add]" value="1" {{ old('permissions.memories.add') ? 'checked' : '' }}>
+                                                </td>
+                                                <td data-label="Edit">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[memories][edit]" value="1" {{ old('permissions.memories.edit') ? 'checked' : '' }}>
+                                                </td>
+                                                <td data-label="Delete">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[memories][delete]" value="1" {{ old('permissions.memories.delete') ? 'checked' : '' }}>
+                                                </td>
+                                                <td data-label="Approve">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[memories][approve]" value="1" {{ old('permissions.memories.approve') ? 'checked' : '' }}>
+                                                </td>
+                                                <td data-label="Reject">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[memories][reject]" value="1" {{ old('permissions.memories.reject') ? 'checked' : '' }}>
+                                                </td>
                                             </tr>
+
+                                            <!-- Employees / Admins -->
                                             <tr>
-                                                <td class="text-start fw-semibold text-dark"><i
-                                                        class="bi bi-people me-2 text-primary"></i> Employees / Admins
+                                                <td class="text-start fw-semibold text-dark">
+                                                    <i class="bi bi-people me-2 text-primary"></i> Employees / Admins
                                                 </td>
-                                                <td data-label="View"><input class="form-check-input" type="checkbox"
-                                                        checked></td>
-                                                <td data-label="Add"><input class="form-check-input" type="checkbox">
+                                                <td data-label="View">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[employees][view]" value="1" {{ old('permissions.employees.view', '1') ? 'checked' : '' }}>
                                                 </td>
-                                                <td data-label="Edit"><input class="form-check-input"
-                                                        type="checkbox"></td>
-                                                <td data-label="Delete"><input class="form-check-input"
-                                                        type="checkbox"></td>
-                                                <td data-label="Approve"><input class="form-check-input"
-                                                        type="checkbox"></td>
-                                                <td data-label="Reject"><input class="form-check-input"
-                                                        type="checkbox"></td>
+                                                <td data-label="Add">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[employees][add]" value="1" {{ old('permissions.employees.add') ? 'checked' : '' }}>
+                                                </td>
+                                                <td data-label="Edit">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[employees][edit]" value="1" {{ old('permissions.employees.edit') ? 'checked' : '' }}>
+                                                </td>
+                                                <td data-label="Delete">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[employees][delete]" value="1" {{ old('permissions.employees.delete') ? 'checked' : '' }}>
+                                                </td>
+                                                <td data-label="Approve">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[employees][approve]" value="1" {{ old('permissions.employees.approve') ? 'checked' : '' }}>
+                                                </td>
+                                                <td data-label="Reject">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[employees][reject]" value="1" {{ old('permissions.employees.reject') ? 'checked' : '' }}>
+                                                </td>
                                             </tr>
+
+                                            <!-- Settings & Configurations -->
                                             <tr>
-                                                <td class="text-start fw-semibold text-dark"><i
-                                                        class="bi bi-gear me-2 text-secondary"></i> Settings &
-                                                    Configurations</td>
-                                                <td data-label="View"><input class="form-check-input" type="checkbox"
-                                                        checked></td>
-                                                <td data-label="Add"><input class="form-check-input" type="checkbox">
+                                                <td class="text-start fw-semibold text-dark">
+                                                    <i class="bi bi-gear me-2 text-secondary"></i> Settings & Configurations
                                                 </td>
-                                                <td data-label="Edit"><input class="form-check-input"
-                                                        type="checkbox"></td>
-                                                <td data-label="Delete"><input class="form-check-input"
-                                                        type="checkbox"></td>
-                                                <td data-label="Approve"><input class="form-check-input"
-                                                        type="checkbox"></td>
-                                                <td data-label="Reject"><input class="form-check-input"
-                                                        type="checkbox"></td>
+                                                <td data-label="View">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[settings][view]" value="1" {{ old('permissions.settings.view', '1') ? 'checked' : '' }}>
+                                                </td>
+                                                <td data-label="Add">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[settings][add]" value="1" {{ old('permissions.settings.add') ? 'checked' : '' }}>
+                                                </td>
+                                                <td data-label="Edit">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[settings][edit]" value="1" {{ old('permissions.settings.edit') ? 'checked' : '' }}>
+                                                </td>
+                                                <td data-label="Delete">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[settings][delete]" value="1" {{ old('permissions.settings.delete') ? 'checked' : '' }}>
+                                                </td>
+                                                <td data-label="Approve">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[settings][approve]" value="1" {{ old('permissions.settings.approve') ? 'checked' : '' }}>
+                                                </td>
+                                                <td data-label="Reject">
+                                                    <input class="form-check-input" type="checkbox" name="permissions[settings][reject]" value="1" {{ old('permissions.settings.reject') ? 'checked' : '' }}>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -254,7 +327,7 @@
                         <div class="col-lg-2 col-md-6">
                             <h6 class="text-gold fw-bold mb-3">Quick Links</h6>
                             <ul class="list-unstyled small d-flex flex-column gap-2 text-light-tan">
-                                <li><a href="{{ url('admin/index') }}"
+                                <li><a href="{{ url('admin/dashboard') }}"
                                         class="text-light-tan text-decoration-none">Home</a></li>
                                 <li><a href="{{ url('admin/all_memories') }}"
                                         class="text-light-tan text-decoration-none">Memories</a></li>
@@ -298,15 +371,9 @@
 
     </div>
 
-
-
-
-
-
-
     <!-- Bootstrap 5 JS and Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!--mobile slidebr script  -->
+    <!--mobile sidebar script  -->
     <script>
         const sidebar = document.getElementById('sidebar');
         const sidebarToggle = document.getElementById('sidebarToggle');
@@ -336,9 +403,6 @@
         });
     </script>
 
-
-
-
     <!-- JavaScript for Auto-Generate & Copy Functions -->
     <script>
         // Auto Generate Password function
@@ -358,13 +422,10 @@
             copyText.setSelectionRange(0, 99999); // For mobile devices
             navigator.clipboard.writeText(copyText.value);
 
-            // Optional alert or visual feedback
+            // Optional visual feedback
             alert("Copied to clipboard: " + copyText.value);
         }
     </script>
-
-
-
 
 </body>
 

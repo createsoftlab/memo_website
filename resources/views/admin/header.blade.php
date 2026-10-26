@@ -8,7 +8,7 @@
                 <span class="navbar-brand mb-0 h6 text-gold font-serif ms-1">Dashboard</span>
             </div>
             <div class="d-flex align-items-center gap-3">
-                <span class="text-white small d-none d-sm-inline">{{ $user?->name ?? 'Guest' }}</span>
+                <span class="text-white small d-none d-sm-inline">{{ Auth::user()?->name ?? 'Guest' }}</span>
                 @auth
                     <form action="{{ route('logout') }}" method="POST" class="m-0">
                         @csrf

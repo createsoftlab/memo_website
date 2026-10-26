@@ -16,10 +16,10 @@
 
             <div>
                 <h6 class="m-0 text-white fw-bold" style="font-size: 0.9rem;">
-                    {{ $user?->name ?? 'Guest' }}
+                    {{ Auth::user()?->name ?? 'Guest' }}
                 </h6>
                 <small class="text-gold" style="font-size: 0.75rem;">
-                    {{ $user?->created_at?->format('d M Y') ?? '' }}
+                    {{ Auth::user()?->created_at?->format('d M Y') ?? '' }}
                 </small>
             </div>
         </div>
@@ -137,7 +137,10 @@
             <!-- User Management Dropdown -->
             @php
                 $usersActive = request()->is('admin/all_users')
+                    || request()->is('admin/users*')
+                    || request()->is('admin/employees*')
                     || request()->is('admin/add_employee')
+                    || request()->is('admin/edit_employee*')
                     || request()->is('admin/view_employee')
                     || request()->is('admin/bulkemail');
             @endphp
@@ -160,15 +163,15 @@
                     id="usersSubmenu">
 
                     <li>
-                        <a href="{{ url('admin/all_users') }}"
-                            class="nav-link sub-link {{ request()->is('admin/all_users') ? 'active' : '' }}">
+                        <a href="{{ route('admin.users.index') }}"
+                            class="nav-link sub-link {{ request()->routeIs('admin.users.*') || request()->is('admin/all_users') ? 'active' : '' }}">
                             All Users
                         </a>
                     </li>
 
                     <li>
-                        <a href="{{ url('admin/add_employee') }}"
-                            class="nav-link sub-link {{ request()->is('admin/add_employee') ? 'active' : '' }}">
+                        <a href="{{ route('admin.employees.create') }}"
+                            class="nav-link sub-link {{ request()->routeIs('admin.employees.*') || request()->is('admin/add_employee') ? 'active' : '' }}">
                             Add Employee
                         </a>
                     </li>
@@ -283,6 +286,17 @@
                     </span>
 
                     <i class="bi bi-chevron-right small"></i>
+                </a>
+            </li>
+
+            <!-- Back to Home -->
+            <li class="nav-item">
+                <a href="{{ url('/') }}"
+                    class="nav-link {{ request()->is('/') ? 'active' : '' }}">
+                    <span>
+                        <i class="bi bi-house-door me-2"></i>
+                        Back To Home
+                    </span>
                 </a>
             </li>
 
