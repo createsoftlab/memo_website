@@ -7,11 +7,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Cashier\Billable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable,Billable ,HasRoles;
+
 
     /**
      * The attributes that are mass assignable.
@@ -106,16 +109,84 @@ class User extends Authenticatable
     }
 
     /**
-     * Determine if user has permission for a specific module and action.
+     * Determine if user has access to a specific module.
+     * Super Admin always has full access to all modules.
      */
-    public function hasPermission(string $module, string $action): bool
+    public function canAccessModule(string $module): bool
     {
         if ($this->isSuperAdmin()) {
             return true;
         }
 
         $permissions = $this->permissions ?? [];
-        return !empty($permissions[$module][$action]);
+        if (!is_array($permissions)) {
+            return false;
+        }
+
+        // Flat array of modules: ['dashboard', 'memories', ...]
+        if (in_array($module, $permissions, true)) {
+            return true;
+        }
+
+        // Associative format: ['memories' => ['view' => 1]] or ['memories' => 1]
+        $modulePermissions = $permissions[$module] ?? [];
+        if (is_array($modulePermissions)) {
+            return !empty(array_filter($modulePermissions));
+        }
+
+        return (bool) $modulePermissions;
+    }
+
+    /**
+     * Determine if user has module-level permission (alias for canAccessModule).
+     */
+    public function hasModulePermission(string $module): bool
+    {
+        return $this->canAccessModule($module);
+    }
+
+    /**
+     * Determine if user has delete authority.
+     * Super Admin has full delete rights; Admins and Employees can NEVER delete any data.
+     */
+    public function canDelete(): bool
+    {
+        return $this->isSuperAdmin();
+    }
+
+    /**
+     * Determine if user has permission for a specific module and action.
+     */
+    public function hasPermission(string $module, string $action = 'view'): bool
+    {
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+
+        // Hard restriction: Admins and Employees can never delete records
+        if ($action === 'delete') {
+            return false;
+        }
+
+        $permissions = $this->permissions ?? [];
+        if (!is_array($permissions)) {
+            return false;
+        }
+
+        // Associative format: ['events' => ['view' => 1, 'approve' => 1]]
+        if (isset($permissions[$module]) && is_array($permissions[$module])) {
+            if (!empty($permissions[$module][$action])) {
+                return true;
+            }
+            // If checking 'view' action, possessing any active module permission allows viewing
+            if ($action === 'view') {
+                return !empty(array_filter($permissions[$module]));
+            }
+            return false;
+        }
+
+        // Flat array format fallback: ['dashboard', 'events']
+        return in_array($module, $permissions, true);
     }
 
     /**

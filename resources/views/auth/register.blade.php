@@ -22,21 +22,21 @@
 
     <!-- Navigation Bar with Mobile Offcanvas Slide Menu -->
     <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
-        <div class="container-fluid px-4">
+        <div class="px-4 container-fluid">
             <a class="navbar-brand me-4" href="{{ url('/') }}">
                 <i class="bi bi-fire"></i> Forever Missed
             </a>
 
             <!-- Offcanvas Mobile Trigger Button -->
-            <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="offcanvas"
+            <button class="text-white border-0 navbar-toggler" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-                <i class="bi bi-list text-white fs-2"></i>
+                <i class="text-white bi bi-list fs-2"></i>
             </button>
 
             <!-- Slide Drawer (Offcanvas) -->
             <div class="offcanvas offcanvas-end offcanvas-memorial" tabindex="-1" id="offcanvasNavbar"
                 aria-labelledby="offcanvasNavbarLabel">
-                <div class="offcanvas-header border-bottom border-secondary pb-3">
+                <div class="pb-3 offcanvas-header border-bottom border-secondary">
                     <h5 class="offcanvas-title text-gold fw-bold" id="offcanvasNavbarLabel">
                         <i class="bi bi-fire me-1"></i> Forever Missed
                     </h5>
@@ -45,7 +45,7 @@
 
                 <div
                     class="offcanvas-body d-flex flex-column flex-lg-row justify-content-between align-items-lg-center">
-                    <ul class="navbar-nav me-auto mb-3 mb-lg-0">
+                    <ul class="mb-3 navbar-nav me-auto mb-lg-0">
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/') }}"><i class="bi bi-house-door"></i> HOME</a>
                         </li>
@@ -64,10 +64,10 @@
                     </ul>
 
                     <div
-                        class="d-flex flex-column flex-lg-row align-items-lg-center gap-2 mt-auto mt-lg-0 pt-3 pt-lg-0 border-top border-lg-0 border-secondary">
-                        <a href="{{ url('login') }}" class="btn btn-nav-login text-center"><i
+                        class="gap-2 pt-3 mt-auto d-flex flex-column flex-lg-row align-items-lg-center mt-lg-0 pt-lg-0 border-top border-lg-0 border-secondary">
+                        <a href="{{ url('login') }}" class="text-center btn btn-nav-login"><i
                                 class="bi bi-box-arrow-in-right"></i> LOGIN</a>
-                        <a href="{{ url('register') }}" class="btn btn-nav-signup text-center active"><i
+                        <a href="{{ url('register') }}" class="text-center btn btn-nav-signup active"><i
                                 class="bi bi-person-plus"></i> SIGN UP</a>
                     </div>
                 </div>
@@ -76,48 +76,62 @@
     </nav>
 
     <!-- Main Content (Sign Up Form Section) -->
-    <main class="flex-grow-1 d-flex align-items-center py-5">
+    <main class="py-5 flex-grow-1 d-flex align-items-center">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-8 col-lg-6">
 
                     <!-- Signup Card -->
-                    <div class="signup-card p-4 p-md-5">
-                        <div class="text-center mb-4">
+                    <div class="p-4 signup-card p-md-5">
+                        <div class="mb-4 text-center">
                             <h2 class="font-serif fw-bold text-brown">Create an Account</h2>
                             <p class="text-muted small">Join Forever Missed to create memorials & honor cherished
                                 legacies</p>
                         </div>
 
                         <form action="{{ route('register') }}" method="POST" id="signupForm">
+                            @csrf
 
+                            <input type="hidden" name="redirect_to"
+                                value="{{ request('redirect_to', session('url.intended', url('/'))) }}">
                             <!-- Full Name -->
                             <div class="mb-3">
                                 <label for="fullName" class="form-label fw-bold small">Full Name *</label>
-                                <input type="text" class="form-control py-2" id="fullName" name="name"
+                                <input type="text" class="py-2 form-control" id="fullName" name="name"
                                     placeholder="John Doe">
+                                @error('name')
+                                    <div class="mt-1 text-danger small">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
 
                             <!-- Email Address -->
                             <div class="mb-3">
                                 <label for="email" class="form-label fw-bold small">Email Address *</label>
-                                <input type="text" class="form-control py-2" id="email" name="email"
+                                <input type="text" class="py-2 form-control" id="email" name="email"
                                     placeholder="name@example.com">
+                                @error('email')
+                                    <div class="mt-1 text-danger small">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
 
 
-                            <div class="row mb-3">
+                            <div class="mb-3 row">
                                 <!-- 1. Country Custom Dropdown -->
-                                <div class="col-12 col-md-6 mb-3 mb-md-0">
-                                    <label class="form-label fw-bold">Country *</label> 
+                                @if (empty($visitorIp))
+                                    <div class="mb-3 col-12 col-md-6 mb-md-0">
+                                    <label class="form-label fw-bold">Country *</label>
                                     <div class="dropdown w-100">
                                         <button
-                                            class="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center text-secondary bg-white border text-truncate py-2 px-3 dropdown-toggle-custom"
+                                            class="px-3 py-2 bg-white border btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center text-secondary text-truncate dropdown-toggle-custom"
                                             type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                             <span class="text-truncate">🇱🇰 Sri Lanka</span>
-                                            <i class="bi bi-chevron-down flex-shrink-0 ms-2"></i>
+                                            <i class="flex-shrink-0 bi bi-chevron-down ms-2"></i>
                                         </button>
-                                        <ul class="dropdown-menu w-100 shadow-sm"
+                                        <ul class="shadow-sm dropdown-menu w-100"
                                             style="max-height: 250px; overflow-y: auto;">
                                             <li><a class="dropdown-item active" href="#"
                                                     onclick="selectDropdownOption(this, 'account_country', 'LK')">🇱🇰
@@ -144,21 +158,85 @@
                                     </div>
                                     <input type="hidden" name="country" id="account_country" value="LK">
                                 </div>
-
+                                @elseif ($visitorCountry)
+                                <div class="mb-3 col-12 col-md-6 mb-md-0">
+                                    <label for="country" class="form-label fw-bold small">Country *</label>
+                                    <input type="text" class="py-2 form-control" id="country" name="country" value="{{ $visitorCountry }}">
+                                    @error('country')
+                                        <div class="mt-1 text-danger small">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                @else
+                                <div class="mb-3 col-12 col-md-6 mb-md-0">
+                                    <label class="form-label fw-bold">Country *</label>
+                                    <div class="dropdown w-100">
+                                        <button
+                                            class="px-3 py-2 bg-white border btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center text-secondary text-truncate dropdown-toggle-custom"
+                                            type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <span class="text-truncate">🇱🇰 Sri Lanka</span>
+                                            <i class="flex-shrink-0 bi bi-chevron-down ms-2"></i>
+                                        </button>
+                                        <ul class="shadow-sm dropdown-menu w-100"
+                                            style="max-height: 250px; overflow-y: auto;">
+                                            <li><a class="dropdown-item active" href="#"
+                                                    onclick="selectDropdownOption(this, 'account_country', 'LK')">🇱🇰
+                                                    Sri Lanka</a></li>
+                                            <li><a class="dropdown-item" href="#"
+                                                    onclick="selectDropdownOption(this, 'account_country', 'US')">🇺🇸
+                                                    United States</a></li>
+                                            <li><a class="dropdown-item" href="#"
+                                                    onclick="selectDropdownOption(this, 'account_country', 'GB')">🇬🇧
+                                                    United Kingdom</a></li>
+                                            <li><a class="dropdown-item" href="#"
+                                                    onclick="selectDropdownOption(this, 'account_country', 'AU')">🇦🇺
+                                                    Australia</a></li>
+                                            <li><a class="dropdown-item" href="#"
+                                                    onclick="selectDropdownOption(this, 'account_country', 'CA')">🇨🇦
+                                                    Canada</a></li>
+                                            <li><a class="dropdown-item" href="#"
+                                                    onclick="selectDropdownOption(this, 'account_country', 'IN')">🇮🇳
+                                                    India</a></li>
+                                            <li><a class="dropdown-item" href="#"
+                                                    onclick="selectDropdownOption(this, 'account_country', 'AE')">🇦🇪
+                                                    United Arab Emirates</a></li>
+                                        </ul>
+                                    </div>
+                                    <input type="hidden" name="country" id="account_country" value="LK">
+                                </div>
+                                @endif
+                                
                                 <div class="col-12 col-md-6">
-                                    <label class="form-label fw-bold" id="regionLabel">City / Town *</label>
-                                    <input type="text" name="state_province" id="stateProvinceInput"
-                                        class="form-control w-100 py-2" value="{{ $visitorState ?? 'Not found' }}">
+                                    <label class="form-label fw-bold" id="regionLabel">State *</label>
+                                    <input type="text" name="state" id="stateProvinceInput"
+                                        class="py-2 form-control w-100">
+                                    @error('state')
+                                        <div class="mt-1 text-danger small">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
                             </div>
-
+                            {{-- <div class="mb-3 row">
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label fw-bold" id="regionLabel">City</label>
+                                    <input type="text" name="city" id="stateProvinceInput"
+                                        class="py-2 form-control w-100" >
+                                    @error('city')
+                                    <div class="mt-1 text-danger small">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div> --}}
 
                             <!-- Country Code & Contact Number (Mobile Friendly Grid Layout) -->
                             <div class="mb-3">
                                 <label for="phone" class="form-label fw-bold small">Contact Number *</label>
                                 <div class="row g-2">
                                     <div class="col-4 col-sm-4">
-                                        <select class="form-select py-2" id="countryCode" name="countryCode"
+                                        <select class="py-2 form-select" id="countryCode" name="countryCode"
                                             required>
                                             <option value="+94" selected>LK (+94)</option>
                                             <option value="+1">US (+1)</option>
@@ -170,8 +248,13 @@
                                         </select>
                                     </div>
                                     <div class="col-8 col-sm-8">
-                                        <input type="tel" class="form-control py-2" id="phone"
-                                            name="phone" placeholder="77 123 4567" required>
+                                        <input type="tel" class="py-2 form-control" id="phone"
+                                            name="phone" placeholder="77 123 4567">
+                                        @error('phone')
+                                            <div class="mt-1 text-danger small">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
@@ -180,12 +263,17 @@
                             <div class="mb-3">
                                 <label for="passwordInput" class="form-label fw-bold small">Create Password *</label>
                                 <div class="input-group">
-                                    <input type="password" class="form-control py-2" id="passwordInput"
-                                        name="password" placeholder="••••••••" required>
-                                    <button class="btn btn-outline-secondary px-3" type="button"
+                                    <input type="password" class="py-2 form-control" id="passwordInput"
+                                        name="password" placeholder="••••••••">
+                                    <button class="px-3 btn btn-outline-secondary" type="button"
                                         id="togglePasswordBtn" aria-label="Toggle password visibility">
                                         <i class="bi bi-eye-slash" id="toggleIcon"></i>
                                     </button>
+                                    @error('password')
+                                        <div class="mt-1 text-danger small">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
                             </div>
 
@@ -194,19 +282,24 @@
                                 <label for="confirmPasswordInput" class="form-label fw-bold small">Confirm Password
                                     *</label>
                                 <div class="input-group">
-                                    <input type="password" class="form-control py-2" id="confirmPasswordInput"
-                                        name="confirmPassword" placeholder="••••••••" required>
-                                    <button class="btn btn-outline-secondary px-3" type="button"
+                                    <input type="password" class="py-2 form-control" id="confirmPasswordInput"
+                                        name="password_confirmation" placeholder="••••••••">
+                                    <button class="px-3 btn btn-outline-secondary" type="button"
                                         id="toggleConfirmPasswordBtn" aria-label="Toggle confirm password visibility">
                                         <i class="bi bi-eye-slash" id="toggleConfirmIcon"></i>
                                     </button>
+                                    @error('password_confirmation')
+                                        <div class="mt-1 text-danger small">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
                             </div>
 
                             <!-- Random Password Generator Action -->
                             <div class="mb-3 text-end">
                                 <button type="button"
-                                    class="btn btn-sm btn-outline-gold text-memorial-accent fw-semibold p-0 border-0 bg-transparent"
+                                    class="p-0 bg-transparent border-0 btn btn-sm btn-outline-gold text-memorial-accent fw-semibold"
                                     id="generatePasswordBtn">
                                     <i class="bi bi-magic me-1"></i> Generate Secure Password
                                 </button>
@@ -225,14 +318,14 @@
                             </div>
 
                             <!-- Submit Button -->
-                            <div class="d-grid mb-3">
-                                <button type="submit" class="btn btn-gold-action py-2 fw-bold">CREATE
+                            <div class="mb-3 d-grid">
+                                <button type="submit" class="py-2 btn btn-gold-action fw-bold">CREATE
                                     ACCOUNT</button>
                             </div>
 
                             <!-- Login Link -->
-                            <div class="text-center mt-4">
-                                <p class="small text-muted mb-0">Already have an account? <a
+                            <div class="mt-4 text-center">
+                                <p class="mb-0 small text-muted">Already have an account? <a
                                         href="{{ url('/login') }}"
                                         class="text-memorial-accent fw-bold text-decoration-none">Sign in here</a></p>
                             </div>
@@ -246,20 +339,20 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-memorial-dark text-white pt-5 pb-3 border-top border-secondary">
+    <footer class="pt-5 pb-3 text-white bg-memorial-dark border-top border-secondary">
         <div class="container">
-            <div class="row g-4 mb-4">
+            <div class="mb-4 row g-4">
                 <div class="col-lg-4 col-md-6">
-                    <h5 class="text-gold fw-bold mb-3"><i class="bi bi-fire me-1"></i> Forever Missed</h5>
-                    <p class="small text-light-tan leading-relaxed">
+                    <h5 class="mb-3 text-gold fw-bold"><i class="bi bi-fire me-1"></i> Forever Missed</h5>
+                    <p class="leading-relaxed small text-light-tan">
                         A dignified digital platform dedicated to preserving legacies, connecting families, and honoring
                         cherished memories forever.
                     </p>
                 </div>
 
                 <div class="col-lg-2 col-md-6">
-                    <h6 class="text-gold fw-bold mb-3">Quick Links</h6>
-                    <ul class="list-unstyled small d-flex flex-column gap-2 text-light-tan">
+                    <h6 class="mb-3 text-gold fw-bold">Quick Links</h6>
+                    <ul class="gap-2 list-unstyled small d-flex flex-column text-light-tan">
                         <li><a href="{{ url('/') }}" class="text-light-tan text-decoration-none">Home</a></li>
                         <li><a href="{{ url('/all_memories') }}"
                                 class="text-light-tan text-decoration-none">Memories</a></li>
@@ -271,8 +364,8 @@
                 </div>
 
                 <div class="col-lg-3 col-md-6">
-                    <h6 class="text-gold fw-bold mb-3">Contact Support</h6>
-                    <ul class="list-unstyled small d-flex flex-column gap-2 text-light-tan">
+                    <h6 class="mb-3 text-gold fw-bold">Contact Support</h6>
+                    <ul class="gap-2 list-unstyled small d-flex flex-column text-light-tan">
                         <li><i class="bi bi-telephone-fill text-gold me-2"></i>+1 (800) 555-0199</li>
                         <li><i class="bi bi-envelope-fill text-gold me-2"></i>support@forevermissed.com</li>
                         <li><i class="bi bi-geo-alt-fill text-gold me-2"></i>Global Headquarters</li>
@@ -280,8 +373,8 @@
                 </div>
 
                 <div class="col-lg-3 col-md-6">
-                    <h6 class="text-gold fw-bold mb-3">Follow Us</h6>
-                    <div class="d-flex gap-2">
+                    <h6 class="mb-3 text-gold fw-bold">Follow Us</h6>
+                    <div class="gap-2 d-flex">
                         <a href="#" class="btn btn-outline-light btn-sm rounded-circle"
                             aria-label="Facebook"><i class="bi bi-facebook"></i></a>
                         <a href="#" class="btn btn-outline-light btn-sm rounded-circle" aria-label="Twitter"><i
@@ -294,7 +387,7 @@
 
             <hr class="border-secondary">
 
-            <div class="text-center small text-white-50 pt-2">
+            <div class="pt-2 text-center small text-white-50">
                 <p class="mb-0">&copy; 2026 Forever Missed Memorial Directory. All rights reserved.</p>
             </div>
         </div>

@@ -74,7 +74,13 @@ body {
   border-left-color: var(--gold-accent);
 }
 
-/* Submenu / Dropdown Styling (Dots completely removed) */
+/* Submenu / Dropdown Styling (Suppress Bootstrap default caret) */
+.sidebar .dropdown-toggle::after,
+.sidebar [data-bs-toggle="collapse"]::after {
+  display: none !important;
+  content: none !important;
+}
+
 .submenu {
   background-color: rgba(0, 0, 0, 0.15);
 }
@@ -82,23 +88,27 @@ body {
 .submenu .sub-link {
   font-size: 0.85rem;
   color: #c5b2a0;
-  padding: 10px 20px 10px 45px !important;
+  padding: 10px 20px 10px 2.5rem !important;
   border-left: none !important;
+  transition: color 0.2s ease, background-color 0.2s ease, padding-left 0.2s ease;
 }
 
-.submenu .sub-link:hover {
+.submenu .sub-link:hover,
+.submenu .sub-link.active {
   color: var(--gold-accent);
   background: rgba(255, 183, 0, 0.08);
 }
 
-/* Rotate dropdown arrow when open */
-.dropdown-toggle[aria-expanded="true"] .dropdown-arrow {
-  transform: rotate(180deg);
-  transition: transform 0.2s ease;
+/* Rotate dropdown arrow when open smoothly */
+.dropdown-arrow {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.dropdown-arrow {
-  transition: transform 0.2s ease;
+.sidebar [aria-expanded="true"] .dropdown-arrow,
+.sidebar .nav-link[aria-expanded="true"] .dropdown-arrow,
+.dropdown-toggle[aria-expanded="true"] .dropdown-arrow {
+  transform: rotate(180deg);
 }
 
 /* Main Content Area */

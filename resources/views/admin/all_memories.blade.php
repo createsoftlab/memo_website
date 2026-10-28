@@ -141,8 +141,10 @@
                                             Approve</button>
                                         <button class="btn btn-xs btn-outline-warning text-dark flex-fill py-1"
                                             style="font-size: 0.75rem;"><i class="bi bi-x-lg"></i> Reject</button>
+                                        @if(Auth::user()?->canDelete())
                                         <button class="btn btn-xs btn-outline-danger flex-fill py-1"
                                             style="font-size: 0.75rem;"><i class="bi bi-trash"></i> Delete</button>
+                                        @endif
                                     </div>
 
                                     <div class="d-flex align-items-center justify-content-between border-top pt-2">
@@ -207,8 +209,10 @@
                                             Approve</button>
                                         <button class="btn btn-xs btn-outline-warning text-dark flex-fill py-1"
                                             style="font-size: 0.75rem;"><i class="bi bi-x-lg"></i> Reject</button>
+                                        @if(Auth::user()?->canDelete())
                                         <button class="btn btn-xs btn-outline-danger flex-fill py-1"
                                             style="font-size: 0.75rem;"><i class="bi bi-trash"></i> Delete</button>
+                                        @endif
                                     </div>
 
                                     <div class="d-flex align-items-center justify-content-between border-top pt-2">
@@ -360,8 +364,10 @@
                     <div class="d-flex gap-2">
                         <button type="button" class="btn btn-outline-success btn-sm"><i class="bi bi-check-lg"></i>
                             Approve</button>
+                        @if(Auth::user()?->canDelete())
                         <button type="button" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i>
                             Delete</button>
+                        @endif
                         <button type="button" class="btn btn-secondary btn-sm"
                             data-bs-dismiss="modal">Close</button>
                     </div>
@@ -460,8 +466,10 @@
                     <div class="d-flex gap-2">
                         <button type="button" class="btn btn-outline-success btn-sm"><i class="bi bi-check-lg"></i>
                             Approve</button>
+                        @if(Auth::user()?->canDelete())
                         <button type="button" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i>
                             Delete</button>
+                        @endif
                         <button type="button" class="btn btn-secondary btn-sm"
                             data-bs-dismiss="modal">Close</button>
                     </div>

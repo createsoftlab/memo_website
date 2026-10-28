@@ -16,53 +16,7 @@
 </head>
 <body>
 
-  <!-- Navigation Bar with Mobile Offcanvas Slide Menu -->
-  <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
-    <div class="container-fluid px-4">
-      <a class="navbar-brand me-4" href="#">
-        <i class="bi bi-fire"></i> Forever Missed
-      </a>
-      
-      <!-- Offcanvas Mobile Trigger Button -->
-      <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-        <i class="bi bi-list text-white fs-2"></i>
-      </button>
-
-      <!-- Slide Drawer (Offcanvas) for Mobile & Standard Navbar for Desktop -->
-      <div class="offcanvas offcanvas-end offcanvas-memorial" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-        <div class="offcanvas-header border-bottom border-secondary pb-3">
-          <h5 class="offcanvas-title text-warning fw-bold" id="offcanvasNavbarLabel">
-            <i class="bi bi-fire me-1"></i> Forever Missed
-          </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-
-        <div class="offcanvas-body d-flex flex-column flex-lg-row justify-content-between align-items-lg-center">
-          <ul class="navbar-nav me-auto mb-3 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link" href="#"><i class="bi bi-house-door"></i> HOME</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url('/all_memories') }}">
-                <i class="bi bi-heart-fill"></i> Memories
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" href="{{ url('/about') }}"><i class="bi bi-info-circle"></i> ABOUT US</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#"><i class="bi bi-envelope"></i> CONTACT US</a>
-            </li>
-          </ul>
-          
-          <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-2 mt-auto mt-lg-0 pt-3 pt-lg-0 border-top border-lg-0 border-secondary">
-            <a href="#" class="btn btn-nav-login text-center"><i class="bi bi-box-arrow-in-right"></i> LOGIN</a>
-            <a href="#" class="btn btn-nav-signup text-center"><i class="bi bi-person-plus"></i> SIGN UP</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </nav>
+    @include('home.header')
 
   <!-- Hero Header -->
   <header class="about-hero d-flex align-items-center text-white mb-5">

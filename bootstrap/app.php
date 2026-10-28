@@ -11,7 +11,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'module' => \App\Http\Middleware\CheckModulePermission::class,
+            'module.permission' => \App\Http\Middleware\CheckModuleAccess::class,
+            'can.delete' => \App\Http\Middleware\CheckCanDelete::class,
+            'super_admin' => \App\Http\Middleware\EnsureSuperAdmin::class,
+            'prevent_admin_creation' => \App\Http\Middleware\PreventAdminContentCreation::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

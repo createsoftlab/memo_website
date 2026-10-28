@@ -188,13 +188,15 @@
                                             </form>
                                         @endif
 
-                                        <form action="{{ route('admin.events.destroy', $event->id) }}" method="POST" class="flex-fill" onsubmit="return confirm('Are you sure you want to delete this event?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-xs btn-outline-danger w-100 py-1" style="font-size: 0.75rem;" title="Delete Event">
-                                                <i class="bi bi-trash"></i> Delete
-                                            </button>
-                                        </form>
+                                        @if(Auth::user()?->canDelete())
+                                            <form action="{{ route('admin.events.destroy', $event->id) }}" method="POST" class="flex-fill" onsubmit="return confirm('Are you sure you want to delete this event?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-xs btn-outline-danger w-100 py-1" style="font-size: 0.75rem;" title="Delete Event">
+                                                    <i class="bi bi-trash"></i> Delete
+                                                </button>
+                                            </form>
+                                        @endif
                                     </div>
 
                                     <div class="d-flex align-items-center justify-content-between border-top pt-2">

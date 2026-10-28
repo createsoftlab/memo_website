@@ -232,6 +232,19 @@
                                                title="Edit User">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
+
+                                            @if(Auth::user()->canDelete())
+                                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle d-flex align-items-center justify-content-center"
+                                                            style="width: 32px; height: 32px;"
+                                                            onclick="return confirm('Are you sure you want to delete this user?')"
+                                                            title="Delete User">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -420,18 +433,24 @@
                                                     </span>
                                                 </div>
 
-                                                @if(!empty($user->permissions))
+                                                @if(!empty($user->permissions) && is_array($user->permissions))
                                                     <div class="col-12">
                                                         <small class="text-muted d-block mb-2">Module Access Permissions</small>
                                                         <div class="d-flex flex-wrap gap-1">
-                                                            @foreach($user->permissions as $module => $actions)
-                                                                @foreach($actions as $action => $val)
-                                                                    @if($val)
-                                                                        <span class="badge bg-secondary" style="font-size: 0.72rem;">
-                                                                            {{ ucfirst($module) }}: {{ ucfirst($action) }}
-                                                                        </span>
-                                                                    @endif
-                                                                @endforeach
+                                                            @foreach($user->permissions as $key => $val)
+                                                                @if(is_array($val))
+                                                                    @foreach($val as $action => $allowed)
+                                                                        @if($allowed)
+                                                                            <span class="badge bg-secondary" style="font-size: 0.72rem;">
+                                                                                {{ ucfirst($key) }}: {{ ucfirst($action) }}
+                                                                            </span>
+                                                                        @endif
+                                                                    @endforeach
+                                                                @else
+                                                                    <span class="badge bg-secondary" style="font-size: 0.72rem;">
+                                                                        <i class="bi bi-check me-1 text-warning"></i>{{ ucfirst(str_replace('_', ' ', $val)) }}
+                                                                    </span>
+                                                                @endif
                                                             @endforeach
                                                         </div>
                                                     </div>
@@ -457,6 +476,16 @@
                                     <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-warning text-dark fw-semibold">
                                         <i class="bi bi-pencil me-1"></i> Edit User
                                     </a>
+
+                                    @if(Auth::user()->canDelete())
+                                        <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Are you sure you want to delete this user?')">
+                                                <i class="bi bi-trash me-1"></i> Delete
+                                            </button>
+                                        </form>
+                                    @endif
 
                                     <button type="button" class="btn btn-dark" data-bs-dismiss="modal">
                                         Close

@@ -175,6 +175,10 @@ class UserController extends Controller
      */
     public function destroy(User $user): RedirectResponse
     {
+        if (Auth::check() && !Auth::user()->canDelete()) {
+            abort(403, 'Unauthorized: Only Super Administrators have permission to delete users.');
+        }
+
         if ($user->isSuperAdmin()) {
             return back()->with('error', 'Super Administrator accounts cannot be deleted.');
         }

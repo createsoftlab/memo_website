@@ -62,21 +62,7 @@ class HomeController extends Controller
         return view('home.donation_form');
     }
 
-    /**
-     * Display the forgot password page.
-     */
-    public function forgotPassword(): View
-    {
-        return view('home.forgot-password');
-    }
 
-    /**
-     * Display the login page.
-     */
-    public function login(): View
-    {
-        return view('home.login');
-    }
 
     /**
      * Display memories donation page.
@@ -142,19 +128,5 @@ class HomeController extends Controller
         return view('home.pricing');
     }
 
-    /**
-     * Display the reset password page.
-     */
-    public function resetPassword(): View
-    {
-        return view('home.reset_password');
-    }
 
-    /**
-     * Display the signup page.
-     */
-    public function signup(): View
-    {
-        return view('home.signup');
-    }
 }

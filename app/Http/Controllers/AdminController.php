@@ -14,6 +14,10 @@ class AdminController extends Controller
         return view('admin.dashbord_index');
     }
 
+    public function memoryUser_dashboard(): View
+    {
+        return view('memory_user.dashbord');
+    }
     /**
      * Display the admin dashboard index view.
      */
@@ -67,6 +71,10 @@ class AdminController extends Controller
      */
     public function createMemory(): View
     {
+        if (\Illuminate\Support\Facades\Auth::check() && in_array(\Illuminate\Support\Facades\Auth::user()->role, ['super_admin', 'admin'])) {
+            abort(403, 'Administrators cannot create memories. You can only view, approve, or reject user submissions.');
+        }
+
         return view('admin.create-memory');
     }
 

@@ -175,123 +175,238 @@
                                     </div>
                                 </div>
 
-                                <!-- Access Levels & Modules Section -->
-                                <h6 class="fw-bold text-brown mb-3 pb-2 border-bottom">
-                                    <i class="bi bi-grid-3x3-gap me-2"></i> Module Access Permissions
+                                <!-- Access Levels & Modules Section (Sidebar-Based Permissions Matrix) -->
+                                <h6 class="fw-bold text-brown mb-2 pb-2 border-bottom">
+                                    <i class="bi bi-shield-check me-2"></i> Module Access & Granular Permissions Matrix
                                 </h6>
+                                <p class="text-muted small mb-3">
+                                    Assign granular permissions across sidebar operational modules. Unassigned modules will remain hidden in the staff sidebar and direct access will be denied (403 Forbidden). Delete actions are strictly reserved for Super Admin.
+                                </p>
 
-                                <div class="table-responsive mb-4">
-                                    <table
-                                        class="table table-bordered align-middle text-center small permissions-table">
+                                <input type="hidden" name="permissions[dashboard][view]" value="1">
+
+                                <div class="table-responsive rounded-3 border mb-4">
+                                    <table class="table table-hover align-middle mb-0 text-center">
                                         <thead class="table-light">
                                             <tr>
-                                                <th class="text-start">Module Name</th>
-                                                <th>View</th>
-                                                <th>Add</th>
-                                                <th>Edit</th>
-                                                <th>Delete</th>
-                                                <th>Approve </th>
-                                                <th>Reject</th>
+                                                <th class="text-start ps-3 py-3" style="min-width: 220px;">Module Name</th>
+                                                <th class="py-3" style="width: 90px;">View</th>
+                                                <th class="py-3" style="width: 90px;">Add</th>
+                                                <th class="py-3" style="width: 90px;">Edit</th>
+                                                <th class="py-3" style="width: 100px;">Delete</th>
+                                                <th class="py-3" style="width: 90px;">Approve</th>
+                                                <th class="py-3" style="width: 90px;">Reject</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <!-- Events Management -->
+                                            <!-- 1. Events Management -->
                                             <tr>
-                                                <td class="text-start fw-semibold text-dark">
-                                                    <i class="bi bi-calendar-event me-2 text-warning"></i> Events Management
+                                                <td class="text-start ps-3 py-3">
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="bi bi-calendar-event text-warning fs-5 me-2"></i>
+                                                        <div>
+                                                            <div class="fw-semibold text-dark">Events Management</div>
+                                                            <small class="text-muted d-block" style="font-size: 0.75rem;">Memorial events and services moderation</small>
+                                                        </div>
+                                                    </div>
                                                 </td>
-                                                <td data-label="View">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[events][view]" value="1" {{ old('permissions.events.view', '1') ? 'checked' : '' }}>
+                                                <td>
+                                                    <input class="form-check-input" type="checkbox" name="permissions[events][view]" value="1" id="perm_events_view"
+                                                        {{ old('permissions.events.view', 1) ? 'checked' : '' }}>
                                                 </td>
-                                                <td data-label="Add">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[events][add]" value="1" {{ old('permissions.events.add') ? 'checked' : '' }}>
+                                                <td>
+                                                    <span class="text-muted small" title="Super Admin and Admin cannot create events directly">&mdash;</span>
                                                 </td>
-                                                <td data-label="Edit">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[events][edit]" value="1" {{ old('permissions.events.edit') ? 'checked' : '' }}>
+                                                <td>
+                                                    <input class="form-check-input" type="checkbox" name="permissions[events][edit]" value="1" id="perm_events_edit"
+                                                        {{ old('permissions.events.edit', 1) ? 'checked' : '' }}>
                                                 </td>
-                                                <td data-label="Delete">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[events][delete]" value="1" {{ old('permissions.events.delete') ? 'checked' : '' }}>
+                                                <td>
+                                                    <input class="form-check-input opacity-50" type="checkbox" disabled title="Super Admin Only: Admins/Employees cannot delete records">
+                                                    <div><span class="badge bg-secondary-subtle text-secondary border" style="font-size: 0.65rem;">Super Admin</span></div>
                                                 </td>
-                                                <td data-label="Approve">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[events][approve]" value="1" {{ old('permissions.events.approve') ? 'checked' : '' }}>
+                                                <td>
+                                                    <input class="form-check-input" type="checkbox" name="permissions[events][approve]" value="1" id="perm_events_approve"
+                                                        {{ old('permissions.events.approve', 1) ? 'checked' : '' }}>
                                                 </td>
-                                                <td data-label="Reject">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[events][reject]" value="1" {{ old('permissions.events.reject') ? 'checked' : '' }}>
+                                                <td>
+                                                    <input class="form-check-input" type="checkbox" name="permissions[events][reject]" value="1" id="perm_events_reject"
+                                                        {{ old('permissions.events.reject', 1) ? 'checked' : '' }}>
                                                 </td>
                                             </tr>
 
-                                            <!-- Memories Directory -->
+                                            <!-- 2. Memories Directory -->
                                             <tr>
-                                                <td class="text-start fw-semibold text-dark">
-                                                    <i class="bi bi-heart me-2 text-danger"></i> Memories Directory
+                                                <td class="text-start ps-3 py-3">
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="bi bi-collection text-warning fs-5 me-2"></i>
+                                                        <div>
+                                                            <div class="fw-semibold text-dark">Memories Directory</div>
+                                                            <small class="text-muted d-block" style="font-size: 0.75rem;">Memorial profiles inspection & approval</small>
+                                                        </div>
+                                                    </div>
                                                 </td>
-                                                <td data-label="View">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[memories][view]" value="1" {{ old('permissions.memories.view', '1') ? 'checked' : '' }}>
+                                                <td>
+                                                    <input class="form-check-input" type="checkbox" name="permissions[memories][view]" value="1" id="perm_memories_view"
+                                                        {{ old('permissions.memories.view', 1) ? 'checked' : '' }}>
                                                 </td>
-                                                <td data-label="Add">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[memories][add]" value="1" {{ old('permissions.memories.add') ? 'checked' : '' }}>
+                                                <td>
+                                                    <span class="text-muted small" title="Super Admin and Admin cannot create memories directly">&mdash;</span>
                                                 </td>
-                                                <td data-label="Edit">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[memories][edit]" value="1" {{ old('permissions.memories.edit') ? 'checked' : '' }}>
+                                                <td>
+                                                    <input class="form-check-input" type="checkbox" name="permissions[memories][edit]" value="1" id="perm_memories_edit"
+                                                        {{ old('permissions.memories.edit', 1) ? 'checked' : '' }}>
                                                 </td>
-                                                <td data-label="Delete">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[memories][delete]" value="1" {{ old('permissions.memories.delete') ? 'checked' : '' }}>
+                                                <td>
+                                                    <input class="form-check-input opacity-50" type="checkbox" disabled title="Super Admin Only: Admins/Employees cannot delete records">
+                                                    <div><span class="badge bg-secondary-subtle text-secondary border" style="font-size: 0.65rem;">Super Admin</span></div>
                                                 </td>
-                                                <td data-label="Approve">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[memories][approve]" value="1" {{ old('permissions.memories.approve') ? 'checked' : '' }}>
+                                                <td>
+                                                    <input class="form-check-input" type="checkbox" name="permissions[memories][approve]" value="1" id="perm_memories_approve"
+                                                        {{ old('permissions.memories.approve', 1) ? 'checked' : '' }}>
                                                 </td>
-                                                <td data-label="Reject">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[memories][reject]" value="1" {{ old('permissions.memories.reject') ? 'checked' : '' }}>
+                                                <td>
+                                                    <input class="form-check-input" type="checkbox" name="permissions[memories][reject]" value="1" id="perm_memories_reject"
+                                                        {{ old('permissions.memories.reject', 1) ? 'checked' : '' }}>
                                                 </td>
                                             </tr>
 
-                                            <!-- Employees / Admins -->
+                                            <!-- 3. Payments & Invoicing -->
                                             <tr>
-                                                <td class="text-start fw-semibold text-dark">
-                                                    <i class="bi bi-people me-2 text-primary"></i> Employees / Admins
+                                                <td class="text-start ps-3 py-3">
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="bi bi-currency-dollar text-warning fs-5 me-2"></i>
+                                                        <div>
+                                                            <div class="fw-semibold text-dark">Payments & Invoicing</div>
+                                                            <small class="text-muted d-block" style="font-size: 0.75rem;">Financial transactions, donations & invoices</small>
+                                                        </div>
+                                                    </div>
                                                 </td>
-                                                <td data-label="View">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[employees][view]" value="1" {{ old('permissions.employees.view', '1') ? 'checked' : '' }}>
+                                                <td>
+                                                    <input class="form-check-input" type="checkbox" name="permissions[payments][view]" value="1" id="perm_payments_view"
+                                                        {{ old('permissions.payments.view') ? 'checked' : '' }}>
                                                 </td>
-                                                <td data-label="Add">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[employees][add]" value="1" {{ old('permissions.employees.add') ? 'checked' : '' }}>
+                                                <td>
+                                                    <input class="form-check-input" type="checkbox" name="permissions[payments][add]" value="1" id="perm_payments_add"
+                                                        {{ old('permissions.payments.add') ? 'checked' : '' }}>
                                                 </td>
-                                                <td data-label="Edit">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[employees][edit]" value="1" {{ old('permissions.employees.edit') ? 'checked' : '' }}>
+                                                <td>
+                                                    <input class="form-check-input" type="checkbox" name="permissions[payments][edit]" value="1" id="perm_payments_edit"
+                                                        {{ old('permissions.payments.edit') ? 'checked' : '' }}>
                                                 </td>
-                                                <td data-label="Delete">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[employees][delete]" value="1" {{ old('permissions.employees.delete') ? 'checked' : '' }}>
+                                                <td>
+                                                    <input class="form-check-input opacity-50" type="checkbox" disabled title="Super Admin Only: Admins/Employees cannot delete records">
+                                                    <div><span class="badge bg-secondary-subtle text-secondary border" style="font-size: 0.65rem;">Super Admin</span></div>
                                                 </td>
-                                                <td data-label="Approve">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[employees][approve]" value="1" {{ old('permissions.employees.approve') ? 'checked' : '' }}>
+                                                <td>
+                                                    <input class="form-check-input" type="checkbox" name="permissions[payments][approve]" value="1" id="perm_payments_approve"
+                                                        {{ old('permissions.payments.approve') ? 'checked' : '' }}>
                                                 </td>
-                                                <td data-label="Reject">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[employees][reject]" value="1" {{ old('permissions.employees.reject') ? 'checked' : '' }}>
+                                                <td>
+                                                    <input class="form-check-input" type="checkbox" name="permissions[payments][reject]" value="1" id="perm_payments_reject"
+                                                        {{ old('permissions.payments.reject') ? 'checked' : '' }}>
                                                 </td>
                                             </tr>
 
-                                            <!-- Settings & Configurations -->
+                                            <!-- 4. Package Management -->
                                             <tr>
-                                                <td class="text-start fw-semibold text-dark">
-                                                    <i class="bi bi-gear me-2 text-secondary"></i> Settings & Configurations
+                                                <td class="text-start ps-3 py-3">
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="bi bi-box-seam text-warning fs-5 me-2"></i>
+                                                        <div>
+                                                            <div class="fw-semibold text-dark">Package Management</div>
+                                                            <small class="text-muted d-block" style="font-size: 0.75rem;">Memorial plans, tiers and virtual tokens</small>
+                                                        </div>
+                                                    </div>
                                                 </td>
-                                                <td data-label="View">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[settings][view]" value="1" {{ old('permissions.settings.view', '1') ? 'checked' : '' }}>
+                                                <td>
+                                                    <input class="form-check-input" type="checkbox" name="permissions[packages][view]" value="1" id="perm_packages_view"
+                                                        {{ old('permissions.packages.view') ? 'checked' : '' }}>
                                                 </td>
-                                                <td data-label="Add">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[settings][add]" value="1" {{ old('permissions.settings.add') ? 'checked' : '' }}>
+                                                <td>
+                                                    <input class="form-check-input" type="checkbox" name="permissions[packages][add]" value="1" id="perm_packages_add"
+                                                        {{ old('permissions.packages.add') ? 'checked' : '' }}>
                                                 </td>
-                                                <td data-label="Edit">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[settings][edit]" value="1" {{ old('permissions.settings.edit') ? 'checked' : '' }}>
+                                                <td>
+                                                    <input class="form-check-input" type="checkbox" name="permissions[packages][edit]" value="1" id="perm_packages_edit"
+                                                        {{ old('permissions.packages.edit') ? 'checked' : '' }}>
                                                 </td>
-                                                <td data-label="Delete">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[settings][delete]" value="1" {{ old('permissions.settings.delete') ? 'checked' : '' }}>
+                                                <td>
+                                                    <input class="form-check-input opacity-50" type="checkbox" disabled title="Super Admin Only: Admins/Employees cannot delete records">
+                                                    <div><span class="badge bg-secondary-subtle text-secondary border" style="font-size: 0.65rem;">Super Admin</span></div>
                                                 </td>
-                                                <td data-label="Approve">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[settings][approve]" value="1" {{ old('permissions.settings.approve') ? 'checked' : '' }}>
+                                                <td>
+                                                    <span class="text-muted small">&mdash;</span>
                                                 </td>
-                                                <td data-label="Reject">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[settings][reject]" value="1" {{ old('permissions.settings.reject') ? 'checked' : '' }}>
+                                                <td>
+                                                    <span class="text-muted small">&mdash;</span>
+                                                </td>
+                                            </tr>
+
+                                            <!-- 5. Analytics & Reports -->
+                                            <tr>
+                                                <td class="text-start ps-3 py-3">
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="bi bi-activity text-warning fs-5 me-2"></i>
+                                                        <div>
+                                                            <div class="fw-semibold text-dark">Analytics & Reports</div>
+                                                            <small class="text-muted d-block" style="font-size: 0.75rem;">Platform insights, traffic & engagement stats</small>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <input class="form-check-input" type="checkbox" name="permissions[reports][view]" value="1" id="perm_reports_view"
+                                                        {{ old('permissions.reports.view') ? 'checked' : '' }}>
+                                                </td>
+                                                <td>
+                                                    <span class="text-muted small">&mdash;</span>
+                                                </td>
+                                                <td>
+                                                    <span class="text-muted small">&mdash;</span>
+                                                </td>
+                                                <td>
+                                                    <input class="form-check-input opacity-50" type="checkbox" disabled title="Super Admin Only: Admins/Employees cannot delete records">
+                                                    <div><span class="badge bg-secondary-subtle text-secondary border" style="font-size: 0.65rem;">Super Admin</span></div>
+                                                </td>
+                                                <td>
+                                                    <span class="text-muted small">&mdash;</span>
+                                                </td>
+                                                <td>
+                                                    <span class="text-muted small">&mdash;</span>
+                                                </td>
+                                            </tr>
+
+                                            <!-- 6. System Settings & Configurations -->
+                                            <tr>
+                                                <td class="text-start ps-3 py-3">
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="bi bi-gear text-warning fs-5 me-2"></i>
+                                                        <div>
+                                                            <div class="fw-semibold text-dark">System Settings & Configurations</div>
+                                                            <small class="text-muted d-block" style="font-size: 0.75rem;">Platform configurations and system preferences</small>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <input class="form-check-input" type="checkbox" name="permissions[settings][view]" value="1" id="perm_settings_view"
+                                                        {{ old('permissions.settings.view') ? 'checked' : '' }}>
+                                                </td>
+                                                <td>
+                                                    <span class="text-muted small">&mdash;</span>
+                                                </td>
+                                                <td>
+                                                    <input class="form-check-input" type="checkbox" name="permissions[settings][edit]" value="1" id="perm_settings_edit"
+                                                        {{ old('permissions.settings.edit') ? 'checked' : '' }}>
+                                                </td>
+                                                <td>
+                                                    <input class="form-check-input opacity-50" type="checkbox" disabled title="Super Admin Only: Admins/Employees cannot delete records">
+                                                    <div><span class="badge bg-secondary-subtle text-secondary border" style="font-size: 0.65rem;">Super Admin</span></div>
+                                                </td>
+                                                <td>
+                                                    <span class="text-muted small">&mdash;</span>
+                                                </td>
+                                                <td>
+                                                    <span class="text-muted small">&mdash;</span>
                                                 </td>
                                             </tr>
                                         </tbody>

@@ -89,6 +89,10 @@ class EventController extends Controller
      */
     public function create(): View
     {
+        if (Auth::check() && in_array(Auth::user()->role, ['super_admin', 'admin'])) {
+            abort(403, 'Administrators cannot create events. You can only view, approve, or reject user submissions.');
+        }
+
         return view('admin.create_my_event');
     }
 
@@ -97,6 +101,10 @@ class EventController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        if (Auth::check() && in_array(Auth::user()->role, ['super_admin', 'admin'])) {
+            abort(403, 'Administrators cannot create events. You can only view, approve, or reject user submissions.');
+        }
+
         $validated = $request->validate([
             'title'           => 'required|string|max:255',
             'event_type'      => 'required|string|in:upcoming,live,past',
@@ -228,6 +236,10 @@ class EventController extends Controller
     {
         $event = Event::findOrFail($id);
         $this->authorizeAccess($event);
+
+        if (Auth::check() && !Auth::user()->canDelete()) {
+            abort(403, 'Unauthorized: Only Super Administrators have permission to delete events.');
+        }
 
         if ($event->banner_image && file_exists(public_path($event->banner_image))) {
             @unlink(public_path($event->banner_image));

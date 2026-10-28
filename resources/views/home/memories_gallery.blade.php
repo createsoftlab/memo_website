@@ -15,39 +15,7 @@
 </head>
 <body class="bg-memorial-light">
 
-  <!-- Navigation Bar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-memorial-dark px-3 py-2">
-    <div class="container-fluid">
-      <a class="navbar-brand text-warning fs-6 fw-bold" href="{{ url('/') }}">
-        <i class="bi bi-fire me-1"></i> Forever Missed
-      </a>
-      <button class="navbar-toggler border-0 d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="offcanvas offcanvas-end bg-memorial-dark text-white" tabindex="-1" id="offcanvasNavbar">
-        <div class="offcanvas-header border-bottom border-secondary d-lg-none">
-          <h5 class="offcanvas-title text-warning"><i class="bi bi-fire me-1"></i> Navigation</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
-        </div>
-        <div class="offcanvas-body d-flex flex-column flex-lg-row align-items-lg-center justify-content-lg-between w-100">
-          <ul class="navbar-nav text-uppercase small gap-lg-3 me-lg-auto mb-3 mb-lg-0">
-            <li class="nav-item"><a class="nav-link py-2" href="{{ url('/') }}"><i class="bi bi-house-door me-1"></i> Home</a></li>
-                  <li class="nav-item">
-  <a class="nav-link" href="{{ url('/all_memories') }}">
-    <i class="bi bi-heart-fill"></i> Memories
-  </a>
-            <li class="nav-item"><a class="nav-link py-2" href="{{ url('/') }}"><i class="bi bi-info-circle me-1"></i> About Us</a></li>
-            <li class="nav-item"><a class="nav-link py-2" href="#"><i class="bi bi-envelope me-1"></i> Contact Us</a></li>
-          </ul>
-          <div id="authButtons" class="d-flex flex-column flex-lg-row gap-2">
-            <a href="#" class="btn btn-outline-light btn-sm text-uppercase" id="loginBtn"><i class="bi bi-box-arrow-in-right me-1"></i> Login</a>
-            <a href="#" class="btn btn-warning btn-sm text-uppercase fw-semibold" id="signupBtn"><i class="bi bi-person-plus me-1"></i> Sign Up</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </nav>
+       @include('home.header')
 
   <!-- Hero Header -->
   <header class="memorial-hero d-flex align-items-end">

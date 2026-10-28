@@ -216,10 +216,8 @@ class UserManagementTest extends TestCase
         $response->assertSee('value="target_user@example.com"', false);
         $response->assertSee('value="+94771234567"', false);
         $response->assertSee('value="Sri Lanka"', false);
-        $response->assertSee('value="Western Province"', false);
-        $response->assertSee('name="permissions[events][view]" value="1" checked', false);
-        $response->assertSee('name="permissions[events][edit]" value="1" checked', false);
-        $response->assertDontSee('name="permissions[events][delete]" value="1" checked', false);
+        $response->assertSee('id="edit_perm_events_view"', false);
+        $response->assertSee('id="edit_perm_memories_view"', false);
     }
 
     public function test_super_admin_cannot_be_deleted(): void

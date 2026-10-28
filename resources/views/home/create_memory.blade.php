@@ -14,51 +14,7 @@
 </head>
 <body>
 
-  <!-- Navigation Bar with Mobile Offcanvas Slide Menu -->
-  <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
-    <div class="container-fluid px-4">
-      <a class="navbar-brand me-4" href="#">
-        <i class="bi bi-fire"></i> Forever Missed
-      </a>
-      
-      <!-- Offcanvas Mobile Trigger Button -->
-      <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-        <i class="bi bi-list text-white fs-2"></i>
-      </button>
-
-      <!-- Slide Drawer (Offcanvas) -->
-      <div class="offcanvas offcanvas-end offcanvas-memorial" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-        <div class="offcanvas-header border-bottom border-secondary pb-3">
-          <h5 class="offcanvas-title text-warning fw-bold" id="offcanvasNavbarLabel">
-            <i class="bi bi-fire me-1"></i> Forever Missed
-          </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-
-        <div class="offcanvas-body d-flex flex-column flex-lg-row justify-content-between align-items-lg-center">
-          <ul class="navbar-nav me-auto mb-3 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url('/') }}"><i class="bi bi-house-door"></i> HOME</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url('/all_memories') }}"><i class="bi bi-heart-fill"></i> Memories</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url('/about') }}"><i class="bi bi-info-circle"></i> ABOUT US</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" href="{{ url('/contact') }}"><i class="bi bi-envelope"></i> CONTACT US</a>
-            </li>
-          </ul>
-          
-          <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-2 mt-auto mt-lg-0 pt-3 pt-lg-0 border-top border-lg-0 border-secondary">
-            <a href="#" class="btn btn-nav-login text-center"><i class="bi bi-box-arrow-in-right"></i> LOGIN</a>
-            <a href="#" class="btn btn-nav-signup text-center"><i class="bi bi-person-plus"></i> SIGN UP</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </nav>
+      @include('home.header')
 
   <!-- Hero Header -->
   <header class="creatememory-hero d-flex align-items-center text-white mb-5">
@@ -75,23 +31,24 @@
         <div class="step-circle">1</div>
         <div class="step-label">About your loved one</div>
     </div>
-    <div class="step" id="tab-step-2" onclick="switchStep(2)">
+    {{-- <div class="step" id="tab-step-2" onclick="switchStep(2)">
         <div class="step-circle">2</div>
         <div class="step-label">Account details</div>
+    </div> --}}
+    <div class="step" id="tab-step-4" onclick="switchStep(4)">
+        <div class="step-circle">2</div>
+        <div class="step-label">Privacy Options</div>
     </div>
     <div class="step" id="tab-step-3" onclick="switchStep(3)">
         <div class="step-circle">3</div>
         <div class="step-label">Choose your plan</div>
     </div>
-    <div class="step" id="tab-step-4" onclick="switchStep(4)">
-        <div class="step-circle">4</div>
-        <div class="step-label">Privacy Options</div>
-    </div>
 </div>
 
     <!-- Form Content Container -->
     <div class="memorial-card p-4 p-md-5">
-        <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Memorial created successfully!');">
+        <form action="{{ route('home.create_memory') }}" method="POST" >
+            @csrf
 <!-- STEP 1: About your loved one -->
 
 <!-- STEP 1: About your loved one -->
@@ -145,6 +102,20 @@
         </div>
     </div>
 
+    <!-- Last Name & Gender -->
+    <div class="row mb-3">
+        <div class="col-12 col-md-6 mb-3 mb-md-0">
+            <label class="form-label">Last name *</label>
+            <input type="text" name="last_name" class="form-control w-100" required>
+        </div>
+        <div class="col-12 col-md-6">
+            <label class="form-label">Gender</label>
+            <div class="mt-2">
+                <input type="radio" name="gender" value="Male" id="male"> <label for="male" class="me-3">Male</label> 
+                <input type="radio" name="gender" value="Female" id="female"> <label for="female">Female</label>
+            </div>
+        </div>
+    </div>
 
     <div class="row mb-3">
         <!-- 1. Country Custom Dropdown -->
@@ -170,25 +141,8 @@
 
         <div class="col-12 col-md-6">
         <label class="form-label fw-bold" id="regionLabel">City / Town *</label>
-        <input type="text" name="state_province" id="stateProvinceInput" class="form-control w-100 py-2" placeholder="Enter your District , Province or state " required>
+        <input type="text" name="city" id="stateProvinceInput" class="form-control w-100 py-2" placeholder="Enter your District , Province or state " required>
     </div>
-    </div>
-
-
-
-    <!-- Last Name & Gender -->
-    <div class="row mb-3">
-        <div class="col-12 col-md-6 mb-3 mb-md-0">
-            <label class="form-label">Last name *</label>
-            <input type="text" name="last_name" class="form-control w-100" required>
-        </div>
-        <div class="col-12 col-md-6">
-            <label class="form-label">Gender</label>
-            <div class="mt-2">
-                <input type="radio" name="gender" value="Male" id="male"> <label for="male" class="me-3">Male</label> 
-                <input type="radio" name="gender" value="Female" id="female"> <label for="female">Female</label>
-            </div>
-        </div>
     </div>
 
     <!-- Relationship & Designation Custom Dropdowns -->
@@ -249,8 +203,7 @@
                     <div class="col-6 col-md-2 mb-2"><input type="number" name="birth_year" class="form-control" placeholder="Year"></div>
                     <div class="col-6 col-md-2 mb-2"><input type="number" name="birth_month" class="form-control" placeholder="Month"></div>
                     <div class="col-6 col-md-2 mb-2"><input type="number" name="birth_day" class="form-control" placeholder="Day"></div>
-                    <div class="col-12 col-md-3 mb-2"><input type="text" name="birth_city" class="form-control" placeholder="City or town"></div>
-                    <div class="col-12 col-md-3 mb-2"><input type="text" name="birth_country" class="form-control" placeholder="Country"></div>
+                    <div class="col-12 col-md-3 mb-2"><input type="text" name="birth_location" class="form-control" placeholder="City or town"></div>
                 </div>
 
                 <label class="form-label small text-muted">Passed away</label>
@@ -258,8 +211,7 @@
                     <div class="col-6 col-md-2 mb-2"><input type="number" name="passed_year" class="form-control" placeholder="Year"></div>
                     <div class="col-6 col-md-2 mb-2"><input type="number" name="passed_month" class="form-control" placeholder="Month"></div>
                     <div class="col-6 col-md-2 mb-2"><input type="number" name="passed_day" class="form-control" placeholder="Day"></div>
-                    <div class="col-12 col-md-3 mb-2"><input type="text" name="passed_city" class="form-control" placeholder="City or town"></div>
-                    <div class="col-12 col-md-3 mb-2"><input type="text" name="passed_country" class="form-control" placeholder="Country"></div>
+                    <div class="col-12 col-md-3 mb-2"><input type="text" name="death_location" class="form-control" placeholder="City or town"></div>
                 </div>
             </div>
         </div>
@@ -292,7 +244,7 @@
 
         
 <!-- STEP 2: Account Details -->
-<div class="form-step-content d-none" id="step-content-2">
+{{-- <div class="form-step-content d-none" id="step-content-2">
     <h2 class="mb-4">Your Account Details</h2>
     
     <!-- First Name & Last Name -->
@@ -361,9 +313,9 @@
                 <input type="tel" name="contact_number" class="form-control" placeholder="Phone number" required style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
             </div>
         </div>
-    </div>
+    </div> --}}
 
-    <!-- Password & Confirm Password with Eye Toggles -->
+    {{-- <!-- Password & Confirm Password with Eye Toggles -->
     <div class="row mb-4">
         <!-- Password Field -->
         <div class="col-12 col-md-6 mb-3 mb-md-0">
@@ -386,7 +338,7 @@
                 </button>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Navigation Buttons -->
     <div class="d-flex justify-content-between">
@@ -655,7 +607,7 @@
        
 
 
-            <div class="form-step-content d-none" id="step-content-4">
+    <div class="form-step-content d-none" id="step-content-4">
     <h2 class="mb-4">Privacy Options</h2>
     <p class="text-muted mb-4">Control who can view and contribute to this memorial space.</p>
     

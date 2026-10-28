@@ -152,7 +152,7 @@
                             <!-- Sign Up Link -->
                             <div class="text-center mt-4">
                                 <p class="small text-muted mb-0">Don't have an account? <a
-                                        href="{{ url('register') }}"
+                                        href="{{ route('register', ['redirect_to' => session('url.intended', url('/'))]) }}"
                                         class="text-memorial-accent fw-bold text-decoration-none">Sign up here</a></p>
                             </div>
 
