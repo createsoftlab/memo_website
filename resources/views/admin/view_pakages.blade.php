@@ -73,7 +73,7 @@
         <!-- Sidebar Include -->
         @include('admin.sidebar')
 
-        <!-- Main Content (Now stretches 100% full width) -->
+        <!-- Main Content -->
         <div class="main-content">
             <!-- Top Navbar -->
             @include('admin.header')
@@ -85,7 +85,7 @@
                 <div class="row align-items-center mb-4">
                     <div class="col-md-8">
                         <h2 class="font-serif fw-bold text-dark m-0" style="color: #3b281a;">Pricing & Packages Management</h2>
-                        <p class="text-muted small m-0 mt-1">Configure your memorial subscription tiers and tribute items (Virtual Flowers & Candles)</p>
+                        <p class="text-muted small m-0 mt-1">Configure memorial subscription tiers, memory creator quotas, guest limits, and tribute items</p>
                     </div>
                     <div class="col-md-4 text-md-end mt-3 mt-md-0">
                         <a href="{{ route('admin.create_package') }}" class="btn btn-dark fw-bold px-4 py-2 rounded-pill shadow-sm">
@@ -148,7 +148,8 @@
                                         <div>
                                             <div class="d-flex justify-content-between align-items-center mb-2">
                                                 <span class="badge bg-primary px-3 py-1 text-uppercase">{{ $pkg->billing_type }}</span>
-                                                <h4 class="text-success fw-bold m-0">${{ number_format($pkg->price, 2) }}
+                                                <h4 class="text-success fw-bold m-0">
+                                                    {{ strtoupper($pkg->currency ?? 'usd') }} {{ number_format($pkg->price, 2) }}
                                                     <small class="text-muted fw-normal fs-6">/ {{ $pkg->billing_type }}</small>
                                                 </h4>
                                             </div>
@@ -161,31 +162,65 @@
                                                 <span>Country: <strong>{{ $pkg->country == 'all' ? 'Global' : strtoupper($pkg->country) }}</strong></span>
                                             </div>
 
-                                            <div class="d-flex flex-wrap gap-2 mb-3">
-                                                <span class="badge bg-light text-dark border"><i class="bi bi-images text-primary me-1"></i> {{ $pkg->max_photos == -1 ? 'Unlimited' : $pkg->max_photos }} Photos</span>
-                                                <span class="badge bg-light text-dark border"><i class="bi bi-camera-video text-danger me-1"></i> {{ $pkg->max_videos }} Videos</span>
-                                                <span class="badge bg-light text-dark border"><i class="bi bi-chat-dots text-info me-1"></i> {{ $pkg->max_comments == -1 ? 'Unlimited' : $pkg->max_comments }} Comments</span>
-                                                <span class="badge bg-light text-dark border"><i class="bi bi-fire text-warning me-1"></i> {{ $pkg->candles_limit }} Candles</span>
-                                                <span class="badge bg-light text-dark border"><i class="bi bi-flower1 text-success me-1"></i> {{ $pkg->flowers_limit }} Flowers</span>
+                                            <!-- Creator Limits -->
+                                            <div class="mb-2">
+                                                <small class="text-muted fw-bold d-block mb-1">CREATOR LIMITS:</small>
+                                                <div class="d-flex flex-wrap gap-1">
+                                                    <span class="badge bg-light text-dark border"><i class="bi bi-calendar-event text-primary me-1"></i> {{ $pkg->events_limit == -1 ? 'Unlimited' : $pkg->events_limit }} Events</span>
+                                                    <span class="badge bg-light text-dark border"><i class="bi bi-images text-primary me-1"></i> {{ $pkg->max_photos == -1 ? 'Unlimited' : $pkg->max_photos }} Photos</span>
+                                                    <span class="badge bg-light text-dark border"><i class="bi bi-camera-video text-danger me-1"></i> {{ $pkg->max_videos }} Videos</span>
+                                                    <span class="badge bg-light text-dark border"><i class="bi bi-mic text-secondary me-1"></i> {{ $pkg->max_audios }} Audios</span>
+                                                    <span class="badge bg-light text-dark border"><i class="bi bi-chat-dots text-info me-1"></i> {{ $pkg->max_comments == -1 ? 'Unlimited' : $pkg->max_comments }} Comments</span>
+                                                    <span class="badge bg-light text-dark border"><i class="bi bi-fire text-warning me-1"></i> {{ $pkg->candles_limit }} Candles</span>
+                                                    <span class="badge bg-light text-dark border"><i class="bi bi-flower1 text-success me-1"></i> {{ $pkg->flowers_limit }} Flowers</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Guest Limits -->
+                                            <div class="mb-2">
+                                                <small class="text-muted fw-bold d-block mb-1">GUEST / PUBLIC LIMITS:</small>
+                                                <div class="d-flex flex-wrap gap-1">
+                                                    <span class="badge bg-light text-secondary border">Stories: {{ $pkg->guest_story_limit == -1 ? 'Unlimited' : $pkg->guest_story_limit }}</span>
+                                                    <span class="badge bg-light text-secondary border">Photos: {{ $pkg->guest_photo_limit == -1 ? 'Unlimited' : $pkg->guest_photo_limit }}</span>
+                                                    <span class="badge bg-light text-secondary border">Videos: {{ $pkg->guest_video_limit == -1 ? 'Unlimited' : $pkg->guest_video_limit }}</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Feature Toggles -->
+                                            <div class="d-flex gap-2 mt-2">
+                                                <span class="badge {{ $pkg->has_ai_features ? 'bg-info text-dark' : 'bg-light text-muted border' }}">
+                                                    <i class="bi bi-cpu me-1"></i> AI {{ $pkg->has_ai_features ? 'Active' : 'Off' }}
+                                                </span>
+                                                <span class="badge {{ $pkg->has_donations ? 'bg-success text-white' : 'bg-light text-muted border' }}">
+                                                    <i class="bi bi-heart me-1"></i> Donations {{ $pkg->has_donations ? 'Active' : 'Off' }}
+                                                </span>
                                             </div>
                                         </div>
 
-                                        <div class="d-flex gap-2 pt-3 border-top mt-2">
+                                        <div class="d-flex gap-2 pt-3 border-top mt-3">
                                             <button type="button" class="btn btn-sm btn-outline-dark w-100 fw-bold edit-pkg-btn"
                                                 data-action="{{ route('admin.packages.update', $pkg->id) }}"
                                                 data-name="{{ $pkg->name }}"
                                                 data-price="{{ $pkg->price }}"
+                                                data-currency="{{ $pkg->currency }}"
                                                 data-billing="{{ $pkg->billing_type }}"
                                                 data-country="{{ $pkg->country }}"
                                                 data-profile="{{ $pkg->business_profile }}"
                                                 data-validity="{{ $pkg->duration_value }}"
                                                 data-validity-unit="{{ $pkg->duration_unit }}"
                                                 data-trial="{{ $pkg->trial_days }}"
+                                                data-events="{{ $pkg->events_limit }}"
                                                 data-photos="{{ $pkg->max_photos }}"
                                                 data-videos="{{ $pkg->max_videos }}"
+                                                data-audios="{{ $pkg->max_audios }}"
                                                 data-comments="{{ $pkg->max_comments }}"
                                                 data-candles="{{ $pkg->candles_limit }}"
-                                                data-flowers="{{ $pkg->flowers_limit }}">
+                                                data-flowers="{{ $pkg->flowers_limit }}"
+                                                data-ai="{{ $pkg->has_ai_features ? '1' : '0' }}"
+                                                data-donations="{{ $pkg->has_donations ? '1' : '0' }}"
+                                                data-guest-story="{{ $pkg->guest_story_limit }}"
+                                                data-guest-photo="{{ $pkg->guest_photo_limit }}"
+                                                data-guest-video="{{ $pkg->guest_video_limit }}">
                                                 <i class="bi bi-pencil-square me-1"></i> Edit Plan
                                             </button>
 
@@ -223,7 +258,8 @@
                                                 <span class="badge {{ $item->type == 'candle' ? 'bg-warning text-dark' : 'bg-success' }} px-3 py-1 text-capitalize">
                                                     <i class="bi {{ $item->type == 'candle' ? 'bi-fire' : 'bi-flower1' }} me-1"></i> {{ $item->type }}
                                                 </span>
-                                                <h4 class="text-success fw-bold m-0">${{ number_format($item->price, 2) }}
+                                                <h4 class="text-success fw-bold m-0">
+                                                    {{ strtoupper($item->currency ?? 'usd') }} {{ number_format($item->price, 2) }}
                                                     <small class="text-muted fw-normal fs-6">/ {{ $item->initial_duration_days }} days</small>
                                                 </h4>
                                             </div>
@@ -232,7 +268,7 @@
 
                                             <p class="text-muted small mb-3">
                                                 <strong>Active Validity:</strong> {{ $item->initial_duration_days }} Days<br>
-                                                <strong>Time Extension:</strong> ${{ number_format($item->extend_price, 2) }} per {{ $item->extend_duration_days }} extra days<br>
+                                                <strong>Extension Cost:</strong> {{ strtoupper($item->currency ?? 'usd') }} {{ number_format($item->extend_price, 2) }} per {{ $item->extend_duration_days }} extra days<br>
                                                 <strong>Country:</strong> {{ $item->country == 'all' ? 'Global' : strtoupper($item->country) }}
                                             </p>
                                         </div>
@@ -243,6 +279,7 @@
                                                 data-type="{{ $item->type }}"
                                                 data-name="{{ $item->name }}"
                                                 data-country="{{ $item->country }}"
+                                                data-currency="{{ $item->currency }}"
                                                 data-price="{{ $item->price }}"
                                                 data-duration="{{ $item->initial_duration_days }}"
                                                 data-extprice="{{ $item->extend_price }}"
@@ -294,12 +331,22 @@
 
                     <div class="modal-body p-4">
                         <div class="row g-3 mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <label class="form-label fw-semibold small">Package Name</label>
                                 <input type="text" name="name" id="modalPkgName" class="form-control" required>
                             </div>
-                            <div class="col-md-3">
-                                <label class="form-label fw-semibold small">Price ($)</label>
+                            <div class="col-md-2">
+                                <label class="form-label fw-semibold small">Currency</label>
+                                <select name="currency" id="modalPkgCurrency" class="form-select" required>
+                                    <option value="usd">USD ($)</option>
+                                    <option value="lkr">LKR (Rs)</option>
+                                    <option value="eur">EUR (€)</option>
+                                    <option value="gbp">GBP (£)</option>
+                                    <option value="aud">AUD (A$)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label fw-semibold small">Price</label>
                                 <input type="number" step="0.01" name="price" id="modalPkgPrice" class="form-control" required>
                             </div>
                             <div class="col-md-3">
@@ -317,10 +364,10 @@
                                 <label class="form-label fw-semibold small">Available Country</label>
                                 <select name="country" id="modalPkgCountry" class="form-select">
                                     <option value="all">All Countries (Global)</option>
-                                    <option value="lk">Sri Lanka</option>
-                                    <option value="us">United States</option>
-                                    <option value="uk">United Kingdom</option>
-                                    <option value="au">Australia</option>
+                                    <option value="lk">Sri Lanka (LK)</option>
+                                    <option value="us">United States (US)</option>
+                                    <option value="uk">United Kingdom (UK)</option>
+                                    <option value="au">Australia (AU)</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
@@ -353,31 +400,77 @@
                             </div>
                         </div>
 
-                        <!-- Feature limits -->
-                        <div class="p-3 border rounded-3 bg-light">
-                            <h6 class="fw-semibold text-dark mb-2"><i class="bi bi-sliders me-1"></i> Features & Upload Limits</h6>
+                        <!-- Creator Quotas -->
+                        <div class="p-3 border rounded-3 bg-light mb-3">
+                            <h6 class="fw-semibold text-dark mb-2"><i class="bi bi-person-badge me-1"></i> Memory Creator Limits (-1 = Unlimited)</h6>
                             <div class="row g-2 mb-2">
-                                <div class="col-md-4">
-                                    <label class="form-label small">Max Photos (-1 = Unlimited)</label>
+                                <div class="col-md-3">
+                                    <label class="form-label small">Events Limit</label>
+                                    <input type="number" name="events_limit" id="modalPkgEvents" class="form-control form-control-sm">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small">Max Photos</label>
                                     <input type="number" name="max_photos" id="modalPkgPhotos" class="form-control form-control-sm">
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label class="form-label small">Max Videos</label>
                                     <input type="number" name="max_videos" id="modalPkgVideos" class="form-control form-control-sm">
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label small">Max Comments (-1 = Unlimited)</label>
-                                    <input type="number" name="max_comments" id="modalPkgComments" class="form-control form-control-sm">
+                                <div class="col-md-3">
+                                    <label class="form-label small">Max Audios</label>
+                                    <input type="number" name="max_audios" id="modalPkgAudios" class="form-control form-control-sm">
                                 </div>
                             </div>
                             <div class="row g-2">
-                                <div class="col-md-6">
-                                    <label class="form-label small">Free Candles Included</label>
+                                <div class="col-md-4">
+                                    <label class="form-label small">Max Comments</label>
+                                    <input type="number" name="max_comments" id="modalPkgComments" class="form-control form-control-sm">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small">Free Candles</label>
                                     <input type="number" name="candles_limit" id="modalPkgCandles" class="form-control form-control-sm">
                                 </div>
-                                <div class="col-md-6">
-                                    <label class="form-label small">Free Flowers Included</label>
+                                <div class="col-md-4">
+                                    <label class="form-label small">Free Flowers</label>
                                     <input type="number" name="flowers_limit" id="modalPkgFlowers" class="form-control form-control-sm">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Guest Limits -->
+                        <div class="p-3 border rounded-3 bg-light mb-3">
+                            <h6 class="fw-semibold text-dark mb-2"><i class="bi bi-people me-1"></i> Guest / General Public Limits</h6>
+                            <div class="row g-2">
+                                <div class="col-md-4">
+                                    <label class="form-label small">Guest Story Limit</label>
+                                    <input type="number" name="guest_story_limit" id="modalPkgGuestStory" class="form-control form-control-sm">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small">Guest Photo Limit</label>
+                                    <input type="number" name="guest_photo_limit" id="modalPkgGuestPhoto" class="form-control form-control-sm">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small">Guest Video Limit</label>
+                                    <input type="number" name="guest_video_limit" id="modalPkgGuestVideo" class="form-control form-control-sm">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Feature Toggles -->
+                        <div class="p-3 border rounded-3 bg-light">
+                            <h6 class="fw-semibold text-dark mb-2"><i class="bi bi-toggle-on me-1"></i> Feature Access Toggles</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="has_ai_features" id="modalPkgAI" value="1">
+                                        <label class="form-check-label small fw-semibold" for="modalPkgAI">AI Story & Tribute Features</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="has_donations" id="modalPkgDonations" value="1">
+                                        <label class="form-check-label small fw-semibold" for="modalPkgDonations">Donation & Memorial Fundraiser</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -420,18 +513,28 @@
                         </div>
 
                         <div class="row g-3 mb-3">
-                            <div class="col-6">
+                            <div class="col-md-4">
                                 <label class="form-label fw-semibold small">Country</label>
                                 <select name="country" id="modalItemCountry" class="form-select">
                                     <option value="all">Global</option>
-                                    <option value="lk">Sri Lanka</option>
-                                    <option value="us">United States</option>
-                                    <option value="uk">United Kingdom</option>
-                                    <option value="au">Australia</option>
+                                    <option value="lk">Sri Lanka (LK)</option>
+                                    <option value="us">United States (US)</option>
+                                    <option value="uk">United Kingdom (UK)</option>
+                                    <option value="au">Australia (AU)</option>
                                 </select>
                             </div>
-                            <div class="col-6">
-                                <label class="form-label fw-semibold small">Base Price ($)</label>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold small">Currency</label>
+                                <select name="currency" id="modalItemCurrency" class="form-select" required>
+                                    <option value="usd">USD ($)</option>
+                                    <option value="lkr">LKR (Rs)</option>
+                                    <option value="eur">EUR (€)</option>
+                                    <option value="gbp">GBP (£)</option>
+                                    <option value="aud">AUD (A$)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold small">Base Price</label>
                                 <input type="number" step="0.01" name="price" id="modalItemPrice" class="form-control" required>
                             </div>
                         </div>
@@ -447,7 +550,7 @@
                         <div class="mb-3">
                             <label class="form-label fw-semibold small text-primary fw-bold">Extension Pricing</label>
                             <div class="input-group">
-                                <span class="input-group-text">$</span>
+                                <span class="input-group-text">Fee</span>
                                 <input type="number" step="0.01" name="extend_price" id="modalItemExtPrice" class="form-control" required>
                                 <span class="input-group-text">per</span>
                                 <input type="number" name="extend_duration_days" id="modalItemExtDays" class="form-control" required>
@@ -480,19 +583,28 @@
                     const form = document.getElementById('editPackageForm');
                     form.action = this.getAttribute('data-action');
 
-                    document.getElementById('modalPkgName').value = this.getAttribute('data-name');
-                    document.getElementById('modalPkgPrice').value = this.getAttribute('data-price');
-                    document.getElementById('modalPkgBilling').value = this.getAttribute('data-billing');
-                    document.getElementById('modalPkgCountry').value = this.getAttribute('data-country');
-                    document.getElementById('modalPkgProfile').value = this.getAttribute('data-profile');
-                    document.getElementById('modalPkgValidity').value = this.getAttribute('data-validity');
+                    document.getElementById('modalPkgName').value = this.getAttribute('data-name') || '';
+                    document.getElementById('modalPkgPrice').value = this.getAttribute('data-price') || '';
+                    document.getElementById('modalPkgCurrency').value = (this.getAttribute('data-currency') || 'usd').toLowerCase();
+                    document.getElementById('modalPkgBilling').value = this.getAttribute('data-billing') || 'monthly';
+                    document.getElementById('modalPkgCountry').value = this.getAttribute('data-country') || 'all';
+                    document.getElementById('modalPkgProfile').value = this.getAttribute('data-profile') || 'all';
+                    document.getElementById('modalPkgValidity').value = this.getAttribute('data-validity') || '';
                     document.getElementById('modalPkgValidityUnit').value = this.getAttribute('data-validity-unit') || 'days';
-                    document.getElementById('modalPkgTrial').value = this.getAttribute('data-trial');
-                    document.getElementById('modalPkgPhotos').value = this.getAttribute('data-photos');
-                    document.getElementById('modalPkgVideos').value = this.getAttribute('data-videos');
-                    document.getElementById('modalPkgComments').value = this.getAttribute('data-comments');
-                    document.getElementById('modalPkgCandles').value = this.getAttribute('data-candles');
-                    document.getElementById('modalPkgFlowers').value = this.getAttribute('data-flowers');
+                    document.getElementById('modalPkgTrial').value = this.getAttribute('data-trial') || '0';
+                    document.getElementById('modalPkgEvents').value = this.getAttribute('data-events') || '1';
+                    document.getElementById('modalPkgPhotos').value = this.getAttribute('data-photos') || '20';
+                    document.getElementById('modalPkgVideos').value = this.getAttribute('data-videos') || '2';
+                    document.getElementById('modalPkgAudios').value = this.getAttribute('data-audios') || '5';
+                    document.getElementById('modalPkgComments').value = this.getAttribute('data-comments') || '100';
+                    document.getElementById('modalPkgCandles').value = this.getAttribute('data-candles') || '0';
+                    document.getElementById('modalPkgFlowers').value = this.getAttribute('data-flowers') || '0';
+                    document.getElementById('modalPkgGuestStory').value = this.getAttribute('data-guest-story') || '5';
+                    document.getElementById('modalPkgGuestPhoto').value = this.getAttribute('data-guest-photo') || '10';
+                    document.getElementById('modalPkgGuestVideo').value = this.getAttribute('data-guest-video') || '1';
+
+                    document.getElementById('modalPkgAI').checked = this.getAttribute('data-ai') === '1';
+                    document.getElementById('modalPkgDonations').checked = this.getAttribute('data-donations') === '1';
 
                     packageModal.show();
                 });
@@ -508,6 +620,7 @@
                     document.getElementById('modalItemType').value = this.getAttribute('data-type');
                     document.getElementById('modalItemName').value = this.getAttribute('data-name');
                     document.getElementById('modalItemCountry').value = this.getAttribute('data-country');
+                    document.getElementById('modalItemCurrency').value = (this.getAttribute('data-currency') || 'usd').toLowerCase();
                     document.getElementById('modalItemPrice').value = this.getAttribute('data-price');
                     document.getElementById('modalItemDuration').value = this.getAttribute('data-duration');
                     document.getElementById('modalItemExtPrice').value = this.getAttribute('data-extprice');
