@@ -34,31 +34,27 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'phone' => ['required', 'string', 'max:255'],
-            'country' => ['required', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:255'],
+            'country' => ['nullable', 'string', 'max:255'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'phone' => $request->phone,
-            'country' => $request->country,
-            'state' => $request->state,
+            'phone' => $request->phone ?? null,
+            'country' => $request->country ?? 'all',
+            'state' => $request->state ?? null,
             'password' => Hash::make($request->password),
+            'role' => 'user',
+            'package_id' => null,
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        $redirectUrl = $request->input('redirect_to', url('/'));
-
-        if (! str_starts_with($redirectUrl, url('/'))) {
-            $redirectUrl = url('/');
-        }
-
-        return redirect()->to($redirectUrl)
-            ->with('success', 'Registration successful!');
+        return redirect()->route('user.dashboard')
+            ->with('success', 'Registration successful! Welcome to your dashboard.');
 
     }
 }

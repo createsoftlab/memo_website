@@ -1,8 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Memory;
+use App\Models\Profile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class MemoryController extends Controller
@@ -10,7 +13,10 @@ class MemoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index() {}
+    public function index() {
+
+
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -83,7 +89,7 @@ class MemoryController extends Controller
     {
         return view('memory_user.all_memories');
     }
-    
+
     public function editMemory(): View
     {
         return view('memory_user.edit_memory');

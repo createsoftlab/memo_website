@@ -19,6 +19,7 @@ class Package extends Model
         'duration_value',
         'duration_unit',
         'trial_days',
+        'memories_limit',
         'events_limit',
         'max_photos',
         'max_videos',
@@ -41,6 +42,7 @@ class Package extends Model
         'has_ai_features'   => 'boolean',
         'has_donations'     => 'boolean',
         'is_active'         => 'boolean',
+        'memories_limit'    => 'integer',
         'events_limit'      => 'integer',
         'max_photos'        => 'integer',
         'max_videos'        => 'integer',
@@ -49,6 +51,11 @@ class Package extends Model
         'guest_photo_limit' => 'integer',
         'guest_video_limit' => 'integer',
     ];
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 
     // Scope for Geo-filtering
     public function scopeForCountry($query, string $countryCode)

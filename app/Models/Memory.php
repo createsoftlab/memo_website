@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Memory extends Model
 {
     protected $fillable = [
-
+        'user_id',
         'memorial_type',
         'web_address',
         'story',
@@ -17,9 +17,12 @@ class Memory extends Model
         'funeral_location_name',
         'funeral_location_address',
         'family_contact_no',
-
-        
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function profiles()
     {

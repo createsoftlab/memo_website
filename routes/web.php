@@ -23,9 +23,13 @@ require __DIR__ . '/auth.php';
 | Dashboard & Profile Routes (Breeze / Default)
 |--------------------------------------------------------------------------
 */
-// Route::get('/dashboard', function () {
-//     return redirect()->route('admin.dashboard');
-// })->middleware(['auth'])->name('dashboard');
+Route::get('/dashboard', function () {
+    $user = Auth::user();
+    if ($user && in_array($user->role, ['super_admin', 'admin', 'employee'], true)) {
+        return redirect()->route('admin.dashboard');
+    }
+    return redirect()->route('user.dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 // Route::middleware('auth')->group(function () {
 //     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -70,8 +74,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::prefix('events')->name('events.')->group(function () {
             Route::get('/all', [EventController::class, 'allEvents'])->name('all');
             Route::get('/my', [EventController::class, 'myEvents'])->name('my');
-            Route::get('/create', [EventController::class, 'create'])->name('create')->middleware('prevent_admin_creation');
-            Route::post('/store', [EventController::class, 'store'])->name('store')->middleware('prevent_admin_creation');
+            Route::get('/create', [EventController::class, 'create'])->name('create')->middleware(['prevent_admin_creation', 'active_package:event']);
+            Route::post('/store', [EventController::class, 'store'])->name('store')->middleware(['prevent_admin_creation', 'active_package:event']);
             Route::get('/{event}/edit', [EventController::class, 'edit'])->name('edit')->middleware('module.permission:events,edit');
             Route::put('/{event}', [EventController::class, 'update'])->name('update')->middleware('module.permission:events,edit');
             Route::delete('/{event}', [EventController::class, 'destroy'])->name('destroy')->middleware('can.delete');
@@ -81,7 +85,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         // Legacy Route Aliases for Events
         Route::get('/all_events', [EventController::class, 'allEvents'])->name('all_events');
         Route::get('/my_events', [EventController::class, 'myEvents'])->name('my_events');
-        Route::get('/create_my_event', [EventController::class, 'create'])->name('create_my_event')->middleware('prevent_admin_creation');
+        Route::get('/create_my_event', [EventController::class, 'create'])->name('create_my_event')->middleware(['prevent_admin_creation', 'active_package:event']);
         Route::get('/edit_my_event', function () {
             $firstEvent = \App\Models\Event::first();
             return $firstEvent
@@ -94,7 +98,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     // Memories Management
     Route::middleware(['module.permission:memories,view'])->group(function () {
         Route::get('/all_memories', [AdminController::class, 'allMemories'])->name('all_memories');
-        Route::get('/create_memory', [AdminController::class, 'createMemory'])->name('create_memory')->middleware('prevent_admin_creation');
+        Route::get('/create_memory', [AdminController::class, 'createMemory'])->name('create_memory')->middleware(['prevent_admin_creation', 'active_package:memory']);
         Route::get('/edit_memory', [AdminController::class, 'editMemory'])->name('edit_memory')->middleware('module.permission:memories,edit');
     });
 
@@ -152,7 +156,8 @@ Route::get('/card', [HomeController::class, 'card'])->name('home.card');
 Route::get('/contact', [HomeController::class, 'contact'])->name('home.contact');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/create_memory', [MemoryController::class, 'store'])->name('home.create_memory');
+    Route::get('/create_memory', [HomeController::class, 'createMemory'])->name('home.create_memory');
+    Route::post('/create_memory', [MemoryController::class, 'store'])->name('home.create_memory.store');
 });
 
 Route::get('/donation_form', [HomeController::class, 'donationForm'])->name('home.donation_form');
@@ -164,13 +169,28 @@ Route::get('/memories_life', [HomeController::class, 'memoriesLife'])->name('hom
 Route::get('/memories_stories', [HomeController::class, 'memoriesStories'])->name('home.memories_stories');
 Route::get('/memories_timeline', [HomeController::class, 'memoriesTimeline'])->name('home.memories_timeline');
 Route::get('/pricing', [HomeController::class, 'pricing'])->name('home.pricing');
+Route::get('/packages', [HomeController::class, 'pricing'])->name('packages.index');
 
 /*
 |--------------------------------------------------------------------------
 | Memory User Routes
 |--------------------------------------------------------------------------
 */
-Route::get('memory_user/dashboard', [AdminController::class, 'memoryUser_dashboard'])->name('memoryUser.dashboard');
-Route::get('memory_user/my_memories', [MemoryController::class, 'myMemories'])->name('my_memories');
-Route::get('memory_user/edit_memory', [MemoryController::class, 'editMemory'])->name('edit_memory');
-Route::get('memory_user/profile_settings', [MemoryUserController::class, 'profileSettings'])->name('userProfile_settings');
+Route::middleware(['auth'])->group(function () {
+    Route::get('memory_user/dashboard', [AdminController::class, 'memoryUser_dashboard'])->name('memoryUser.dashboard');
+    Route::get('user/dashboard', [AdminController::class, 'memoryUser_dashboard'])->name('user.dashboard');
+    Route::get('memory_user/my_memories', [MemoryController::class, 'myMemories'])->name('my_memories');
+    Route::get('memory_user/create_memory', [AdminController::class, 'createMemory'])->name('memoryUser.create_memory')->middleware(['prevent_admin_creation', 'active_package:memory']);
+    Route::get('memory_user/edit_memory', [MemoryController::class, 'editMemory'])->name('edit_memory');
+    Route::get('memory_user/profile_settings', [MemoryUserController::class, 'profileSettings'])->name('userProfile_settings');
+
+    // Events management for Memory User
+    Route::get('memory_user/my_events', [EventController::class, 'myEvents'])->name('memoryUser.my_events');
+    Route::get('memory_user/all_events', [EventController::class, 'allEvents'])->name('memoryUser.all_events');
+    Route::get('memory_user/create_my_event', [EventController::class, 'create'])->name('memoryUser.create_event')->middleware(['prevent_admin_creation', 'active_package:event']);
+
+    // Canonical Named Route Aliases for Events & Memories
+    Route::get('/events/create', [EventController::class, 'create'])->name('events.create')->middleware(['prevent_admin_creation', 'active_package:event']);
+    Route::post('/events/store', [EventController::class, 'store'])->name('events.store')->middleware(['prevent_admin_creation', 'active_package:event']);
+    Route::get('/memories/create', [AdminController::class, 'createMemory'])->name('memories.create')->middleware(['prevent_admin_creation', 'active_package:memory']);
+});

@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'can.delete' => \App\Http\Middleware\CheckCanDelete::class,
             'super_admin' => \App\Http\Middleware\EnsureSuperAdmin::class,
             'prevent_admin_creation' => \App\Http\Middleware\PreventAdminContentCreation::class,
+            'active_package' => \App\Http\Middleware\EnsureActivePackage::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

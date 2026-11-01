@@ -16,12 +16,12 @@
 </head>
 <body>
 
-    @include('admin.sidebar')
+    @include(Auth::user()?->isMemoryUser() ? 'memory_user.sidebar' : 'admin.sidebar')
 
     <!-- Main Content -->
     <div class="main-content">
         <!-- Top Navbar -->
-        @include('admin.header')
+        @include(Auth::user()?->isMemoryUser() ? 'memory_user.header' : 'admin.header')
 
         <!-- Page Body -->
         <div class="container-fluid py-4">
