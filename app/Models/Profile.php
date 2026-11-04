@@ -13,6 +13,8 @@ class Profile extends Model
         'middle_name',
         'last_name',
         'gender',
+        'relationship',
+        'designation',
         'memorial_status',
         'passed_away_reason',
         'date_of_birth',
@@ -57,29 +59,41 @@ class Profile extends Model
         return $this->belongsTo(Memory::class);
     }
 
+    // Memory user and profile images
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
+
+    // Music
+    public function music()
+    {
+        return $this->hasOne(Music::class);
+    }
+
     public function stories()
-{
-    return $this->hasMany(Story::class);
-}
+    {
+        return $this->hasMany(Story::class);
+    }
 
-public function photos()
-{
-    return $this->hasMany(Media::class)
-                ->where('type', 'image');
-}
+    // Images only
+    public function photos()
+    {
+        return $this->hasMany(Media::class)
+            ->where('type', 'image');
+    }
 
-// Videos only
-public function videos()
-{
-    return $this->hasMany(Media::class)
-                ->where('type', 'video');
-}
+    // Videos only
+    public function videos()
+    {
+        return $this->hasMany(Media::class)
+            ->where('type', 'video');
+    }
 
-// Audio files only
-public function audios()
-{
-    return $this->hasMany(Media::class)
-                ->where('type', 'audio');
-}
-
+    // Audio files only
+    public function audios()
+    {
+        return $this->hasMany(Media::class)
+            ->where('type', 'audio');
+    }
 }

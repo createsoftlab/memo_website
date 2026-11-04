@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Package;
 use Illuminate\View\View;
 
 class HomeController extends Controller
@@ -51,7 +52,8 @@ class HomeController extends Controller
      */
     public function createMemory(): View
     {
-        return view('home.create_memory');
+        $packages = Package::where('is_active', true)->get();
+        return view('home.create_memory', compact('packages'));
     }
 
     /**

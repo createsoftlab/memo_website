@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('memories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->enum('memorial_type', ['passed_away','living_memory']);
-            $table->string('website_url')->nullable();
             // Publication status
             $table->enum('status', ['draft','published'])->default('draft');
             $table->text('story')->nullable();

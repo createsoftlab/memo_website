@@ -85,12 +85,11 @@
             <!-- Dashboard -->
             @php
                 $dashboardActive =
-                    request()->routeIs('user.dashboard', 'memoryUser.dashboard') ||
-                    request()->is('user/dashboard*') ||
-                    request()->is('memory_user/dashboard*');
+                    request()->routeIs('memoryUser.dashboard') ||
+                    request()->is('memory_user/dashboard');
             @endphp
             <li class="nav-item">
-                <a href="{{ route('user.dashboard') }}"
+                <a href="{{ route('memoryUser.dashboard') }}"
                     class="nav-link {{ $dashboardActive ? 'active' : '' }}">
                     <span>
                         <i class="bi bi-speedometer2 me-2"></i>
@@ -99,89 +98,20 @@
                 </a>
             </li>
 
-            <!-- All Memories Dropdown -->
+            <!-- Dashboard -->
             @php
-                $myMemoriesActive =
+                 $myMemoriesActive =
                     request()->routeIs('my_memories') ||
-                    request()->is('memory_user/my_memories*');
-                $createMemoryActive =
-                    request()->routeIs('admin.create_memory', 'memories.create', 'memoryUser.create_memory', 'home.create_memory') ||
-                    request()->is('admin/create_memory*') ||
-                    request()->is('memory_user/create_memory*') ||
-                    request()->is('create_memory*') ||
-                    request()->is('memories/create*');
-                $editMemoryActive =
-                    request()->routeIs('edit_memory', 'admin.edit_memory') ||
-                    request()->is('memory_user/edit_memory*');
-                $memoriesActive =
-                    $myMemoriesActive ||
-                    $createMemoryActive ||
-                    $editMemoryActive;
+                    request()->is('memory_user/my_memories');
             @endphp
-
             <li class="nav-item">
-                <a href="#memoriesSubmenu"
-                    data-bs-toggle="collapse"
-                    role="button"
-                    aria-expanded="{{ $memoriesActive ? 'true' : 'false' }}"
-                    aria-controls="memoriesSubmenu"
-                    class="nav-link dropdown-toggle d-flex justify-content-between align-items-center {{ $memoriesActive ? 'active' : '' }}">
-
+                <a href="{{ route('my_memories') }}"
+                    class="nav-link {{ $myMemoriesActive ? 'active' : '' }}">
                     <span>
-                        <i class="bi bi-collection me-2"></i>
-                        All Memories
+                        <i class="bi bi-speedometer2 me-2"></i>
+                        My Memory
                     </span>
-
-                    <i class="bi bi-chevron-down small dropdown-arrow transition-icon"></i>
                 </a>
-
-                <div class="collapse submenu-collapse {{ $memoriesActive ? 'show' : '' }}" id="memoriesSubmenu">
-                    <ul class="collapse list-unstyled submenu show py-1 m-0">
-
-                        <li>
-                            <a href="{{ url('memory_user/my_memories') }}"
-                                class="nav-link sub-link {{ $myMemoriesActive ? 'active' : '' }}">
-                                <i class="bi bi-grid me-2 opacity-75"></i> My Memories
-                            </a>
-                        </li>
-
-                        {{-- Dynamic Package-Gated Create Memory Link --}}
-                        @if($canCreateMem)
-                            <li>
-                                <a href="{{ route('memoryUser.create_memory') }}"
-                                    class="nav-link sub-link d-flex align-items-center justify-content-between {{ $createMemoryActive ? 'active' : '' }}">
-                                    <span>
-                                        <i class="bi bi-plus-circle-fill me-2 text-warning"></i> Create Memory
-                                    </span>
-                                    <span class="badge bg-warning bg-opacity-25 text-warning" style="font-size: 0.65rem;">
-                                        {{ $memoriesLeft > 999 ? 'New' : $memoriesLeft . ' left' }}
-                                    </span>
-                                </a>
-                            </li>
-                        @else
-                            <li>
-                                <a href="{{ $upgradeUrl }}"
-                                    class="nav-link sub-link d-flex align-items-center justify-content-between text-white-50 opacity-75 text-decoration-none"
-                                    title="Active package required to create memories">
-                                    <span>
-                                        <i class="bi bi-lock-fill me-2 text-warning"></i> Create Memory
-                                    </span>
-                                    <span class="badge bg-warning text-dark fw-bold" style="font-size: 0.65rem;">
-                                        Buy Package
-                                    </span>
-                                </a>
-                            </li>
-                        @endif
-
-                        <li>
-                            <a href="{{ url('memory_user/edit_memory') }}"
-                                class="nav-link sub-link {{ $editMemoryActive ? 'active' : '' }}">
-                                <i class="bi bi-pencil-square me-2 opacity-75"></i> Edit Memory
-                            </a>
-                        </li>
-
-                    </ul>
-                </div>
             </li>
 
             <!-- Events Dropdown -->

@@ -161,7 +161,7 @@
                                 @elseif ($visitorCountry)
                                 <div class="mb-3 col-12 col-md-6 mb-md-0">
                                     <label for="country" class="form-label fw-bold small">Country *</label>
-                                    <input type="text" class="py-2 form-control" id="country" name="country" value="{{ $visitorCountry }}">
+                                    <input type="text" class="py-2 form-control" id="country" name="country" value="{{ $visitorCountry }}" readonly>
                                     @error('country')
                                         <div class="mt-1 text-danger small">
                                             {{ $message }}

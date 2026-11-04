@@ -8,8 +8,6 @@ class Memory extends Model
 {
     protected $fillable = [
         'user_id',
-        'memorial_type',
-        'web_address',
         'story',
         'status',
         'about',
@@ -24,8 +22,8 @@ class Memory extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function profiles()
+    public function profile()
     {
-        return $this->hasMany(Profile::class);
+        return $this->hasOne(Profile::class);
     }
 }

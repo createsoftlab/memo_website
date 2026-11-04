@@ -28,7 +28,7 @@ Route::get('/dashboard', function () {
     if ($user && in_array($user->role, ['super_admin', 'admin', 'employee'], true)) {
         return redirect()->route('admin.dashboard');
     }
-    return redirect()->route('user.dashboard');
+    return redirect()->route('memoryUser.dashboard');
 })->middleware(['auth'])->name('dashboard');
 
 // Route::middleware('auth')->group(function () {
@@ -157,7 +157,9 @@ Route::get('/contact', [HomeController::class, 'contact'])->name('home.contact')
 
 Route::middleware('auth')->group(function () {
     Route::get('/create_memory', [HomeController::class, 'createMemory'])->name('home.create_memory');
-    Route::post('/create_memory', [MemoryController::class, 'store'])->name('home.create_memory.store');
+    Route::post('/store_memory', [MemoryController::class, 'store'])->name('home.create_memory.store');
+    Route::post('/create_memory/purchase', [MemoryController::class, 'completeMemoryPurchase'])->name('home.create_memory.purchase');
+    Route::post('/create_memory/step-3', [MemoryController::class, 'storeStep3'])->name('home.create_memory.step3');
 });
 
 Route::get('/donation_form', [HomeController::class, 'donationForm'])->name('home.donation_form');
@@ -177,12 +179,12 @@ Route::get('/packages', [HomeController::class, 'pricing'])->name('packages.inde
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth'])->group(function () {
-    Route::get('memory_user/dashboard', [AdminController::class, 'memoryUser_dashboard'])->name('memoryUser.dashboard');
-    Route::get('user/dashboard', [AdminController::class, 'memoryUser_dashboard'])->name('user.dashboard');
+    Route::get('memory_user/dashboard', [MemoryUserController::class, 'dashboard'])->name('memoryUser.dashboard');
     Route::get('memory_user/my_memories', [MemoryController::class, 'myMemories'])->name('my_memories');
-    Route::get('memory_user/create_memory', [AdminController::class, 'createMemory'])->name('memoryUser.create_memory')->middleware(['prevent_admin_creation', 'active_package:memory']);
-    Route::get('memory_user/edit_memory', [MemoryController::class, 'editMemory'])->name('edit_memory');
+
     Route::get('memory_user/profile_settings', [MemoryUserController::class, 'profileSettings'])->name('userProfile_settings');
+    Route::post('memory_user/profile_settings', [MemoryUserController::class, 'profileImageSettings'])->name('userProfile_imageSettings');
+    Route::post('memory_user/profile_Passwordsettings', [MemoryUserController::class, 'passwordSettings'])->name('userProfile_passwordSettings');
 
     // Events management for Memory User
     Route::get('memory_user/my_events', [EventController::class, 'myEvents'])->name('memoryUser.my_events');
@@ -193,4 +195,39 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/events/create', [EventController::class, 'create'])->name('events.create')->middleware(['prevent_admin_creation', 'active_package:event']);
     Route::post('/events/store', [EventController::class, 'store'])->name('events.store')->middleware(['prevent_admin_creation', 'active_package:event']);
     Route::get('/memories/create', [AdminController::class, 'createMemory'])->name('memories.create')->middleware(['prevent_admin_creation', 'active_package:memory']);
+});
+
+
+
+Route::middleware('auth')->group(function () {
+
+    // Store multiple stories
+    Route::post(
+        '/profiles/{profile}/stories',
+        [MemoryController::class, 'storeStories']
+    )->name('stories.store');
+
+    // Update an existing story
+    Route::patch(
+        '/stories/{story}',
+        [MemoryController::class, 'updateStory']
+    )->name('stories.update');
+
+    // Delete an existing story
+    Route::delete(
+        '/stories/{story}',
+        [MemoryController::class, 'deleteStory']
+    )->name('stories.destroy');
+
+    // Store photos, videos and audio
+    Route::post(
+        '/profiles/{profile}/media',
+        [MemoryController::class, 'mediaStore']
+    )->name('media.store');
+
+    Route::delete(
+    '/profiles/{profile}/media/{media}',
+    [MemoryController::class, 'mediaDestroy']
+)->name('media.destroy');
+
 });

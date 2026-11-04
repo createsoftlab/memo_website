@@ -247,6 +247,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the package purchases made by the user.
+     */
+    public function packagePurchases(): HasMany
+    {
+        return $this->hasMany(PackagePurchase::class);
+    }
+
+    /**
      * Get the profiles (memories) created by the user.
      */
     public function profiles(): HasMany
@@ -450,5 +458,11 @@ class User extends Authenticatable
     public function events(): HasMany
     {
         return $this->hasMany(Event::class);
+    }
+
+    // Memory user and profile images
+    public function image()
+    {
+        return $this->hasOne(Image::class);
     }
 }

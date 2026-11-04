@@ -20,8 +20,10 @@ return new class extends Migration
             $table->string('middle_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('gender')->nullable();
+            $table->string('relationship')->nullable();
+            $table->string('designation')->nullable();
             $table->enum('memorial_status', ['passed_away','living_memory']);
-            $table->string('death_reason')->nullable();
+            $table->string('passed_away_reason')->nullable();
 
             $table->date('date_of_birth')->nullable();
             $table->string('birth_location')->nullable();

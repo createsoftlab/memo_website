@@ -14,10 +14,7 @@ class AdminController extends Controller
         return view('admin.dashbord_index');
     }
 
-    public function memoryUser_dashboard(): View
-    {
-        return view('memory_user.dashbord');
-    }
+
     /**
      * Display the admin dashboard index view.
      */

@@ -36,12 +36,12 @@ class AuthenticatedSessionController extends Controller
         }
 
         // Standard users (role === 'user') must be redirected to the user dashboard
-        if ($user && ($user->role === 'user' || $user->isMemoryUser())) {
-            return redirect()->intended(route('user.dashboard', absolute: false));
+        if ($user && ($user->role === 'user')) {
+            return redirect()->intended(route('home', absolute: false));
         }
 
         // Safe fallback: NEVER default to admin.dashboard
-        return redirect()->intended(route('user.dashboard', absolute: false));
+        return redirect()->intended(route('memoryUser.dashboard', absolute: false));
     }
 
     /**
