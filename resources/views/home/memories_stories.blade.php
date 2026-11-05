@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stories - Lallan Writer Memorial</title>
+  <title>Stories - {{ trim(collect([$profile->first_name, $profile->middle_name, $profile->last_name])->filter()->implode(" ")) }} | Forever Missed</title>
   
   <!-- Bootstrap 5 CSS & Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -17,34 +17,70 @@
 
         @include('home.header')
 
+  @php
+
+    // $coverImage = \App\Models\Image::where('profile_id', $memory->profile?->id)->where('type', 'cover')->first();
+    $backgroundMusic = \App\Models\Music::where('profile_id', $memory->profile?->id)->first();
+    // Get profile image from images table
+    $profileImage = \App\Models\Image::where('profile_id', $memory->profile?->id)
+        ->where('type', 'profile')
+        ->first();
+
+    $birthYear = $profile->date_of_birth
+        ? \Carbon\Carbon::parse($profile->date_of_birth)->format('Y')
+        : null;
+
+    $deathYear = $profile->date_of_death
+        ? \Carbon\Carbon::parse($profile->date_of_death)->format('Y')
+        : null;
+  @endphp
+
   <!-- Hero Header -->
   <header class="memorial-hero d-flex align-items-end">
     <div class="container py-4">
       <div class="row align-items-center">
         <div class="col-8">
-          <h1 class="memorial-title text-white mb-0">Lallan Writer</h1>
-          <p class="fs-4 text-white-50 font-serif mb-0">1945 - 2021</p>
+          <h1 class="memorial-title text-white mb-0">{{ $memory->profile?->first_name }} {{ $memory->profile?->last_name }}</h1>
+          @if ($birthYear || $deathYear)
+          <p class="fs-4 text-white-50 font-serif mb-0">
+            {{ collect([$birthYear, $deathYear])->filter()->implode(' - ') }}
+          </p>
+          @endif
         </div>
         <div class="col-4 text-end">
-          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?fit=crop&w=300&h=300" class="memorial-avatar rounded-3 shadow" alt="Lallan Writer">
+          <img src="{{ $profileImage? asset($profileImage->path): asset('images/profile_photo.png') }}" class="memorial-avatar rounded-3 shadow" alt="">
         </div>
       </div>
     </div>
+            @if ($backgroundMusic?->path) 
+        <!-- Background Music Toggle Button -->
+        <button id="audioToggleBtn"
+            class="btn btn-outline-warning btn-sm rounded-pill px-3 py-1 d-flex align-items-center gap-2 bg-dark bg-opacity-50"
+            onclick="toggleBackgroundMusic()" title="Toggle Background Music">
+            <i id="audioIcon" class="bi bi-volume-up-fill fs-6 text-warning"></i>
+            <span id="audioText" class="small">Mute Music</span>
+        </button>
+                                                                                           
+        <!-- Hidden HTML5 Audio Element (Autoplay without muted) -->
+        <audio id="memorialAudio" autoplay loop>
+            <source src="{{ asset($backgroundMusic->path) }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        @endif
+
   </header>
 
   <!-- Navigation Tabs Bar -->
   <div class="memorial-tabs-bar sticky-top">
     <div class="container">
       <ul class="nav nav-tabs border-0">
-        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_index') }}">ABOUT</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_life') }}">LIFE</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_gallery') }}">GALLERY</a></li>
-        <li class="nav-item"><a class="nav-link active" href="{{ url('/memories_stories') }}">STORIES</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_timeline') }}">TIMELINE</a></li>
-                <li class="nav-item"><a class="nav-link " href="{{ url('/memories_event') }}">EVENTS</a></li>
-
-                                                <li class="nav-item"><a class="nav-link " href="{{ url('/memories_donation') }}">DONATIONS</a></li>
-
+        <li class="nav-item"><a class="nav-link" href="{{ url('/memory_index/' . $memory->profile->slug) }}">ABOUT</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_life/' . $memory->profile->slug) }}">LIFE</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_gallery/' . $memory->profile->slug) }}">GALLERY</a></li>
+        <li class="nav-item"><a class="nav-link active" href="{{ url('/memories_stories/' . $memory->profile->slug) }}">STORIES</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_timeline/'. $memory->profile->slug) }}">TIMELINE</a></li>
+        <li class="nav-item"><a class="nav-link " href="{{ url('/memories_event/'. $memory->profile->slug) }}">EVENTS</a></li>
+       <li class="nav-item"><a class="nav-link " href="{{ url('/memories_donation/' . $memory->profile->slug) }}">DONATIONS</a></li>
       </ul>
     </div>
   </div>
@@ -55,158 +91,132 @@
       
       <!-- Left Column: Story Creation & Posted Stories -->
       <div class="col-lg-8 d-flex flex-column gap-4">
-
-        <!-- Section Intro Text -->
-        <p class="story-intro-text  small-textbold small mb-0">
-          This section is where friends and family can share personal memories of Lallan. Whether it is a time you spent together, something that made you laugh, or anything you want others to know about him - we encourage you to tell your story here.
+        <p class="story-intro-text small-textbold small mb-0">
+          This section is where friends and family can share personal memories of {{ $memory->profile?->last_name }}.
+          Whether it is a time you spent together, something that made you laugh, or anything you want
+          others to know, we encourage you to tell your story here.
         </p>
 
         <!-- Share a Story Form Card -->
         <div class="sidebar-card p-4 rounded shadow-sm bg-memorial-card">
           <h5 class="fw-bold text-dark mb-3">Share a story</h5>
 
-          <form id="storyForm">
-            <!-- Title Input -->
+          @if($errors->any())
+            <div class="alert alert-danger" role="alert">
+              Please correct the highlighted fields and try again.
+            </div>
+          @endif
+
+          <form id="storyForm" action="{{ route('story-comments.store', $profile->id) }}" method="POST">
+            @csrf
             <div class="mb-3">
-              <input type="text" class="form-control story-title-input" placeholder="Title (Optional)">
+              <input type="text" name="title" maxlength="255"
+                     class="form-control story-title-input @error('title') is-invalid @enderror"
+                     placeholder="Title (Optional)" value="{{ old('title') }}">
+              @error('title')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
 
             <div class="mb-3">
-              <input type="text" class="form-control story-title-input" placeholder="Who is this From(optional)">
+              <input type="text" name="contributor_name" maxlength="255"
+                     class="form-control story-title-input @error('contributor_name') is-invalid @enderror"
+                     placeholder="Who is this from? (Optional)" value="{{ old('contributor_name') }}">
+              @error('contributor_name')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
 
-            <!-- Editor Container -->
             <div class="editor-container rounded border bg-white overflow-hidden mb-3">
-              <div class="editor-toolbar d-flex flex-wrap align-items-center gap-1 p-2 border-bottom bg-light">
-                <!-- <button type="button" class="btn btn-sm btn-editor-tool"><i class="bi bi-fonts"></i></button>
-                <button type="button" class="btn btn-sm btn-editor-tool fw-bold">B</button>
-                <button type="button" class="btn btn-sm btn-editor-tool fst-italic">I</button>
-                <button type="button" class="btn btn-sm btn-editor-tool text-decoration-underline">U</button>
-                <span class="border-end mx-1" style="height: 18px;"></span>
-                <button type="button" class="btn btn-sm btn-editor-tool"><i class="bi bi-link-45deg"></i></button>
-                <button type="button" class="btn btn-sm btn-editor-tool"><i class="bi bi-quote"></i></button>
-                <button type="button" class="btn btn-sm btn-editor-tool"><i class="bi bi-list-ul"></i></button>
-                <button type="button" class="btn btn-sm btn-editor-tool"><i class="bi bi-list-ol"></i></button>
-                <span class="border-end mx-1" style="height: 18px;"></span>
-                <button type="button" class="btn btn-sm btn-editor-tool"><i class="bi bi-eraser"></i></button>
-                <button type="button" class="btn btn-sm btn-editor-tool"><i class="bi bi-code-slash"></i></button> -->
-              </div>
-              <textarea class="form-control border-0 p-3 story-textarea" rows="6" placeholder="Write your story here..."></textarea>
+              <div class="editor-toolbar d-flex flex-wrap align-items-center gap-1 p-2 border-bottom bg-light"></div>
+              <textarea id="storyContent" name="content" maxlength="10000" rows="6" required
+                        class="form-control border-0 p-3 story-textarea @error('content') is-invalid @enderror"
+                        placeholder="Write your story here...">{{ old('content') }}</textarea>
             </div>
+            @error('content')<div class="text-danger small mb-3">{{ $message }}</div>@enderror
 
-            <!-- Attachment Area -->
-            <!-- <div class="attachment-dropzone rounded p-3 mb-4 d-flex align-items-center gap-3">
-              <div class="attachment-icon-circle rounded-circle d-flex align-items-center justify-content-center bg-secondary-subtle">
-                <i class="bi bi-upload fs-5 text-dark"></i>
-              </div>
-              <div>
-                <h6 class="fw-bold mb-0 text-dark small">Add a document, picture, song, or video</h6>
-                <span class="small text-muted">You can illustrate your story with a photo, video, song, or PDF document attachment.</span>
-              </div>
-            </div> -->
-
-            <!-- Publish Button -->
             <div class="text-end">
-        <button type="submit" class="btn story-submit-btn text-white px-4 py-2 fw-semibold d-inline-flex align-items-center gap-2">
-        <!-- Bootstrap Icon (Send/Upload) -->
-        <i class="bi bi-send-fill submit-icon"></i>
-        <span>Publish</span>
-    </button>
-
-            <button type="submit" class="btn btn-ai-generate text-white px-4 py-2 fw-semibold d-inline-flex align-items-center gap-2">
-                <!-- AI Sparkles Icon -->
-                <i class="bi bi-stars ai-sparkles-icon"></i>
-                <span>Generate With AI</span>
-            </button>
+              <button type="submit" class="btn story-submit-btn text-white px-4 py-2 fw-semibold d-inline-flex align-items-center gap-2">
+                <i class="bi bi-send-fill submit-icon"></i><span>Publish</span>
+              </button>
+              {{-- <button type="button" id="generateStoryAI"
+                      class="btn btn-ai-generate text-white px-4 py-2 fw-semibold d-inline-flex align-items-center gap-2">
+                <i class="bi bi-stars ai-sparkles-icon"></i><span>Generate With AI</span>
+              </button> --}}
             </div>
           </form>
         </div>
 
-<!-- Shared Stories Feed List with Pagination & Profile Avatars -->
-<div class="sidebar-card p-4 rounded shadow-sm bg-memorial-card">
-    <h5 class="fw-bold text-dark border-bottom pb-2 mb-3 d-flex justify-content-between align-items-center">
-        <span>Memorable Stories</span>
-        <!-- Pagination Navigation Buttons -->
-        <div class="story-pagination-nav d-flex gap-1">
-            <button type="button" class="btn btn-sm btn-outline-secondary story-page-btn" data-page="prev"><i class="bi bi-chevron-left"></i></button>
-            <button type="button" class="btn btn-sm btn-outline-secondary story-page-btn" data-page="next"><i class="bi bi-chevron-right"></i></button>
-        </div>
-    </h5>
+        <!-- Shared Stories Feed -->
+        <div class="sidebar-card p-4 rounded shadow-sm bg-memorial-card" id="memorableStories">
+          <h5 class="fw-bold text-dark border-bottom pb-2 mb-3 d-flex justify-content-between align-items-center">
+            <span>Memorable Stories</span>
+            @if($storyComments->hasPages())
+              <div class="story-pagination-nav d-flex gap-1">
+                @if($storyComments->onFirstPage())
+                  <button type="button" class="btn btn-sm btn-outline-secondary story-page-btn" disabled aria-label="Previous page"><i class="bi bi-chevron-left"></i></button>
+                @else
+                  <a class="btn btn-sm btn-outline-secondary story-page-btn" aria-label="Previous page" href="{{ $storyComments->previousPageUrl() }}#memorableStories"><i class="bi bi-chevron-left"></i></a>
+                @endif
+                @if($storyComments->hasMorePages())
+                  <a class="btn btn-sm btn-outline-secondary story-page-btn" aria-label="Next page" href="{{ $storyComments->nextPageUrl() }}#memorableStories"><i class="bi bi-chevron-right"></i></a>
+                @else
+                  <button type="button" class="btn btn-sm btn-outline-secondary story-page-btn" disabled aria-label="Next page"><i class="bi bi-chevron-right"></i></button>
+                @endif
+              </div>
+            @endif
+          </h5>
 
-    <!-- Stories Container (Backend එකෙන් loop කරන විට දත්ත මෙහි පැමිණේ) -->
-    <div class="stories-feed-container d-flex flex-column gap-3">
-        
-        <!-- Story Card 1 (پින්තූරයක් ඇති අවස්ථාව - With Profile Image) -->
-        <div class="story-page-item card border-0 bg-white shadow-sm" data-page-group="1">
-            <div class="card-body p-3">
-                <div class="d-flex align-items-center justify-content-between mb-2">
-                    <!-- User Profile Info -->
+          <div class="stories-feed-container d-flex flex-column gap-3">
+            @forelse($storyComments as $comment)
+              @php
+                $contributorName = $comment->contributor_name ?: 'Anonymous';
+                $initials = collect(preg_split('/\s+/u', trim($contributorName)))
+                    ->filter()->take(2)
+                    ->map(fn ($word) => mb_strtoupper(mb_substr($word, 0, 1)))->implode('');
+                $avatarColors = ['#854d0e', '#0ea5e9', '#7c3aed', '#059669', '#be123c'];
+                $avatarColor = $avatarColors[$comment->id % count($avatarColors)];
+                $badgeClass = match(strtolower($comment->relationship ?? '')) {
+                    'family' => 'badge-family',
+                    'partner' => 'badge-partner',
+                    default => 'badge-friend',
+                };
+              @endphp
+              <div class="story-page-item card border-0 bg-white shadow-sm">
+                <div class="card-body p-3">
+                  <div class="d-flex align-items-center justify-content-between mb-2">
                     <div class="d-flex align-items-center gap-2">
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" alt="User" class="story-user-avatar">
-                        <div>
-                            <h6 class="mb-0 fw-semibold text-dark small">Sarah Jenkins</h6>
-                            <span class="text-muted" style="font-size: 0.7rem;">2 hours ago</span>
-                        </div>
+                      <div class="story-user-initials" style="background-color: {{ $avatarColor }};">{{ $initials }}</div>
+                      <div>
+                        <h6 class="mb-0 fw-semibold text-dark small">{{ $contributorName }}</h6>
+                        <span class="text-muted" style="font-size: 0.7rem;">{{ $comment->created_at->diffForHumans() }}</span>
+                      </div>
                     </div>
-                    <span class="badge badge-friend">Friend</span>
+                    @if($comment->relationship)
+                      <span class="badge {{ $badgeClass }}">{{ ucfirst($comment->relationship) }}</span>
+                    @endif
+                  </div>
+                  @if($comment->title)
+                    <h6 class="card-title fw-bold text-dark mb-1 fs-6">{{ $comment->title }}</h6>
+                  @endif
+                  <p class="card-text small mb-0 text-muted" style="white-space: pre-line;">{{ $comment->content }}</p>
                 </div>
-                <h6 class="card-title fw-bold text-dark mb-1 fs-6">A Great Mentor</h6>
-                <p class="card-text small mb-0 text-muted">
-                    "Lallan always took time to read my draft poems and guide me with infinite patience."
-                </p>
+              </div>
+            @empty
+              <div class="text-center py-4">
+                <i class="bi bi-journal-text fs-1 text-muted"></i>
+                <h6 class="fw-semibold text-dark mt-2">No stories shared yet</h6>
+                <p class="small text-muted mb-0">Be the first to share a beautiful memory.</p>
+              </div>
+            @endforelse
+          </div>
+
+          @if($storyComments->hasPages())
+            <div class="story-pagination-footer d-flex justify-content-center align-items-center gap-2 mt-3 flex-wrap">
+              @foreach($storyComments->getUrlRange(1, $storyComments->lastPage()) as $page => $url)
+                <a href="{{ $url }}#memorableStories"
+                   class="story-dot-btn text-decoration-none {{ $storyComments->currentPage() == $page ? 'active' : '' }}"
+                   @if($storyComments->currentPage() == $page) aria-current="page" @endif>{{ $page }}</a>
+              @endforeach
             </div>
+          @endif
         </div>
-
-        <!-- Story Card 2 (පින්තූරයක් නැති අවස්ථාව - Initials Avatar: "KD") -->
-        <div class="story-page-item card border-0 bg-white shadow-sm" data-page-group="1">
-            <div class="card-body p-3">
-                <div class="d-flex align-items-center justify-content-between mb-2">
-                    <!-- User Profile Info with Initials Avatar -->
-                    <div class="d-flex align-items-center gap-2">
-                        <div class="story-user-initials" style="background-color: #854d0e;">KD</div>
-                        <div>
-                            <h6 class="mb-0 fw-semibold text-dark small">Kumara Disanayake</h6>
-                            <span class="text-muted" style="font-size: 0.7rem;">Yesterday</span>
-                        </div>
-                    </div>
-                    <span class="badge badge-family">Family</span>
-                </div>
-                <h6 class="card-title fw-bold text-dark mb-1 fs-6">Unforgettable Smiles</h6>
-                <p class="card-text small mb-0 text-muted">
-                    "Every family gathering became brighter whenever he shared his childhood stories."
-                </p>
-            </div>
-        </div>
-
-        <!-- Story Card 3 (Pagination page 2 සඳහා උදාහරණයක්) -->
-        <div class="story-page-item card border-0 bg-white shadow-sm d-none" data-page-group="2">
-            <div class="card-body p-3">
-                <div class="d-flex align-items-center justify-content-between mb-2">
-                    <div class="d-flex align-items-center gap-2">
-                        <div class="story-user-initials" style="background-color: #0ea5e9;">AM</div>
-                        <div>
-                            <h6 class="mb-0 fw-semibold text-dark small">Anjana Malalasekera</h6>
-                            <span class="text-muted" style="font-size: 0.7rem;">3 days ago</span>
-                        </div>
-                    </div>
-                    <span class="badge badge-partner">Partner</span>
-                </div>
-                <h6 class="card-title fw-bold text-dark mb-1 fs-6">The Midnight Talks</h6>
-                <p class="card-text small mb-0 text-muted">
-                    "Those long midnight conversations under the stars are memories I will cherish forever."
-                </p>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Pagination Dots / Numbers Footer -->
-    <div class="story-pagination-footer d-flex justify-content-center align-items-center gap-2 mt-3">
-        <button type="button" class="story-dot-btn active" data-page="1">1</button>
-        <button type="button" class="story-dot-btn" data-page="2">2</button>
-    </div>
-</div>
-
       </div>
 
       <!-- Right Column: Sidebar Panels -->
@@ -215,7 +225,7 @@
         <!-- Invite Panel -->
         <div class="main-content-card p-3 rounded shadow-sm">
           <div class="d-flex justify-content-between align-items-start mb-2">
-            <h6 class="fw-bold mb-0 me-2 text-dark">Invite Lallan's family and friends</h6>
+            <h6 class="fw-bold mb-0 me-2 text-dark">Invite {{ $profile->first_name }}'s family and friends</h6>
             <i class="bi bi-person-add fs-4 text-muted"></i>
           </div>
           <button class="btn btn-invite w-100 py-2">
@@ -240,7 +250,7 @@
         <div class="main-content-card   p-3 rounded shadow-sm">
           <h6 class="fw-bold mb-3 text-dark">Profile </h6>
           <div class="rounded overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=400&h=300" class="img-fluid rounded w-100" alt="Spotlight Photo">
+            <img src="{{ $profileImage? asset($profileImage->path): asset('images/profile_photo.png') }}" class="img-fluid rounded w-100" alt="Spotlight Photo">
           </div>
         </div>
 
@@ -268,7 +278,7 @@
         <div class="main-content-card  p-3 rounded shadow-sm">
           <div class="d-flex align-items-center gap-2 mb-2">
             <i class="bi bi-eye fs-5 text-dark"></i>
-            <h6 class="fw-bold mb-0 text-dark">14 Views</h6>
+            <h6 class="fw-bold mb-0 text-dark">Memorial Profile</h6>
           </div>
           <div class="d-flex align-items-center gap-2 small text-muted pt-2 border-top border-secondary-subtle">
             <i class="bi bi-globe"></i>
@@ -281,6 +291,22 @@
     </div>
   </main>
 
+
+    @if(session('success'))
+      <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1090;">
+        <div id="storySuccessToast" class="toast border-0 shadow" role="status" aria-live="polite" aria-atomic="true">
+          <div class="toast-header">
+            <i class="bi bi-check-circle-fill text-success me-2"></i>
+            <strong class="me-auto">Success</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body">{{ session('success') }}</div>
+          <div class="progress rounded-0" style="height: 3px;">
+            <div id="storyToastProgress" class="progress-bar bg-success" style="width: 100%; transition: width 3s linear;"></div>
+          </div>
+        </div>
+      </div>
+    @endif
 
     <!-- Footer -->
   <footer class="bg-memorial-dark text-white pt-5 pb-3 border-top border-secondary">
@@ -338,6 +364,13 @@
 
   <script>
 document.addEventListener("DOMContentLoaded", function () {
+    const successToast = document.getElementById('storySuccessToast');
+    if (successToast && typeof bootstrap !== 'undefined') {
+        bootstrap.Toast.getOrCreateInstance(successToast, { delay: 3000 }).show();
+        const progress = document.getElementById('storyToastProgress');
+        if (progress) requestAnimationFrame(() => requestAnimationFrame(() => { progress.style.width = '0%'; }));
+    }
+
     const cards = document.querySelectorAll('.story-page-item');
 
     // Intersection Observer හරහා සයිට් එක 스크롤 (scroll) වෙද්දී කාඩ්ස් පෙනෙන ආකාරය පාලනය කිරීම
@@ -363,7 +396,49 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-  
+  <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const audio = document.getElementById('memorialAudio');
+            const audioIcon = document.getElementById('audioIcon');
+            const audioText = document.getElementById('audioText');
+
+            const isMuted = localStorage.getItem('memorialAudioMuted');
+
+            if (isMuted === 'false') {
+
+                audio.muted = false;
+                audio.play().catch(error => console.log("Autoplay restricted"));
+                audioIcon.className = "bi bi-volume-up-fill fs-6 text-warning";
+                audioText.innerText = "Mute Music";
+            } else {
+
+                audio.muted = true;
+                audio.play().catch(error => console.log("Autoplay restricted"));
+                audioIcon.className = "bi bi-volume-mute-fill fs-6";
+                audioText.innerText = "Play Music";
+            }
+        });
+
+
+        function toggleBackgroundMusic() {
+            const audio = document.getElementById('memorialAudio');
+            const audioIcon = document.getElementById('audioIcon');
+            const audioText = document.getElementById('audioText');
+
+            if (audio.muted) {
+                audio.muted = false;
+                audio.play();
+                audioIcon.className = "bi bi-volume-up-fill fs-6 text-warning";
+                audioText.innerText = "Mute Music";
+                localStorage.setItem('memorialAudioMuted', 'false');
+            } else {
+                audio.muted = true;
+                audioIcon.className = "bi bi-volume-mute-fill fs-6";
+                audioText.innerText = "Play Music";
+                localStorage.setItem('memorialAudioMuted', 'true');
+            }
+        }
+    </script>
 
 </body>
 </html>

@@ -21,26 +21,31 @@
             transition: all 0.3s ease;
             position: relative;
         }
+
         .pricing-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 12px 30px rgba(45, 30, 20, 0.08);
             border-color: #d4af37;
         }
+
         .pricing-card.selected-plan {
             border: 2.5px solid #d4af37 !important;
             background: linear-gradient(180deg, #ffffff 0%, #fffdf8 100%) !important;
             box-shadow: 0 12px 35px rgba(212, 175, 55, 0.25) !important;
             transform: translateY(-5px);
         }
+
         .pricing-card.selected-plan .plan-select-btn {
             background-color: #3b281c !important;
             color: #ffffff !important;
             border-color: #3b281c !important;
         }
+
         .pricing-toggle-wrapper .btn-toggle.active {
             background-color: #3b281c !important;
             color: #ffffff !important;
         }
+
         /* Stripe Element Styling */
         #card-element {
             background-color: #f8f9fa;
@@ -86,14 +91,14 @@
         <form action="{{ route('home.create_memory.store') }}" method="POST" id="payment-form">
             @csrf
 
-            @if(session('success'))
+            @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
                     <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
 
-            @if(session('error'))
+            @if (session('error'))
                 <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ session('error') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -102,7 +107,8 @@
 
             @if (isset($errors) && $errors->any())
                 <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
-                    <strong class="d-block mb-1"><i class="bi bi-exclamation-circle-fill me-2"></i>Please review the form errors:</strong>
+                    <strong class="d-block mb-1"><i class="bi bi-exclamation-circle-fill me-2"></i>Please review the
+                        form errors:</strong>
                     <ul class="mb-0 ps-3">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -117,63 +123,134 @@
                 <h2 class="mb-4">This memorial is dedicated to:</h2>
 
                 <!-- Memorial Status & Type Custom Dropdowns -->
-                <div class="row mb-3">
+                @php
+                    $selectedStatus = old('memorial_status', 'passed_away');
+                    $selectedReason = old('passed_away_reason', '');
+
+                    $reasons = [
+                        'Natural Causes',
+                        'Old Age',
+                        'Cancer',
+                        'Heart Disease',
+                        'Heart Attack',
+                        'Stroke',
+                        'COVID-19',
+                        'Other Illness',
+                        'Accident',
+                        'Road Accident',
+                        'Natural Disaster',
+                        'Suicide',
+                        'Homicide',
+                        'Other',
+                        'Unknown',
+                        'Prefer Not to Disclose',
+                    ];
+                @endphp
+
+                <div class="mb-3 row">
+
                     <!-- Memorial Status Custom Dropdown -->
-                    <div class="col-12 col-md-6 mb-3 mb-md-0">
-                        <label class="form-label fw-bold">Memorial Status</label>
+                    <div class="mb-3 col-12 col-md-6 mb-md-0">
+                        <label class="form-label fw-bold">Memorial Status *</label>
+
                         <div class="dropdown w-100">
                             <button
-                                class="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center text-secondary bg-white border text-truncate py-2 px-3 dropdown-toggle-custom"
+                                class="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center text-secondary bg-white border text-truncate py-2 px-3 dropdown-toggle-custom @error('memorial_status') is-invalid @enderror"
                                 type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="text-truncate">Passed away</span>
-                                <i class="bi bi-chevron-down flex-shrink-0 ms-2"></i>
+
+                                <span class="text-truncate">
+                                    {{ $selectedStatus === 'passed_away' ? 'Passed Away' : 'Living Memory' }}
+                                </span>
+
+                                <i class="flex-shrink-0 bi bi-chevron-down ms-2"></i>
                             </button>
-                            <ul class="dropdown-menu w-100 shadow-sm">
-                                <li><a class="dropdown-item active" href="#"
-                                        onclick="selectDropdownOption(this, 'memorial_status', 'passed_away')">Passed
-                                        away</a></li>
-                                <li><a class="dropdown-item" href="#"
-                                        onclick="selectDropdownOption(this, 'memorial_status', 'living_memory')">Living
-                                        memory</a></li>
+
+                            <ul class="shadow-sm dropdown-menu w-100">
+
+                                <li>
+                                    <a class="dropdown-item {{ $selectedStatus === 'passed_away' ? 'active' : '' }}"
+                                        href="#"
+                                        onclick="event.preventDefault(); selectDropdownOption(this, 'memorial_status', 'passed_away')">
+                                        Passed Away
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item {{ $selectedStatus === 'living_memory' ? 'active' : '' }}"
+                                        href="#"
+                                        onclick="event.preventDefault(); selectDropdownOption(this, 'memorial_status', 'living_memory')">
+                                        Living Memory
+                                    </a>
+                                </li>
+
                             </ul>
                         </div>
-                        <input type="hidden" name="memorial_status" id="memorial_status" value="passed_away">
+
+                        <input type="hidden" name="memorial_status" id="memorial_status"
+                            value="{{ $selectedStatus }}">
+
+                        @error('memorial_status')
+                            <div class="mt-1 text-danger small">{{ $message }}</div>
+                        @enderror
                     </div>
 
-                    <!-- Who is this for? Custom Dropdown -->
-                    <div class="col-12 col-md-6">
+
+                    <!-- Passed Away Reason Dropdown -->
+                    <div class="col-12 col-md-6 {{ $selectedStatus === 'living_memory' ? 'd-none' : '' }}"
+                        id="passedAwayReasonContainer">
+
                         <label class="form-label fw-bold">Passed Away Reason</label>
+
                         <div class="dropdown w-100">
                             <button
-                                class="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center text-secondary bg-white border text-truncate py-2 px-3 dropdown-toggle-custom"
+                                class="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center text-secondary bg-white border text-truncate py-2 px-3 dropdown-toggle-custom @error('passed_away_reason') is-invalid @enderror"
                                 type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="text-truncate">Living memory</span>
-                                <i class="bi bi-chevron-down flex-shrink-0 ms-2"></i>
+
+                                <span class="text-truncate">
+                                    {{ $selectedReason ?: 'Select Passed Away Reason' }}
+                                </span>
+
+                                <i class="flex-shrink-0 bi bi-chevron-down ms-2"></i>
                             </button>
-                            <ul class="dropdown-menu w-100 shadow-sm">
-                                <li><a class="dropdown-item active" href="#"
-                                        onclick="selectDropdownOption(this, 'passed_away_reason', 'living_memory')">Living
-                                        memory
-                                    </a></li>
-                                <li><a class="dropdown-item" href="#"
-                                        onclick="selectDropdownOption(this, 'passed_away_reason', 'passed_away')">
-                                        Passed Away
-                                        Memory</a></li>
+
+                            <ul class="shadow-sm dropdown-menu w-100">
+
+                                @foreach ($reasons as $reason)
+                                    <li>
+                                        <a class="dropdown-item {{ $selectedReason === $reason ? 'active' : '' }}"
+                                            href="#"
+                                            onclick="event.preventDefault(); selectDropdownOption(this, 'passed_away_reason', @js($reason))">
+                                            {{ $reason }}
+                                        </a>
+                                    </li>
+                                @endforeach
+
                             </ul>
                         </div>
-                        <input type="hidden" name="passed_away_reason" id="passed_away_reason" value="living_memory">
+
+                        <input type="hidden" name="passed_away_reason" id="passed_away_reason"
+                            value="{{ $selectedReason }}" {{ $selectedStatus === 'living_memory' ? 'disabled' : '' }}>
+
+                        @error('passed_away_reason')
+                            <div class="mt-1 text-danger small">{{ $message }}</div>
+                        @enderror
+
                     </div>
+
                 </div>
+
 
                 <!-- First & Middle Name -->
                 <div class="row mb-3">
                     <div class="col-12 col-md-6 mb-3 mb-md-0">
                         <label class="form-label">First name *</label>
-                        <input type="text" name="first_name" class="form-control w-100">
+                        <input type="text" name="first_name" value="{{ old('first_name') }}"
+                            class="form-control w-100">
                     </div>
                     <div class="col-12 col-md-6">
                         <label class="form-label">Middle name</label>
-                        <input type="text" name="middle_name" class="form-control w-100">
+                        <input type="text" name="middle_name" value="{{ old('middle_name') }}"
+                            class="form-control w-100">
                     </div>
                 </div>
 
@@ -181,15 +258,19 @@
                 <div class="row mb-3">
                     <div class="col-12 col-md-6 mb-3 mb-md-0">
                         <label class="form-label">Last name *</label>
-                        <input type="text" name="last_name" class="form-control w-100">
+                        <input type="text" name="last_name" value="{{ old('last_name') }}"
+                            class="form-control w-100">
                     </div>
                     <div class="col-12 col-md-6">
                         <label class="form-label">Gender</label>
                         <div class="mt-2">
-                            <input type="radio" name="gender" value="Male" id="male"> <label
-                                for="male" class="me-3">Male</label>
-                            <input type="radio" name="gender" value="Female" id="female"> <label
-                                for="female">Female</label>
+                            <input type="radio" name="gender" value="Male" id="male"
+                                @checked(old('gender') == 'Male')>
+                            <label for="male" class="me-3">Male</label>
+
+                            <input type="radio" name="gender" value="Female" id="female"
+                                @checked(old('gender') == 'Female')>
+                            <label for="female">Female</label>
                         </div>
                     </div>
                 </div>
@@ -336,16 +417,6 @@
                     </div>
                 </div>
 
-                <!-- Memorial Web Address -->
-                <div class="mb-4">
-                    <label class="form-label fw-bold">Memorial web address:</label>
-                    <div class="input-group flex-nowrap">
-                        <span class="input-group-text font-monospace small">https://</span>
-                        <input type="text" name="web_address" class="form-control" placeholder="your-loved-name">
-                        <span class="input-group-text font-monospace small text-truncate">.forevermissed.com</span>
-                    </div>
-                </div>
-
                 <div class="d-flex justify-content-end">
                     <button type="button" class="btn btn-gold px-5" onclick="switchStep(2)">Continue</button>
                 </div>
@@ -483,31 +554,38 @@
                             <div class="row g-4 justify-content-center mb-5" id="packagesGrid">
                                 @forelse($packages as $pkg)
                                     @php
-                                        $isFree = ((float) $pkg->price <= 0);
-                                        $isFeatured = ($pkg->billing_type === 'yearly') || (stripos($pkg->name, 'premium') !== false);
-                                        $currSymbol = strtolower($pkg->currency ?? 'usd') === 'usd' ? '$' : strtoupper($pkg->currency ?? 'USD') . ' ';
+                                        $isFree = (float) $pkg->price <= 0;
+                                        $isFeatured =
+                                            $pkg->billing_type === 'yearly' || stripos($pkg->name, 'premium') !== false;
+                                        $currSymbol =
+                                            strtolower($pkg->currency ?? 'usd') === 'usd'
+                                                ? '$'
+                                                : strtoupper($pkg->currency ?? 'USD') . ' ';
                                     @endphp
-                                    <div class="col-12 col-md-6 col-lg-4 package-col" data-billing="{{ $pkg->billing_type }}" data-price="{{ $pkg->price }}">
+                                    <div class="col-12 col-md-6 col-lg-4 package-col"
+                                        data-billing="{{ $pkg->billing_type }}" data-price="{{ $pkg->price }}">
                                         <div class="pricing-card {{ $isFeatured ? 'card-featured' : '' }} h-100 d-flex flex-column p-4 text-center"
-                                             id="package-card-{{ $pkg->id }}"
-                                             onclick="selectPackage({{ $pkg->id }}, {{ $pkg->price }}, '{{ addslashes($pkg->name) }}', '{{ $pkg->currency ?? 'USD' }}')">
+                                            id="package-card-{{ $pkg->id }}"
+                                            onclick="selectPackage({{ $pkg->id }}, {{ $pkg->price }}, '{{ addslashes($pkg->name) }}', '{{ $pkg->currency ?? 'USD' }}')">
 
-                                            @if($isFeatured)
+                                            @if ($isFeatured)
                                                 <span class="popular-badge">Most Popular</span>
                                             @endif
 
-                                            <span class="plan-subtitle text-uppercase font-serif {{ $isFeatured ? 'text-brown' : 'text-muted' }} fw-bold">
+                                            <span
+                                                class="plan-subtitle text-uppercase font-serif {{ $isFeatured ? 'text-brown' : 'text-muted' }} fw-bold">
                                                 {{ $pkg->name }}
                                             </span>
 
                                             <div class="price-wrapper my-3">
-                                                @if($isFree)
+                                                @if ($isFree)
                                                     <span class="price-val fw-bold display-5 text-brown">Free</span>
                                                 @else
                                                     <span class="currency">{{ $currSymbol }}</span>
-                                                    <span class="price-val fw-bold display-5 text-brown">{{ number_format($pkg->price, 2) }}</span>
+                                                    <span
+                                                        class="price-val fw-bold display-5 text-brown">{{ number_format($pkg->price, 2) }}</span>
                                                     <span class="period text-muted">
-                                                        @if($pkg->billing_type === 'yearly')
+                                                        @if ($pkg->billing_type === 'yearly')
                                                             /yr
                                                         @elseif($pkg->billing_type === 'monthly')
                                                             /mo
@@ -520,49 +598,62 @@
                                                 @endif
                                             </div>
 
-                                            @if($pkg->trial_days > 0)
+                                            @if ($pkg->trial_days > 0)
                                                 <span class="trial-note small text-gold mb-2 fw-semibold">
-                                                    <i class="bi bi-clock-history me-1"></i>{{ $pkg->trial_days }}-day free trial
+                                                    <i class="bi bi-clock-history me-1"></i>{{ $pkg->trial_days }}-day
+                                                    free trial
                                                 </span>
                                             @else
                                                 <span class="trial-note small text-muted mb-2">&nbsp;</span>
                                             @endif
 
                                             <!-- Limits & Quotas -->
-                                            <ul class="list-unstyled text-start small text-muted my-3 px-2 flex-grow-1 border-top border-bottom py-3">
+                                            <ul
+                                                class="list-unstyled text-start small text-muted my-3 px-2 flex-grow-1 border-top border-bottom py-3">
                                                 <li class="mb-2 d-flex align-items-center">
                                                     <i class="bi bi-check-circle-fill text-gold me-2 fs-6"></i>
-                                                    <span><strong>{{ $pkg->memories_limit == -1 ? 'Unlimited' : $pkg->memories_limit }}</strong> Memorial {{ Str::plural('Space', $pkg->memories_limit) }}</span>
-                                                </li>
-                                                <li class="mb-2 d-flex align-items-center">
-                                                    <i class="bi bi-check-circle-fill text-gold me-2 fs-6"></i>
-                                                    <span><strong>{{ $pkg->max_photos == -1 ? 'Unlimited' : $pkg->max_photos }}</strong> Photos</span>
-                                                </li>
-                                                <li class="mb-2 d-flex align-items-center">
-                                                    <i class="bi bi-check-circle-fill text-gold me-2 fs-6"></i>
-                                                    <span><strong>{{ $pkg->max_videos == -1 ? 'Unlimited' : $pkg->max_videos }}</strong> Videos</span>
+                                                    <span><strong>{{ $pkg->memories_limit == -1 ? 'Unlimited' : $pkg->memories_limit }}</strong>
+                                                        Memorial
+                                                        {{ Str::plural('Space', $pkg->memories_limit) }}</span>
                                                 </li>
                                                 <li class="mb-2 d-flex align-items-center">
                                                     <i class="bi bi-check-circle-fill text-gold me-2 fs-6"></i>
-                                                    <span><strong>{{ $pkg->max_audios == -1 ? 'Unlimited' : $pkg->max_audios }}</strong> Audio Tracks</span>
+                                                    <span><strong>{{ $pkg->max_photos == -1 ? 'Unlimited' : $pkg->max_photos }}</strong>
+                                                        Photos</span>
                                                 </li>
-                                                @if($pkg->events_limit)
-                                                <li class="mb-1 d-flex align-items-center">
+                                                <li class="mb-2 d-flex align-items-center">
                                                     <i class="bi bi-check-circle-fill text-gold me-2 fs-6"></i>
-                                                    <span><strong>{{ $pkg->events_limit == -1 ? 'Unlimited' : $pkg->events_limit }}</strong> Events</span>
+                                                    <span><strong>{{ $pkg->max_videos == -1 ? 'Unlimited' : $pkg->max_videos }}</strong>
+                                                        Videos</span>
                                                 </li>
+                                                <li class="mb-2 d-flex align-items-center">
+                                                    <i class="bi bi-check-circle-fill text-gold me-2 fs-6"></i>
+                                                    <span><strong>{{ $pkg->max_audios == -1 ? 'Unlimited' : $pkg->max_audios }}</strong>
+                                                        Audio Tracks</span>
+                                                </li>
+                                                @if ($pkg->events_limit)
+                                                    <li class="mb-1 d-flex align-items-center">
+                                                        <i class="bi bi-check-circle-fill text-gold me-2 fs-6"></i>
+                                                        <span><strong>{{ $pkg->events_limit == -1 ? 'Unlimited' : $pkg->events_limit }}</strong>
+                                                            Events</span>
+                                                    </li>
                                                 @endif
                                             </ul>
 
                                             <!-- Hidden Package Radio -->
-                                            <input type="radio" name="package_id" id="pkg_radio_{{ $pkg->id }}" value="{{ $pkg->id }}" class="d-none package-radio" {{ (old('package_id', optional($packages->first())->id) == $pkg->id) ? 'checked' : '' }}>
+                                            <input type="radio" name="package_id"
+                                                id="pkg_radio_{{ $pkg->id }}" value="{{ $pkg->id }}"
+                                                class="d-none package-radio"
+                                                {{ old('package_id', optional($packages->first())->id) == $pkg->id ? 'checked' : '' }}>
 
                                             <!-- Select Plan Button -->
-                                            <button type="button" class="btn {{ $isFeatured ? 'btn-gold shadow-sm' : ($isFree ? 'btn-outline-brown' : 'btn-outline-gold') }} w-100 mt-auto py-2 fw-bold text-uppercase plan-select-btn" id="btn-select-{{ $pkg->id }}">
+                                            <button type="button"
+                                                class="btn {{ $isFeatured ? 'btn-gold shadow-sm' : ($isFree ? 'btn-outline-brown' : 'btn-outline-gold') }} w-100 mt-auto py-2 fw-bold text-uppercase plan-select-btn"
+                                                id="btn-select-{{ $pkg->id }}">
                                                 <span class="btn-text">Select Plan</span>
                                             </button>
 
-                                            @if($isFree)
+                                            @if ($isFree)
                                                 <span class="d-block text-muted tiny-note mt-2">
                                                     <i class="bi bi-shield-check me-1"></i>No credit card required
                                                 </span>
@@ -575,19 +666,23 @@
                                     </div>
                                 @empty
                                     <div class="col-12 text-center py-4">
-                                        <p class="text-muted">No memorial packages are currently active. Please contact support.</p>
+                                        <p class="text-muted">No memorial packages are currently active. Please contact
+                                            support.</p>
                                     </div>
                                 @endforelse
                             </div>
 
                             <!-- Payment Details Section (Stripe Integration) -->
-                            <div id="paymentDetailsSection" class="p-4 p-md-5 rounded-4 border bg-white mb-5 shadow-sm d-none">
-                                <div class="d-flex align-items-center justify-content-between pb-3 mb-4 border-bottom flex-wrap gap-2">
+                            <div id="paymentDetailsSection"
+                                class="p-4 p-md-5 rounded-4 border bg-white mb-5 shadow-sm d-none">
+                                <div
+                                    class="d-flex align-items-center justify-content-between pb-3 mb-4 border-bottom flex-wrap gap-2">
                                     <div>
                                         <h4 class="font-serif text-brown fw-bold mb-1">
                                             <i class="bi bi-credit-card-2-front text-gold me-2"></i>Payment Details
                                         </h4>
-                                        <p class="text-muted small mb-0">Enter your card credentials to activate your memorial package safely.</p>
+                                        <p class="text-muted small mb-0">Enter your card credentials to activate your
+                                            memorial package safely.</p>
                                     </div>
                                     <div class="d-flex align-items-center gap-2">
                                         <span class="badge bg-light text-dark border px-3 py-2">
@@ -597,7 +692,8 @@
                                 </div>
 
                                 <!-- Selected Plan Summary Banner -->
-                                <div class="alert alert-light border d-flex justify-content-between align-items-center mb-4 py-3 px-4 rounded-3">
+                                <div
+                                    class="alert alert-light border d-flex justify-content-between align-items-center mb-4 py-3 px-4 rounded-3">
                                     <div>
                                         <span class="text-muted small d-block">Selected Plan:</span>
                                         <strong class="text-brown fs-5" id="summaryPlanName">-</strong>
@@ -644,18 +740,21 @@
                             </div>
 
                             <!-- Free Plan Selected Notice -->
-                            <div id="freePlanNotice" class="p-4 p-md-5 rounded-4 border bg-white mb-5 shadow-sm text-center d-none">
+                            <div id="freePlanNotice"
+                                class="p-4 p-md-5 rounded-4 border bg-white mb-5 shadow-sm text-center d-none">
                                 <div class="d-inline-flex p-3 rounded-circle bg-light border mb-3 shadow-sm">
                                     <i class="bi bi-gift-fill text-gold fs-2"></i>
                                 </div>
                                 <h4 class="font-serif fw-bold text-brown mb-2">Free Plan Selected</h4>
                                 <p class="text-muted small mb-0 max-w-md mx-auto">
-                                    <i class="bi bi-check-circle-fill text-success me-1"></i> No credit card or payment details required. Click below to activate your memorial immediately with essential core features.
+                                    <i class="bi bi-check-circle-fill text-success me-1"></i> No credit card or payment
+                                    details required. Click below to activate your memorial immediately with essential
+                                    core features.
                                 </p>
                             </div>
 
                             <!-- Features Comparison Table -->
-                            <div class="comparison-wrapper rounded-4 p-3 p-md-5">
+                            {{-- <div class="comparison-wrapper rounded-4 p-3 p-md-5">
                                 <h3 class="font-serif text-brown text-center mb-4 fs-4 fw-bold">Compare Features &
                                     Capabilities</h3>
 
@@ -779,7 +878,8 @@
                                                             free</span>
                                                         <span class="fs-4 fw-bold text-dark d-block my-1">Free</span>
                                                         <div class="mt-2">
-                                                            <a href="javascript:void(0)" onclick="selectPackageByType('free')"
+                                                            <a href="javascript:void(0)"
+                                                                onclick="selectPackageByType('free')"
                                                                 class="btn btn-secondary btn-sm w-100 fw-semibold text-uppercase py-2">Select</a>
                                                         </div>
                                                     </div>
@@ -794,7 +894,8 @@
                                                                 class="fs-6">95</span><span
                                                                 class="small text-muted fw-normal">/yr</span></span>
                                                         <div class="mt-2">
-                                                            <a href="javascript:void(0)" onclick="selectPackageByType('yearly')"
+                                                            <a href="javascript:void(0)"
+                                                                onclick="selectPackageByType('yearly')"
                                                                 class="btn btn-gold btn-sm w-100 fw-semibold text-uppercase py-2 shadow-sm">Start
                                                                 Trial</a>
                                                         </div>
@@ -808,7 +909,8 @@
                                                         <span class="fs-4 fw-bold text-brown d-block my-1">$159.<span
                                                                 class="fs-6">95</span></span>
                                                         <div class="mt-2">
-                                                            <a href="javascript:void(0)" onclick="selectPackageByType('lifetime')"
+                                                            <a href="javascript:void(0)"
+                                                                onclick="selectPackageByType('lifetime')"
                                                                 class="btn btn-outline-gold btn-sm w-100 fw-semibold text-uppercase py-2">Start
                                                                 Trial</a>
                                                         </div>
@@ -852,7 +954,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </section>
                 </div>
@@ -861,7 +963,8 @@
                     <button type="button" class="btn btn-secondary px-4 py-2" onclick="switchStep(2)">
                         <i class="bi bi-arrow-left me-1"></i> Back to Step 2
                     </button>
-                    <button type="submit" class="btn btn-gold px-5 py-2 fw-bold text-uppercase shadow-sm" id="btn-submit-step3">
+                    <button type="submit" class="btn btn-gold px-5 py-2 fw-bold text-uppercase shadow-sm"
+                        id="btn-submit-step3">
                         <span id="btn-submit-text">Complete & Activate / Purchase</span>
                         <i class="bi bi-arrow-right ms-1"></i>
                     </button>
@@ -870,6 +973,55 @@
 
         </form>
     </div>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const memorialStatus = document.getElementById('memorial_status');
+            const reasonContainer = document.getElementById('passedAwayReasonContainer');
+            const reasonInput = document.getElementById('passed_away_reason');
+
+            function togglePassedAwayReason() {
+                const isPassedAway = memorialStatus.value === 'passed_away';
+
+                reasonContainer.classList.toggle('d-none', !isPassedAway);
+
+                // Prevent submission when Living Memory is selected
+                reasonInput.disabled = !isPassedAway;
+            }
+
+            // Custom dropdown selection
+            window.selectDropdownOption = function(element, inputId, value) {
+
+                const input = document.getElementById(inputId);
+                const dropdown = element.closest('.dropdown');
+                const buttonText = dropdown.querySelector('button span');
+
+                // Update hidden input
+                input.value = value;
+
+                // Update dropdown label
+                buttonText.textContent = element.textContent.trim();
+
+                // Update active option
+                dropdown.querySelectorAll('.dropdown-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+
+                element.classList.add('active');
+
+                // Toggle reason dropdown when status changes
+                if (inputId === 'memorial_status') {
+                    togglePassedAwayReason();
+                }
+            };
+
+            // Set correct visibility on initial page load
+            togglePassedAwayReason();
+
+        });
+    </script>
 
     <!-- JavaScript for Tab Switching Logic -->
     <script>
@@ -888,32 +1040,16 @@
     </script>
 
 
-    <script>
-        function selectDropdownOption(element, inputName, value) {
-            event.preventDefault();
-            const dropdown = element.closest('.dropdown');
-            const buttonSpan = dropdown.querySelector('.dropdown-toggle-custom span');
-            const hiddenInput = document.getElementById(inputName);
-
-            buttonSpan.textContent = element.textContent;
-
-            if (hiddenInput) {
-                hiddenInput.value = value;
-            }
-
-            dropdown.querySelectorAll('.dropdown-item').forEach(item => item.classList.remove('active'));
-            element.classList.add('active');
-        }
-    </script>
-
     <!-- JavaScript Functions -->
     <script>
+        // Private ඔප්ෂන් එක තෝරාගත් විට Box එක පෙන්වීම හෝ වැසීම
         function togglePrivacySettings() {
             const isPrivate = document.getElementById('private').checked;
             const privateBox = document.getElementById('privateSettingsBox');
 
             if (isPrivate) {
                 privateBox.classList.remove('d-none');
+                // මුල් වරට private තෝරන විට input හිස් නම් පමණක් random අගයන් දමා හැඩගැස්වීම (অটোමැටික්)
                 if (!document.getElementById('private_password').value) {
                     generateRandomPassword();
                 }
@@ -925,6 +1061,7 @@
             }
         }
 
+        // අහඹු (Random) Username එකක් සකස් කිරීම (Custom අවශ්‍ය නම් වෙනස් කර ටයිප් කළ හැක)
         function generateRandomUsername() {
             const randomNames = ["GuestUser", "FamilyVisitor", "Visitor99", "FriendMemorial", "AnonymousUser",
                 "MemoryKeeper"
@@ -934,6 +1071,7 @@
             document.getElementById('private_username').value = randomName;
         }
 
+        // අහඹු (Random) ශක්තිමත් Password එකක් සකස් කිරීම (Custom අවශ්‍ය නම් වෙනස් කර ටයිප් කළ හැක)
         function generateRandomPassword() {
             const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$!";
             let password = "";
@@ -943,10 +1081,11 @@
             document.getElementById('private_password').value = password;
         }
 
+        // Password එක Clipboard එකට Copy කරගැනීම
         function copyPassword() {
             const passwordInput = document.getElementById('private_password');
             passwordInput.select();
-            passwordInput.setSelectionRange(0, 99999);
+            passwordInput.setSelectionRange(0, 99999); // Mobile devices සඳහා
 
             navigator.clipboard.writeText(passwordInput.value).then(() => {
                 const alertBox = document.getElementById('copyAlert');
@@ -957,6 +1096,7 @@
             });
         }
 
+        // දත්ත Share කරගැනීම (Web Share API හරහා)
         function sharePassword() {
             const username = document.getElementById('private_username').value;
             const password = document.getElementById('private_password').value;
@@ -971,6 +1111,43 @@
             } else {
                 navigator.clipboard.writeText(shareText);
                 alert("Access details copied to clipboard to share!");
+            }
+        }
+    </script>
+
+
+
+    <!-- අතිරේක JavaScript ශ්‍රිතය (Country Code වෙනස් කිරීම සඳහා) -->
+    <script>
+        function selectCountryCode(element, codeValue) {
+            event.preventDefault();
+            const dropdown = element.closest('.dropdown');
+            const buttonSpan = dropdown.querySelector('.dropdown-toggle-custom span');
+            const hiddenInput = document.getElementById('selected_country_code');
+
+            buttonSpan.textContent = codeValue;
+            if (hiddenInput) {
+                hiddenInput.value = codeValue;
+            }
+
+            dropdown.querySelectorAll('.dropdown-item').forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+        }
+    </script>
+
+    <script>
+        function togglePasswordVisibility(fieldId, iconId) {
+            const passwordInput = document.getElementById(fieldId);
+            const icon = document.getElementById(iconId);
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                icon.classList.remove("bi-eye-slash");
+                icon.classList.add("bi-eye");
+            } else {
+                passwordInput.type = "password";
+                icon.classList.remove("bi-eye");
+                icon.classList.add("bi-eye-slash");
             }
         }
     </script>
@@ -1010,7 +1187,8 @@
             const paymentSection = document.getElementById('paymentDetailsSection');
             const freeNotice = document.getElementById('freePlanNotice');
 
-            const currSymbol = (currency && currency.toLowerCase() === 'usd') ? '$' : (currency ? currency.toUpperCase() + ' ' : '$');
+            const currSymbol = (currency && currency.toLowerCase() === 'usd') ? '$' : (currency ? currency.toUpperCase() +
+                ' ' : '$');
 
             if (summaryName) summaryName.textContent = name;
             if (summaryPrice) {
@@ -1021,7 +1199,8 @@
             if (numPrice > 0) {
                 if (paymentSection) paymentSection.classList.remove('d-none');
                 if (freeNotice) freeNotice.classList.add('d-none');
-                if (submitBtnText) submitBtnText.textContent = 'Complete & Purchase (' + currSymbol + numPrice.toFixed(2) + ')';
+                if (submitBtnText) submitBtnText.textContent = 'Complete & Purchase (' + currSymbol + numPrice.toFixed(2) +
+                    ')';
                 setPaymentFieldsRequired(true);
             } else {
                 if (paymentSection) paymentSection.classList.add('d-none');
@@ -1077,11 +1256,14 @@
         function selectPackageByType(type) {
             let targetCard = null;
             if (type === 'free') {
-                targetCard = document.querySelector('.package-col[data-price="0"] .pricing-card, .package-col[data-price="0.00"] .pricing-card');
+                targetCard = document.querySelector(
+                    '.package-col[data-price="0"] .pricing-card, .package-col[data-price="0.00"] .pricing-card');
             } else if (type === 'yearly') {
                 targetCard = document.querySelector('.package-col[data-billing="yearly"] .pricing-card');
             } else if (type === 'lifetime') {
-                targetCard = document.querySelector('.package-col[data-billing="lifetime"]:not([data-price="0"]):not([data-price="0.00"]) .pricing-card');
+                targetCard = document.querySelector(
+                    '.package-col[data-billing="lifetime"]:not([data-price="0"]):not([data-price="0.00"]) .pricing-card'
+                    );
             }
 
             if (targetCard) {
@@ -1090,7 +1272,10 @@
                 const freeNotice = document.getElementById('freePlanNotice');
                 const targetElement = (type === 'free') ? freeNotice : paymentSection;
                 if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
                 }
             }
         }
@@ -1100,7 +1285,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Automatically select the default package
-            const defaultRadio = document.querySelector('.package-radio:checked') || document.querySelector('.package-radio');
+            const defaultRadio = document.querySelector('.package-radio:checked') || document.querySelector(
+                '.package-radio');
             if (defaultRadio) {
                 const card = defaultRadio.closest('.pricing-card');
                 if (card) {

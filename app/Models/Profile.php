@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Profile extends Model
 {
@@ -36,7 +37,7 @@ class Profile extends Model
         'funeral_location_name',
         'funeral_address',
         'family_contact_number',
-        'live_broadcast_link',
+        // 'live_broadcast_link',
 
         // Privacy
         'privacy',
@@ -76,6 +77,11 @@ class Profile extends Model
         return $this->hasMany(Story::class);
     }
 
+    public function postStories()
+    {
+        return $this->hasMany(PostStory::class);
+    }
+
     // Images only
     public function photos()
     {
@@ -96,4 +102,14 @@ class Profile extends Model
         return $this->hasMany(Media::class)
             ->where('type', 'audio');
     }
+
+    public function timelines(): HasMany
+{
+    return $this->hasMany(Timeline::class);
+}
+
+public function storyComments()
+{
+    return $this->hasMany(StoryComment::class);
+}
 }

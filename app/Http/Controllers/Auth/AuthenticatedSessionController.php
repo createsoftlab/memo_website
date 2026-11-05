@@ -32,16 +32,25 @@ class AuthenticatedSessionController extends Controller
 
         // Super Admin and Admin accounts must be redirected to the admin dashboard
         if ($user && in_array($user->role, ['super_admin', 'admin'], true)) {
-            return redirect()->intended(route('admin.dashboard', absolute: false));
+            return redirect()->intended(route('admin.dashboard', absolute: false))->with(
+            'success',
+            'Login successfully.'
+        );;;
         }
 
         // Standard users (role === 'user') must be redirected to the user dashboard
-        if ($user && ($user->role === 'user')) {
-            return redirect()->intended(route('home', absolute: false));
+        if ($user && ($user->role === 'general_user')) {
+            return redirect()->intended(route('home', absolute: false))->with(
+            'success',
+            'Login successfully.'
+        );;;
         }
 
         // Safe fallback: NEVER default to admin.dashboard
-        return redirect()->intended(route('memoryUser.dashboard', absolute: false));
+        return redirect()->intended(route('memoryUser.dashboard', absolute: false))->with(
+            'success',
+            'Login successfully..'
+        );;
     }
 
     /**

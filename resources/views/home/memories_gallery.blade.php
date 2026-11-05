@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gallery - Lallan Writer Memorial</title>
+  <title>Gallery - {{ $profile->first_name }} {{ $profile->last_name }} Memorial</title>
   
   <!-- Bootstrap 5 CSS & Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -12,40 +12,112 @@
   <!-- Custom Stylesheets -->
   <link rel="stylesheet" href="{{ asset('memo_website_dev_frontend/assets/css/main.css') }}">
   <link rel="stylesheet" href="{{ asset('memo_website_dev_frontend/assets/css/gallery.css') }}">
+
+  <!-- Consistent layout for both server-rendered and AJAX-added gallery items -->
+  <style>
+    /* Explicit CSS grid prevents theme styles or Bootstrap columns from shifting cards. */
+    #galleryPhotosGrid { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 16px !important; margin: 0 !important; width: 100% !important; align-items: stretch !important; }
+    #galleryPhotosGrid > .gallery-photo-col { display: block !important; width: 100% !important; max-width: none !important; min-width: 0 !important; flex: none !important; padding: 0 !important; margin: 0 !important; position: static !important; float: none !important; transform: none !important; clear: none !important; }
+    #galleryPhotosGrid .gallery-item-wrapper { display: block !important; position: relative !important; width: 100% !important; height: 260px !important; overflow: hidden !important; margin: 0 !important; padding: 0 !important; transform: none !important; opacity: 1 !important; visibility: visible !important; }
+    #galleryPhotosGrid .gallery-item-wrapper img.gallery-thumb { display: block !important; width: 100% !important; height: 100% !important; max-width: none !important; max-height: none !important; object-fit: cover !important; object-position: center !important; float: none !important; position: static !important; margin: 0 !important; transform: none !important; }
+    #galleryPhotosGrid .gallery-item-wrapper .badge { z-index: 3 !important; }
+    #galleryPhotosGrid > [data-gallery-empty] { grid-column: 1 / -1 !important; width: 100% !important; }
+    @media (max-width: 767.98px) { #galleryPhotosGrid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; } #galleryPhotosGrid .gallery-item-wrapper { height: 200px !important; } }
+
+    /* Selected photo thumbnails: fill their cards without empty lower space. */
+    #imagePreviewContainer { display:grid !important; grid-template-columns:repeat(4,minmax(0,1fr)) !important; gap:10px !important; margin-left:0 !important; margin-right:0 !important; align-items:start !important; }
+    #imagePreviewContainer > .col { display:block !important; width:100% !important; max-width:none !important; min-width:0 !important; padding:0 !important; margin:0 !important; flex:none !important; }
+    #imagePreviewContainer .preview-thumb-card { position:relative !important; width:100% !important; height:150px !important; min-height:0 !important; padding:0 !important; margin:0 !important; overflow:hidden !important; border-radius:10px !important; background:#f8f9fa; }
+    #imagePreviewContainer .preview-thumb-card > img { display:block !important; width:100% !important; height:100% !important; max-width:none !important; max-height:none !important; object-fit:cover !important; object-position:center !important; margin:0 !important; padding:0 !important; position:static !important; }
+    #imagePreviewContainer .delete-thumb-btn { position:absolute !important; top:6px !important; right:6px !important; z-index:5 !important; width:26px !important; height:26px !important; border:0 !important; border-radius:50% !important; background:rgba(0,0,0,.7) !important; color:white !important; display:flex !important; align-items:center !important; justify-content:center !important; padding:0 !important; }
+    @media (max-width:575.98px) { #imagePreviewContainer { grid-template-columns:repeat(2,minmax(0,1fr)) !important; } }
+    /* Standalone Stories-style notification: avoids site-wide .toast/.alert overrides. */
+    #fmGalleryNoticeHost { position:fixed !important; top:16px !important; right:16px !important; z-index:2147483000 !important; width:min(380px,calc(100vw - 32px)) !important; pointer-events:none !important; }
+    #fmGalleryNotice { display:none; width:100% !important; background:#fff !important; color:#212529 !important; border-radius:8px !important; overflow:hidden !important; box-shadow:0 8px 25px rgba(0,0,0,.18) !important; border:1px solid #e9ecef !important; pointer-events:auto !important; font-family:system-ui,-apple-system,Segoe UI,sans-serif !important; }
+    #fmGalleryNotice.fm-visible { display:block !important; animation:fmNoticeIn .18s ease-out both; }
+    #fmGalleryNotice .fm-notice-header { display:flex !important; align-items:center !important; gap:8px !important; padding:10px 14px !important; background:#fff !important; border-bottom:1px solid #eee !important; color:#212529 !important; }
+    #fmGalleryNotice .fm-notice-title { font-weight:700 !important; font-size:14px !important; flex:1; }
+    #fmGalleryNotice .fm-notice-close { border:0 !important; background:transparent !important; color:#666 !important; cursor:pointer !important; font-size:20px !important; line-height:1 !important; padding:0 2px !important; }
+    #fmGalleryNotice .fm-notice-body { padding:12px 14px !important; background:#fff !important; color:#343a40 !important; font-size:14px !important; white-space:pre-line !important; }
+    #fmGalleryNotice .fm-notice-track { height:3px !important; background:#e9ecef !important; }
+    #fmGalleryNotice .fm-notice-bar { height:100% !important; width:100%; background:#198754 !important; transition:none; }
+    @keyframes fmNoticeIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+  </style>
 </head>
 <body class="bg-memorial-light">
 
        @include('home.header')
+
+  @php
+
+    // $coverImage = \App\Models\Image::where('profile_id', $memory->profile?->id)->where('type', 'cover')->first();
+    $backgroundMusic = \App\Models\Music::where('profile_id', $memory->profile?->id)->first();
+    // Get profile image from images table
+    $profileImage = \App\Models\Image::where('profile_id', $memory->profile?->id)
+        ->where('type', 'profile')
+        ->first();
+
+    $birthYear = $profile->date_of_birth
+        ? \Carbon\Carbon::parse($profile->date_of_birth)->format('Y')
+        : null;
+
+    $deathYear = $profile->date_of_death
+        ? \Carbon\Carbon::parse($profile->date_of_death)->format('Y')
+        : null;
+  @endphp
+
+  @php
+    $canUpload = auth()->check() && (int) auth()->id() === (int) $profile->user_id;
+    $visiblePhotos = $canUpload ? $photos : $photos->where('status', 1);
+    $visibleVideos = $canUpload ? $videos : $videos->where('status', 1);
+    $visibleAudios = $canUpload ? $audios : $audios->where('status', 1);
+  @endphp
 
   <!-- Hero Header -->
   <header class="memorial-hero d-flex align-items-end">
     <div class="container py-4">
       <div class="row align-items-center">
         <div class="col-8">
-          <h1 class="memorial-title text-white mb-0">Lallan Writer</h1>
-          <p class="fs-4 text-white-50 font-serif mb-0">1945 - 2021</p>
+          <h1 class="memorial-title text-white mb-0">{{ $memory->profile?->first_name }} {{ $memory->profile?->last_name }}</h1>
+          @if ($birthYear || $deathYear)
+          <p class="fs-4 text-white-50 font-serif mb-0">
+            {{ collect([$birthYear, $deathYear])->filter()->implode(' - ') }}
+          </p>
+          @endif
         </div>
         <div class="col-4 text-end">
-          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?fit=crop&w=300&h=300" class="memorial-avatar rounded-3 shadow" alt="Lallan Writer">
+          <img src="{{ $profileImage?->path ? asset($profileImage->path) : asset('images/profile_photo.png') }}" class="memorial-avatar rounded-3 shadow" alt="Memorial profile">
         </div>
       </div>
     </div>
+          @if ($backgroundMusic?->path) 
+        <!-- Background Music Toggle Button -->
+        <button id="audioToggleBtn"
+            class="btn btn-outline-warning btn-sm rounded-pill px-3 py-1 d-flex align-items-center gap-2 bg-dark bg-opacity-50"
+            onclick="toggleBackgroundMusic()" title="Toggle Background Music">
+            <i id="audioIcon" class="bi bi-volume-up-fill fs-6 text-warning"></i>
+            <span id="audioText" class="small">Mute Music</span>
+        </button>
+                                                                                           
+        <!-- Hidden HTML5 Audio Element (Autoplay without muted) -->
+        <audio id="memorialAudio" autoplay loop>
+            <source src="{{ asset($backgroundMusic->path) }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        @endif
   </header>
 
   <!-- Navigation Tabs Bar -->
   <div class="memorial-tabs-bar sticky-top">
     <div class="container">
       <ul class="nav nav-tabs border-0">
-        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_index') }}">ABOUT</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_life') }}">LIFE</a></li>
-        <li class="nav-item"><a class="nav-link active" href="{{ url('/memories_gallery') }}">GALLERY</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_stories') }}">STORIES</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_timeline') }}">TIMELINE</a></li>
-                <li class="nav-item"><a class="nav-link " href="{{ url('/memories_event') }}">EVENTS</a></li>
-
-                                                <li class="nav-item"><a class="nav-link " href="{{ url('/memories_donation') }}">DONATIONS</a></li>
-
-
+        <li class="nav-item"><a class="nav-link" href="{{ url('/memory_index/' . $memory->profile->slug) }}">ABOUT</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_life/' . $memory->profile->slug) }}">LIFE</a></li>
+        <li class="nav-item"><a class="nav-link active" href="{{ url('/memories_gallery/' . $memory->profile->slug) }}">GALLERY</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_stories/' . $memory->profile->slug) }}">STORIES</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_timeline/'. $memory->profile->slug) }}">TIMELINE</a></li>
+        <li class="nav-item"><a class="nav-link " href="{{ url('/memories_event/'. $memory->profile->slug) }}">EVENTS</a></li>
+       <li class="nav-item"><a class="nav-link " href="{{ url('/memories_donation/' . $memory->profile->slug) }}">DONATIONS</a></li>
       </ul>
     </div>
   </div>
@@ -79,6 +151,7 @@
             <!-- PHOTO TAB -->
             <div class="tab-pane fade show active" id="photo-tab-pane" role="tabpanel" tabindex="0">
               <!-- Action Control Buttons -->
+              @if($canUpload)
               <div class="d-flex gap-2 mb-4">
              <button class="btn btn-add-photos btn-sm font-monospace fw-semibold d-inline-flex align-items-center gap-1 shadow-sm px-3 py-2" onclick="document.getElementById('upload-section').scrollIntoView({behavior: 'smooth'});">
     <i class="bi bi-image-fill me-1"></i> Add photos
@@ -88,43 +161,26 @@
                 </button> -->
               </div>
 
+              @endif
               <!-- Photos Grid (Responsive 3 Columns) -->
-              <div class="row g-3">
-                <div class="col-6 col-sm-4">
+              <div id="galleryPhotosGrid">
+                @forelse ($visiblePhotos as $photo)
+                <div class="gallery-photo-col">
                   <div class="gallery-item-wrapper rounded overflow-hidden shadow-sm position-relative">
-                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1 uppercase-badge">NEW</span>
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=400&h=400" class="img-fluid gallery-thumb" alt="Photo 1">
+                    @if((int) $photo->status === 0)
+                    <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2 z-1">Pending Approval</span>
+                    @endif
+                    <img src="{{ asset($photo->file_path) }}" class="img-fluid gallery-thumb" alt="{{ $photo->file_name }}">
                   </div>
                 </div>
-                <div class="col-6 col-sm-4">
-                  <div class="gallery-item-wrapper rounded overflow-hidden shadow-sm position-relative">
-                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1 uppercase-badge">NEW</span>
-                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?fit=crop&w=400&h=400" class="img-fluid gallery-thumb" alt="Photo 2">
-                  </div>
-                </div>
-                <div class="col-6 col-sm-4">
-                  <div class="gallery-item-wrapper rounded overflow-hidden shadow-sm position-relative">
-                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1 uppercase-badge">NEW</span>
-                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?fit=crop&w=400&h=400" class="img-fluid gallery-thumb" alt="Photo 3">
-                  </div>
-                </div>
-                <div class="col-6 col-sm-4">
-                  <div class="gallery-item-wrapper rounded overflow-hidden shadow-sm position-relative">
-                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1 uppercase-badge">NEW</span>
-                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?fit=crop&w=400&h=400" class="img-fluid gallery-thumb" alt="Photo 4">
-                  </div>
-                </div>
-                <div class="col-6 col-sm-4">
-                  <div class="gallery-item-wrapper rounded overflow-hidden shadow-sm position-relative">
-                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1 uppercase-badge">NEW</span>
-                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?fit=crop&w=400&h=400" class="img-fluid gallery-thumb" alt="Photo 5">
-                  </div>
-                </div>
-                
+                @empty
+                <div class="col-12 text-center py-5 text-muted" data-gallery-empty> No photos uploaded yet.</div>
+                @endforelse
               </div>
 
 
               <br>
+ @if($canUpload)
  <!-- Add Media Dynamic Upload Section Box -->
 <div class="sidebar-card p-4 rounded-4 shadow-sm bg-white border border-light reveal-card mb-4" id="upload-section">
   <h5 class="fw-bold text-dark mb-3" id="upload-section-title">Add Photos</h5>
@@ -139,7 +195,7 @@
 
   <!-- Drag and Drop Dropzone -->
   <div class="upload-dropzone rounded-4 p-4 text-center mb-3 d-flex flex-column align-items-center justify-content-center border border-2 border-dashed position-relative" id="dropzoneArea">
-    <input type="file" id="mediaFileInput" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" multiple accept="image/*" style="cursor: pointer;">
+    <input type="file" id="mediaFileInput" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" multiple accept=".jpg,.jpeg,.png,.webp,.gif" style="cursor: pointer;">
     <div class="dropzone-content py-3">
       <i class="bi bi-cloud-arrow-up fs-1 text-memorial mb-2"></i>
       <p class="small text-muted mb-0">
@@ -166,24 +222,36 @@
     </button>
   </div>
 </div>
+@endif
 </div>
 
 
             <!-- MOVIE TAB -->
             <div class="tab-pane fade" id="movie-tab-pane" role="tabpanel" tabindex="0">
+              @if($canUpload)
               <div class="d-flex gap-2 mb-4">
                 <button class="btn btn-add-photos btn-sm font-monospace fw-semibold d-inline-flex align-items-center gap-1 shadow-sm px-3 py-2" onclick="document.getElementById('videoupload-section').scrollIntoView({behavior: 'smooth'});">
                   <i class="bi bi-plus-square me-1"></i> Add Video 
                 </button>
               </div>
-              <div class="text-center py-5 text-muted bg-white rounded border border-dashed">
-                <i class="bi bi-film fs-1 d-block mb-2 text-memorial-accent"></i>
-                <p class="mb-0 fw-semibold">No videos uploaded yet.</p>
-                <span class="small text-muted">Upload memorial movies using the section below.</span>
+              @endif
+              <div class="row g-3" id="galleryVideosGrid">
+                @forelse($visibleVideos as $video)
+                  <div class="col-12 col-md-6">
+                    <div class="rounded border bg-white p-2 shadow-sm">
+                      <video controls preload="metadata" class="w-100 rounded" style="max-height:250px;" src="{{ asset($video->file_path) }}"></video>
+                      <p class="small text-muted text-truncate mb-0">{{ $video->file_name }}</p>
+                      @if((int) $video->status === 0)<span class="badge bg-warning text-dark">Pending Approval</span>@endif
+                    </div>
+                  </div>
+                @empty
+                  <div class="col-12 text-center py-5 text-muted bg-white rounded border border-dashed" data-gallery-empty>No videos uploaded yet.</div>
+                @endforelse
               </div>
 
               <br>
 
+  @if($canUpload)
   <!-- Add Video Dynamic Upload Section Box -->
 <div class="sidebar-card p-4 rounded-4 shadow-sm bg-white border border-light reveal-card mb-4" id="videoupload-section">
   <h5 class="fw-bold text-dark mb-3" id="upload-section-title">Add videos</h5>
@@ -198,7 +266,7 @@
 
   <!-- Drag and Drop Dropzone (Video specific IDs) -->
   <div class="upload-dropzone rounded-4 p-4 text-center mb-3 d-flex flex-column align-items-center justify-content-center border border-2 border-dashed position-relative" id="videoDropzoneArea">
-    <input type="file" id="videoFileInput" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" multiple accept="video/*" style="cursor: pointer;">
+    <input type="file" id="videoFileInput" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" multiple accept=".mp4,.mov,.webm" style="cursor: pointer;">
     <div class="dropzone-content py-3">
       <i class="bi bi-cloud-arrow-up fs-1 text-memorial mb-2"></i>
       <p class="small text-muted mb-0">
@@ -225,13 +293,14 @@
     </button>
   </div>
 </div>
-            </br>
+            @endif
 
             </div>
 
        <!-- AUDIO TAB -->
 <div class="tab-pane fade" id="audio-tab-pane" role="tabpanel" tabindex="0">
   
+  @if($canUpload)
   <!-- Add Audio Top Button -->
   <div class="d-flex gap-2 mb-4">
     <button class="btn btn-add-photos btn-sm font-monospace fw-semibold d-inline-flex align-items-center gap-1 shadow-sm px-3 py-2" onclick="document.getElementById('audio-upload-section').scrollIntoView({behavior: 'smooth'});">
@@ -239,13 +308,19 @@
     </button>
   </div>
 
-  <!-- Empty State Box -->
-  <div class="text-center py-5 text-muted bg-white rounded border border-dashed mb-4" id="emptyAudioState">
-    <i class="bi bi-music-note-beamed fs-1 d-block mb-2 text-memorial-accent"></i>
-    <p class="mb-0 fw-semibold">No audio files uploaded yet.</p>
-    <span class="small text-muted">Upload voice recordings or music tracks using the section below.</span>
+  @endif
+  <div class="row g-3 mb-4" id="galleryAudiosGrid">
+    @forelse($visibleAudios as $audio)
+      <div class="col-12 col-md-6"><div class="p-3 border rounded bg-white shadow-sm">
+        <p class="small text-truncate">{{ $audio->file_name }}</p>
+        @if((int) $audio->status === 0)<span class="badge bg-warning text-dark mb-2">Pending Approval</span>@endif
+        <audio controls preload="none" class="w-100" src="{{ asset($audio->file_path) }}"></audio>
+      </div></div>
+    @empty
+      <div class="col-12 text-center py-5 text-muted" data-gallery-empty>No audio files uploaded yet.</div>
+    @endforelse
   </div>
-
+  @if($canUpload)
   <!-- Add Audio Dynamic Upload Section Box -->
   <div class="sidebar-card p-4 rounded-4 shadow-sm bg-white border border-light reveal-card mb-4" id="audio-upload-section">
     <h5 class="fw-bold text-dark mb-3" id="audio-section-title">Add audio</h5>
@@ -260,7 +335,7 @@
 
     <!-- Drag and Drop Dropzone (Audio specific IDs) -->
     <div class="upload-dropzone rounded-4 p-4 text-center mb-3 d-flex flex-column align-items-center justify-content-center border border-2 border-dashed position-relative" id="audioDropzoneArea">
-      <input type="file" id="audioFileInput" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" multiple accept="audio/*" style="cursor: pointer;">
+      <input type="file" id="audioFileInput" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" multiple accept=".mp3,.wav,.ogg,.m4a" style="cursor: pointer;">
       <div class="dropzone-content py-3">
         <i class="bi bi-cloud-arrow-up fs-1 text-memorial mb-2"></i>
         <p class="small text-muted mb-0">
@@ -287,6 +362,7 @@
       </button>
     </div>
   </div>
+  @endif
 
 </div>
      
@@ -302,7 +378,7 @@
         <!-- Invite & Donate Card -->
         <div class="main-content-card p-3 rounded">
           <div class="d-flex justify-content-between align-items-start mb-2">
-            <h6 class="fw-bold mb-0 me-2 text-dark">Invite Lallan's family and friends</h6>
+            <h6 class="fw-bold mb-0 me-2 text-dark">Invite {{ $profile->first_name }}'s family and friends</h6>
             <i class="bi bi-person-add fs-4 text-muted"></i>
           </div>
           <button class="btn btn-invite w-100 py-2 mb-2">
@@ -328,9 +404,9 @@
 
         <!-- Photos Spotlight Card -->
         <div class="main-content-card p-3 rounded">
-          <h6 class="fw-bold mb-3 text-dark">5 Photos</h6>
+          <h6 class="fw-bold mb-3 text-dark">{{ $visiblePhotos->count() }} Photos</h6>
           <div class="mb-3 rounded overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=400&h=300" class="img-fluid rounded w-100" alt="Spotlight Photo">
+            <img src="{{ $profileImage?->path ? asset($profileImage->path) : asset('images/profile_photo.png') }}" class="img-fluid rounded w-100" alt="Spotlight Photo">
           </div>
         </div>
 
@@ -367,7 +443,20 @@
 
 
   
-   <!-- Footer -->
+  <!-- Independent gallery notification: visually matches Stories success toast. -->
+  <div id="fmGalleryNoticeHost" aria-live="polite" aria-atomic="true">
+    <div id="fmGalleryNotice" role="status">
+      <div class="fm-notice-header">
+        <i id="fmGalleryNoticeIcon" class="bi bi-check-circle-fill text-success"></i>
+        <strong id="fmGalleryNoticeTitle" class="fm-notice-title">Success</strong>
+        <button id="fmGalleryNoticeClose" class="fm-notice-close" type="button" aria-label="Close">&times;</button>
+      </div>
+      <div id="fmGalleryNoticeBody" class="fm-notice-body"></div>
+      <div class="fm-notice-track"><div id="fmGalleryNoticeProgress" class="fm-notice-bar"></div></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
   <footer class="bg-memorial-dark text-white pt-5 pb-3 border-top border-secondary">
     <div class="container">
       <div class="row g-4 mb-4">
@@ -418,294 +507,270 @@
   <!-- JavaScript Files -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="{{ asset('memo_website_dev_frontend/assets/js/main.js') }}"></script>
-  
-  <!-- Dynamic Sub-Tab Handler Script -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const tabLinks = document.querySelectorAll('#gallerySubTabs button[data-bs-toggle="tab"]');
-      const uploadTitle = document.getElementById('upload-section-title');
-      const chooseFilesLink = document.getElementById('choose-files-link');
-      const importButtons = document.getElementById('import-buttons-wrapper');
 
-      tabLinks.forEach(tab => {
-        tab.addEventListener('shown.bs.tab', function (e) {
-          const targetId = e.target.id;
-          
-          if (targetId === 'photo-tab') {
-            uploadTitle.textContent = 'Add Photos';
-            chooseFilesLink.textContent = 'Choose photo files';
-            importButtons.classList.remove('d-none');
-          } else if (targetId === 'movie-tab') {
-            uploadTitle.textContent = 'Add Movies / Videos';
-            chooseFilesLink.textContent = 'Choose video files';
-            importButtons.classList.add('d-none');
-          } else if (targetId === 'audio-tab') {
-            uploadTitle.textContent = 'Add Audio Tracks';
-            chooseFilesLink.textContent = 'Choose audio files';
-            importButtons.classList.add('d-none');
+  <!-- Suppress only the obsolete upload success alert if another script inserts it. -->
+  <script>
+    (function () {
+      const oldMessage = 'Files uploaded successfully. They are pending approval.';
+      function removeLegacyUploadAlerts(root = document) {
+        const candidates = root.querySelectorAll
+          ? root.querySelectorAll('.alert, .toast, [role="alert"], .notification, .toastify, .swal2-popup')
+          : [];
+        for (const el of candidates) {
+          if (el.closest('#fmGalleryNoticeHost')) continue;
+          if ((el.textContent || '').trim() === oldMessage) {
+            el.remove();
           }
-        });
+        }
+      }
+      document.addEventListener('DOMContentLoaded', function () {
+        removeLegacyUploadAlerts();
+        const observer = new MutationObserver(() => removeLegacyUploadAlerts());
+        observer.observe(document.body, { childList: true, subtree: true });
       });
+    })();
+  </script>
+
+  <!-- Gallery notifications: no dependency on global .toast or .alert styling. -->
+  <script>
+    let fmNoticeTimeout = null;
+    function hideGalleryToast() {
+      document.getElementById('fmGalleryNotice')?.classList.remove('fm-visible');
+      if (fmNoticeTimeout !== null) clearTimeout(fmNoticeTimeout);
+      fmNoticeTimeout = null;
+    }
+    function showGalleryToast(message, type = 'success') {
+      const notice = document.getElementById('fmGalleryNotice');
+      if (!notice) return;
+      const ok = type === 'success';
+      document.getElementById('fmGalleryNoticeTitle').textContent = ok ? 'Success' : 'Error';
+      document.getElementById('fmGalleryNoticeBody').textContent = String(message || '');
+      document.getElementById('fmGalleryNoticeIcon').className = ok
+        ? 'bi bi-check-circle-fill text-success'
+        : 'bi bi-x-circle-fill text-danger';
+      const bar = document.getElementById('fmGalleryNoticeProgress');
+      bar.style.background = ok ? '#198754' : '#dc3545';
+      if (fmNoticeTimeout !== null) clearTimeout(fmNoticeTimeout);
+      bar.style.transition = 'none';
+      bar.style.width = '100%';
+      notice.classList.remove('fm-visible');
+      void notice.offsetWidth;
+      notice.classList.add('fm-visible');
+      void bar.offsetWidth;
+      requestAnimationFrame(() => {
+        bar.style.transition = 'width 3s linear';
+        bar.style.width = '0%';
+      });
+      fmNoticeTimeout = setTimeout(hideGalleryToast, 3000);
+    }
+    document.getElementById('fmGalleryNoticeClose')?.addEventListener('click', hideGalleryToast);
+    document.addEventListener('DOMContentLoaded', () => {
+      @if(session('success'))
+        showGalleryToast(@json(session('success')), 'success');
+      @elseif(session('error'))
+        showGalleryToast(@json(session('error')), 'error');
+      @endif
     });
   </script>
 
+     <!-- AJAX gallery uploads: preserves the existing three preview sections -->
+   @if($canUpload)
+   <script>
+   document.addEventListener('DOMContentLoaded', () => {
+     const uploadUrl = @json(route('gallery.media.store', $profile->id));
+     const csrfToken = @json(csrf_token());
+     const configs = [
+       { type: 'image', input: 'mediaFileInput', preview: 'imagePreviewContainer', button: 'submitImagesBtn', loader: 'uploadLoader', extensions: ['jpg','jpeg','png','webp','gif'], maxSize: 10 * 1024 * 1024 },
+       { type: 'video', input: 'videoFileInput', preview: 'videoPreviewContainer', button: 'submitVideoBtn', loader: 'videoUploadLoader', extensions: ['mp4','mov','webm'], maxSize: 100 * 1024 * 1024 },
+       { type: 'audio', input: 'audioFileInput', preview: 'audioPreviewContainer', button: 'submitAudioBtn', loader: 'audioUploadLoader', extensions: ['mp3','wav','ogg','m4a'], maxSize: 20 * 1024 * 1024 }
+     ];
 
+     function notify(text, success = true) {
+       showGalleryToast(text, success ? 'success' : 'error');
+     }
 
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const fileInput = document.getElementById("mediaFileInput");
-    const previewContainer = document.getElementById("imagePreviewContainer");
-    const submitBtn = document.getElementById("submitImagesBtn");
-    const uploadLoader = document.getElementById("uploadLoader");
-    
-    let selectedFiles = [];
+     // Add newly uploaded media immediately, without reloading the page.
+     function displayUploadedMedia(type, items) {
+       const gridId = { image: 'galleryPhotosGrid', video: 'galleryVideosGrid', audio: 'galleryAudiosGrid' }[type];
+       const grid = document.getElementById(gridId);
+       if (!grid) return;
+       grid.querySelectorAll('[data-gallery-empty]').forEach(element => element.remove());
+       items.forEach(item => {
+         const col = document.createElement('div');
+         col.className = type === 'image' ? 'gallery-photo-col' : 'col-12 col-md-6';
+         const badge = document.createElement('span');
+         badge.className = 'badge bg-warning text-dark';
+         badge.textContent = 'Pending Approval';
+         if (type === 'image') {
+           const wrapper = document.createElement('div');
+           wrapper.className = 'gallery-item-wrapper rounded overflow-hidden shadow-sm position-relative';
+           badge.classList.add('position-absolute', 'top-0', 'start-0', 'm-2', 'z-1');
+           const img = document.createElement('img');
+           img.src = item.url;
+           img.alt = item.file_name || 'Memorial photo';
+           img.className = 'img-fluid gallery-thumb';
+           wrapper.append(badge, img);
+           col.append(wrapper);
+         } else {
+           const wrapper = document.createElement('div');
+           wrapper.className = type === 'video' ? 'rounded border bg-white p-2 shadow-sm' : 'p-3 border rounded bg-white shadow-sm';
+           const player = document.createElement(type === 'video' ? 'video' : 'audio');
+           player.src = item.url;
+           player.controls = true;
+           player.preload = 'metadata';
+           player.className = 'w-100 rounded';
+           if (type === 'video') player.style.maxHeight = '250px';
+           const name = document.createElement('p');
+           name.className = 'small text-muted text-truncate mb-1';
+           name.textContent = item.file_name || '';
+           wrapper.append(player, name, badge);
+           col.append(wrapper);
+         }
+         grid.prepend(col);
+       });
+     }
 
-    if (fileInput) {
-        fileInput.addEventListener("change", function (e) {
-            const files = Array.from(e.target.files);
-            
-            files.forEach(file => {
-                if (file.type.startsWith("image/")) {
-                    selectedFiles.push(file);
-                }
-            });
+     configs.forEach(config => {
+       const input = document.getElementById(config.input);
+       const preview = document.getElementById(config.preview);
+       const button = document.getElementById(config.button);
+       const loader = document.getElementById(config.loader);
+       if (!input || !preview || !button || !loader) return;
 
-            renderPreviews();
-            fileInput.value = ""; // Reset input so same files can be re-selected if needed
-        });
-    }
+       let files = [];
+       let busy = false;
+       let objectUrls = [];
+       const updateButton = () => {
+         button.disabled = busy || files.length === 0;
+         button.classList.toggle('opacity-50', button.disabled);
+       };
+       function render() {
+         objectUrls.forEach(url => URL.revokeObjectURL(url));
+         objectUrls = [];
+         preview.replaceChildren();
+         files.forEach((file, index) => {
+           const col = document.createElement('div');
+           col.className = 'col';
+           const wrapper = document.createElement('div');
+           wrapper.className = 'preview-thumb-card shadow-sm position-relative rounded overflow-hidden';
+           let media;
+           const url = URL.createObjectURL(file);
+           objectUrls.push(url);
+           if (config.type === 'image') {
+             media = document.createElement('img');
+             media.src = url;
+             media.alt = 'Selected photo';
+             media.style.cssText = 'display:block;width:100%;height:100%;object-fit:cover;object-position:center';
+           } else if (config.type === 'video') {
+             media = document.createElement('video');
+             media.src = url;
+             media.muted = true;
+             media.preload = 'metadata';
+             media.style.cssText = 'width:100%;height:120px;object-fit:cover;background:#000';
+           } else {
+             media = document.createElement('div');
+             media.className = 'p-2 bg-light';
+             const name = document.createElement('p');
+             name.className = 'small text-truncate pe-4';
+             name.textContent = file.name;
+             const player = document.createElement('audio');
+             player.controls = true;
+             player.src = url;
+             player.style.width = '100%';
+             media.append(name, player);
+           }
+           const remove = document.createElement('button');
+           remove.type = 'button';
+           remove.className = 'delete-thumb-btn';
+           remove.title = 'Remove';
+           remove.innerHTML = '<i class="bi bi-x"></i>';
+           remove.disabled = busy;
+           remove.addEventListener('click', () => {
+             files.splice(index, 1);
+             render();
+           });
+           wrapper.append(media, remove);
+           col.append(wrapper);
+           preview.append(col);
+         });
+         updateButton();
+       }
 
-    function renderPreviews() {
-        previewContainer.innerHTML = "";
+       function addFiles(incoming) {
+         const rejected = [];
+         for (const file of incoming) {
+           const ext = (file.name.split('.').pop() || '').toLowerCase();
+           if (!config.extensions.includes(ext)) {
+             rejected.push(file.name + ': unsupported format');
+           } else if (file.size > config.maxSize) {
+             rejected.push(file.name + ': file too large');
+           } else if (files.length >= 20) {
+             rejected.push('Maximum 20 files per upload');
+             break;
+           } else {
+             files.push(file);
+           }
+         }
+         if (rejected.length) notify(rejected.join('\n'), false);
+         render();
+       }
 
-        if (selectedFiles.length > 0) {
-            submitBtn.removeAttribute("disabled");
-            submitBtn.classList.remove("opacity-50");
-        } else {
-            submitBtn.setAttribute("disabled", "true");
-            submitBtn.classList.add("opacity-50");
-        }
+       input.addEventListener('change', () => {
+         addFiles(Array.from(input.files));
+         input.value = '';
+       });
+       const dropzone = input.closest('.upload-dropzone');
+       if (dropzone) {
+         dropzone.addEventListener('dragover', event => {
+           event.preventDefault();
+           dropzone.classList.add('border-primary');
+         });
+         dropzone.addEventListener('dragleave', () => dropzone.classList.remove('border-primary'));
+         dropzone.addEventListener('drop', event => {
+           event.preventDefault();
+           dropzone.classList.remove('border-primary');
+           if (!busy) addFiles(Array.from(event.dataTransfer.files));
+         });
+       }
 
-        selectedFiles.forEach((file, index) => {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const col = document.createElement("div");
-                col.className = "col";
-                col.innerHTML = `
-                    <div class="preview-thumb-card shadow-sm">
-                        <img src="${e.target.result}" alt="Preview">
-                        <button type="button" class="delete-thumb-btn" data-index="${index}" title="Remove">
-                            <i class="bi bi-x"></i>
-                        </button>
-                    </div>
-                `;
-                previewContainer.appendChild(col);
-
-                // Attach delete event
-                col.querySelector(".delete-thumb-btn").addEventListener("click", function () {
-                    const idx = parseInt(this.getAttribute("data-index"));
-                    selectedFiles.splice(idx, 1);
-                    renderPreviews();
-                });
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-
-    // Submit / Upload trigger simulation
-    if (submitBtn) {
-        submitBtn.addEventListener("click", function () {
-            if (selectedFiles.length === 0) return;
-
-            // Show loading state ("uploading to space")
-            uploadLoader.classList.remove("d-none");
-            submitBtn.setAttribute("disabled", "true");
-
-            setTimeout(() => {
-                // Simulate completion
-                uploadLoader.classList.add("d-none");
-                alert(`${selectedFiles.length} photo(s) successfully uploaded to space!`);
-                selectedFiles = [];
-                renderPreviews();
-            }, 2000);
-        });
-    }
-});
-</script>
-
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const fileInput = document.getElementById("videoFileInput");
-    const previewContainer = document.getElementById("videoPreviewContainer");
-    const submitBtn = document.getElementById("submitVideoBtn");
-    const uploadLoader = document.getElementById("videoUploadLoader");
-    
-    let selectedFiles = [];
-
-    if (fileInput) {
-        fileInput.addEventListener("change", function (e) {
-            const files = Array.from(e.target.files);
-            
-            files.forEach(file => {
-                // Video files witharak filter karagannawa
-                if (file.type.startsWith("video/")) {
-                    selectedFiles.push(file);
-                }
-            });
-
-            renderPreviews();
-            fileInput.value = ""; // Input eka reset karanawa ayeth e file ma select karanna puluwan wenna
-        });
-    }
-
-    function renderPreviews() {
-        previewContainer.innerHTML = "";
-
-        if (selectedFiles.length > 0) {
-            submitBtn.removeAttribute("disabled");
-            submitBtn.classList.remove("opacity-50");
-        } else {
-            submitBtn.setAttribute("disabled", "true");
-            submitBtn.classList.add("opacity-50");
-        }
-
-        selectedFiles.forEach((file, index) => {
-            // Video file eka preview karann object URL ekak hadanawa
-            const videoUrl = URL.createObjectURL(file);
-            const col = document.createElement("div");
-            col.className = "col";
-            col.innerHTML = `
-                <div class="preview-thumb-card shadow-sm position-relative" style="background:#000; aspect-ratio:1; border-radius:8px; overflow:hidden;">
-                    <video src="${videoUrl}" muted style="width: 100%; height: 100%; object-fit: cover; opacity: 0.85;"></video>
-                    <i class="bi bi-play-circle-fill text-white position-absolute top-50 start-50 translate-middle fs-3" style="pointer-events: none;"></i>
-                    <button type="button" class="delete-thumb-btn" data-index="${index}" title="Remove">
-                        <i class="bi bi-x"></i>
-                    </button>
-                </div>
-            `;
-            previewContainer.appendChild(col);
-
-            // Delete button click event eka
-            col.querySelector(".delete-thumb-btn").addEventListener("click", function () {
-                const idx = parseInt(this.getAttribute("data-index"));
-                selectedFiles.splice(idx, 1);
-                renderPreviews();
-            });
-        });
-    }
-
-    // Submit / Upload trigger simulation
-    if (submitBtn) {
-        submitBtn.addEventListener("click", function () {
-            if (selectedFiles.length === 0) return;
-
-            // Loading state eka pennanawa
-            uploadLoader.classList.remove("d-none");
-            submitBtn.setAttribute("disabled", "true");
-
-            setTimeout(() => {
-                // Upload complete unata passe
-                uploadLoader.classList.add("d-none");
-                alert(`${selectedFiles.length} video(s) successfully uploaded to space!`);
-                selectedFiles = [];
-                renderPreviews();
-            }, 2000);
-        });
-    }
-});
-</script>
-
-
-
-
-<script>
-
-  document.addEventListener("DOMContentLoaded", function () {
-    const audioFileInput = document.getElementById("audioFileInput");
-    const audioPreviewContainer = document.getElementById("audioPreviewContainer");
-    const submitAudioBtn = document.getElementById("submitAudioBtn");
-    const audioUploadLoader = document.getElementById("audioUploadLoader");
-    
-    let selectedAudioFiles = [];
-
-    if (audioFileInput) {
-        audioFileInput.addEventListener("change", function (e) {
-            const files = Array.from(e.target.files);
-            
-            files.forEach(file => {
-                // Audio files witharak filter karagannawa
-                if (file.type.startsWith("audio/")) {
-                    selectedAudioFiles.push(file);
-                }
-            });
-
-            renderAudioPreviews();
-            audioFileInput.value = ""; // Input eka reset karanawa
-        });
-    }
-
-    function renderAudioPreviews() {
-        audioPreviewContainer.innerHTML = "";
-
-        if (selectedAudioFiles.length > 0) {
-            submitAudioBtn.removeAttribute("disabled");
-            submitAudioBtn.classList.remove("opacity-50");
-        } else {
-            submitAudioBtn.setAttribute("disabled", "true");
-            submitAudioBtn.classList.add("opacity-50");
-        }
-
-        selectedAudioFiles.forEach((file, index) => {
-            const audioUrl = URL.createObjectURL(file);
-            const col = document.createElement("div");
-            col.className = "col";
-            col.innerHTML = `
-                <div class="p-3 border rounded-3 bg-light shadow-sm position-relative d-flex flex-column gap-2">
-                    <div class="d-flex align-items-center gap-2 pe-4">
-                        <i class="bi bi-file-earmark-music-fill text-memorial fs-4"></i>
-                        <span class="small fw-semibold text-truncate text-dark" style="max-width: 200px;" title="${file.name}">${file.name}</span>
-                    </div>
-                    <audio controls src="${audioUrl}" class="w-100" style="height: 35px;"></audio>
-                    <button type="button" class="delete-thumb-btn" data-index="${index}" title="Remove" style="top: 10px; right: 10px;">
-                        <i class="bi bi-x"></i>
-                    </button>
-                </div>
-            `;
-            audioPreviewContainer.appendChild(col);
-
-            // Delete button event eka
-            col.querySelector(".delete-thumb-btn").addEventListener("click", function () {
-                const idx = parseInt(this.getAttribute("data-index"));
-                selectedAudioFiles.splice(idx, 1);
-                renderAudioPreviews();
-            });
-        });
-    }
-
-    // Submit / Upload trigger simulation for Audio
-    if (submitAudioBtn) {
-        submitAudioBtn.addEventListener("click", function () {
-            if (selectedAudioFiles.length === 0) return;
-
-            // Loading state eka pennanawa
-            audioUploadLoader.classList.remove("d-none");
-            submitAudioBtn.setAttribute("disabled", "true");
-
-            setTimeout(() => {
-                // Upload complete unata passe
-                audioUploadLoader.classList.add("d-none");
-                alert(`${selectedAudioFiles.length} audio file(s) successfully uploaded to space!`);
-                selectedAudioFiles = [];
-                renderAudioPreviews();
-            }, 2000);
-        });
-    }
-});
-</script>
-
-
-
+       button.addEventListener('click', async () => {
+         if (busy || files.length === 0) return;
+         busy = true;
+         updateButton();
+         input.disabled = true;
+         loader.classList.remove('d-none');
+         const data = new FormData();
+         data.append('type', config.type);
+         files.forEach(file => data.append('files[]', file, file.name));
+         try {
+           const response = await fetch(uploadUrl, {
+             method: 'POST',
+             headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' },
+             body: data,
+             credentials: 'same-origin'
+           });
+           const result = await response.json();
+           if (!response.ok || !result.success) {
+             const details = result.errors ? Object.values(result.errors).flat().join('\n') : result.message;
+             throw new Error(details || 'Upload failed.');
+           }
+           displayUploadedMedia(config.type, result.media || []);
+           files = [];
+           notify('Your media has been uploaded and is awaiting approval.', true);
+         } catch (error) {
+           notify(error.message || 'Unable to upload files.', false);
+         } finally {
+           busy = false;
+           input.disabled = false;
+           loader.classList.add('d-none');
+           render();
+         }
+       });
+       render();
+     });
+   });
+   </script>
+   @endif
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -725,10 +790,54 @@
     }, observerOptions);
 
     // Gallery items okkoma observe karanna danna
-    document.querySelectorAll('.gallery-item-wrapper').forEach(item => {
+    document.querySelectorAll('.gallery-item-wrapper:not(#galleryPhotosGrid .gallery-item-wrapper)').forEach(item => {
         galleryObserver.observe(item);
     });
 });
 </script>
+
+<script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const audio = document.getElementById('memorialAudio');
+            const audioIcon = document.getElementById('audioIcon');
+            const audioText = document.getElementById('audioText');
+
+            const isMuted = localStorage.getItem('memorialAudioMuted');
+
+            if (isMuted === 'false') {
+
+                audio.muted = false;
+                audio.play().catch(error => console.log("Autoplay restricted"));
+                audioIcon.className = "bi bi-volume-up-fill fs-6 text-warning";
+                audioText.innerText = "Mute Music";
+            } else {
+
+                audio.muted = true;
+                audio.play().catch(error => console.log("Autoplay restricted"));
+                audioIcon.className = "bi bi-volume-mute-fill fs-6";
+                audioText.innerText = "Play Music";
+            }
+        });
+
+
+        function toggleBackgroundMusic() {
+            const audio = document.getElementById('memorialAudio');
+            const audioIcon = document.getElementById('audioIcon');
+            const audioText = document.getElementById('audioText');
+
+            if (audio.muted) {
+                audio.muted = false;
+                audio.play();
+                audioIcon.className = "bi bi-volume-up-fill fs-6 text-warning";
+                audioText.innerText = "Mute Music";
+                localStorage.setItem('memorialAudioMuted', 'false');
+            } else {
+                audio.muted = true;
+                audioIcon.className = "bi bi-volume-mute-fill fs-6";
+                audioText.innerText = "Play Music";
+                localStorage.setItem('memorialAudioMuted', 'true');
+            }
+        }
+    </script>
 </body>
 </html>

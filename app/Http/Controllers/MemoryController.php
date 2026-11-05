@@ -19,9 +19,8 @@ use Illuminate\Support\Facades\File;
 use App\Models\Media;
 use App\Models\Image;
 use App\Models\Music;
-use Illuminate\Support\Facades\Http;
-use Stripe\Stripe;
-use Stripe\Charge;
+use App\Models\Timeline;
+use App\Models\StoryComments;
 
 class MemoryController extends Controller
 {
@@ -44,7 +43,7 @@ class MemoryController extends Controller
     /**
      * Process Step 3 submission & complete memory purchase lifecycle.
      */
-    public function completeMemoryPurchase(Request $request): \Illuminate\Http\RedirectResponse
+    public function completeMemoryPurchase(Request $request): RedirectResponse
     {
         // 1. Validation for Step 1, 2, and 3
         $rules = [
@@ -74,13 +73,13 @@ class MemoryController extends Controller
         $request->validate($rules);
 
         // 2. Validate selected package is active
-        $package = \App\Models\Package::where('id', $request->package_id)
+        $package = Package::where('id', $request->package_id)
             ->where('is_active', true)
             ->firstOrFail();
 
         $isPaid = (float) $package->price > 0;
 
-        // Default Values
+        // Default Variables
         $amountPaid = 0.00;
         $paymentMethod = 'free';
         $transactionId = null;
@@ -108,14 +107,9 @@ class MemoryController extends Controller
             }
         }
 
-        // Calculate trial_ends_at
-        $trialEndsAt = ($package->trial_days && (int) $package->trial_days > 0)
-            ? now()->addDays((int) $package->trial_days)
-            : null;
-
-        // =========================================================
-        // මෙතන ඉඳන් තමයි අලුත් Payment Conversion Code එක පටන් ගන්නේ
-        // =========================================================
+        // ====================================================================
+        // UPDATE: STRIPE PAYMENT PROCESSING BLOCK (Replaces raw card handling)
+        // ====================================================================
         if ($isPaid) {
             $request->validate([
                 'stripeToken' => 'required|string',
@@ -127,23 +121,21 @@ class MemoryController extends Controller
             $packageCurrency = strtoupper($package->currency ?? 'USD');
             $paymentMethod = 'stripe';
 
-            // 1. Currency Conversion
-            $chargeCurrency = 'usd'; // අපි Stripe එකට යවන්නේ අනිවාර්යයෙන්ම USD වලින්
+            // Currency Conversion Logic
+            $chargeCurrency = 'usd'; // Defaulting to USD for Stripe charge
             $chargeAmountInCents = 0;
 
             if ($packageCurrency === 'LKR') {
                 try {
-                    // නොමිලේ දෙන Exchange Rate API එකකින් Live Rate එක ගැනීම
+                    // Fetch live exchange rate from free API
                     $response = Http::timeout(5)->get('https://open.er-api.com/v6/latest/LKR');
 
                     if ($response->successful()) {
                         $rates = $response->json('rates');
-                        $usdRate = $rates['USD']; // උදා: 0.0033
+                        $usdRate = $rates['USD'];
 
-                        // LKR ගාණ USD වලට හැරවීම
+                        // Convert LKR to USD and into cents (Stripe format)
                         $convertedUsd = $amountPaid * $usdRate;
-
-                        // Stripe එකට Cents වලින් දෙන්න ඕනේ නිසා 100න් වැඩි කරනවා
                         $chargeAmountInCents = intval(round($convertedUsd * 100));
                     } else {
                         return back()->withInput()->with('error', 'Currency conversion service is currently unavailable.');
@@ -152,33 +144,38 @@ class MemoryController extends Controller
                     return back()->withInput()->with('error', 'Failed to fetch live exchange rates: ' . $e->getMessage());
                 }
             } else {
-                // LKR නෙමෙයි නම් අගය වෙනස් නොකර Cents වලට හරවන්න
+                // If it's already USD or other, just convert to cents
                 $chargeAmountInCents = intval(round($amountPaid * 100));
                 $chargeCurrency = strtolower($packageCurrency);
             }
 
-            // 2. Stripe Payment Processing
+            // Execute Stripe Charge
             try {
-                Stripe::setApiKey(env('STRIPE_SECRET'));
+                \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
-                $charge = Charge::create([
+                $charge = \Stripe\Charge::create([
                     'amount' => $chargeAmountInCents,
                     'currency' => $chargeCurrency,
                     'description' => 'Memory Package: ' . $package->name . ' (Original: ' . $amountPaid . ' ' . $packageCurrency . ')',
                     'source' => $request->stripeToken,
                 ]);
 
-                $transactionId = $charge->id;
+                $transactionId = $charge->id; // Use real transaction ID from Stripe
+
             } catch (\Exception $e) {
                 return back()->withInput()->with('error', 'Payment failed: ' . $e->getMessage());
             }
         }
-        // =========================================================
-        // Payment Conversion Code එක ඉවරයි
-        // =========================================================
+        // ====================================================================
+        // END OF PAYMENT PROCESSING BLOCK
+        // ====================================================================
 
+        // Calculate trial_ends_at
+        $trialEndsAt = ($package->trial_days && (int) $package->trial_days > 0)
+            ? now()->addDays((int) $package->trial_days)
+            : null;
 
-        // 3. Database Insertion & Association
+        // 3. Database Insertion & Association (Unchanged)
         DB::beginTransaction();
         try {
             $user = Auth::user();
@@ -186,14 +183,14 @@ class MemoryController extends Controller
             // Find existing or create new Memory & Profile
             $memoryId = $request->memory_id ?? session('memory_id');
             if ($memoryId) {
-                $memory = \App\Models\Memory::findOrFail($memoryId);
+                $memory = Memory::findOrFail($memoryId);
             } else {
-                $memory = new \App\Models\Memory();
+                $memory = new Memory();
                 $memory->user_id = Auth::id();
                 $memory->status = $request->status ?? 'published';
                 $memory->save();
 
-                $profile = new \App\Models\Profile();
+                $profile = new Profile();
                 $profile->memory_id = $memory->id;
                 $profile->user_id = Auth::id();
                 $profile->memorial_status = $request->memorial_status ?? 'passed_away';
@@ -236,7 +233,7 @@ class MemoryController extends Controller
                 $originalSlug = $slug;
                 $count = 1;
 
-                while (\App\Models\Profile::where('slug', $slug)->exists()) {
+                while (Profile::where('slug', $slug)->exists()) {
                     $slug = $originalSlug . '-' . $count;
                     $count++;
                 }
@@ -245,7 +242,7 @@ class MemoryController extends Controller
             }
 
             // Create record in package_purchases
-            $purchase = \App\Models\PackagePurchase::create([
+            $purchase = PackagePurchase::create([
                 'user_id'        => Auth::id(),
                 'package_id'     => $package->id,
                 'amount_paid'    => $amountPaid,
@@ -277,7 +274,7 @@ class MemoryController extends Controller
                 ->with('success', 'Memory created and plan activated successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withInput()->with('error', 'Error processing details: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Error completing purchase: ' . $e->getMessage());
         }
     }
 
@@ -295,7 +292,6 @@ class MemoryController extends Controller
     public function updateMemory(Request $request)
     {
         $memory = Memory::with('profile')->where('user_id', Auth::id())->first();
-
         $memory->status = $request->status;
         $memory->tribute_quote = $request->tribute_quote;
         $memory->about = $request->about;
@@ -314,6 +310,8 @@ class MemoryController extends Controller
         $profile->last_name = $request->last_name;
         $profile->country = $request->country;
         $profile->city = $request->city;
+        $profile->living_address = $request->living_address;
+        $profile->zip_code = $request->zip_code;
         $profile->date_of_birth = $request->date_of_birth;
         $profile->birth_location = $request->birth_location;
         $profile->date_of_death = $request->date_of_death;
@@ -429,7 +427,7 @@ class MemoryController extends Controller
         }
 
 
-        return back()->with('success', 'Memory created successfully.');
+        return back()->with('success', 'Memory updated successfully.');
     }
 
     /**
@@ -472,9 +470,17 @@ class MemoryController extends Controller
                 unset($story['id']);
 
                 if ($storyId) {
+
                     $record = $profile->stories()->findOrFail($storyId);
                     $record->update($story);
                 } else {
+
+                    // Add authenticated user ID
+                    $story['user_id'] = auth()->id();
+
+                    // Set status according to user role
+                    $story['status'] = auth()->user()->role === 'memory_user' ? 1 : 0;
+
                     $record = $profile->stories()->create($story);
                 }
 
@@ -545,45 +551,53 @@ class MemoryController extends Controller
     // media store
     public function mediaStore(Request $request, Profile $profile)
     {
-        // Only the profile owner can upload media
+        // ==========================================
+        // 1. CHECK PROFILE OWNERSHIP
+        // ==========================================
         abort_unless(
             (int) $profile->user_id === (int) Auth::id(),
             403
         );
 
-        // Validate media type
+        // ==========================================
+        // 2. VALIDATE MEDIA TYPE
+        // ==========================================
         $request->validate([
             'type' => [
                 'required',
-                Rule::in(['image', 'video', 'audio'])
+                Rule::in(['image', 'video', 'audio']),
             ],
             'files' => 'required|array|min:1|max:20',
         ]);
 
         $type = $request->type;
 
-        // Separate folder and validation for each type
+        // ==========================================
+        // 3. MEDIA CONFIGURATION
+        // ==========================================
         $config = [
             'image' => [
                 'folder' => 'images',
                 'mimes' => 'jpg,jpeg,png,webp,gif',
-                'max' => 10240, // 10 MB
+                'max' => 10240,
             ],
             'video' => [
                 'folder' => 'videos',
                 'mimes' => 'mp4,mov,webm',
-                'max' => 102400, // 100 MB
+                'max' => 102400,
             ],
             'audio' => [
                 'folder' => 'audios',
                 'mimes' => 'mp3,wav,ogg,m4a',
-                'max' => 20480, // 20 MB
+                'max' => 20480,
             ],
         ];
 
         $selected = $config[$type];
 
-        // Validate uploaded files
+        // ==========================================
+        // 4. VALIDATE UPLOADED FILES
+        // ==========================================
         $request->validate([
             'files.*' => [
                 'required',
@@ -593,22 +607,32 @@ class MemoryController extends Controller
             ],
         ]);
 
-        // Public folder path
+        // ==========================================
+        // 5. SET STATUS BASED ON USER ROLE
+        // ==========================================
+        $user = Auth::user();
+
+        $status = $user->role === 'memory_user' ? 1 : 0;
+
+        // ==========================================
+        // 6. CREATE UPLOAD DIRECTORY
+        // ==========================================
         $folder = 'uploads/memorial/gallery/'
             . $selected['folder'];
 
         $destination = public_path($folder);
 
-        // Create folder if it does not exist
         if (!File::isDirectory($destination)) {
             File::makeDirectory($destination, 0755, true);
         }
 
         $savedMedia = [];
 
+        // ==========================================
+        // 7. UPLOAD AND SAVE MEDIA
+        // ==========================================
         foreach ($request->file('files') as $file) {
 
-            // Generate unique filename
             $filename = Str::uuid() . '.'
                 . $file->extension();
 
@@ -618,35 +642,52 @@ class MemoryController extends Controller
 
             $fileSize = $file->getSize();
 
-            // Move file to public folder
+            // Move file to public directory
             $file->move($destination, $filename);
 
-            // Save relative path in database
             $path = $folder . '/' . $filename;
 
             try {
+
+                // ==========================================
+                // 8. CREATE MEDIA RECORD
+                // ==========================================
                 $media = Media::create([
                     'profile_id' => $profile->id,
+                    'user_id' => $user->id,
                     'type' => $type,
                     'file_path' => $path,
                     'file_name' => $originalName,
                     'mime_type' => $mimeType,
                     'file_size' => $fileSize,
+
+                    // Role-based approval status
+                    'status' => $status,
                 ]);
             } catch (\Throwable $e) {
+
                 File::delete(public_path($path));
+
                 throw $e;
             }
 
+            // ==========================================
+            // 9. PREPARE AJAX RESPONSE DATA
+            // ==========================================
             $savedMedia[] = [
                 'id' => $media->id,
+                'user_id' => $media->user_id,
                 'type' => $media->type,
                 'file_path' => $media->file_path,
                 'file_name' => $media->file_name,
                 'url' => asset($media->file_path),
+                'status' => $media->status,
             ];
         }
 
+        // ==========================================
+        // 10. RETURN AJAX RESPONSE
+        // ==========================================
         return response()->json([
             'success' => true,
             'message' => ucfirst($type) . ' files saved successfully.',
@@ -678,5 +719,311 @@ class MemoryController extends Controller
             'success' => true,
             'message' => 'Media deleted successfully.'
         ]);
+    }
+
+
+    //timeline
+
+    public function storeTimeline(Request $request)
+    {
+        // ==========================================
+        // 1. VALIDATE TIMELINE DATA
+        // ==========================================
+        $validated = $request->validate([
+            'memory_id' => [
+                'required',
+                'integer',
+                'exists:memories,id',
+            ],
+
+            'timelines' => [
+                'required',
+                'array',
+                'min:1',
+                'max:30',
+            ],
+
+            'timelines.*.title' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'timelines.*.event_date' => [
+                'required',
+                'string',
+                'max:100',
+            ],
+
+            'timelines.*.location' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+
+            'timelines.*.description' => [
+                'nullable',
+                'string',
+                'max:5000',
+            ],
+
+            'timelines.*.icon' => [
+                'required',
+                Rule::in([
+                    'star',
+                    'birth',
+                    'education',
+                    'career',
+                    'meeting',
+                    'marriage',
+                    'home',
+                    'retired',
+                    'passed_away',
+                ]),
+            ],
+
+            'timelines.*.image' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:5120',
+            ],
+
+            'visibility' => [
+                'required',
+                Rule::in(['public', 'private']),
+            ],
+        ]);
+
+        // ==========================================
+        // 2. FIND USER'S MEMORY
+        // ==========================================
+        $memory = Memory::with('profile')
+            ->where('id', $validated['memory_id'])
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        $profile = $memory->profile;
+
+        if (!$profile) {
+
+            $message = 'Memorial profile not found.';
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                ], 422);
+            }
+
+            return back()->withInput()->with([
+                'error' => $message,
+                'active_tab' => 'tab-timeline',
+            ]);
+        }
+
+        $uploadedPaths = [];
+        $savedTimelines = [];
+
+        // ==========================================
+        // 3. SAVE TIMELINE MILESTONES
+        // ==========================================
+        try {
+
+            DB::transaction(function () use (
+                $validated,
+                $memory,
+                $profile,
+                &$uploadedPaths,
+                &$savedTimelines
+            ) {
+
+                // Lock the memory row during saving
+                Memory::whereKey($memory->id)
+                    ->lockForUpdate()
+                    ->firstOrFail();
+
+                // Get next timeline sort order
+                $sortOrder = Timeline::where(
+                    'memory_id',
+                    $memory->id
+                )->max('sort_order') ?? 0;
+
+                foreach ($validated['timelines'] as $item) {
+
+                    $imagePath = null;
+
+                    // ==========================================
+                    // 4. UPLOAD IMAGE
+                    // ==========================================
+                    if (!empty($item['image'])) {
+
+                        $file = $item['image'];
+
+                        $filename = Str::uuid()->toString()
+                            . '.' . $file->extension();
+
+                        $folder = 'uploads/memorial/timelines';
+
+                        $directory = public_path($folder);
+
+                        if (!File::isDirectory($directory)) {
+
+                            File::makeDirectory(
+                                $directory,
+                                0755,
+                                true
+                            );
+                        }
+
+                        $file->move($directory, $filename);
+
+                        $imagePath = $folder . '/' . $filename;
+
+                        $uploadedPaths[] = $imagePath;
+                    }
+
+                    // ==========================================
+                    // 5. CREATE TIMELINE RECORD
+                    // ==========================================
+                    $sortOrder++;
+
+                    $timeline = Timeline::create([
+                        'memory_id' => $memory->id,
+                        'profile_id' => $profile->id,
+                        'title' => $item['title'],
+                        'event_date' => $item['event_date'],
+                        'location' => $item['location'] ?? null,
+                        'description' => $item['description'] ?? null,
+                        'icon' => $item['icon'],
+                        'image_path' => $imagePath,
+                        'visibility' => $validated['visibility'],
+                        'sort_order' => $sortOrder,
+                    ]);
+
+                    $savedTimelines[] = [
+                        'id' => $timeline->id,
+                        'title' => $timeline->title,
+                        'event_date' => $timeline->event_date,
+                        'location' => $timeline->location,
+                        'description' => $timeline->description,
+                        'icon' => $timeline->icon,
+                        'image_url' => $imagePath
+                            ? asset($imagePath)
+                            : null,
+                        'visibility' => $timeline->visibility,
+                        'sort_order' => $timeline->sort_order,
+                    ];
+                }
+            });
+
+            // ==========================================
+            // 6. SUCCESS RESPONSE
+            // ==========================================
+            $count = count($savedTimelines);
+
+            $message = $count === 1
+                ? 'Timeline milestone added successfully!'
+                : $count . ' timeline milestones added successfully!';
+
+            // AJAX response: no page reload
+            if ($request->expectsJson()) {
+
+                return response()->json([
+                    'success' => true,
+                    'message' => $message,
+                    'count' => $count,
+                    'timelines' => $savedTimelines,
+                ], 201);
+            }
+
+            // Normal form submission fallback
+            return back()->with([
+                'success' => $message,
+                'active_tab' => 'tab-timeline',
+            ]);
+        } catch (\Throwable $e) {
+
+            // ==========================================
+            // 7. CLEAN UP UPLOADED IMAGES
+            // ==========================================
+            foreach ($uploadedPaths as $path) {
+
+                if (File::exists(public_path($path))) {
+                    File::delete(public_path($path));
+                }
+            }
+
+            report($e);
+
+            $message = config('app.debug')
+                ? $e->getMessage()
+                : 'Failed to save timeline milestones. Please try again.';
+
+            // AJAX error response
+            if ($request->expectsJson()) {
+
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                ], 500);
+            }
+
+            return back()->withInput()->with([
+                'error' => $message,
+                'active_tab' => 'tab-timeline',
+            ]);
+        }
+    }
+
+
+    //save comments
+
+    public function storeStoryComment(Request $request, Profile $profile)
+    {
+        // Validate story information
+        $validated = $request->validate([
+            'title' => 'nullable|string|max:255',
+            'contributor_name' => 'nullable|string|max:255',
+            'content' => 'required|string|max:10000',
+        ]);
+
+        // Save story linked to the memorial profile
+        $profile->storyComments()->create([
+            'title' => $validated['title'] ?? null,
+            'contributor_name' => $validated['contributor_name'] ?? null,
+            'content' => $validated['content'],
+            'status' => 'published',
+        ]);
+
+        return redirect()
+            ->back()
+            ->with('success', 'Your story has been published successfully.');
+    }
+
+    public function memoriesStories($slug): View
+    {
+        // Get memorial profile using slug
+        $profile = Profile::with('images')
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        // Get memory related to this profile
+        $memory = Memory::with('profile')
+            ->where('id', $profile->memory_id)
+            ->firstOrFail();
+
+        // Get published story comments
+        $storyComments = $profile->storyComments()
+            ->where('status', 'published')
+            ->latest()
+            ->paginate(5);
+
+        // Pass all variables to Blade
+        return view('home.memories_stories', compact(
+            'profile',
+            'memory',
+            'storyComments'
+        ));
     }
 }

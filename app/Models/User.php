@@ -465,4 +465,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(Image::class);
     }
+    
+    public function stories()
+    {
+        return $this->hasMany(Story::class);
+    }
+    
 }

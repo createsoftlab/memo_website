@@ -192,110 +192,117 @@
                                 Update your account password to keep your account secure.
                             </p>
 
-                            <form method="POST" action="{{ route('userProfile_passwordSettings') }}"
-                                enctype="multipart/form-data">
-
-                                @csrf
-                            <!-- Current Password -->
-                            <div class="mb-3">
-
-                                <label for="currentPassword" class="form-label small fw-semibold">
-                                    Current Password
-                                </label>
-
-                                <div class="input-group">
-
-                                    <input type="password" class="form-control" id="currentPassword" name="current_password"
-                                        placeholder="Enter current password">
-
-                                    <button type="button" class="btn btn-outline-secondary password-toggle"
-                                        data-target="currentPassword" title="Show / Hide Password">
-
-                                        <i class="bi bi-eye"></i>
-
-                                    </button>
-
-                                </div>
-
-                            </div>
 
 
-                            <!-- New Password -->
-                            <div class="mb-3">
+<form method="POST" action="{{ route('userProfile_passwordSettings') }}"
+      id="changePasswordForm">
 
-                                <label for="newPassword" class="form-label small fw-semibold">
-                                    New Password
-                                </label>
+    @csrf
 
-                                <div class="input-group">
+    <!-- Current Password -->
+    <div class="mb-3">
+        <label for="currentPassword" class="form-label small fw-semibold">
+            Current Password
+        </label>
 
-                                    <input type="password" class="form-control" id="newPassword" name="new_password"
-                                        placeholder="Enter new password">
+        <div class="input-group">
+            <input type="password"
+                   class="form-control"
+                   id="currentPassword"
+                   name="current_password"
+                   placeholder="Enter current password"
+                   autocomplete="current-password"
+                   required>
 
-                                    <button type="button" class="btn btn-outline-secondary password-toggle"
-                                        data-target="newPassword" title="Show / Hide Password">
+            <button type="button"
+                    class="btn btn-outline-secondary password-toggle"
+                    data-target="currentPassword"
+                    title="Show / Hide Password">
+                <i class="bi bi-eye"></i>
+            </button>
+        </div>
+    </div>
 
-                                        <i class="bi bi-eye"></i>
+    <!-- New Password -->
+    <div class="mb-3">
+        <label for="newPassword" class="form-label small fw-semibold">
+            New Password
+        </label>
 
-                                    </button>
+        <div class="input-group">
+            <input type="password"
+                   class="form-control"
+                   id="newPassword"
+                   name="new_password"
+                   placeholder="Enter new password"
+                   autocomplete="new-password"
+                   minlength="8"
+                   required>
 
-                                </div>
+            <button type="button"
+                    class="btn btn-outline-secondary password-toggle"
+                    data-target="newPassword"
+                    title="Show / Hide Password">
+                <i class="bi bi-eye"></i>
+            </button>
+        </div>
 
-                            </div>
+        <small id="passwordError" class="d-block mt-1"></small>
+    </div>
+
+    <!-- Confirm Password -->
+    <div class="mb-3">
+        <label for="confirmPassword" class="form-label small fw-semibold">
+            Confirm New Password
+        </label>
+
+        <div class="input-group">
+            <input type="password"
+                   class="form-control"
+                   id="confirmPassword"
+                   name="new_password_confirmation"
+                   placeholder="Confirm new password"
+                   autocomplete="new-password"
+                   required>
+
+            <button type="button"
+                    class="btn btn-outline-secondary password-toggle"
+                    data-target="confirmPassword"
+                    title="Show / Hide Password">
+                <i class="bi bi-eye"></i>
+            </button>
+        </div>
+
+        <small id="confirmError" class="d-block mt-1"></small>
+    </div>
+
+    <!-- Password Requirements -->
+    <div class="bg-light border rounded p-3 mb-4">
+        <div class="small fw-semibold text-brown mb-2">
+            Password requirements
+        </div>
+
+        <ul class="small text-muted mb-0 ps-3">
+            <li>At least 8 characters</li>
+            <li>Use uppercase and lowercase letters</li>
+            <li>Include at least one number</li>
+        </ul>
+    </div>
+
+    <!-- Change Password Button -->
+    <div class="d-grid">
+        <button type="submit"
+                class="btn btn-dark fw-bold"
+                id="changePasswordBtn">
+
+            <i class="bi bi-key me-2"></i>
+            Change Password
+        </button>
+    </div>
+
+</form>
 
 
-                            <!-- Confirm Password -->
-                            <div class="mb-3">
-
-                                <label for="confirmPassword" class="form-label small fw-semibold">
-                                    Confirm New Password
-                                </label>
-
-                                <div class="input-group">
-
-                                    <input type="password" class="form-control" id="confirmPassword"
-                                        placeholder="Confirm new password">
-
-                                    <button type="button" class="btn btn-outline-secondary password-toggle"
-                                        data-target="confirmPassword" title="Show / Hide Password">
-
-                                        <i class="bi bi-eye"></i>
-
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-
-                            <!-- Password Requirement -->
-                            <div class="bg-light border rounded p-3 mb-4">
-
-                                <div class="small fw-semibold text-brown mb-2">
-                                    Password requirements
-                                </div>
-
-                                <ul class="small text-muted mb-0 ps-3">
-
-                                    <li>At least 8 characters</li>
-                                    <li>Use uppercase and lowercase letters</li>
-                                    <li>Include at least one number</li>
-
-                                </ul>
-
-                            </div>
-
-
-                            <!-- Change Password Button -->
-                            <div class="d-grid">
-
-                                <button type="button" class="btn btn-dark fw-bold" id="changePasswordBtn">
-
-                                    <i class="bi bi-key me-2"></i>
-                                    Change Password
-
-                                </button>
-                            </form>
                             </div>
 
                         </div>
@@ -350,7 +357,7 @@
 
 
 
-        </div>
+
 
 
         <!-- Footer -->
@@ -408,7 +415,7 @@
                 </div>
             </div>
         </footer>
-
+        </div>
     </div>
     </div>
 
@@ -622,149 +629,233 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+  
+document.addEventListener("DOMContentLoaded", function () {
 
+    const form = document.getElementById("changePasswordForm");
 
-    /* =====================================================
-       PASSWORD SHOW / HIDE
-    ====================================================== */
+    const currentPasswordInput =
+        document.getElementById("currentPassword");
 
-    const passwordToggleButtons =
-        document.querySelectorAll(".password-toggle");
+    const passwordInput =
+        document.getElementById("newPassword");
 
+    const confirmPasswordInput =
+        document.getElementById("confirmPassword");
 
-    passwordToggleButtons.forEach(function (button) {
+    const passwordError =
+        document.getElementById("passwordError");
 
-        button.addEventListener("click", function () {
+    const confirmError =
+        document.getElementById("confirmError");
 
-            const targetId =
-                this.getAttribute("data-target");
+    // ==========================================
+    // 1. PASSWORD VISIBILITY TOGGLE
+    // ==========================================
 
-            const passwordInput =
-                document.getElementById(targetId);
+    document.querySelectorAll(".password-toggle")
+        .forEach(function (button) {
 
-            const icon =
-                this.querySelector("i");
+            button.addEventListener("click", function () {
 
+                const targetId = this.dataset.target;
+                const input = document.getElementById(targetId);
+                const icon = this.querySelector("i");
 
-            if (passwordInput.type === "password") {
+                if (!input) return;
 
-                passwordInput.type = "text";
+                if (input.type === "password") {
+                    input.type = "text";
 
-                icon.classList.remove("bi-eye");
+                    icon.classList.remove("bi-eye");
+                    icon.classList.add("bi-eye-slash");
 
-                icon.classList.add("bi-eye-slash");
+                } else {
+                    input.type = "password";
 
-            } else {
-
-                passwordInput.type = "password";
-
-                icon.classList.remove("bi-eye-slash");
-
-                icon.classList.add("bi-eye");
-
-            }
-
+                    icon.classList.remove("bi-eye-slash");
+                    icon.classList.add("bi-eye");
+                }
+            });
         });
 
+
+    // ==========================================
+    // 2. NEW PASSWORD VALIDATION
+    // ==========================================
+
+    function validatePassword() {
+
+        const password = passwordInput.value;
+
+        if (password.length === 0) {
+
+            passwordError.textContent = "";
+            passwordError.style.display = "none";
+
+            passwordInput.setCustomValidity("");
+
+            validateConfirmPassword();
+
+            return false;
+        }
+
+        const conditions = {
+            length: password.length >= 8,
+            uppercase: /[A-Z]/.test(password),
+            lowercase: /[a-z]/.test(password),
+            number: /\d/.test(password)
+        };
+
+        let messages = [];
+
+        if (!conditions.length) {
+            messages.push("8+ characters");
+        }
+
+        if (!conditions.uppercase) {
+            messages.push("Uppercase letter");
+        }
+
+        if (!conditions.lowercase) {
+            messages.push("Lowercase letter");
+        }
+
+        if (!conditions.number) {
+            messages.push("Number");
+        }
+
+        if (messages.length > 0) {
+
+            const errorMessage =
+                "Password must include: " + messages.join(", ");
+
+            passwordError.textContent = errorMessage;
+            passwordError.style.color = "red";
+            passwordError.style.display = "block";
+
+            passwordInput.setCustomValidity(errorMessage);
+
+        } else {
+
+            passwordError.textContent = "Strong password ✅";
+            passwordError.style.color = "green";
+            passwordError.style.display = "block";
+
+            passwordInput.setCustomValidity("");
+        }
+
+        validateConfirmPassword();
+
+        return messages.length === 0;
+    }
+
+
+    // ==========================================
+    // 3. CONFIRM PASSWORD VALIDATION
+    // ==========================================
+
+    function validateConfirmPassword() {
+
+        const password = passwordInput.value;
+        const confirm = confirmPasswordInput.value;
+
+        if (confirm.length === 0) {
+
+            confirmError.textContent = "";
+            confirmError.style.display = "none";
+
+            confirmPasswordInput.setCustomValidity("");
+
+            return false;
+        }
+
+        if (password !== confirm) {
+
+            confirmError.textContent = "Passwords do not match.";
+            confirmError.style.color = "red";
+            confirmError.style.display = "block";
+
+            confirmPasswordInput.setCustomValidity(
+                "Passwords do not match."
+            );
+
+            return false;
+
+        } else {
+
+            confirmError.textContent = "Passwords match ✅";
+            confirmError.style.color = "green";
+            confirmError.style.display = "block";
+
+            confirmPasswordInput.setCustomValidity("");
+
+            return true;
+        }
+    }
+
+
+    // ==========================================
+    // 4. LIVE VALIDATION
+    // ==========================================
+
+    passwordInput.addEventListener(
+        "input",
+        validatePassword
+    );
+
+    confirmPasswordInput.addEventListener(
+        "input",
+        validateConfirmPassword
+    );
+
+
+    // ==========================================
+    // 5. FORM SUBMISSION VALIDATION
+    // ==========================================
+
+    form.addEventListener("submit", function (event) {
+
+        const isPasswordValid = validatePassword();
+        const isConfirmValid = validateConfirmPassword();
+
+        if (!currentPasswordInput.value.trim()) {
+
+            event.preventDefault();
+
+            currentPasswordInput.setCustomValidity(
+                "Please enter your current password."
+            );
+
+            currentPasswordInput.reportValidity();
+
+            return;
+        }
+
+        currentPasswordInput.setCustomValidity("");
+
+        if (!isPasswordValid || !isConfirmValid) {
+
+            event.preventDefault();
+
+            if (!isPasswordValid) {
+                passwordInput.reportValidity();
+            } else {
+                confirmPasswordInput.reportValidity();
+            }
+
+            return;
+        }
+
+        // Valid form: allow normal Laravel submission.
     });
 
-
-
-    /* =====================================================
-       CHANGE PASSWORD
-    ====================================================== */
-
-    const changePasswordBtn =
-        document.getElementById("changePasswordBtn");
-
-
-    changePasswordBtn.addEventListener("click", function () {
-
-        const currentPassword =
-            document.getElementById("currentPassword").value.trim();
-
-        const newPassword =
-            document.getElementById("newPassword").value.trim();
-
-        const confirmPassword =
-            document.getElementById("confirmPassword").value.trim();
-
-
-        /* Empty Validation */
-
-        if (!currentPassword ||
-            !newPassword ||
-            !confirmPassword) {
-
-            alert("Please fill in all password fields.");
-
-            return;
-        }
-
-
-        /* Minimum Length */
-
-        if (newPassword.length < 8) {
-
-            alert(
-                "New password must contain at least 8 characters."
-            );
-
-            return;
-        }
-
-
-        /* Confirm Password */
-
-        if (newPassword !== confirmPassword) {
-
-            alert(
-                "New password and confirm password do not match."
-            );
-
-            return;
-        }
-
-
-        /* Password Strength */
-
-        const hasUppercase =
-            /[A-Z]/.test(newPassword);
-
-        const hasLowercase =
-            /[a-z]/.test(newPassword);
-
-        const hasNumber =
-            /[0-9]/.test(newPassword);
-
-
-        if (!hasUppercase ||
-            !hasLowercase ||
-            !hasNumber) {
-
-            alert(
-                "Password must contain uppercase, lowercase and a number."
-            );
-
-            return;
-        }
-
-
-        /*
-         * Backend/API password change code
-         * should be added here.
-         */
-
-        alert("Password changed successfully.");
-
-        document.getElementById("currentPassword").value = "";
-        document.getElementById("newPassword").value = "";
-        document.getElementById("confirmPassword").value = "";
-
+    currentPasswordInput.addEventListener("input", function () {
+        currentPasswordInput.setCustomValidity("");
     });
 
 });
+
     </script>
 
 

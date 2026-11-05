@@ -39,6 +39,19 @@ body.modal-open {
     overflow-y: hidden;
     padding-right: 0 !important;
 }
+
+    /* Existing shared toast: 3-second countdown */
+    #storyToast { overflow: hidden; }
+    .toast-progress-track { height: 4px; background: #e9ecef; overflow: hidden; }
+    .toast-progress-bar {
+        height: 100%; width: 100%; background: #198754;
+        transform-origin: left;
+    }
+    .toast-progress-bar.running { animation: memorialToastCountdown 3s linear forwards; }
+    @keyframes memorialToastCountdown {
+        from { transform: scaleX(1); }
+        to { transform: scaleX(0); }
+    }
 </style>
 
 </head>
@@ -74,7 +87,7 @@ body.modal-open {
                                     onclick="scrollToContents()">
                                     Go to Memorial Contents
                                 </button>
-                                <form method="POST" action="{{ route('userProfile_imageSettings') }}"
+                            <form method="POST" action="{{ route('update_my_memory') }}"
                                 enctype="multipart/form-data">
                                 @csrf
                             <!-- =====================================================
@@ -513,8 +526,7 @@ body.modal-open {
                                         <div class="col-md-6">
                                             <label class="form-label small fw-bold">Funeral & Wake Location
                                                 Name</label>
-                                            <input type="text" class="form-control" value="Jayaratne Funeral Parlour"
-                                                name="funeral_location_name"
+                                            <input type="text" class="form-control" name="funeral_location_name"
                                                 value="{{ old('funeral_location_name', $memory->funeral_location_name) }}">
                                             @error('funeral_location_name')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -542,7 +554,7 @@ body.modal-open {
                                                     <i class="bi bi-geo-alt-fill text-danger"></i>
                                                 </span>
                                                 <input type="text" class="form-control border-start-0 ps-0"
-                                                    placeholder="Enter venue name, address or map link" name=""
+                                                    placeholder="Enter venue name, address or map link" name="funeral_location_address"
                                                     value="{{ old('funeral_location_address', $memory->funeral_location_address) }}">
                                                 @error('funeral_location_address')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -585,8 +597,8 @@ body.modal-open {
 
                                         <!-- PUBLIC MEMORIAL -->
                                         <div class="form-check mb-3">
-                                            <input class="form-check-input" type="radio" name="memorialPrivacy"
-                                                id="publicMemorial" value="public">
+                                            <input class="form-check-input" type="radio" name="privacy"
+                                                id="publicMemorial" value="public" @checked(old('privacy', $memory->profile?->privacy) === 'public')>
 
                                             <label class="form-check-label fw-bold" for="publicMemorial">
                                                 Public Memorial
@@ -599,8 +611,8 @@ body.modal-open {
 
                                         <!-- PRIVATE MEMORIAL -->
                                         <div class="form-check mb-3">
-                                            <input class="form-check-input" type="radio" name="memorialPrivacy"
-                                                id="privateMemorial" value="private" checked>
+                                            <input class="form-check-input" type="radio" name="privacy"
+                                                id="privateMemorial" value="private" @checked(old('privacy', $memory->profile?->privacy) === 'private')>
 
                                             <label class="form-check-label fw-bold" for="privateMemorial">
                                                 Private (Password Protected)
@@ -625,7 +637,7 @@ body.modal-open {
                                                 <div class="input-group">
 
                                                     <input type="text" class="form-control" id="accessUsername"
-                                                        value="AnonymousUser245" placeholder="Enter username">
+                                                        value="{{ old('private_username', $memory->profile?->access_username) }}" placeholder="Enter username" name="private_username">
 
                                                     <button type="button" class="btn btn-outline-secondary"
                                                         id="randomUsernameBtn">
@@ -653,7 +665,7 @@ body.modal-open {
                                                 <div class="input-group">
 
                                                     <input type="password" class="form-control" id="accessPassword"
-                                                        value="Sp3RuRkDre" placeholder="Enter password">
+                                                        value="{{ old('private_password', $memory->profile?->access_password) }}" placeholder="Enter password" name="private_password">
 
                                                     <button type="button" class="btn btn-outline-secondary"
                                                         id="randomPasswordBtn" title="Generate Random Password">
@@ -697,8 +709,8 @@ body.modal-open {
                                             <!-- PUBLISH NOW -->
                                             <div class="form-check mb-3">
 
-                                                <input class="form-check-input" type="radio" name="publicationStatus"
-                                                    id="publishNow" value="published" checked>
+                                                <input class="form-check-input" type="radio" name="status"
+                                                    id="publishNow" value="published" @checked(old('status', $memory->status) === 'published')>
 
                                                 <label class="form-check-label fw-bold" for="publishNow">
                                                     <i class="bi bi-globe text-success me-1"></i>
@@ -715,8 +727,8 @@ body.modal-open {
                                             <!-- SAVE AS DRAFT -->
                                             <div class="form-check">
 
-                                                <input class="form-check-input" type="radio" name="publicationStatus"
-                                                    id="saveAsDraft" value="draft">
+                                                <input class="form-check-input" type="radio" name="status"
+                                                    id="saveAsDraft" value="draft" @checked(old('status', $memory->status) === 'draft')>
 
                                                 <label class="form-check-label fw-bold" for="saveAsDraft">
                                                     <i class="bi bi-file-earmark-text text-secondary me-1"></i>
@@ -736,8 +748,7 @@ body.modal-open {
                                         <button type="submit"
                                             class="btn btn-warning fw-bold text-dark px-4 rounded-pill">Save Memorial
                                             Details</button>
-                                        <a href="#" class="text-danger small text-decoration-none">Delete
-                                            Memorial</a>
+
                                     </div>
                                 </form>
                             </div>
@@ -1525,185 +1536,360 @@ body.modal-open {
                                     <button type="button" class="btn btn-outline-dark btn-sm mb-3">+ Add New Milestone</button>
                                 </div> -->
                             <!-- Tab 4: Timeline Events Management Tab -->
-                            <div class="tab-pane fade" id="tab-timeline" role="tabpanel">
-                                <form id="timelineForm">
-                                    <div
-                                        class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
-                                        <h6 class="fw-bold text-brown m-0"><i
-                                                class="bi bi-clock-history me-2 text-info"></i> Manage Timeline </h6>
-                                        <!-- Add New Milestone Button -->
-                                        <button type="button" class="btn btn-sm btn-outline-dark fw-bold"
-                                            id="addTimelineBtn">
-                                            <i class="bi bi-plus-circle me-1 text-primary"></i> Add New Timeline
-                                        </button>
-                                    </div>
-                                    <p class="text-muted small">Highlight key milestones throughout their life journey
-                                        (e.g., Birth, Graduation, Marriage) with custom icons and images.</p>
+                         <div class="tab-pane fade" id="tab-timeline" role="tabpanel">
 
-                                    <!-- Dynamic Container for Timeline Forms -->
-                                    <div id="timelineContainer">
+    @php
+        $timelineIcons = [
+            'star' => ['bi-star', 'Star / General'],
+            'birth' => ['bi-balloon-heart', 'Birth / Baby'],
+            'education' => ['bi-mortarboard', 'Education / Graduation'],
+            'career' => ['bi-briefcase', 'Career / Work'],
+            'meeting' => ['bi-people', 'Meeting / People'],
+            'marriage' => ['bi-heart', 'Marriage / Love'],
+            'home' => ['bi-house', 'Moved / Home'],
+            'retired' => ['bi-tree', 'Retired / Life'],
+            'passed_away' => ['bi-flag', 'Passed Away'],
+        ];
 
-                                        <!-- Default Initial Timeline Form Card -->
-                                        <div class="card border-0 shadow-sm bg-light p-3 mb-3 timeline-item">
-                                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                                <span class="badge bg-secondary">Timeline #1</span>
-                                                <button type="button" class="btn btn-sm text-danger delete-timeline-btn"
-                                                    title="Delete Milestone">
-                                                    <i class="bi bi-trash fs-6"></i>
-                                                </button>
-                                            </div>
+        $timelineInputs = old('timelines', [
+            [
+                'title' => '',
+                'icon' => 'star',
+                'event_date' => '',
+                'location' => '',
+                'description' => '',
+            ]
+        ]);
 
-                                            <div class="row">
-                                                <!-- Event Title -->
-                                                <div class="col-md-7 mb-3">
-                                                    <label class="form-label small fw-bold">Timeline Title</label>
-                                                    <input type="text" class="form-control"
-                                                        placeholder="e.g., Graduated from high school" required>
-                                                </div>
+        $timelineInputs = array_values($timelineInputs);
+    @endphp
 
-                                                <!-- Icon Selector with Live Preview -->
+    <form
+        id="timelineForm"
+        action="{{ route('timelines.store') }}"
+        method="POST"
+        enctype="multipart/form-data"
+    >
+        @csrf
 
-                                                <!-- <div class="col-md-5 mb-3">
-                        <label class="form-label small fw-bold">Event Icon</label>
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-star icon-preview fs-4"></i>
-                            <select class="form-select" onchange="this.previousElementSibling.className = 'bi ' + this.value + ' icon-preview fs-4'">
-                                <option value="bi-star" selected>Star / General</option>
-                                <option value="bi-balloon-heart">Birth / Baby</option>
-                                <option value="bi-mortarboard">Education / Graduation</option>
-                                <option value="bi-briefcase">Career / Work</option>
-                                <option value="bi-people">Meeting / People</option>
-                                <option value="bi-heart">Marriage / Love</option>
-                                <option value="bi-house">Moved / Home</option>
-                                <option value="bi-tree">Retired / Life</option>
-                                <option value="bi-flag">Passed away</option>
-                            </select>
+        <input
+            type="hidden"
+            name="memory_id"
+            value="{{ $memory->id }}"
+        >
+
+        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+
+            <h6 class="fw-bold text-brown m-0">
+                <i class="bi bi-clock-history me-2 text-info"></i>
+                Manage Timeline
+            </h6>
+
+            <button
+                type="button"
+                class="btn btn-sm btn-outline-dark fw-bold"
+                id="addTimelineBtn"
+            >
+                <i class="bi bi-plus-circle me-1 text-primary"></i>
+                Add New Timeline
+            </button>
+
+        </div>
+
+        <p class="text-muted small">
+            Highlight key milestones throughout their life journey
+            (e.g., Birth, Graduation, Marriage) with custom icons
+            and images.
+        </p>
+
+        @if($errors->has('memory_id') || $errors->has('timelines') || $errors->has('visibility'))
+            <div class="alert alert-danger">
+                {{ $errors->first('memory_id')
+                    ?: ($errors->first('timelines')
+                    ?: $errors->first('visibility')) }}
+            </div>
+        @endif
+
+        <div id="timelineContainer">
+
+            @foreach($timelineInputs as $index => $item)
+
+                @php
+                    $selectedIcon = $item['icon'] ?? 'star';
+
+                    if (!array_key_exists($selectedIcon, $timelineIcons)) {
+                        $selectedIcon = 'star';
+                    }
+
+                    $selectedData = $timelineIcons[$selectedIcon];
+                @endphp
+
+                <div class="card border-0 shadow-sm bg-light p-3 mb-3 timeline-item">
+
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+
+                        <span class="badge bg-secondary timeline-number">
+                            Timeline #{{ $loop->iteration }}
+                        </span>
+
+                        <button
+                            type="button"
+                            class="btn btn-sm text-danger delete-timeline-btn"
+                            title="Delete Milestone"
+                        >
+                            <i class="bi bi-trash fs-6"></i>
+                        </button>
+
+                    </div>
+
+                    <div class="row">
+
+                        <!-- Title -->
+                        <div class="col-md-7 mb-3">
+
+                            <label class="form-label small fw-bold">
+                                Timeline Title *
+                            </label>
+
+                            <input
+                                type="text"
+                                name="timelines[{{ $index }}][title]"
+                                class="form-control timeline-title @error("timelines.$index.title") is-invalid @enderror"
+                                value="{{ $item['title'] ?? '' }}"
+                                placeholder="e.g., Graduated from high school"
+                                maxlength="255"
+                                required
+                            >
+
+                            @error("timelines.$index.title")
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
                         </div>
-                    </div> -->
 
-                                                <div class="col-md-5 mb-3">
-                                                    <label class="form-label small fw-bold">Timeline Icon</label>
+                        <!-- Icon Dropdown -->
+                        <div class="col-md-5 mb-3">
 
-                                                    <!-- Custom Dropdown Container -->
-                                                    <div class="dropdown custom-icon-dropdown">
-                                                        <!-- Dropdown Toggle Button -->
-                                                        <button
-                                                            class="btn btn-light border w-100 d-flex align-items-center justify-content-between dropdown-toggle bg-white py-2"
-                                                            type="button" data-bs-toggle="dropdown"
-                                                            aria-expanded="false">
-                                                            <span
-                                                                class="d-flex align-items-center gap-2 selected-option-text">
-                                                                <i class="bi bi-star icon-preview fs-5"></i> Star /
-                                                                General
-                                                            </span>
-                                                        </button>
+                            <label class="form-label small fw-bold">
+                                Timeline Icon *
+                            </label>
 
-                                                        <!-- Hidden input to store selected value for form submission -->
-                                                        <input type="hidden" name="event_icon" class="icon-hidden-input"
-                                                            value="bi-star">
+                            <div class="dropdown custom-icon-dropdown">
 
-                                                        <!-- Dropdown Menu with Icons -->
-                                                        <ul class="dropdown-menu w-100 shadow-sm py-1">
-                                                            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                                    href="#" data-value="bi-star"><i
-                                                                        class="bi bi-star fs-5"></i> Star / General</a>
-                                                            </li>
-                                                            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                                    href="#" data-value="bi-balloon-heart fs-5"><i
-                                                                        class="bi bi-balloon-heart"></i> Birth /
-                                                                    Baby</a></li>
-                                                            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                                    href="#" data-value="bi-mortarboard"><i
-                                                                        class="bi bi-mortarboard fs-5"></i>
-                                                                    Education/Graduation</a></li>
-                                                            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                                    href="#" data-value="bi-briefcase"><i
-                                                                        class="bi bi-briefcase fs-5"></i> Career /
-                                                                    Work</a></li>
-                                                            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                                    href="#" data-value="bi-people"><i
-                                                                        class="bi bi-people fs-5"></i> Meeting /
-                                                                    People</a></li>
-                                                            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                                    href="#" data-value="bi-heart"><i
-                                                                        class="bi bi-heart fs-5"></i> Marriage /
-                                                                    Love</a></li>
-                                                            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                                    href="#" data-value="bi-house"><i
-                                                                        class="bi bi-house fs-5"></i> Moved / Home</a>
-                                                            </li>
-                                                            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                                    href="#" data-value="bi-tree"><i
-                                                                        class="bi bi-tree fs-5"></i> Retired / Life</a>
-                                                            </li>
-                                                            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                                    href="#" data-value="bi-flag"><i
-                                                                        class="bi bi-flag fs-5"></i> Passed away</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
+                                <button
+                                    class="btn btn-light border w-100 d-flex align-items-center justify-content-between dropdown-toggle bg-white py-2"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    <span class="d-flex align-items-center gap-2 selected-option-text">
+                                        <i class="bi {{ $selectedData[0] }} icon-preview fs-5"></i>
+                                        {{ $selectedData[1] }}
+                                    </span>
+                                </button>
 
-                                            </div>
+                                <input
+                                    type="hidden"
+                                    name="timelines[{{ $index }}][icon]"
+                                    class="icon-hidden-input"
+                                    value="{{ $selectedIcon }}"
+                                >
 
-                                            <div class="row">
-                                                <!-- Year / Date -->
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label small fw-bold">Year / Date</label>
-                                                    <input type="text" class="form-control"
-                                                        placeholder="e.g., 1961 or December 12th, 1944">
-                                                </div>
+                                <ul class="dropdown-menu w-100 shadow-sm py-1">
 
-                                                <!-- Location / Address -->
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label small fw-bold">Location / Address</label>
-                                                    <input type="text" class="form-control"
-                                                        placeholder="e.g., Central High School, City Campus">
-                                                </div>
-                                            </div>
+                                    @foreach($timelineIcons as $value => $iconData)
 
-                                            <!-- Short Description -->
-                                            <div class="mb-3">
-                                                <label class="form-label small fw-bold">Short Description /
-                                                    Details</label>
-                                                <textarea class="form-control" rows="2"
-                                                    placeholder="Write a short note about this milestone..."></textarea>
-                                            </div>
+                                        <li>
+                                            <a
+                                                class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                                href="#"
+                                                data-value="{{ $value }}"
+                                                data-icon="{{ $iconData[0] }}"
+                                                data-label="{{ $iconData[1] }}"
+                                            >
+                                                <i class="bi {{ $iconData[0] }} fs-5"></i>
+                                                {{ $iconData[1] }}
+                                            </a>
+                                        </li>
 
-                                            <!-- Image Upload -->
-                                            <div class="mb-2">
-                                                <label class="form-label small fw-bold">Upload Image (Optional)</label>
-                                                <input type="file" class="form-control" accept="image/*">
-                                            </div>
-                                        </div>
+                                    @endforeach
 
-                                    </div>
+                                </ul>
 
-                                    <!-- Privacy Checkbox / Toggle Switch -->
-                                    <div
-                                        class="form-check form-switch mb-3 p-2 bg-white rounded border d-flex align-items-center justify-content-between px-3">
-                                        <div>
-                                            <label class="form-check-label small fw-bold text-dark mb-0"
-                                                for="privacySwitch1">
-                                                <i class="bi bi-lock-fill me-1 text-warning"></i> Make this Timeline
-                                                Private
-                                            </label>
-                                            <div class="text-muted" style="font-size: 0.75rem;">If private, this
-                                                Timeline will only be visible to only you.</div>
-                                        </div>
-                                        <input class="form-check-input fs-5 m-0" type="checkbox" role="switch"
-                                            id="privacySwitch1" name="is_private" value="1">
-                                    </div>
-
-                                    <!-- Save Timeline Button -->
-                                    <div class="mt-4 pt-3 border-top">
-                                        <button type="submit"
-                                            class="btn btn-warning fw-bold text-dark px-4 rounded-pill">
-                                            <i class="bi bi-check2-circle me-1"></i> Save Timeline
-                                        </button>
-                                    </div>
-                                </form>
                             </div>
+
+                            @error("timelines.$index.icon")
+                                <div class="text-danger small mt-1">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <!-- Event Date -->
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label small fw-bold">
+                                Year / Date *
+                            </label>
+
+                            <input
+                                type="text"
+                                name="timelines[{{ $index }}][event_date]"
+                                class="form-control timeline-date @error("timelines.$index.event_date") is-invalid @enderror"
+                                value="{{ $item['event_date'] ?? '' }}"
+                                placeholder="e.g., 1961 or December 12th, 1944"
+                                maxlength="100"
+                                required
+                            >
+
+                            @error("timelines.$index.event_date")
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+                        </div>
+
+                        <!-- Location -->
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label small fw-bold">
+                                Location / Address
+                            </label>
+
+                            <input
+                                type="text"
+                                name="timelines[{{ $index }}][location]"
+                                class="form-control timeline-location @error("timelines.$index.location") is-invalid @enderror"
+                                value="{{ $item['location'] ?? '' }}"
+                                placeholder="e.g., Central High School, City Campus"
+                                maxlength="255"
+                            >
+
+                            @error("timelines.$index.location")
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+                        </div>
+
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-3">
+
+                        <label class="form-label small fw-bold">
+                            Short Description / Details
+                        </label>
+
+                        <textarea
+                            name="timelines[{{ $index }}][description]"
+                            class="form-control timeline-description @error("timelines.$index.description") is-invalid @enderror"
+                            rows="2"
+                            maxlength="5000"
+                            placeholder="Write a short note about this milestone..."
+                        >{{ $item['description'] ?? '' }}</textarea>
+
+                        @error("timelines.$index.description")
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div class="mb-2">
+
+                        <label class="form-label small fw-bold">
+                            Upload Image (Optional)
+                        </label>
+
+                        <input
+                            type="file"
+                            name="timelines[{{ $index }}][image]"
+                            class="form-control timeline-image @error("timelines.$index.image") is-invalid @enderror"
+                            accept="image/jpeg,image/png,image/webp"
+                        >
+
+                        <div class="form-text">
+                            JPG, PNG or WEBP. Maximum 5 MB.
+                        </div>
+
+                        @error("timelines.$index.image")
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+                    </div>
+
+                </div>
+
+            @endforeach
+
+        </div>
+
+        <!-- Privacy Switch -->
+        <div class="form-check form-switch mb-3 p-2 bg-white rounded border d-flex align-items-center justify-content-between px-3">
+
+            <div>
+                <label
+                    class="form-check-label small fw-bold text-dark mb-0"
+                    for="timelinePrivacySwitch"
+                >
+                    <i class="bi bi-lock-fill me-1 text-warning"></i>
+                    Make this Timeline Private
+                </label>
+
+                <div class="text-muted" style="font-size:0.75rem;">
+                    If private, these timeline milestones will only
+                    be visible to you.
+                </div>
+            </div>
+
+            <input
+                type="hidden"
+                name="visibility"
+                id="timelineVisibility"
+                value="{{ old('visibility', 'public') }}"
+            >
+
+            <input
+                class="form-check-input fs-5 m-0"
+                type="checkbox"
+                role="switch"
+                id="timelinePrivacySwitch"
+                {{ old('visibility', 'public') === 'private' ? 'checked' : '' }}
+            >
+
+        </div>
+
+        <!-- Save Button -->
+        <div class="mt-4 pt-3 border-top">
+
+            <button
+                type="submit"
+                class="btn btn-warning fw-bold text-dark px-4 rounded-pill"
+                id="saveTimelineBtn"
+            >
+                <i class="bi bi-check2-circle me-1"></i>
+                Save Timeline
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
                             <!-- Tab 6: Upcoming Events Tab -->
                             <!-- <div class="tab-pane fade" id="tab-events" role="tabpanel">
                                     <h6 class="fw-bold text-brown mb-3 border-bottom pb-2"><i class="bi bi-calendar-event me-2" style="color: #6f42c1;"></i> Add Upcoming Events</h6>
@@ -2268,6 +2454,9 @@ body.modal-open {
         </div>
 
         <div class="toast-body" id="storyToastMessage"></div>
+        <div class="toast-progress-track">
+            <div id="storyToastProgress" class="toast-progress-bar"></div>
+        </div>
 
     </div>
 </div>
@@ -2403,111 +2592,360 @@ body.modal-open {
     </script>
 
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const addTimelineBtn = document.getElementById('addTimelineBtn');
-            const timelineContainer = document.getElementById('timelineContainer');
+    
+<script>
+document.addEventListener('DOMContentLoaded', function () {
 
-            if (addTimelineBtn && timelineContainer) {
-                addTimelineBtn.addEventListener('click', function() {
-                    // Milestone count eka ganna
-                    const count = timelineContainer.querySelectorAll('.timeline-item').length + 1;
+    const timelineForm = document.getElementById('timelineForm');
+    const timelineContainer = document.getElementById('timelineContainer');
+    const addTimelineBtn = document.getElementById('addTimelineBtn');
+    const saveTimelineBtn = document.getElementById('saveTimelineBtn');
 
-                    const timelineCardHTML = `
-                <div class="card border-0 shadow-sm bg-light p-3 mb-3 timeline-item">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="badge bg-secondary">Milestone #${count}</span>
-                        <button type="button" class="btn btn-sm text-danger delete-timeline-btn" title="Delete Milestone">
-                            <i class="bi bi-trash fs-6"></i>
-                        </button>
-                    </div>
+    const privacySwitch = document.getElementById('timelinePrivacySwitch');
+    const visibilityInput = document.getElementById('timelineVisibility');
 
-                    <div class="row">
-                        <div class="col-md-7 mb-3">
-                            <label class="form-label small fw-bold">Milestone Title</label>
-                            <input type="text" class="form-control" placeholder="e.g., Graduated from high school" required>
-                        </div>
+    if (!timelineForm || !timelineContainer || !addTimelineBtn) {
+        return;
+    }
 
-                        <div class="col-md-5 mb-3">
-                            <label class="form-label small fw-bold">Event Icon</label>
-                            <div class="dropdown custom-icon-dropdown">
-                                <button class="btn btn-light border w-100 d-flex align-items-center justify-content-between dropdown-toggle bg-white py-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <span class="d-flex align-items-center gap-2 selected-option-text">
-                                        <i class="bi bi-star icon-preview fs-5"></i> Star / General
-                                    </span>
-                                </button>
-                                <input type="hidden" name="event_icon" class="icon-hidden-input" value="bi-star">
-                                <ul class="dropdown-menu w-100 shadow-sm py-1">
-                                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-star"><i class="bi bi-star fs-5"></i> Star / General</a></li>
-                                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-balloon-heart"><i class="bi bi-balloon-heart fs-5"></i> Birth / Baby</a></li>
-                                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-mortarboard"><i class="bi bi-mortarboard fs-5"></i> Education/Graduation</a></li>
-                                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-briefcase"><i class="bi bi-briefcase fs-5"></i> Career / Work</a></li>
-                                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-people"><i class="bi bi-people fs-5"></i> Meeting / People</a></li>
-                                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-heart"><i class="bi bi-heart fs-5"></i> Marriage / Love</a></li>
-                                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-house"><i class="bi bi-house fs-5"></i> Moved / Home</a></li>
-                                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-tree"><i class="bi bi-tree fs-5"></i> Retired / Life</a></li>
-                                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-value="bi-flag"><i class="bi bi-flag fs-5"></i> Passed away</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+    // ==========================================
+    // RENUMBER TIMELINE CARDS AND INPUT NAMES
+    // ==========================================
+    function updateTimelineIndexes() {
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label small fw-bold">Year / Date</label>
-                            <input type="text" class="form-control" placeholder="e.g., 1961 or December 12th, 1944">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label small fw-bold">Location / Address</label>
-                            <input type="text" class="form-control" placeholder="e.g., Central High School, City Campus">
-                        </div>
-                    </div>
+        const cards = timelineContainer.querySelectorAll('.timeline-item');
 
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Short Description / Details</label>
-                        <textarea class="form-control" rows="2" placeholder="Write a short note about this milestone..."></textarea>
-                    </div>
+        cards.forEach((card, index) => {
 
-                    <div class="mb-2">
-                        <label class="form-label small fw-bold">Upload Event Image (Optional)</label>
-                        <input type="file" class="form-control" accept="image/*">
-                    </div>
-                </div>
-            `;
-                    timelineContainer.insertAdjacentHTML('beforeend', timelineCardHTML);
-                });
+            const badge = card.querySelector('.timeline-number');
+
+            if (badge) {
+                badge.textContent = `Timeline #${index + 1}`;
             }
 
-            // Custom Icon Dropdown Selection Handler (Delegated for dynamic items too)
-            document.addEventListener('click', function(e) {
-                // Dropdown selection logic
-                const dropdownItem = e.target.closest('.custom-icon-dropdown .dropdown-item');
-                if (dropdownItem) {
-                    e.preventDefault();
-                    const dropdownContainer = dropdownItem.closest('.custom-icon-dropdown');
-                    const toggleButton = dropdownContainer.querySelector('.dropdown-toggle');
-                    const hiddenInput = dropdownContainer.querySelector('.icon-hidden-input');
+            card.querySelectorAll('[name]').forEach(input => {
 
-                    const iconHtml = dropdownItem.innerHTML;
-                    const value = dropdownItem.getAttribute('data-value');
+                input.name = input.name.replace(
+                    /timelines\[\d+\]/,
+                    `timelines[${index}]`
+                );
 
-                    toggleButton.innerHTML =
-                        `<span class="d-flex align-items-center gap-2 selected-option-text">${iconHtml}</span>`;
-                    hiddenInput.value = value;
-                    return;
-                }
-
-                // Delete Button Click Event
-                const deleteBtn = e.target.closest('.delete-timeline-btn');
-                if (deleteBtn) {
-                    const timelineItem = deleteBtn.closest('.timeline-item');
-                    if (timelineItem) {
-                        timelineItem.remove();
-                    }
-                }
             });
+
         });
-    </script>
+
+    }
+
+    // ==========================================
+    // ADD NEW TIMELINE CARD
+    // ==========================================
+    addTimelineBtn.addEventListener('click', function () {
+
+        const cards = timelineContainer.querySelectorAll('.timeline-item');
+
+        if (cards.length >= 30) {
+            alert('You can add a maximum of 30 milestones at once.');
+            return;
+        }
+
+        const template = cards[0];
+
+        if (!template) {
+            return;
+        }
+
+        const newCard = template.cloneNode(true);
+
+        // Clear title
+        const title = newCard.querySelector('.timeline-title');
+
+        if (title) {
+            title.value = '';
+        }
+
+        // Clear event date
+        const date = newCard.querySelector('.timeline-date');
+
+        if (date) {
+            date.value = '';
+        }
+
+        // Clear location
+        const location = newCard.querySelector('.timeline-location');
+
+        if (location) {
+            location.value = '';
+        }
+
+        // Clear description
+        const description = newCard.querySelector('.timeline-description');
+
+        if (description) {
+            description.value = '';
+        }
+
+        // Clear image input
+        const image = newCard.querySelector('.timeline-image');
+
+        if (image) {
+            image.value = '';
+        }
+
+        // Reset icon to star
+        const iconInput = newCard.querySelector('.icon-hidden-input');
+        const iconPreview = newCard.querySelector('.selected-option-text');
+
+        if (iconInput) {
+            iconInput.value = 'star';
+        }
+
+        if (iconPreview) {
+            iconPreview.innerHTML = `
+                <i class="bi bi-star icon-preview fs-5"></i>
+                Star / General
+            `;
+        }
+
+        // Remove copied Laravel validation messages
+        newCard.querySelectorAll('.invalid-feedback').forEach(el => {
+            el.remove();
+        });
+
+        newCard.querySelectorAll('.text-danger.small').forEach(el => {
+            el.remove();
+        });
+
+        newCard.querySelectorAll('.is-invalid').forEach(el => {
+            el.classList.remove('is-invalid');
+        });
+
+        timelineContainer.appendChild(newCard);
+
+        updateTimelineIndexes();
+
+        // Focus new milestone title
+        const newTitle = newCard.querySelector('.timeline-title');
+
+        if (newTitle) {
+            newTitle.focus();
+        }
+
+    });
+
+    // ==========================================
+    // CUSTOM ICON DROPDOWN SELECTION
+    // ==========================================
+    timelineContainer.addEventListener('click', function (event) {
+
+        const dropdownItem = event.target.closest(
+            '.custom-icon-dropdown .dropdown-item'
+        );
+
+        if (dropdownItem) {
+
+            event.preventDefault();
+
+            const dropdown = dropdownItem.closest(
+                '.custom-icon-dropdown'
+            );
+
+            const hiddenInput = dropdown.querySelector(
+                '.icon-hidden-input'
+            );
+
+            const selectedText = dropdown.querySelector(
+                '.selected-option-text'
+            );
+
+            const value = dropdownItem.dataset.value;
+            const icon = dropdownItem.dataset.icon;
+            const label = dropdownItem.dataset.label;
+
+            hiddenInput.value = value;
+
+            selectedText.textContent = '';
+
+            const iconElement = document.createElement('i');
+            iconElement.className = `bi ${icon} icon-preview fs-5`;
+
+            selectedText.appendChild(iconElement);
+            selectedText.appendChild(
+                document.createTextNode(' ' + label)
+            );
+
+            return;
+        }
+
+        // ==========================================
+        // DELETE UNSAVED TIMELINE CARD
+        // ==========================================
+        const deleteButton = event.target.closest(
+            '.delete-timeline-btn'
+        );
+
+        if (deleteButton) {
+
+            const cards = timelineContainer.querySelectorAll(
+                '.timeline-item'
+            );
+
+            if (cards.length <= 1) {
+                alert('At least one timeline milestone is required.');
+                return;
+            }
+
+            const card = deleteButton.closest('.timeline-item');
+
+            if (card) {
+                card.remove();
+                updateTimelineIndexes();
+            }
+
+        }
+
+    });
+
+    // ==========================================
+    // PRIVACY SWITCH
+    // ==========================================
+    if (privacySwitch && visibilityInput) {
+
+        privacySwitch.addEventListener('change', function () {
+
+            visibilityInput.value = this.checked
+                ? 'private'
+                : 'public';
+
+        });
+
+    }
+
+    // ==========================================
+    // AJAX TIMELINE SUBMISSION (NO PAGE RELOAD)
+    // ==========================================
+    function timelineToast(message, type = 'success') {
+        const el = document.getElementById('storyToast');
+        if (!el || typeof bootstrap === 'undefined') return;
+
+        const types = {
+            success: ['Success', 'bi bi-check-circle-fill text-success me-2', '#198754'],
+            error: ['Error', 'bi bi-x-circle-fill text-danger me-2', '#dc3545'],
+            warning: ['Warning', 'bi bi-exclamation-triangle-fill text-warning me-2', '#ffc107']
+        };
+        const config = types[type] || types.success;
+        document.getElementById('storyToastTitle').textContent = config[0];
+        document.getElementById('storyToastIcon').className = config[1];
+        document.getElementById('storyToastMessage').textContent = message;
+        const progress = document.getElementById('storyToastProgress');
+        if (progress) {
+            progress.style.backgroundColor = config[2];
+            progress.classList.remove('running');
+            void progress.offsetWidth;
+            progress.classList.add('running');
+        }
+        bootstrap.Toast.getOrCreateInstance(el, {
+            animation: true, autohide: true, delay: 3000
+        }).show();
+    }
+
+    let timelineSaving = false;
+    timelineForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        if (timelineSaving) return;
+
+        updateTimelineIndexes();
+        if (!timelineContainer.querySelector('.timeline-item')) {
+            timelineToast('Add at least one milestone.', 'error');
+            return;
+        }
+        if (!timelineForm.reportValidity()) return;
+
+        // Remove validation indicators left by earlier submissions.
+        timelineForm.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+        timelineForm.querySelectorAll('.timeline-ajax-error').forEach(el => el.remove());
+
+        const originalButton = saveTimelineBtn ? saveTimelineBtn.innerHTML : '';
+        timelineSaving = true;
+        if (saveTimelineBtn) {
+            saveTimelineBtn.disabled = true;
+            saveTimelineBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Saving Timeline...';
+        }
+
+        try {
+            const response = await fetch(timelineForm.action, {
+                method: 'POST',
+                body: new FormData(timelineForm),
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'same-origin'
+            });
+
+            const contentType = response.headers.get('content-type') || '';
+            if (!contentType.includes('application/json')) {
+                throw new Error('The server returned an unexpected response. Please check the Laravel log.');
+            }
+            const result = await response.json();
+
+            if (!response.ok) {
+                if (response.status === 422 && result.errors) {
+                    const firstError = Object.values(result.errors).flat()[0];
+                    Object.entries(result.errors).forEach(([key, messages]) => {
+                        const match = key.match(/^timelines\.(\d+)\.(.+)$/);
+                        const name = match
+                            ? `timelines[${match[1]}][${match[2]}]`
+                            : key;
+                        const field = Array.from(timelineForm.querySelectorAll('[name]'))
+                            .find(input => input.name === name);
+                        if (!field) return;
+                        field.classList.add('is-invalid');
+                        const error = document.createElement('div');
+                        error.className = 'text-danger small mt-1 timeline-ajax-error';
+                        error.textContent = messages[0];
+                        field.insertAdjacentElement('afterend', error);
+                    });
+                    timelineToast(firstError || 'Please check your timeline fields.', 'error');
+                } else {
+                    timelineToast(result.message || 'Failed to save timeline milestones.', 'error');
+                }
+                return;
+            }
+
+            timelineToast(result.message || 'Timeline milestones saved successfully!', 'success');
+
+            // Clear submitted milestones so another click cannot create duplicates.
+            const cards = timelineContainer.querySelectorAll('.timeline-item');
+            cards.forEach((card, index) => { if (index > 0) card.remove(); });
+            const firstCard = timelineContainer.querySelector('.timeline-item');
+            if (firstCard) {
+                firstCard.querySelectorAll('input, textarea').forEach(input => {
+                    if (input.classList.contains('icon-hidden-input')) input.value = 'star';
+                    else if (input.type !== 'hidden') input.value = '';
+                });
+                const iconPreview = firstCard.querySelector('.selected-option-text');
+                if (iconPreview) iconPreview.innerHTML = '<i class="bi bi-star icon-preview fs-5"></i> Star / General';
+            }
+            updateTimelineIndexes();
+        } catch (error) {
+            timelineToast(error.message || 'Network error. Please try again.', 'error');
+        } finally {
+            timelineSaving = false;
+            if (saveTimelineBtn) {
+                saveTimelineBtn.disabled = false;
+                saveTimelineBtn.innerHTML = originalButton;
+            }
+        }
+    });
+
+    // ==========================================
+    // INITIALIZE
+    // ==========================================
+    updateTimelineIndexes();
+
+});
+</script>
+
 
 
 
@@ -3357,7 +3795,7 @@ document.addEventListener('DOMContentLoaded', function () {
         toastInstance = new bootstrap.Toast(toastElement, {
             animation: true,
             autohide: true,
-            delay: 8000
+            delay: 3000
         });
 
         toastInstance.show();
@@ -4117,7 +4555,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('storyToastTitle').textContent = config[0];
         document.getElementById('storyToastMessage').textContent = message;
         document.getElementById('storyToastIcon').className = config[1];
-        bootstrap.Toast.getOrCreateInstance(el, { delay: 8000 }).show();
+        bootstrap.Toast.getOrCreateInstance(el, { delay: 3000 }).show();
     }
 
     function syncInput(type) {
@@ -4269,6 +4707,63 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }, true);
     });
+});
+</script>
+
+
+<!-- Laravel flash messages using the existing storyToast component -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const el = document.getElementById('storyToast');
+    const progress = document.getElementById('storyToastProgress');
+    if (!el || typeof bootstrap === 'undefined') return;
+
+    const toastTypes = {
+        success: ['Success', 'bi bi-check-circle-fill text-success me-2', '#198754'],
+        error: ['Error', 'bi bi-x-circle-fill text-danger me-2', '#dc3545'],
+        warning: ['Warning', 'bi bi-exclamation-triangle-fill text-warning me-2', '#ffc107'],
+        info: ['Information', 'bi bi-info-circle-fill text-primary me-2', '#0d6efd']
+    };
+
+    function showSessionToast(message, type = 'success') {
+        const config = toastTypes[type] || toastTypes.success;
+        document.getElementById('storyToastTitle').textContent = config[0];
+        document.getElementById('storyToastIcon').className = config[1];
+        document.getElementById('storyToastMessage').textContent = message;
+        if (progress) {
+            progress.style.backgroundColor = config[2];
+            progress.classList.remove('running');
+            void progress.offsetWidth;
+            progress.classList.add('running');
+        }
+        bootstrap.Toast.getOrCreateInstance(el, {
+            animation: true, autohide: true, delay: 3000
+        }).show();
+    }
+
+    // Restart the countdown whenever existing Story/Media scripts show this toast.
+    el.addEventListener('show.bs.toast', function () {
+        if (!progress) return;
+        const icon = document.getElementById('storyToastIcon');
+        progress.style.backgroundColor = icon.classList.contains('text-danger') ? '#dc3545'
+            : icon.classList.contains('text-warning') ? '#ffc107'
+            : icon.classList.contains('text-primary') ? '#0d6efd' : '#198754';
+        progress.classList.remove('running');
+        void progress.offsetWidth;
+        progress.classList.add('running');
+    });
+
+    @if(session('success'))
+        showSessionToast(@json(session('success')), 'success');
+    @elseif(session('error'))
+        showSessionToast(@json(session('error')), 'error');
+    @elseif(session('warning'))
+        showSessionToast(@json(session('warning')), 'warning');
+    @elseif(session('info'))
+        showSessionToast(@json(session('info')), 'info');
+    @elseif($errors->any())
+        showSessionToast(@json($errors->first()), 'error');
+    @endif
 });
 </script>
 

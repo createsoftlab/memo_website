@@ -7,6 +7,9 @@ use Illuminate\View\View;
 use App\Models\Image;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\ValidationException;
 
 class MemoryUserController extends Controller
 {
@@ -60,8 +63,64 @@ class MemoryUserController extends Controller
     public function passwordSettings(Request $request)
     {
 
+    try {
 
+
+        $validated = $request->validate([
+
+            'current_password' => [
+                'required',
+                'current_password:web',
+            ],
+
+            'new_password' => [
+                'required',
+                'string',
+                'confirmed',
+
+                Password::min(8)
+                    ->mixedCase()
+                    ->numbers(),
+            ],
+
+        ], [
+
+            'current_password.required' =>
+                'Please enter your current password.',
+
+            'current_password.current_password' =>
+                'Your current password is incorrect.',
+
+            'new_password.required' =>
+                'Please enter a new password.',
+
+            'new_password.confirmed' =>
+                'New password and confirmation do not match.',
+
+        ]);
+
+        $user = $request->user();
+
+        $user->password = Hash::make(
+            $validated['new_password']
+        );
+
+        $user->save();
+
+        return back()->with(
+            'success',
+            'Password updated successfully.'
+        );
+
+    } catch (ValidationException $e) {
+
+        return back()->with(
+            'error',
+            $e->validator->errors()->first()
+        );
+    
     }
+}
     public function dashboard(): View
     {
         return view('memory_user.dashbord');

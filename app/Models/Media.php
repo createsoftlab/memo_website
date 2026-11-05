@@ -13,6 +13,8 @@ class Media extends Model
         'file_name',
         'mime_type',
         'file_size',
+        'status',
+        
     ];
 
     public function profile()

@@ -16,35 +16,78 @@
 <body class="bg-memorial-light">
 
        @include('home.header')
+  
+    @php
+
+    // $coverImage = \App\Models\Image::where('profile_id', $memory->profile?->id)->where('type', 'cover')->first();
+    $backgroundMusic = \App\Models\Music::where('profile_id', $memory->profile?->id)->first();
+    // Get profile image from images table
+    $profileImage = \App\Models\Image::where('profile_id', $memory->profile?->id)
+        ->where('type', 'profile')
+        ->first();
+
+    $birthYear = $profile->date_of_birth
+        ? \Carbon\Carbon::parse($profile->date_of_birth)->format('Y')
+        : null;
+
+    $deathYear = $profile->date_of_death
+        ? \Carbon\Carbon::parse($profile->date_of_death)->format('Y')
+        : null;
+  @endphp
 
   <!-- Hero Header -->
   <header class="memorial-hero d-flex align-items-end">
     <div class="container py-4">
       <div class="row align-items-center">
         <div class="col-8">
-          <h1 class="memorial-title text-white mb-0">Lallan Writer</h1>
-          <p class="fs-4 text-white-50 font-serif mb-0">1945 - 2021</p>
+          <h1 class="memorial-title text-white mb-0">{{ $memory->profile?->first_name }} {{ $memory->profile?->last_name }}</h1>
+          @if ($birthYear || $deathYear)
+          <p class="fs-4 text-white-50 font-serif mb-0">
+            {{ collect([$birthYear, $deathYear])->filter()->implode(' - ') }}
+          </p>
+          @endif
         </div>
         <div class="col-4 text-end">
-          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?fit=crop&w=300&h=300" class="memorial-avatar rounded-3 shadow" alt="Lallan Writer">
+          <img src="{{ $profileImage? asset($profileImage->path): asset('images/profile_photo.png') }}" class="memorial-avatar rounded-3 shadow" alt="Lallan Writer">
         </div>
       </div>
     </div>
+            @if ($backgroundMusic?->path) 
+        <!-- Background Music Toggle Button -->
+        <button id="audioToggleBtn"
+            class="btn btn-outline-warning btn-sm rounded-pill px-3 py-1 d-flex align-items-center gap-2 bg-dark bg-opacity-50"
+            onclick="toggleBackgroundMusic()" title="Toggle Background Music">
+            <i id="audioIcon" class="bi bi-volume-up-fill fs-6 text-warning"></i>
+            <span id="audioText" class="small">Mute Music</span>
+        </button>
+                                                                                           
+        <!-- Hidden HTML5 Audio Element (Autoplay without muted) -->
+        <audio id="memorialAudio" autoplay loop>
+            <source src="{{ asset($backgroundMusic->path) }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        @endif
   </header>
 
   <!-- Navigation Tabs Bar -->
   <div class="memorial-tabs-bar sticky-top">
     <div class="container">
-      <ul class="nav nav-tabs border-0">
-        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_index') }}">ABOUT</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_life') }}">LIFE</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_gallery') }}">GALLERY</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_stories') }}">STORIES</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_timeline') }}">TIMELINE</a></li>
-        <li class="nav-item"><a class="nav-link active" href="{{ url('/memories_event') }}">EVENTS</a></li>
-                                                <li class="nav-item"><a class="nav-link " href="{{ url('/memories_donation') }}">DONATIONS</a></li>
-
-      </ul>
+            <ul class="nav nav-tabs border-0">
+                <li class="nav-item"><a class="nav-link"
+                        href="{{ url('/memory_index/' . $memory->profile->slug) }}">ABOUT</a></li>
+                <li class="nav-item"><a class="nav-link"
+                        href="{{ url('/memories_life/' . $memory->profile->slug) }}">LIFE</a></li>
+                <li class="nav-item"><a class="nav-link"
+                        href="{{ url('/memories_gallery/' . $memory->profile->slug) }}">GALLERY</a></li>
+                <li class="nav-item"><a class="nav-link"
+                        href="{{ url('/memories_stories/' . $memory->profile->slug) }}">STORIES</a></li>
+                <li class="nav-item"><a class="nav-link"
+                        href="{{ url('/memories_timeline/' . $memory->profile->slug) }}">TIMELINE</a></li>
+                <li class="nav-item"><a class="nav-link active"
+                        href="{{ url('/memories_event/' . $memory->profile->slug) }}">EVENTS</a></li>
+                <li class="nav-item"><a class="nav-link "
+                        href="{{ url('/memories_donation/' . $memory->profile->slug) }}">DONATIONS</a></li>
+            </ul>
     </div>
   </div>
 
@@ -488,5 +531,48 @@ document.addEventListener("DOMContentLoaded", function () {
 });
   </script>
 
+<script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const audio = document.getElementById('memorialAudio');
+            const audioIcon = document.getElementById('audioIcon');
+            const audioText = document.getElementById('audioText');
+
+            const isMuted = localStorage.getItem('memorialAudioMuted');
+
+            if (isMuted === 'false') {
+
+                audio.muted = false;
+                audio.play().catch(error => console.log("Autoplay restricted"));
+                audioIcon.className = "bi bi-volume-up-fill fs-6 text-warning";
+                audioText.innerText = "Mute Music";
+            } else {
+
+                audio.muted = true;
+                audio.play().catch(error => console.log("Autoplay restricted"));
+                audioIcon.className = "bi bi-volume-mute-fill fs-6";
+                audioText.innerText = "Play Music";
+            }
+        });
+
+
+        function toggleBackgroundMusic() {
+            const audio = document.getElementById('memorialAudio');
+            const audioIcon = document.getElementById('audioIcon');
+            const audioText = document.getElementById('audioText');
+
+            if (audio.muted) {
+                audio.muted = false;
+                audio.play();
+                audioIcon.className = "bi bi-volume-up-fill fs-6 text-warning";
+                audioText.innerText = "Mute Music";
+                localStorage.setItem('memorialAudioMuted', 'false');
+            } else {
+                audio.muted = true;
+                audioIcon.className = "bi bi-volume-mute-fill fs-6";
+                audioText.innerText = "Play Music";
+                localStorage.setItem('memorialAudioMuted', 'true');
+            }
+        }
+    </script>
 </body>
 </html>

@@ -9,6 +9,7 @@ use App\Http\Controllers\MemoryUserController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CaptchaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -151,9 +152,24 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 */
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [HomeController::class, 'about'])->name('home.about');
-Route::get('/all_memories', [HomeController::class, 'allMemories'])->name('home.all_memories');
 Route::get('/card', [HomeController::class, 'card'])->name('home.card');
 Route::get('/contact', [HomeController::class, 'contact'])->name('home.contact');
+
+
+//view memory from all memories
+Route::get('/all_memories', [HomeController::class, 'allMemories'])->name('home.all_memories');
+//homepage inside memory navigation pages
+Route::get('/memory_index/{slug}', [HomeController::class, 'memoryIndex'])->name('home.memory_index');
+//verify privacy
+Route::post('/memorial/verify-password',[HomeController::class, 'verifyMemorialPassword'])->middleware('throttle:5,1')->name('memorial.verifyPassword');
+Route::get('/memories_life/{slug}', [HomeController::class, 'memoriesLife'])->name('home.memories_life');
+Route::get('/memories_stories/{slug}', [HomeController::class, 'memoriesStories'])->name('home.memories_stories');
+Route::get('/memories_timeline/{slug}', [HomeController::class, 'memoriesTimeline'])->name('home.memories_timeline');
+Route::get('/memories_gallery/{slug}', [HomeController::class, 'memoriesGallery'])->name('home.memories_gallery');
+Route::get('/memories_donation/{slug}', [HomeController::class, 'memoriesDonation'])->name('home.memories_donation');
+Route::get('/memories_event/{slug}', [HomeController::class, 'memoriesEvent'])->name('home.memories_event');
+
+Route::get('/donation_form', [HomeController::class, 'donationForm'])->name('home.donation_form');
 
 Route::middleware('auth')->group(function () {
     Route::get('/create_memory', [HomeController::class, 'createMemory'])->name('home.create_memory');
@@ -162,14 +178,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/create_memory/step-3', [MemoryController::class, 'storeStep3'])->name('home.create_memory.step3');
 });
 
-Route::get('/donation_form', [HomeController::class, 'donationForm'])->name('home.donation_form');
-Route::get('/memories_donation', [HomeController::class, 'memoriesDonation'])->name('home.memories_donation');
-Route::get('/memories_event', [HomeController::class, 'memoriesEvent'])->name('home.memories_event');
-Route::get('/memories_gallery', [HomeController::class, 'memoriesGallery'])->name('home.memories_gallery');
-Route::get('/memories_index', [HomeController::class, 'memoriesIndex'])->name('home.memories_index');
-Route::get('/memories_life', [HomeController::class, 'memoriesLife'])->name('home.memories_life');
-Route::get('/memories_stories', [HomeController::class, 'memoriesStories'])->name('home.memories_stories');
-Route::get('/memories_timeline', [HomeController::class, 'memoriesTimeline'])->name('home.memories_timeline');
+
+
+
 Route::get('/pricing', [HomeController::class, 'pricing'])->name('home.pricing');
 Route::get('/packages', [HomeController::class, 'pricing'])->name('packages.index');
 
@@ -181,6 +192,7 @@ Route::get('/packages', [HomeController::class, 'pricing'])->name('packages.inde
 Route::middleware(['auth'])->group(function () {
     Route::get('memory_user/dashboard', [MemoryUserController::class, 'dashboard'])->name('memoryUser.dashboard');
     Route::get('memory_user/my_memories', [MemoryController::class, 'myMemories'])->name('my_memories');
+    Route::post('memory_user/my_memories/update', [MemoryController::class, 'updateMemory'])->name('update_my_memory');
 
     Route::get('memory_user/profile_settings', [MemoryUserController::class, 'profileSettings'])->name('userProfile_settings');
     Route::post('memory_user/profile_settings', [MemoryUserController::class, 'profileImageSettings'])->name('userProfile_imageSettings');
@@ -229,5 +241,63 @@ Route::middleware('auth')->group(function () {
     '/profiles/{profile}/media/{media}',
     [MemoryController::class, 'mediaDestroy']
 )->name('media.destroy');
+
+});
+
+/*
+|--------------------------------------------------------------------------
+| Offline CAPTCHA Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('guest')->group(function () {
+
+    // Generate CAPTCHA image
+    Route::get('/captcha/image', [CaptchaController::class, 'image'])
+        ->name('captcha.image');
+
+    // Verify CAPTCHA answer
+    Route::post('/captcha/verify', [CaptchaController::class, 'verify'])
+        ->name('captcha.verify');
+
+});
+
+Route::get('/test-gd', function () {
+    return response()->json([
+        'gd_enabled' => extension_loaded('gd'),
+        'image_function' => function_exists('imagecreatetruecolor'),
+        'imagepng_function' => function_exists('imagepng'),
+        'php_ini' => php_ini_loaded_file(),
+        'php_binary' => PHP_BINARY,
+    ]);
+});
+
+Route::middleware('auth')->group(function () {
+    Route::post(
+        '/timelines/store',
+        [MemoryController::class, 'storeTimeline']
+    )->name('timelines.store');
+});
+
+// Display memorial stories page
+Route::get(
+    '/memories_stories/{slug}',
+    [MemoryController::class, 'memoriesStories']
+)->name('memories.stories');
+
+// Save a new story comment
+Route::post(
+    '/profiles/{profile}/story-comments',
+    [MemoryController::class, 'storeStoryComment']
+)->middleware('throttle:5,1')
+  ->name('story-comments.store');
+
+
+Route::middleware('auth')->group(function () {
+
+    Route::post(
+        '/profiles/{profile}/gallery/upload',
+        [HomeController::class, 'mediaStore']
+    )->name('gallery.media.store');
 
 });

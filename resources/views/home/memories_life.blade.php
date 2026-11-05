@@ -17,35 +17,69 @@
 
         @include('home.header')
 
+  @php
+
+    // $coverImage = \App\Models\Image::where('profile_id', $memory->profile?->id)->where('type', 'cover')->first();
+    $backgroundMusic = \App\Models\Music::where('profile_id', $memory->profile?->id)->first();
+    // Get profile image from images table
+    $profileImage = \App\Models\Image::where('profile_id', $memory->profile?->id)
+        ->where('type', 'profile')
+        ->first();
+
+    $birthYear = $profile->date_of_birth
+        ? \Carbon\Carbon::parse($profile->date_of_birth)->format('Y')
+        : null;
+
+    $deathYear = $profile->date_of_death
+        ? \Carbon\Carbon::parse($profile->date_of_death)->format('Y')
+        : null;
+  @endphp
+
   <!-- Hero Header -->
   <header class="memorial-hero d-flex align-items-end">
     <div class="container py-4">
       <div class="row align-items-center">
         <div class="col-8">
-          <h1 class="memorial-title text-white mb-0">Lallan Writer</h1>
-          <p class="fs-4 text-white-50 font-serif mb-0">1945 - 2021</p>
+          <h1 class="memorial-title text-white mb-0">{{ $memory->profile?->first_name }} {{ $memory->profile?->last_name }}</h1>
+          @if ($birthYear || $deathYear)
+          <p class="fs-4 text-white-50 font-serif mb-0">
+            {{ collect([$birthYear, $deathYear])->filter()->implode(' - ') }}
+          </p>
+          @endif
         </div>
         <div class="col-4 text-end">
-          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?fit=crop&w=300&h=300" class="memorial-avatar rounded-3 shadow" alt="Lallan Writer">
+          <img src="{{ $profileImage? asset($profileImage->path): asset('images/profile_photo.png') }}" class="memorial-avatar rounded-3 shadow" alt="Lallan Writer">
         </div>
       </div>
     </div>
+            @if ($backgroundMusic?->path) 
+        <!-- Background Music Toggle Button -->
+        <button id="audioToggleBtn"
+            class="btn btn-outline-warning btn-sm rounded-pill px-3 py-1 d-flex align-items-center gap-2 bg-dark bg-opacity-50"
+            onclick="toggleBackgroundMusic()" title="Toggle Background Music">
+            <i id="audioIcon" class="bi bi-volume-up-fill fs-6 text-warning"></i>
+            <span id="audioText" class="small">Mute Music</span>
+        </button>
+                                                                                           
+        <!-- Hidden HTML5 Audio Element (Autoplay without muted) -->
+        <audio id="memorialAudio" autoplay loop>
+            <source src="{{ asset($backgroundMusic->path) }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        @endif
   </header>
 
   <!-- Navigation Tabs Bar -->
   <div class="memorial-tabs-bar sticky-top">
     <div class="container">
       <ul class="nav nav-tabs border-0">
-        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_index') }}">ABOUT</a></li>
-        <li class="nav-item"><a class="nav-link active" href="{{ url('/memories_life') }}">LIFE</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_gallery') }}">GALLERY</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_stories') }}">STORIES</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_timeline') }}">TIMELINE</a></li>
-                <li class="nav-item"><a class="nav-link " href="{{ url('/memories_event') }}">EVENTS</a></li>
-
-                                                <li class="nav-item"><a class="nav-link " href="{{ url('/memories_donation') }}">DONATIONS</a></li>
-
-
+        <li class="nav-item"><a class="nav-link" href="{{ url('/memory_index/' . $memory->profile->slug) }}">ABOUT</a></li>
+        <li class="nav-item"><a class="nav-link active" href="{{ url('/memories_life/' . $memory->profile->slug) }}">LIFE</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_gallery/' . $memory->profile->slug) }}">GALLERY</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_stories/' . $memory->profile->slug) }}">STORIES</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/memories_timeline/'. $memory->profile->slug) }}">TIMELINE</a></li>
+        <li class="nav-item"><a class="nav-link " href="{{ url('/memories_event/'. $memory->profile->slug) }}">EVENTS</a></li>
+       <li class="nav-item"><a class="nav-link " href="{{ url('/memories_donation/' . $memory->profile->slug) }}">DONATIONS</a></li>
       </ul>
     </div>
   </div>
@@ -56,43 +90,27 @@
       
 <div class="col-lg-8 d-flex flex-column gap-3">
 
-    <!-- Story 1: Early Life -->
+  @foreach ($stories as $story)
+      <!-- Story 1: Early Life -->
     <div class="life-story-card p-4 rounded shadow-sm position-relative reveal-card" data-delay="100">
       <div class="badge-wrapper mb-2">
           <span class="badge custom-badge bg-memorial-brown px-3 py-2 fs-6 d-inline-flex align-items-center gap-2 shadow-sm">
-              <i class="bi bi-heart-fill"></i> Early Life
+              <i class="bi bi-heart-fill"></i> {{$story?->story_type}}
           </span>
       </div>
-      <h4 class="fw-bold text-dark mb-1">Birth & Childhood</h4>
-      <p class="small text-muted mb-3">Posted on August 14 &bull; By <span class="text-memorial-accent fw-semibold">Family Admin</span></p>
+      <h4 class="fw-bold text-dark mb-1">{{$story?->title}}</h4>
+      <p class="small text-muted mb-3">Posted on {{ $story->updated_at?->format('F d') }} &bull; By <span class="text-memorial-accent fw-semibold">{{ $story->user?->name ?? 'Unknown User' }} {{ $story->user?->role ?? 'Unknown Role' }}</span></p>
       
       <div class="story-content text-secondary mb-3">
-        <p class="mb-0 story-highlight-text">Born and brought up with a deep affection for literature and classical arts. From a very young age, Lallan spent endless hours reading classical literature and writing short stories that inspired his close friends and family.</p>
+        <p class="mb-0 story-highlight-text">{{$story?->content}}</p>
       </div>
 
       <!-- <button class="btn btn-sm btn-link text-muted text-decoration-none p-0 share-story-btn">
         <i class="bi bi-share me-1"></i> Share
       </button> -->
     </div>
+  @endforeach
 
-    <!-- Story 2: Career & Achievements -->
-    <div class="life-story-card p-4 rounded shadow-sm position-relative reveal-card" data-delay="200">
-      <div class="badge-wrapper mb-2">
-          <span class="badge custom-badge bg-memorial-brown px-3 py-2 fs-6 d-inline-flex align-items-center gap-2 shadow-sm">
-              <i class="bi bi-heart-fill"></i> Career & Achievements
-          </span>
-      </div>
-      <h4 class="fw-bold text-dark mb-1">Career & Achievements</h4>
-      <p class="small text-muted mb-3">Posted on August 14 &bull; By <span class="text-memorial-accent fw-semibold">Family Admin</span></p>
-      
-      <div class="story-content text-secondary mb-3">
-        <p class="mb-0 story-highlight-text">Published numerous poems, stories, and inspired thousands of students worldwide. Throughout his illustrious literary career, he mentored hundreds of budding poets and left a lasting imprint on contemporary prose.</p>
-      </div>
-
-      <!-- <button class="btn btn-sm btn-link text-muted text-decoration-none p-0 share-story-btn">
-        <i class="bi bi-share me-1"></i> Share
-      </button> -->
-    </div>
 
     <!-- Contribution Notice Box -->
     <div class="life-story-card p-4 rounded shadow-sm d-flex align-items-center gap-3 reveal-card" data-delay="300">
@@ -245,5 +263,49 @@
     revealCards.forEach(card => observer.observe(card));
 });
   </script>
+
+  <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const audio = document.getElementById('memorialAudio');
+            const audioIcon = document.getElementById('audioIcon');
+            const audioText = document.getElementById('audioText');
+
+            const isMuted = localStorage.getItem('memorialAudioMuted');
+
+            if (isMuted === 'false') {
+
+                audio.muted = false;
+                audio.play().catch(error => console.log("Autoplay restricted"));
+                audioIcon.className = "bi bi-volume-up-fill fs-6 text-warning";
+                audioText.innerText = "Mute Music";
+            } else {
+
+                audio.muted = true;
+                audio.play().catch(error => console.log("Autoplay restricted"));
+                audioIcon.className = "bi bi-volume-mute-fill fs-6";
+                audioText.innerText = "Play Music";
+            }
+        });
+
+
+        function toggleBackgroundMusic() {
+            const audio = document.getElementById('memorialAudio');
+            const audioIcon = document.getElementById('audioIcon');
+            const audioText = document.getElementById('audioText');
+
+            if (audio.muted) {
+                audio.muted = false;
+                audio.play();
+                audioIcon.className = "bi bi-volume-up-fill fs-6 text-warning";
+                audioText.innerText = "Mute Music";
+                localStorage.setItem('memorialAudioMuted', 'false');
+            } else {
+                audio.muted = true;
+                audioIcon.className = "bi bi-volume-mute-fill fs-6";
+                audioText.innerText = "Play Music";
+                localStorage.setItem('memorialAudioMuted', 'true');
+            }
+        }
+    </script>
 </body>
 </html>

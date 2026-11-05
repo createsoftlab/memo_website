@@ -31,7 +31,21 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Memory Creator',
                 'role' => 'memory_user',
-                'password' => Hash::make('Admin@12345'),
+                'country' => 'Sri Lanka',
+                'state' => 'Southern',
+                'password' => Hash::make('11112222'),
+                'email_verified_at' => now(),
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'dpmalinda111@gmail.com'],
+            [
+                'name' => 'Memory Creator',
+                'role' => 'general_user',
+                'country' => 'Sri Lanka',
+                'state' => 'Southern',
+                'password' => Hash::make('11112222'),
                 'email_verified_at' => now(),
             ]
         );

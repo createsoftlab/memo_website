@@ -15,11 +15,15 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             // Publication status
+            $table->text('broadcast_link')->nullable();
             $table->enum('status', ['draft','published'])->default('draft');
             $table->text('story')->nullable();
+            $table->text('tribute_quote')->nullable();
+            $table->longText('about')->nullable();
             $table->text('funeral_location_name')->nullable();
             $table->text('funeral_location_address')->nullable();
             $table->text('family_contact_no')->nullable();
+            $table->text('approval')->default('0');
             $table->timestamps();
         });
     }

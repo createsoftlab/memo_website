@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('designation')->nullable();
             $table->enum('memorial_status', ['passed_away','living_memory']);
             $table->string('passed_away_reason')->nullable();
+            $table->text('live_broadcast_link')->nullable();
 
             $table->date('date_of_birth')->nullable();
             $table->string('birth_location')->nullable();

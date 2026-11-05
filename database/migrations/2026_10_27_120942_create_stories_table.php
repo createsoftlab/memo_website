@@ -14,14 +14,12 @@ return new class extends Migration
         Schema::create('stories', function (Blueprint $table) {
           $table->id();
 
-            $table->foreignId('profile_id')
-                ->constrained()
-                ->cascadeOnDelete();
-
+            $table->foreignId('profile_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('story_type');
             $table->string('title');
             $table->longText('content');
-
+            $table->string('status');
             $table->timestamps();
         });
     }
