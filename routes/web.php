@@ -3,13 +3,15 @@
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AdminController;
+
+use App\Http\Controllers\CaptchaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MemoryController;
 use App\Http\Controllers\MemoryUserController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CaptchaController;
+use App\Http\Controllers\BillingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -161,7 +163,7 @@ Route::get('/all_memories', [HomeController::class, 'allMemories'])->name('home.
 //homepage inside memory navigation pages
 Route::get('/memory_index/{slug}', [HomeController::class, 'memoryIndex'])->name('home.memory_index');
 //verify privacy
-Route::post('/memorial/verify-password',[HomeController::class, 'verifyMemorialPassword'])->middleware('throttle:5,1')->name('memorial.verifyPassword');
+Route::post('/memorial/verify-password', [HomeController::class, 'verifyMemorialPassword'])->middleware('throttle:5,1')->name('memorial.verifyPassword');
 Route::get('/memories_life/{slug}', [HomeController::class, 'memoriesLife'])->name('home.memories_life');
 Route::get('/memories_stories/{slug}', [HomeController::class, 'memoriesStories'])->name('home.memories_stories');
 Route::get('/memories_timeline/{slug}', [HomeController::class, 'memoriesTimeline'])->name('home.memories_timeline');
@@ -207,6 +209,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/events/create', [EventController::class, 'create'])->name('events.create')->middleware(['prevent_admin_creation', 'active_package:event']);
     Route::post('/events/store', [EventController::class, 'store'])->name('events.store')->middleware(['prevent_admin_creation', 'active_package:event']);
     Route::get('/memories/create', [AdminController::class, 'createMemory'])->name('memories.create')->middleware(['prevent_admin_creation', 'active_package:memory']);
+
+    Route::get('/billing/upgrade', [BillingController::class, 'index'])->name('billing.index');
+
+    // Stripe වෙත යොමු කරන Route එක
+    Route::post('/billing/checkout', [BillingController::class, 'checkout'])->name('billing.checkout');
+
+    // Payment එක සාර්ථක වූ පසු එන Route එක
+    Route::get('/billing/success', [BillingController::class, 'success'])->name('billing.success');
 });
 
 
@@ -238,10 +248,9 @@ Route::middleware('auth')->group(function () {
     )->name('media.store');
 
     Route::delete(
-    '/profiles/{profile}/media/{media}',
-    [MemoryController::class, 'mediaDestroy']
-)->name('media.destroy');
-
+        '/profiles/{profile}/media/{media}',
+        [MemoryController::class, 'mediaDestroy']
+    )->name('media.destroy');
 });
 
 /*
@@ -259,7 +268,6 @@ Route::middleware('guest')->group(function () {
     // Verify CAPTCHA answer
     Route::post('/captcha/verify', [CaptchaController::class, 'verify'])
         ->name('captcha.verify');
-
 });
 
 Route::get('/test-gd', function () {
@@ -290,7 +298,7 @@ Route::post(
     '/profiles/{profile}/story-comments',
     [MemoryController::class, 'storeStoryComment']
 )->middleware('throttle:5,1')
-  ->name('story-comments.store');
+    ->name('story-comments.store');
 
 
 Route::middleware('auth')->group(function () {
@@ -299,5 +307,4 @@ Route::middleware('auth')->group(function () {
         '/profiles/{profile}/gallery/upload',
         [HomeController::class, 'mediaStore']
     )->name('gallery.media.store');
-
 });

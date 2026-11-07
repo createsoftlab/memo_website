@@ -179,14 +179,14 @@
                                         data-country="{{ $memory->profile->country }}">
                                         <div class="card h-100 border-0 shadow-sm memorial-grid-card">
                                             <div class="position-relative overflow-hidden rounded-top">
-                                                @if ($memory->profile->privacy === 'private')
-                                                <img src="{{ asset($memory->profile?->images->first()?->path ?? 'images/profile_photo.png') }}"
-                                                    class="card-img-top memorial-grid-img" alt="Memorial Profile"
-                                                    style="width: 100%; height: 220px; object-fit: contain; object-position: center; background-color: #f5f5f5;">
+                                                @if ($memory->profile->privacy === 'public')
+                                                    <img src="{{ asset($memory->profile?->images->first()?->path ?? 'images/profile_photo.png') }}"
+                                                        class="card-img-top memorial-grid-img" alt="Memorial Profile"
+                                                        style="width: 100%; height: 220px; object-fit: contain; object-position: center; background-color: #f5f5f5;">
                                                 @else
-                                                <img src="{{ asset($memory->profile?->images->first()?->path ?? 'images/profile_photo.png') }}"
-                                                    class="card-img-top memorial-grid-img" alt="Memorial Profile"
-                                                    style="width: 100%; height: 220px; object-fit: contain; object-position: center; background-color: #f5f5f5;">
+                                                    <img src="{{ asset('images/profile_photo.png') }}"
+                                                        class="card-img-top memorial-grid-img" alt="Memorial Profile"
+                                                        style="width: 100%; height: 220px; object-fit: contain; object-position: center; background-color: #f5f5f5;">
                                                 @endif
                                                 <span
                                                     class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2">{{ $memory->profile?->passed_away_reason }}
@@ -213,10 +213,11 @@
                                                 class="small text-warning text-decoration-none text-truncate mb-2">
                                                 <i class="bi bi-link-45deg"></i> ivan-e-ramirez.forevermissed.com
                                             </a> --}}
-                                                <p class="small text-secondary mb-3 text-truncate-3">
-                                                    {{ Str::limit($memory?->about, 100) }}
-                                                </p>
-
+                                                @if ($memory->profile->privacy === 'public')
+                                                    <p class="small text-secondary mb-3 text-truncate-3">
+                                                        {{ Str::limit($memory?->about, 100) }}
+                                                    </p>
+                                                @endif
 
                                                 @if ($memory->profile->privacy === 'private')
                                                     <button type="button"

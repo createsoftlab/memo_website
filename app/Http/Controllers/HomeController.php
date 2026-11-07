@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\Package;
 use Illuminate\View\View;
@@ -35,71 +36,73 @@ class HomeController extends Controller
      */
     public function allMemories(): View
     {
-        $memories = Memory::with(['profile','profile.images' => function ($query) {$query->where('type', 'profile');}])
-        ->where('approval', 1)->get();
+        $memories = Memory::with(['profile', 'profile.images' => function ($query) {
+            $query->where('type', 'profile');
+        }])
+            ->where('approval', 1)->get();
         $totalMemories = Memory::count();
-        
-        return view('home.all_memories',compact('memories','totalMemories'));
+
+        return view('home.all_memories', compact('memories', 'totalMemories'));
     }
 
     public function verifyMemorialPassword(Request $request)
-{
-    $validated = $request->validate([
-        'slug' => 'required|string',
-        'password' => 'required|string',
-    ]);
+    {
+        $validated = $request->validate([
+            'slug' => 'required|string',
+            'password' => 'required|string',
+        ]);
 
-    $profile = Profile::where('slug', $validated['slug'])
-        ->first();
+        $profile = Profile::where('slug', $validated['slug'])
+            ->first();
 
-    if (!$profile) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Memorial not found.'
-        ], 404);
-    }
+        if (!$profile) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Memorial not found.'
+            ], 404);
+        }
 
-    // Public memorial
-    if ($profile->privacy === 'public') {
+        // Public memorial
+        if ($profile->privacy === 'public') {
+            return response()->json([
+                'success' => true,
+                'redirect' => url('/memory_index/' . $profile->slug)
+            ]);
+        }
+
+        // Check password directly from database
+        // Temporary plaintext comparison
+        if (
+            $profile->privacy === 'private' &&
+            !hash_equals(
+                (string) $profile->access_password,
+                (string) $validated['password']
+            )
+        ) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Incorrect password. Please try again.'
+            ], 422);
+        }
+
+        if ($profile->privacy !== 'private') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Memorial access is unavailable.'
+            ], 403);
+        }
+
+        // Grant access to this memorial
+        $request->session()->put(
+            'private_memorial_access.' . $profile->id,
+            true
+        );
+
         return response()->json([
             'success' => true,
             'redirect' => url('/memory_index/' . $profile->slug)
         ]);
     }
-
-    // Check password directly from database
-    // Temporary plaintext comparison
-    if (
-        $profile->privacy === 'private' &&
-        !hash_equals(
-            (string) $profile->access_password,
-            (string) $validated['password']
-        )
-    ) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Incorrect password. Please try again.'
-        ], 422);
-    }
-
-    if ($profile->privacy !== 'private') {
-        return response()->json([
-            'success' => false,
-            'message' => 'Memorial access is unavailable.'
-        ], 403);
-    }
-
-    // Grant access to this memorial
-    $request->session()->put(
-        'private_memorial_access.' . $profile->id,
-        true
-    );
-
-    return response()->json([
-        'success' => true,
-        'redirect' => url('/memory_index/' . $profile->slug)
-    ]);
-}
 
     /**
      * Display memories index page.
@@ -108,9 +111,9 @@ class HomeController extends Controller
     {
         $profile = Profile::where('slug', $slug)->firstOrFail();
 
-        $memory = Memory::with('profile')->firstOrFail();
+        $memory = Memory::with('profile')->where('id', $profile->memory_id)->firstOrFail();
 
-        return view('home.memories_index',compact('memory','profile'));
+        return view('home.memories_index', compact('memory', 'profile'));
     }
 
     /**
@@ -157,7 +160,7 @@ class HomeController extends Controller
         $profile = Profile::where('slug', $slug)->firstOrFail();
 
         $memory = Memory::with('profile')->where('id', $profile->memory_id)->firstOrFail();
-        return view('home.memories_donation',compact('profile','memory'));
+        return view('home.memories_donation', compact('profile', 'memory'));
     }
 
     /**
@@ -168,7 +171,7 @@ class HomeController extends Controller
         $profile = Profile::where('slug', $slug)->firstOrFail();
 
         $memory = Memory::with('profile')->where('id', $profile->memory_id)->firstOrFail();
-        return view('home.memories_event',compact('profile','memory'));
+        return view('home.memories_event', compact('profile', 'memory'));
     }
 
     /**
@@ -176,7 +179,7 @@ class HomeController extends Controller
      */
     public function memoriesGallery($slug): View
     {
-        $profile = Profile::with(['photos', 'videos','audios'])->where('slug', $slug)->firstOrFail();
+        $profile = Profile::with(['photos', 'videos', 'audios'])->where('slug', $slug)->firstOrFail();
 
         $memory = Memory::with('profile')->where('id', $profile->memory_id)->firstOrFail();
         $photos = $profile->photos;
@@ -198,7 +201,7 @@ class HomeController extends Controller
         $memory = Memory::with('profile')->where('id', $profile->memory_id)->firstOrFail();
         $stories = $profile->stories;
 
-        return view('home.memories_life',compact('memory','stories','profile'));
+        return view('home.memories_life', compact('memory', 'stories', 'profile'));
     }
 
     /**
@@ -211,7 +214,7 @@ class HomeController extends Controller
         $memory = Memory::with('profile')->where('id', $profile->memory_id)->firstOrFail();
 
 
-        return view('home.memories_stories',compact('memory','profile'));
+        return view('home.memories_stories', compact('memory', 'profile'));
     }
 
     /**
@@ -224,7 +227,7 @@ class HomeController extends Controller
         $memory = Memory::with('profile')->where('id', $profile->memory_id)->firstOrFail();
         $timelines = $profile->timelines;
 
-        return view('home.memories_timeline',compact('memory','timelines','profile'));
+        return view('home.memories_timeline', compact('memory', 'timelines', 'profile'));
     }
 
     /**
@@ -235,142 +238,140 @@ class HomeController extends Controller
         return view('home.pricing');
     }
 
-//media store
- public function mediaStore(Request $request, Profile $profile)
-{
-    // ==========================================
-    // 1. CHECK PROFILE OWNERSHIP
-    // ==========================================
-    abort_unless(
-        (int) $profile->user_id === (int) Auth::id(),
-        403
-    );
+    //media store
+    public function mediaStore(Request $request, Profile $profile)
+    {
+        // ==========================================
+        // 1. CHECK PROFILE OWNERSHIP
+        // ==========================================
+        abort_unless(
+            (int) $profile->user_id === (int) Auth::id(),
+            403
+        );
 
-    // ==========================================
-    // 2. VALIDATE MEDIA TYPE
-    // ==========================================
-    $request->validate([
-        'type' => [
-            'required',
-            Rule::in(['image', 'video', 'audio']),
-        ],
-        'files' => 'required|array|min:1|max:20',
-    ]);
+        // ==========================================
+        // 2. VALIDATE MEDIA TYPE
+        // ==========================================
+        $request->validate([
+            'type' => [
+                'required',
+                Rule::in(['image', 'video', 'audio']),
+            ],
+            'files' => 'required|array|min:1|max:20',
+        ]);
 
-    $type = $request->input('type');
+        $type = $request->input('type');
 
-    // ==========================================
-    // 3. MEDIA CONFIGURATION
-    // ==========================================
-    $config = [
-        'image' => [
-            'folder' => 'images',
-            'mimes' => 'jpg,jpeg,png,webp,gif',
-            'max' => 10240, // 10 MB
-        ],
-        'video' => [
-            'folder' => 'videos',
-            'mimes' => 'mp4,mov,webm',
-            'max' => 102400, // 100 MB
-        ],
-        'audio' => [
-            'folder' => 'audios',
-            'mimes' => 'mp3,wav,ogg,m4a',
-            'max' => 20480, // 20 MB
-        ],
-    ];
+        // ==========================================
+        // 3. MEDIA CONFIGURATION
+        // ==========================================
+        $config = [
+            'image' => [
+                'folder' => 'images',
+                'mimes' => 'jpg,jpeg,png,webp,gif',
+                'max' => 10240, // 10 MB
+            ],
+            'video' => [
+                'folder' => 'videos',
+                'mimes' => 'mp4,mov,webm',
+                'max' => 102400, // 100 MB
+            ],
+            'audio' => [
+                'folder' => 'audios',
+                'mimes' => 'mp3,wav,ogg,m4a',
+                'max' => 20480, // 20 MB
+            ],
+        ];
 
-    $selected = $config[$type];
+        $selected = $config[$type];
 
-    // ==========================================
-    // 4. VALIDATE UPLOADED FILES
-    // ==========================================
-    $request->validate([
-        'files.*' => [
-            'required',
-            'file',
-            'mimes:' . $selected['mimes'],
-            'max:' . $selected['max'],
-        ],
-    ]);
+        // ==========================================
+        // 4. VALIDATE UPLOADED FILES
+        // ==========================================
+        $request->validate([
+            'files.*' => [
+                'required',
+                'file',
+                'mimes:' . $selected['mimes'],
+                'max:' . $selected['max'],
+            ],
+        ]);
 
-    // ==========================================
-    // 5. CREATE UPLOAD DIRECTORY
-    // ==========================================
-    $folder = 'uploads/memorial/gallery/'
-        . $selected['folder'];
+        // ==========================================
+        // 5. CREATE UPLOAD DIRECTORY
+        // ==========================================
+        $folder = 'uploads/memorial/gallery/'
+            . $selected['folder'];
 
-    $destination = public_path($folder);
+        $destination = public_path($folder);
 
-    if (!File::isDirectory($destination)) {
-        File::makeDirectory($destination, 0755, true);
-    }
+        if (!File::isDirectory($destination)) {
+            File::makeDirectory($destination, 0755, true);
+        }
 
-    $savedMedia = [];
+        $savedMedia = [];
 
-    // ==========================================
-    // 6. UPLOAD AND SAVE MEDIA
-    // ==========================================
-    foreach ($request->file('files') as $file) {
+        // ==========================================
+        // 6. UPLOAD AND SAVE MEDIA
+        // ==========================================
+        foreach ($request->file('files') as $file) {
 
-        $filename = Str::uuid() . '.' . $file->extension();
+            $filename = Str::uuid() . '.' . $file->extension();
 
-        $originalName = $file->getClientOriginalName();
-        $mimeType = $file->getMimeType();
-        $fileSize = $file->getSize();
+            $originalName = $file->getClientOriginalName();
+            $mimeType = $file->getMimeType();
+            $fileSize = $file->getSize();
 
-        // Move file to public directory
-        $file->move($destination, $filename);
+            // Move file to public directory
+            $file->move($destination, $filename);
 
-        $path = $folder . '/' . $filename;
+            $path = $folder . '/' . $filename;
 
-        try {
+            try {
+
+                // ==========================================
+                // 7. CREATE MEDIA RECORD
+                // ==========================================
+                $media = Media::create([
+                    'profile_id' => $profile->id,
+                    'type' => $type,
+                    'file_path' => $path,
+                    'file_name' => $originalName,
+                    'mime_type' => $mimeType,
+                    'file_size' => $fileSize,
+                    'status' => 0,
+                ]);
+            } catch (\Throwable $e) {
+
+                // Remove file if database insert fails
+                File::delete(public_path($path));
+
+                throw $e;
+            }
 
             // ==========================================
-            // 7. CREATE MEDIA RECORD
+            // 8. PREPARE AJAX RESPONSE
             // ==========================================
-            $media = Media::create([
-                'profile_id' => $profile->id,
-                'type' => $type,
-                'file_path' => $path,
-                'file_name' => $originalName,
-                'mime_type' => $mimeType,
-                'file_size' => $fileSize,
-                'status' => 0,
-            ]);
-
-        } catch (\Throwable $e) {
-
-            // Remove file if database insert fails
-            File::delete(public_path($path));
-
-            throw $e;
+            $savedMedia[] = [
+                'id' => $media->id,
+                'profile_id' => $media->profile_id,
+                'type' => $media->type,
+                'file_path' => $media->file_path,
+                'file_name' => $media->file_name,
+                'mime_type' => $media->mime_type,
+                'file_size' => $media->file_size,
+                'url' => asset($media->file_path),
+                'status' => $media->status,
+            ];
         }
 
         // ==========================================
-        // 8. PREPARE AJAX RESPONSE
+        // 9. RETURN AJAX RESPONSE
         // ==========================================
-        $savedMedia[] = [
-            'id' => $media->id,
-            'profile_id' => $media->profile_id,
-            'type' => $media->type,
-            'file_path' => $media->file_path,
-            'file_name' => $media->file_name,
-            'mime_type' => $media->mime_type,
-            'file_size' => $media->file_size,
-            'url' => asset($media->file_path),
-            'status' => $media->status,
-        ];
+        return response()->json([
+            'success' => true,
+            'message' => ucfirst($type) . ' files uploaded successfully.',
+            'media' => $savedMedia,
+        ]);
     }
-
-    // ==========================================
-    // 9. RETURN AJAX RESPONSE
-    // ==========================================
-    return response()->json([
-        'success' => true,
-        'message' => ucfirst($type) . ' files uploaded successfully.',
-        'media' => $savedMedia,
-    ]);
-}
-
 }
