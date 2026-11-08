@@ -15,7 +15,6 @@ use DateTimeZone;
 
 class BillingController extends Controller
 {
-    // 1. Upgrade / Renew පිටුව පෙන්වීම
     public function index()
     {
         $user = Auth::user();
@@ -25,7 +24,6 @@ class BillingController extends Controller
         return view('memory_user.billing', compact('user', 'currentPackage', 'packages'));
     }
 
-    // 2. Stripe Checkout පිටුවට යැවීම
     public function checkout(Request $request)
     {
         $request->validate([
@@ -84,7 +82,6 @@ class BillingController extends Controller
         return redirect()->away($checkout_session->url);
     }
 
-    // 3. Payment එක සාර්ථක වුනාට පස්සේ Database එක Update කිරීම (PDF එකේ උපදෙස් අනුව)
     public function success(Request $request)
     {
         if (!$request->has('session_id')) {
@@ -109,18 +106,9 @@ class BillingController extends Controller
             $metadata = $session->metadata;
             $package = Package::find($metadata->package_id);
 
-            // -------------------------------------------------------------------------
-            // Package expire.pdf හි උපදෙස් අනුව Expiry Date එක සෑදීම
-            // -------------------------------------------------------------------------
-
-            // 1. Stripe එකෙන් ලැබෙන ගෝලීය නියම වේලාව (UTC) ලබා ගැනීම[cite: 8]
             $stripeTime = $session->created;
             $purchaseDate = new DateTime('@' . $stripeTime);
-
-            // 2. පරිශීලකයාගේ රටේ Timezone එක ලබා ගැනීම[cite: 8] (නැතිනම් ලංකාවේ වේලාව භාවිතා වේ)
             $userTimezone = $user->timezone ?? 'Asia/Colombo';
-
-            // 3. Stripe වේලාව පරිශීලකයා ඉන්න රටේ නියම වේලාවට හැරවීම[cite: 8]
             $purchaseDate->setTimezone(new DateTimeZone($userTimezone));
 
             $formattedExpiryDate = null;
@@ -129,32 +117,26 @@ class BillingController extends Controller
                 $durationValue = (int) ($package->duration_value ?: 1);
                 $durationUnit = strtolower($package->duration_unit ?? 'months');
 
-                // 4. පරිශීලකයාගේ රටේ වේලාවෙන්ම Expiry Date එක සෑදීම[cite: 8]
-                $expiryDate = clone $purchaseDate; //[cite: 9]
+                $expiryDate = clone $purchaseDate;
 
-                // Renew එකක් නම් සහ දැනටමත් expiry date එකක් තිබේ නම්
                 if ($metadata->action === 'renew' && $user->package_expires_at) {
                     $currentExpiry = new DateTime($user->package_expires_at, new DateTimeZone($userTimezone));
                     $now = clone $purchaseDate;
-
-                    // Expiry එක අනාගතයේ එකක් නම් එතැන් සිට කාලය දික් වේ
                     if ($currentExpiry > $now) {
                         $expiryDate = clone $currentExpiry;
                     }
                 }
 
-                // කාල සීමාව එකතු කිරීම (+30 days ආදී වශයෙන්)[cite: 9]
                 if ($durationUnit === 'years' || $package->billing_type === 'yearly') {
                     $expiryDate->modify("+$durationValue years");
                 } elseif ($durationUnit === 'days') {
                     $expiryDate->modify("+$durationValue days");
                 } else {
-                    $expiryDate->modify("+30 days"); // මාසයක් සඳහා[cite: 9]
+                    $expiryDate->modify("+30 days");
                 }
 
-                $formattedExpiryDate = $expiryDate->format('Y-m-d H:i:s'); // Database එකට සේව් කිරීම[cite: 9]
+                $formattedExpiryDate = $expiryDate->format('Y-m-d H:i:s');
             }
-            // -------------------------------------------------------------------------
 
             DB::beginTransaction();
 

@@ -3,7 +3,7 @@
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AdminController;
-
+use App\Http\Controllers\BillingController;
 use App\Http\Controllers\CaptchaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MemoryController;
@@ -11,7 +11,6 @@ use App\Http\Controllers\MemoryUserController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BillingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -101,6 +100,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     // Memories Management
     Route::middleware(['module.permission:memories,view'])->group(function () {
         Route::get('/all_memories', [AdminController::class, 'allMemories'])->name('all_memories');
+        Route::post('/all_memories/approveOrRejectMemories/{id}', [AdminController::class, 'approveOrRejectMemories'])->name('approveOrRejectMemories');
+
         Route::get('/create_memory', [AdminController::class, 'createMemory'])->name('create_memory')->middleware(['prevent_admin_creation', 'active_package:memory']);
         Route::get('/edit_memory', [AdminController::class, 'editMemory'])->name('edit_memory')->middleware('module.permission:memories,edit');
     });
@@ -173,7 +174,7 @@ Route::get('/memories_event/{slug}', [HomeController::class, 'memoriesEvent'])->
 
 Route::get('/donation_form', [HomeController::class, 'donationForm'])->name('home.donation_form');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', \App\Http\Middleware\CheckPackageExpiry::class])->group(function () {
     Route::get('/create_memory', [HomeController::class, 'createMemory'])->name('home.create_memory');
     Route::post('/store_memory', [MemoryController::class, 'store'])->name('home.create_memory.store');
     Route::post('/create_memory/purchase', [MemoryController::class, 'completeMemoryPurchase'])->name('home.create_memory.purchase');
@@ -191,7 +192,7 @@ Route::get('/packages', [HomeController::class, 'pricing'])->name('packages.inde
 | Memory User Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', \App\Http\Middleware\CheckPackageExpiry::class])->group(function () {
     Route::get('memory_user/dashboard', [MemoryUserController::class, 'dashboard'])->name('memoryUser.dashboard');
     Route::get('memory_user/my_memories', [MemoryController::class, 'myMemories'])->name('my_memories');
     Route::post('memory_user/my_memories/update', [MemoryController::class, 'updateMemory'])->name('update_my_memory');
@@ -209,16 +210,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/events/create', [EventController::class, 'create'])->name('events.create')->middleware(['prevent_admin_creation', 'active_package:event']);
     Route::post('/events/store', [EventController::class, 'store'])->name('events.store')->middleware(['prevent_admin_creation', 'active_package:event']);
     Route::get('/memories/create', [AdminController::class, 'createMemory'])->name('memories.create')->middleware(['prevent_admin_creation', 'active_package:memory']);
-
-    Route::get('/billing/upgrade', [BillingController::class, 'index'])->name('billing.index');
-
-    // Stripe වෙත යොමු කරන Route එක
-    Route::post('/billing/checkout', [BillingController::class, 'checkout'])->name('billing.checkout');
-
-    // Payment එක සාර්ථක වූ පසු එන Route එක
-    Route::get('/billing/success', [BillingController::class, 'success'])->name('billing.success');
 });
 
+Route::middleware('auth')->group(function () {
+
+    Route::get('/billing/upgrade', [BillingController::class, 'index'])->name('billing.index');
+    Route::post('/billing/checkout', [BillingController::class, 'checkout'])->name('billing.checkout');
+    Route::get('/billing/success', [BillingController::class, 'success'])->name('billing.success');
+});
 
 
 Route::middleware('auth')->group(function () {

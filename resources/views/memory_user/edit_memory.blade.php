@@ -433,8 +433,7 @@ body.modal-open {
                                             <label class="form-label small fw-bold">Living Address *</label>
                                             <input type="text" name="living_address"
                                                 class="form-control @error('living_address') is-invalid @enderror"
-                                                value="{{ old('living_address', $memory->profile?->living_address) }}"
-                                                required>
+                                                value="{{ old('living_address', $memory->profile?->living_address) }}">
                                             @error('living_address')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror

@@ -8,6 +8,7 @@
 
         @php
             $currentUser = Auth::user() ?? ($user ?? null);
+            $profileImage = \App\Models\Image::where('user_id', $currentUser->id)->first();
             $hasActivePlan = $currentUser?->hasActivePackage() ?? false;
             $canCreateMem = $currentUser?->canCreateMemory() ?? false;
             $canCreateEvt = $currentUser?->canCreateEvent() ?? false;
@@ -33,7 +34,7 @@
         <!-- Sidebar Profile -->
         <div class="sidebar-profile p-3">
             <div class="d-flex align-items-center gap-3">
-                <img src="{{ $avatarUrl }}"
+                <img src="{{ $currentUser ? asset($profileImage?->path) : asset('images/profile_photo.png') }}"
                     class="rounded-circle object-fit-cover border border-warning border-opacity-25 flex-shrink-0"
                     width="45" height="45" alt="Profile">
 
@@ -69,6 +70,7 @@
                         <span class="text-light fw-medium">{{ $memoriesLeft > 999 ? '∞' : $memoriesLeft }} Mem |
                             {{ $eventsLeft > 999 ? '∞' : $eventsLeft }} Evt</span>
                     </div>
+
                     <!-- Renew or Upgrade Link -->
                     <div class="text-center mt-2 border-top border-warning border-opacity-25 pt-2">
                         <a href="{{ route('billing.index') }}" class="text-warning text-decoration-none fw-bold"
@@ -217,7 +219,7 @@
                 </div>
             </li>
 
-            <!-- Quick Action Buttons -->
+            {{-- <!-- Quick Action Buttons -->
             <!-- <li class="nav-item px-3 my-3">
                 <div class="p-2 rounded-3 border border-warning border-opacity-25 bg-black bg-opacity-25 text-center">
                     <small class="text-warning text-uppercase fw-bold d-block mb-2" style="font-size: 0.68rem; letter-spacing: 0.5px;">
@@ -251,7 +253,7 @@
 @endif
                     </div>
                 </div>
-            </li> -->
+            </li> --> --}}
 
             <!-- Settings -->
             @php

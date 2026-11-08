@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Memory;
+use App\Models\Profile;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class AdminController extends Controller
@@ -13,7 +17,6 @@ class AdminController extends Controller
     {
         return view('admin.dashbord_index');
     }
-
 
     /**
      * Display the admin dashboard index view.
@@ -44,7 +47,38 @@ class AdminController extends Controller
      */
     public function allMemories(): View
     {
-        return view('admin.all_memories');
+        $memories = Memory::with([
+            'profile',
+
+            'profile.images' => function ($query) {
+                $query->where('type', 'profile');
+            },
+
+            'profile.photos',
+
+        ])
+            ->where('status', 'published')
+            ->get();
+
+        return view('admin.all_memories', compact('memories'));
+    }
+
+    public function approveOrRejectMemories(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'approval' => 'required|in:1,2',
+        ]);
+
+        $memory = Memory::findOrFail($id);
+
+        $memory->approval = (int) $validated['approval'];
+        $memory->save();
+
+        if ($memory->approval == 1) {
+            return back()->with('success', 'Memory Approved successfully.');
+        }
+
+        return back()->with('success', 'Memory Rejected successfully.');
     }
 
     /**
@@ -68,7 +102,7 @@ class AdminController extends Controller
      */
     public function createMemory(): View
     {
-        if (\Illuminate\Support\Facades\Auth::check() && in_array(\Illuminate\Support\Facades\Auth::user()->role, ['super_admin', 'admin'])) {
+        if (Auth::check() && in_array(Auth::user()->role, ['super_admin', 'admin'])) {
             abort(403, 'Administrators cannot create memories. You can only view, approve, or reject user submissions.');
         }
 

@@ -97,22 +97,32 @@
                                             <input type="text" name="name" value="{{ old('name') }}"
                                                 class="form-control" placeholder="e.g. Gold Memorial Plan" required>
                                         </div>
+
                                         <div class="col-md-2">
                                             <label class="form-label fw-semibold small">Currency</label>
-                                            <select name="currency" class="form-select" required>
-                                                <option value="usd" {{ old('currency', 'usd') == 'usd' ? 'selected' : '' }}>USD ($)</option>
-                                                <option value="lkr" {{ old('currency') == 'lkr' ? 'selected' : '' }}>LKR (Rs)</option>
-                                                <option value="eur" {{ old('currency') == 'eur' ? 'selected' : '' }}>EUR (€)</option>
-                                                <option value="gbp" {{ old('currency') == 'gbp' ? 'selected' : '' }}>GBP (£)</option>
-                                                <option value="aud" {{ old('currency') == 'aud' ? 'selected' : '' }}>AUD (A$)</option>
+                                            <!-- 'disabled' ඉවත් කර ඇත, එවිට අගය save වේ -->
+                                            <select name="currency" id="currencySelect" class="form-select" required>
+                                                <option value="usd"
+                                                    {{ old('currency', 'usd') == 'usd' ? 'selected' : '' }}>USD ($)
+                                                </option>
+                                                <option value="lkr" {{ old('currency') == 'lkr' ? 'selected' : '' }}>
+                                                    LKR (Rs)</option>
+                                                <option value="eur" {{ old('currency') == 'eur' ? 'selected' : '' }}>
+                                                    EUR (€)</option>
+                                                <option value="gbp" {{ old('currency') == 'gbp' ? 'selected' : '' }}>
+                                                    GBP (£)</option>
+                                                <option value="aud"
+                                                    {{ old('currency') == 'aud' ? 'selected' : '' }}>AUD (A$)</option>
                                             </select>
                                         </div>
+
                                         <div class="col-md-2">
                                             <label class="form-label fw-semibold small">Price</label>
                                             <input type="number" step="0.01" name="price"
                                                 value="{{ old('price') }}" class="form-control" placeholder="79.95"
                                                 required>
                                         </div>
+
                                         <div class="col-md-3">
                                             <label class="form-label fw-semibold small">Billing Type</label>
                                             <select name="billing_type" class="form-select">
@@ -131,15 +141,28 @@
 
                                     <div class="row g-3 mb-3">
                                         <div class="col-md-6">
-                                            <label class="form-label fw-semibold small">Available Country (Code)</label>
-                                            <select name="country" class="form-select">
-                                                <option value="all">All Countries (Global)</option>
-                                                <option value="lk">Sri Lanka (LK)</option>
-                                                <option value="us">United States (US)</option>
-                                                <option value="uk">United Kingdom (UK)</option>
-                                                <option value="au">Australia (AU)</option>
+                                            <label class="form-label fw-semibold small">Available Country
+                                                (Code)</label>
+                                            <!-- id="countrySelect" එකතු කර ඇත -->
+                                            <select name="country" id="countrySelect" class="form-select">
+                                                <option value="all"
+                                                    {{ old('country') == 'all' ? 'selected' : '' }}>All Countries
+                                                    (Global)</option>
+                                                <option value="sri lanka"
+                                                    {{ old('country') == 'sri lanka' ? 'selected' : '' }}>
+                                                    Sri Lanka (LK)</option>
+                                                <option value="united states"
+                                                    {{ old('country') == 'united states' ? 'selected' : '' }}>
+                                                    United States (US)</option>
+                                                <option value="united kingdem"
+                                                    {{ old('country') == 'united kingdem' ? 'selected' : '' }}>
+                                                    United Kingdom (UK)</option>
+                                                <option value="australia"
+                                                    {{ old('country') == 'australia' ? 'selected' : '' }}>
+                                                    Australia (AU)</option>
                                             </select>
                                         </div>
+
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold small">Business Profile Type</label>
                                             <select name="business_profile" class="form-select">
@@ -185,15 +208,13 @@
                                             <label class="form-label small fw-bold">Events Limit</label>
                                             <input type="number" name="events_limit"
                                                 value="{{ old('events_limit', 1) }}"
-                                                class="form-control form-control-sm"
-                                                placeholder="e.g. 1">
+                                                class="form-control form-control-sm" placeholder="e.g. 1">
                                         </div>
                                         <div class="col-md-3">
                                             <label class="form-label small fw-bold">Max Photo Uploads</label>
                                             <input type="number" name="max_photos"
                                                 value="{{ old('max_photos', 20) }}"
-                                                class="form-control form-control-sm"
-                                                placeholder="e.g. 20">
+                                                class="form-control form-control-sm" placeholder="e.g. 20">
                                         </div>
                                         <div class="col-md-3">
                                             <label class="form-label small fw-bold">Max Video Uploads</label>
@@ -211,8 +232,7 @@
                                             <label class="form-label small fw-bold">Max Comments Limit</label>
                                             <input type="number" name="max_comments"
                                                 value="{{ old('max_comments', 100) }}"
-                                                class="form-control form-control-sm"
-                                                placeholder="e.g. 100">
+                                                class="form-control form-control-sm" placeholder="e.g. 100">
                                         </div>
                                         <div class="col-md-4 mt-3">
                                             <label class="form-label small fw-bold">Candles Allocation</label>
@@ -236,48 +256,47 @@
                                     <div class="row g-3 mb-4 p-3 bg-light rounded-3 border">
                                         <div class="col-md-6">
                                             <div class="form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" name="has_ai_features" id="has_ai_features" value="1"
+                                                <input class="form-check-input" type="checkbox"
+                                                    name="has_ai_features" id="has_ai_features" value="1"
                                                     {{ old('has_ai_features') ? 'checked' : '' }}>
-                                                <label class="form-check-label fw-semibold small" for="has_ai_features">
-                                                    Enable AI Features (Storyteller, Tribute Writer)
-                                                </label>
+                                                <label class="form-check-label fw-semibold small"
+                                                    for="has_ai_features">Enable AI Features (Storyteller, Tribute
+                                                    Writer)</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" name="has_donations" id="has_donations" value="1"
+                                                <input class="form-check-input" type="checkbox" name="has_donations"
+                                                    id="has_donations" value="1"
                                                     {{ old('has_donations') ? 'checked' : '' }}>
-                                                <label class="form-check-label fw-semibold small" for="has_donations">
-                                                    Enable Memorial Donations & Fundraiser Support
-                                                </label>
+                                                <label class="form-check-label fw-semibold small"
+                                                    for="has_donations">Enable Memorial Donations & Fundraiser
+                                                    Support</label>
                                             </div>
                                         </div>
                                     </div>
 
                                     <!-- General Public / Guest Limits -->
-                                    <h5 class="form-section-title fs-6 mt-4"><i class="bi bi-people me-2"></i>
-                                        General Public / Guest Limits (-1 = Unlimited, 0 = Disabled)</h5>
+                                    <h5 class="form-section-title fs-6 mt-4"><i class="bi bi-people me-2"></i> General
+                                        Public / Guest Limits (-1 = Unlimited, 0 = Disabled)</h5>
                                     <div class="row g-3 mb-4 bg-light p-3 rounded-3 border">
                                         <div class="col-md-4">
                                             <label class="form-label small fw-bold">Guest Story Limit</label>
                                             <input type="number" name="guest_story_limit"
                                                 value="{{ old('guest_story_limit', 5) }}"
-                                                class="form-control form-control-sm"
-                                                placeholder="e.g. 5">
+                                                class="form-control form-control-sm" placeholder="e.g. 5">
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label small fw-bold">Guest Photo Limit</label>
                                             <input type="number" name="guest_photo_limit"
                                                 value="{{ old('guest_photo_limit', 10) }}"
-                                                class="form-control form-control-sm"
-                                                placeholder="e.g. 10">
+                                                class="form-control form-control-sm" placeholder="e.g. 10">
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label small fw-bold">Guest Video Limit</label>
                                             <input type="number" name="guest_video_limit"
                                                 value="{{ old('guest_video_limit', 1) }}"
-                                                class="form-control form-control-sm"
-                                                placeholder="e.g. 1">
+                                                class="form-control form-control-sm" placeholder="e.g. 1">
                                         </div>
                                     </div>
 
@@ -285,6 +304,35 @@
                                         class="btn btn-dark w-100 py-2 fw-bold text-uppercase">Publish Package</button>
                                 </form>
                             </div>
+
+                            <!-- ========================================== -->
+                            <!-- JAVASCRIPT FOR AUTO-SELECTING CURRENCY     -->
+                            <!-- ========================================== -->
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    const countrySelect = document.getElementById('countrySelect');
+                                    const currencySelect = document.getElementById('currencySelect');
+
+                                    // රටවල් සහ ඒවාට අදාළ මුදල් වර්ග Mapping කිරීම (ඔබගේ අලුත් option values වලට අනුව)
+                                    const currencyMap = {
+                                        'all': 'usd', // Global නම් USD
+                                        'sri lanka': 'lkr', // Sri Lanka
+                                        'united states': 'usd', // United States
+                                        'united kingdem': 'gbp', // United Kingdom
+                                        'australia': 'aud' // Australia
+                                    };
+
+                                    // රට වෙනස් කරන විට මෙය ක්‍රියාත්මක වේ
+                                    countrySelect.addEventListener('change', function() {
+                                        const selectedCountry = this.value;
+
+                                        // Map එකේ අදාළ රට තිබේ නම් Currency එක ස්වයංක්‍රීයව මාරු කිරීම
+                                        if (currencyMap[selectedCountry]) {
+                                            currencySelect.value = currencyMap[selectedCountry];
+                                        }
+                                    });
+                                });
+                            </script>
 
                             <!-- 2. SINGLE ITEMS FORM -->
                             <div class="tab-pane fade" id="itemContent" role="tabpanel">
@@ -323,11 +371,17 @@
                                         <div class="col-md-4">
                                             <label class="form-label fw-semibold small">Currency</label>
                                             <select name="currency" class="form-select" required>
-                                                <option value="usd" {{ old('currency', 'usd') == 'usd' ? 'selected' : '' }}>USD ($)</option>
-                                                <option value="lkr" {{ old('currency') == 'lkr' ? 'selected' : '' }}>LKR (Rs)</option>
-                                                <option value="eur" {{ old('currency') == 'eur' ? 'selected' : '' }}>EUR (€)</option>
-                                                <option value="gbp" {{ old('currency') == 'gbp' ? 'selected' : '' }}>GBP (£)</option>
-                                                <option value="aud" {{ old('currency') == 'aud' ? 'selected' : '' }}>AUD (A$)</option>
+                                                <option value="usd"
+                                                    {{ old('currency', 'usd') == 'usd' ? 'selected' : '' }}>USD ($)
+                                                </option>
+                                                <option value="lkr"
+                                                    {{ old('currency') == 'lkr' ? 'selected' : '' }}>LKR (Rs)</option>
+                                                <option value="eur"
+                                                    {{ old('currency') == 'eur' ? 'selected' : '' }}>EUR (€)</option>
+                                                <option value="gbp"
+                                                    {{ old('currency') == 'gbp' ? 'selected' : '' }}>GBP (£)</option>
+                                                <option value="aud"
+                                                    {{ old('currency') == 'aud' ? 'selected' : '' }}>AUD (A$)</option>
                                             </select>
                                         </div>
                                         <div class="col-md-4">

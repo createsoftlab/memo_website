@@ -21,9 +21,6 @@ use App\Models\Image;
 use App\Models\Music;
 use App\Models\Timeline;
 use App\Models\StoryComments;
-use Illuminate\Support\Facades\Http;
-use Stripe\Stripe;
-use Stripe\Charge;
 
 class MemoryController extends Controller
 {
@@ -46,244 +43,9 @@ class MemoryController extends Controller
     /**
      * Process Step 3 submission & complete memory purchase lifecycle.
      */
-    // public function completeMemoryPurchase(Request $request): RedirectResponse
-    // {
-    //     // 1. Validation for Step 1, 2, and 3
-    //     $rules = [
-    //         'first_name'   => 'nullable|string|max:150',
-    //         'middle_name'  => 'nullable|string|max:150',
-    //         'last_name'    => 'nullable|string|max:150',
-    //         'gender'       => 'nullable|string',
-    //         'country'      => 'nullable|string',
-    //         'city'         => 'nullable|string|max:150',
-    //         'relationship' => 'nullable|string',
-    //         'designation'  => 'nullable|string',
-    //         'privacy'      => 'nullable|string',
-    //         'status'       => 'nullable|string',
-    //         'package_id'   => 'required|exists:packages,id',
-    //     ];
-
-    //     // If not already existing memory, validate required Step 1 & 2 fields
-    //     if (!$request->filled('memory_id') && !session()->has('memory_id')) {
-    //         $rules['first_name'] = 'required|string|max:150';
-    //         $rules['last_name']  = 'required|string|max:150';
-    //         $rules['gender']     = 'required';
-    //         $rules['country']    = 'required';
-    //         $rules['privacy']    = 'required';
-    //         $rules['status']     = 'required';
-    //     }
-
-    //     $request->validate($rules);
-
-    //     // 2. Validate selected package is active
-    //     $package = Package::where('id', $request->package_id)
-    //         ->where('is_active', true)
-    //         ->firstOrFail();
-
-    //     $isPaid = (float) $package->price > 0;
-
-    //     // Default Variables
-    //     $amountPaid = 0.00;
-    //     $paymentMethod = 'free';
-    //     $transactionId = null;
-    //     $expiresAt = null;
-
-    //     // Calculate expires_at based on duration_value, duration_unit, and billing_type
-    //     if ($package->billing_type === 'lifetime' || strtolower($package->duration_unit ?? '') === 'unlimited') {
-    //         $expiresAt = null;
-    //     } else {
-    //         $durationValue = (int) ($package->duration_value ?: 1);
-    //         $durationUnit = strtolower($package->duration_unit ?? '');
-
-    //         if ($durationUnit === 'years') {
-    //             $expiresAt = now()->addYears($durationValue);
-    //         } elseif ($durationUnit === 'months') {
-    //             $expiresAt = now()->addMonths($durationValue);
-    //         } elseif ($durationUnit === 'days') {
-    //             $expiresAt = now()->addDays($durationValue);
-    //         } else {
-    //             $expiresAt = match ($package->billing_type) {
-    //                 'yearly' => now()->addYear(),
-    //                 'monthly' => now()->addMonth(),
-    //                 default => null,
-    //             };
-    //         }
-    //     }
-
-    //     // ====================================================================
-    //     // UPDATE: STRIPE PAYMENT PROCESSING BLOCK (Replaces raw card handling)
-    //     // ====================================================================
-    //     if ($isPaid) {
-    //         $request->validate([
-    //             'stripeToken' => 'required|string',
-    //         ], [
-    //             'stripeToken.required' => 'Payment validation failed. Please check your card details and try again.',
-    //         ]);
-
-    //         $amountPaid = (float) $package->price;
-    //         $packageCurrency = strtoupper($package->currency ?? 'USD');
-    //         $paymentMethod = 'stripe';
-
-    //         // Currency Conversion Logic
-    //         $chargeCurrency = 'usd'; // Defaulting to USD for Stripe charge
-    //         $chargeAmountInCents = 0;
-
-    //         if ($packageCurrency === 'LKR') {
-    //             try {
-    //                 // Fetch live exchange rate from free API
-    //                 $response = Http::timeout(5)->get('https://open.er-api.com/v6/latest/LKR');
-
-    //                 if ($response->successful()) {
-    //                     $rates = $response->json('rates');
-    //                     $usdRate = $rates['USD'];
-
-    //                     // Convert LKR to USD and into cents (Stripe format)
-    //                     $convertedUsd = $amountPaid * $usdRate;
-    //                     $chargeAmountInCents = intval(round($convertedUsd * 100));
-    //                 } else {
-    //                     return back()->withInput()->with('error', 'Currency conversion service is currently unavailable.');
-    //                 }
-    //             } catch (\Exception $e) {
-    //                 return back()->withInput()->with('error', 'Failed to fetch live exchange rates: ' . $e->getMessage());
-    //             }
-    //         } else {
-    //             // If it's already USD or other, just convert to cents
-    //             $chargeAmountInCents = intval(round($amountPaid * 100));
-    //             $chargeCurrency = strtolower($packageCurrency);
-    //         }
-
-    //         // Execute Stripe Charge
-    //         try {
-    //             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-
-    //             $charge = \Stripe\Charge::create([
-    //                 'amount' => $chargeAmountInCents,
-    //                 'currency' => $chargeCurrency,
-    //                 'description' => 'Memory Package: ' . $package->name . ' (Original: ' . $amountPaid . ' ' . $packageCurrency . ')',
-    //                 'source' => $request->stripeToken,
-    //             ]);
-
-    //             $transactionId = $charge->id; // Use real transaction ID from Stripe
-
-    //         } catch (\Exception $e) {
-    //             return back()->withInput()->with('error', 'Payment failed: ' . $e->getMessage());
-    //         }
-    //     }
-    //     // ====================================================================
-    //     // END OF PAYMENT PROCESSING BLOCK
-    //     // ====================================================================
-
-    //     // Calculate trial_ends_at
-    //     $trialEndsAt = ($package->trial_days && (int) $package->trial_days > 0)
-    //         ? now()->addDays((int) $package->trial_days)
-    //         : null;
-
-    //     // 3. Database Insertion & Association (Unchanged)
-    //     DB::beginTransaction();
-    //     try {
-    //         $user = Auth::user();
-
-    //         // Find existing or create new Memory & Profile
-    //         $memoryId = $request->memory_id ?? session('memory_id');
-    //         if ($memoryId) {
-    //             $memory = Memory::findOrFail($memoryId);
-    //         } else {
-    //             $memory = new Memory();
-    //             $memory->user_id = Auth::id();
-    //             $memory->status = $request->status ?? 'published';
-    //             $memory->save();
-
-    //             $profile = new Profile();
-    //             $profile->memory_id = $memory->id;
-    //             $profile->user_id = Auth::id();
-    //             $profile->memorial_status = $request->memorial_status ?? 'passed_away';
-    //             $profile->passed_away_reason = $request->passed_away_reason;
-    //             $profile->first_name = $request->first_name;
-    //             $profile->middle_name = $request->middle_name;
-    //             $profile->last_name = $request->last_name;
-    //             $profile->gender = $request->gender;
-    //             $profile->country = $request->country;
-    //             $profile->city = $request->city;
-    //             $profile->relationship = $request->relationship;
-    //             $profile->designation = $request->designation;
-
-    //             // Birth Date
-    //             $dob = $request->date_of_birth;
-    //             if (!$dob && $request->filled('birth_year') && $request->filled('birth_month') && $request->filled('birth_day')) {
-    //                 $dob = sprintf('%04d-%02d-%02d', $request->birth_year, $request->birth_month, $request->birth_day);
-    //             }
-    //             $profile->date_of_birth = $dob;
-    //             $profile->birth_location = $request->birth_location;
-
-    //             // Death Date
-    //             $dod = $request->date_of_death;
-    //             if (!$dod && $request->filled('passed_year') && $request->filled('passed_month') && $request->filled('passed_day')) {
-    //                 $dod = sprintf('%04d-%02d-%02d', $request->passed_year, $request->passed_month, $request->passed_day);
-    //             }
-    //             $profile->date_of_death = $dod;
-    //             $profile->death_location = $request->death_location;
-
-    //             // Privacy
-    //             $profile->privacy = $request->privacy ?? 'public';
-    //             $profile->access_username = $request->private_username;
-    //             $profile->access_password = $request->private_password;
-
-    //             // Slug
-    //             $rawSlug = $request->web_address
-    //                 ? Str::slug($request->web_address)
-    //                 : Str::slug(trim($request->first_name . ' ' . $request->last_name));
-    //             $slug = $rawSlug ?: 'memorial-' . $memory->id;
-    //             $originalSlug = $slug;
-    //             $count = 1;
-
-    //             while (Profile::where('slug', $slug)->exists()) {
-    //                 $slug = $originalSlug . '-' . $count;
-    //                 $count++;
-    //             }
-    //             $profile->slug = $slug;
-    //             $profile->save();
-    //         }
-
-    //         // Create record in package_purchases
-    //         $purchase = PackagePurchase::create([
-    //             'user_id'        => Auth::id(),
-    //             'package_id'     => $package->id,
-    //             'amount_paid'    => $amountPaid,
-    //             'currency'       => strtoupper($package->currency ?? 'USD'),
-    //             'payment_method' => $paymentMethod,
-    //             'transaction_id' => $transactionId,
-    //             'status'         => 'active',
-    //             'starts_at'      => now(),
-    //             'expires_at'     => $expiresAt,
-    //             'trial_ends_at'  => $trialEndsAt,
-    //         ]);
-
-    //         // Update user active package and role
-    //         if ($user) {
-    //             $user->package_id = $package->id;
-    //             $user->package_expires_at = $expiresAt;
-    //             if (in_array($user->role, ['user', 'general_user'], true)) {
-    //                 $user->role = 'memory_user';
-    //             }
-    //             $user->save();
-    //         }
-
-    //         DB::commit();
-
-    //         // Clear temporary multi-step session data if used
-    //         session()->forget(['memory_wizard_data', 'memory_id', 'memory_step']);
-
-    //         return redirect()->route('dashboard')
-    //             ->with('success', 'Memory created and plan activated successfully!');
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-    //         return back()->withInput()->with('error', 'Error completing purchase: ' . $e->getMessage());
-    //     }
-    // }
-
     public function completeMemoryPurchase(Request $request): \Illuminate\Http\RedirectResponse
     {
-        // 1. Validation for Step 1, 2, and 3 (Removed card validations as Stripe handles it)
+        // 1. Validation for Step 1, 2, and 3
         $rules = [
             'first_name'   => 'nullable|string|max:150',
             'middle_name'  => 'nullable|string|max:150',
@@ -311,64 +73,51 @@ class MemoryController extends Controller
         $request->validate($rules);
 
         // 2. Validate selected package is active
-        $package = \App\Models\Package::where('id', $request->package_id)
+        $package = Package::where('id', $request->package_id)
             ->where('is_active', true)
             ->firstOrFail();
 
         $isPaid = (float) $package->price > 0;
-
-        // Default Variables
-        $amountPaid = 0.00;
-        $paymentMethod = 'free';
-        $transactionId = null;
-        $expiresAt = null;
         $checkout_session = null;
 
-        // Calculate expires_at based on duration_value, duration_unit, and billing_type
-        if ($package->billing_type === 'lifetime' || strtolower($package->duration_unit ?? '') === 'unlimited') {
-            $expiresAt = null;
-        } else {
-            $durationValue = (int) ($package->duration_value ?: 1);
-            $durationUnit = strtolower($package->duration_unit ?? '');
-
-            if ($durationUnit === 'years') {
-                $expiresAt = now()->addYears($durationValue);
-            } elseif ($durationUnit === 'months') {
-                $expiresAt = now()->addMonths($durationValue);
-            } elseif ($durationUnit === 'days') {
-                $expiresAt = now()->addDays($durationValue);
-            } else {
-                $expiresAt = match ($package->billing_type) {
-                    'yearly' => now()->addYear(),
-                    'monthly' => now()->addMonth(),
-                    default => null,
-                };
-            }
-        }
-
-        // ====================================================================
-        // STRIPE CHECKOUT SESSION LOGIC
-        // ====================================================================
+        // If package price > 0, generate Stripe Checkout Session
         if ($isPaid) {
             $amountPaid = (float) $package->price;
-            $packageCurrency = strtoupper($package->currency ?? 'USD');
             $paymentMethod = 'stripe_checkout';
 
-            // Currency Conversion Logic
-            $chargeCurrency = 'usd'; // Defaulting to USD for Stripe checkout
+            // Calculate expires_at based on duration_value, duration_unit, and billing_type
+            if ($package->billing_type === 'lifetime' || $package->duration_unit === 'unlimited') {
+                $expiresAt = null;
+            } else {
+                $durationValue = (int) ($package->duration_value ?: 1);
+                $durationUnit = strtolower($package->duration_unit ?? '');
+
+                if ($durationUnit === 'years') {
+                    $expiresAt = now()->addYears($durationValue);
+                } elseif ($durationUnit === 'months') {
+                    $expiresAt = now()->addMonths($durationValue);
+                } elseif ($durationUnit === 'days') {
+                    $expiresAt = now()->addDays($durationValue);
+                } else {
+                    $expiresAt = match ($package->billing_type) {
+                        'yearly' => now()->addYear(),
+                        'monthly' => now()->addMonth(),
+                        default => null,
+                    };
+                }
+            }
+
+            $packageCurrency = strtoupper($package->currency ?? 'USD');
+            $chargeCurrency = 'usd';
             $chargeAmountInCents = 0;
 
+            // Convert LKR to USD for Stripe
             if ($packageCurrency === 'LKR') {
                 try {
                     $response = \Illuminate\Support\Facades\Http::timeout(5)->get('https://open.er-api.com/v6/latest/LKR');
-
                     if ($response->successful()) {
-                        $rates = $response->json('rates');
-                        $usdRate = $rates['USD'];
-
-                        // Convert LKR to USD and into cents (Stripe format)
-                        $convertedUsd = $amountPaid * $usdRate;
-                        $chargeAmountInCents = intval(round($convertedUsd * 100));
+                        $usdRate = $response->json('rates')['USD'];
+                        $chargeAmountInCents = intval(round(($amountPaid * $usdRate) * 100));
                     } else {
                         return back()->withInput()->with('error', 'Currency conversion service is currently unavailable.');
                     }
@@ -376,12 +125,10 @@ class MemoryController extends Controller
                     return back()->withInput()->with('error', 'Failed to fetch live exchange rates: ' . $e->getMessage());
                 }
             } else {
-                // If it's already USD or other, just convert to cents
                 $chargeAmountInCents = intval(round($amountPaid * 100));
                 $chargeCurrency = strtolower($packageCurrency);
             }
 
-            // Create Stripe Checkout Session
             try {
                 \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
@@ -399,9 +146,7 @@ class MemoryController extends Controller
                         'quantity' => 1,
                     ]],
                     'mode' => 'payment',
-                    // On success, redirect to dashboard
                     'success_url' => route('dashboard') . '?payment_status=success',
-                    // On cancel, redirect back to the current form page
                     'cancel_url' => url()->previous() . '?payment_status=cancelled',
                 ]);
 
@@ -409,32 +154,35 @@ class MemoryController extends Controller
             } catch (\Exception $e) {
                 return back()->withInput()->with('error', 'Stripe Checkout Error: ' . $e->getMessage());
             }
+        } else {
+            // Free plan
+            $amountPaid = 0.00;
+            $paymentMethod = 'free';
+            $transactionId = null;
+            $expiresAt = null;
         }
-        // ====================================================================
-        // END STRIPE CHECKOUT SESSION LOGIC
-        // ====================================================================
 
         // Calculate trial_ends_at
         $trialEndsAt = ($package->trial_days && (int) $package->trial_days > 0)
             ? now()->addDays((int) $package->trial_days)
             : null;
 
-        // 3. Database Insertion & Association (Unchanged)
-        \Illuminate\Support\Facades\DB::beginTransaction();
+        // 3. Database Insertion & Association
+        DB::beginTransaction();
         try {
             $user = Auth::user();
 
             // Find existing or create new Memory & Profile
             $memoryId = $request->memory_id ?? session('memory_id');
             if ($memoryId) {
-                $memory = \App\Models\Memory::findOrFail($memoryId);
+                $memory = Memory::findOrFail($memoryId);
             } else {
-                $memory = new \App\Models\Memory();
+                $memory = new Memory();
                 $memory->user_id = Auth::id();
                 $memory->status = $request->status ?? 'published';
                 $memory->save();
 
-                $profile = new \App\Models\Profile();
+                $profile = new Profile();
                 $profile->memory_id = $memory->id;
                 $profile->user_id = Auth::id();
                 $profile->memorial_status = $request->memorial_status ?? 'passed_away';
@@ -471,13 +219,13 @@ class MemoryController extends Controller
 
                 // Slug
                 $rawSlug = $request->web_address
-                    ? \Illuminate\Support\Str::slug($request->web_address)
-                    : \Illuminate\Support\Str::slug(trim($request->first_name . ' ' . $request->last_name));
+                    ? Str::slug($request->web_address)
+                    : Str::slug(trim($request->first_name . ' ' . $request->last_name));
                 $slug = $rawSlug ?: 'memorial-' . $memory->id;
                 $originalSlug = $slug;
                 $count = 1;
 
-                while (\App\Models\Profile::where('slug', $slug)->exists()) {
+                while (Profile::where('slug', $slug)->exists()) {
                     $slug = $originalSlug . '-' . $count;
                     $count++;
                 }
@@ -486,15 +234,14 @@ class MemoryController extends Controller
             }
 
             // Create record in package_purchases
-            // (Note: DB record is created before redirect. If user cancels checkout, record stays)
-            $purchase = \App\Models\PackagePurchase::create([
+            $purchase = PackagePurchase::create([
                 'user_id'        => Auth::id(),
                 'package_id'     => $package->id,
                 'amount_paid'    => $amountPaid,
                 'currency'       => strtoupper($package->currency ?? 'USD'),
                 'payment_method' => $paymentMethod,
-                'transaction_id' => $transactionId, // This is now the Stripe Checkout Session ID
-                'status'         => 'active', // TODO: Consider changing to 'pending' if you verify payments later
+                'transaction_id' => $transactionId,
+                'status'         => 'active',
                 'starts_at'      => now(),
                 'expires_at'     => $expiresAt,
                 'trial_ends_at'  => $trialEndsAt,
@@ -510,21 +257,20 @@ class MemoryController extends Controller
                 $user->save();
             }
 
-            \Illuminate\Support\Facades\DB::commit();
+            DB::commit();
 
             // Clear temporary multi-step session data if used
             session()->forget(['memory_wizard_data', 'memory_id', 'memory_step']);
 
-            // REDIRECT TO STRIPE CHECKOUT IF PAID PLAN
+            // Redirect to Stripe Checkout for paid plans
             if ($isPaid && $checkout_session) {
                 return redirect()->away($checkout_session->url);
             }
 
-            // IF FREE PLAN, REDIRECT TO DASHBOARD
             return redirect()->route('dashboard')
                 ->with('success', 'Memory created and plan activated successfully!');
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\DB::rollBack();
+            DB::rollBack();
             return back()->withInput()->with('error', 'Error completing purchase: ' . $e->getMessage());
         }
     }

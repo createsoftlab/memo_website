@@ -9,17 +9,17 @@ return new class extends Migration {
     {
         Schema::create('packages', function (Blueprint $table) {
             $table->id();
-            
+
             // Basic Package Information
             $table->string('name');
-            $table->string('country', 10)->default('all')->index(); // 'all', 'lk', 'us', etc.
+            $table->string('country', 50)->default('all')->index(); // 'all', 'lk', 'us', etc.
             $table->string('business_profile')->default('all');
-            
+
             // Pricing & Multi-Currency Engine
             $table->decimal('price', 10, 2);
             $table->string('currency', 3)->default('usd')->index(); // 'usd', 'lkr', 'eur', 'gbp', 'aud'
             $table->enum('billing_type', ['monthly', 'yearly', 'lifetime'])->default('monthly');
-            
+
             // Validity & Trial
             $table->integer('duration_value')->nullable();
             $table->enum('duration_unit', ['days', 'months', 'years', 'unlimited'])->default('days');

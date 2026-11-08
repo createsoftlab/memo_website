@@ -31,7 +31,23 @@ class Memory extends Model
     }
 
     public function timelines(): HasMany
-{
-    return $this->hasMany(Timeline::class);
-}
+    {
+        return $this->hasMany(Timeline::class);
+    }
+
+    /**
+     * Scope a query to only include memories where the user's package is active.
+     */
+    public function scopeActiveSubscription($query)
+    {
+        return $query->whereHas('user', function ($q) {
+            $q->where(function ($subQuery) {
+                // Lifetime packages හෝ කල් ඉකුත් නොවූ packages පමණක් තෝරයි
+                $subQuery->whereNull('package_expires_at')
+                    ->orWhere('package_expires_at', '>=', now());
+            })->orWhereHas('package', function ($pkgQuery) {
+                $pkgQuery->where('billing_type', 'lifetime');
+            });
+        });
+    }
 }

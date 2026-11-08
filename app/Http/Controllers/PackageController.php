@@ -38,12 +38,12 @@ class PackageController extends Controller
             'price'             => 'required|numeric|min:0',
             'currency'          => 'required|string|in:usd,lkr,eur,gbp,aud',
             'billing_type'      => 'required|in:monthly,yearly,lifetime',
-            'country'           => 'required|string|max:10',
+            'country'           => 'required|string|max:50',
             'business_profile'  => 'required|string|max:100',
             'duration_value'    => 'nullable|integer',
             'duration_unit'     => 'required|in:days,months,years,unlimited',
             'trial_days'        => 'nullable|integer|min:0',
-            
+
             // Memory Creator Limits
             'events_limit'      => 'nullable|integer',
             'max_photos'        => 'nullable|integer',
@@ -52,7 +52,7 @@ class PackageController extends Controller
             'candles_limit'     => 'nullable|integer|min:0',
             'flowers_limit'     => 'nullable|integer|min:0',
             'max_comments'      => 'nullable|integer',
-            
+
             // Feature Toggles (Checkboxes)
             'has_ai_features'   => 'nullable|boolean',
             'has_donations'     => 'nullable|boolean',
@@ -120,7 +120,7 @@ class PackageController extends Controller
             'price'             => 'required|numeric|min:0',
             'currency'          => 'required|string|in:usd,lkr,eur,gbp,aud',
             'billing_type'      => 'required|in:monthly,yearly,lifetime',
-            'country'           => 'required|string|max:10',
+            'country'           => 'required|string|max:50',
             'business_profile'  => 'required|string|max:100',
             'duration_value'    => 'nullable|integer',
             'duration_unit'     => 'required|in:days,months,years,unlimited',

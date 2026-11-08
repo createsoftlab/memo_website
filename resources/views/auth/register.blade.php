@@ -415,7 +415,8 @@
 <div class="mb-3 d-grid">
     <button type="submit"
         id="createAccountBtn"
-        class="py-2 btn btn-gold-action fw-bold" disabled>
+        class="py-2 btn btn-gold-action fw-bold"
+        disabled>
         <i class="bi bi-person-plus me-1"></i>
         CREATE ACCOUNT
     </button>
