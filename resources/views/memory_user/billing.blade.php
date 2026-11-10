@@ -199,133 +199,118 @@
                     </div>
                 </div>
 
-                <!-- Pricing Section -->
-                <section class="pricing-section py-3" id="pricing-section">
-                    <div class="container-fluid px-0">
-                        <div class="text-center mb-5">
-                            <h2 class="font-serif text-brown fw-bold display-6 mb-2 text-uppercase">Choose Your Memorial
-                                Plan</h2>
-                            <div
-                                class="pricing-toggle-wrapper mx-auto d-inline-flex align-items-center p-1 rounded-pill bg-white border shadow-sm mt-3">
-                                <button type="button" class="btn btn-toggle active px-4 py-2 rounded-pill"
-                                    id="btn-all-plans" onclick="filterBilling('all')">All Plans</button>
-                                <button type="button" class="btn btn-toggle px-4 py-2 rounded-pill text-muted"
-                                    id="btn-monthly" onclick="filterBilling('monthly')">Monthly</button>
-                                <button type="button" class="btn btn-toggle px-4 py-2 rounded-pill text-muted"
-                                    id="btn-yearly" onclick="filterBilling('yearly')">Yearly</button>
-                            </div>
-                        </div>
+                <div class="row g-4 justify-content-center mb-5" id="packagesGrid">
+                    @forelse($packages as $pkg)
+                        @php
+                            $isFree = (float) $pkg->price <= 0;
+                            $isFeatured = $pkg->billing_type === 'yearly' || stripos($pkg->name, 'premium') !== false;
+                            $currSymbol =
+                                strtolower($pkg->currency ?? 'usd') === 'usd'
+                                    ? '$'
+                                    : strtoupper($pkg->currency ?? 'USD') . ' ';
 
-                        <div class="row g-4 justify-content-center mb-5" id="packagesGrid">
-                            @forelse($packages as $pkg)
-                                @php
-                                    $isFree = (float) $pkg->price <= 0;
-                                    $isFeatured =
-                                        $pkg->billing_type === 'yearly' || stripos($pkg->name, 'premium') !== false;
-                                    $currSymbol =
-                                        strtolower($pkg->currency ?? 'usd') === 'usd'
-                                            ? '$'
-                                            : strtoupper($pkg->currency ?? 'USD') . ' ';
-                                @endphp
+                            // User ගේ රට සහ Package එකේ රට ගළපා බැලීම (case-insensitive)
+                            $userCountry = strtolower(Auth::user()->country ?? '');
+                            $pkgCountry = strtolower($pkg->country ?? 'all');
+                            $isCountryMatch = $pkgCountry === 'all' || $pkgCountry === $userCountry;
+                        @endphp
 
-                                @if ($pkg->id !== $user->package_id)
-                                    <div class="col-12 col-md-6 col-lg-4 package-col"
-                                        data-billing="{{ $pkg->billing_type }}" data-price="{{ $pkg->price }}">
-                                        <div
-                                            class="pricing-card {{ $isFeatured ? 'card-featured border-warning' : 'border' }} h-100 d-flex flex-column p-4 text-center rounded-4 bg-white shadow-sm position-relative">
-                                            @if ($isFeatured)
-                                                <span
-                                                    class="position-absolute top-0 start-50 translate-middle badge bg-warning text-dark px-3 py-1 fw-bold text-uppercase">Most
-                                                    Popular</span>
-                                            @endif
+                        {{-- දැනට භාවිතා කරන පැකේජය නොවීම සහ රට ගැළපෙනවා නම් පමණක් පෙන්වීම --}}
+                        @if ($pkg->id !== $user->package_id && $isCountryMatch)
+                            <div class="col-12 col-md-6 col-lg-4 package-col" data-billing="{{ $pkg->billing_type }}"
+                                data-price="{{ $pkg->price }}">
+                                <div
+                                    class="pricing-card {{ $isFeatured ? 'card-featured border-warning' : 'border' }} h-100 d-flex flex-column p-4 text-center rounded-4 bg-white shadow-sm position-relative">
+                                    @if ($isFeatured)
+                                        <span
+                                            class="position-absolute top-0 start-50 translate-middle badge bg-warning text-dark px-3 py-1 fw-bold text-uppercase">Most
+                                            Popular</span>
+                                    @endif
 
+                                    <span
+                                        class="plan-subtitle text-uppercase font-serif {{ $isFeatured ? 'fw-bold mt-2 text-dark' : 'text-muted fw-bold' }}">{{ $pkg->name }}</span>
+
+                                    <div class="price-wrapper my-3">
+                                        @if ($isFree)
+                                            <span class="price-val fw-bold display-5 text-dark">Free</span>
+                                        @else
+                                            <span class="currency">{{ $currSymbol }}</span>
                                             <span
-                                                class="plan-subtitle text-uppercase font-serif {{ $isFeatured ? 'fw-bold mt-2 text-dark' : 'text-muted fw-bold' }}">{{ $pkg->name }}</span>
-
-                                            <div class="price-wrapper my-3">
-                                                @if ($isFree)
-                                                    <span class="price-val fw-bold display-5 text-dark">Free</span>
-                                                @else
-                                                    <span class="currency">{{ $currSymbol }}</span>
-                                                    <span
-                                                        class="price-val fw-bold display-5 text-dark">{{ number_format($pkg->price, 2) }}</span>
-                                                    <span class="period text-muted">
-                                                        @if ($pkg->billing_type === 'yearly')
-                                                            /yr
-                                                        @elseif($pkg->billing_type === 'monthly')
-                                                            /mo
-                                                        @elseif($pkg->billing_type === 'lifetime')
-                                                            <small class="text-muted d-block fs-6">one-time</small>
-                                                        @elseif($pkg->duration_value)
-                                                            /{{ $pkg->duration_value }} {{ $pkg->duration_unit }}
-                                                        @endif
-                                                    </span>
+                                                class="price-val fw-bold display-5 text-dark">{{ number_format($pkg->price, 2) }}</span>
+                                            <span class="period text-muted">
+                                                @if ($pkg->billing_type === 'yearly')
+                                                    /yr
+                                                @elseif($pkg->billing_type === 'monthly')
+                                                    /mo
+                                                @elseif($pkg->billing_type === 'lifetime')
+                                                    <small class="text-muted d-block fs-6">one-time</small>
+                                                @elseif($pkg->duration_value)
+                                                    /{{ $pkg->duration_value }} {{ $pkg->duration_unit }}
                                                 @endif
-                                            </div>
-
-                                            <!-- Memory Quotas -->
-                                            <ul
-                                                class="list-unstyled text-start small text-muted my-3 px-2 flex-grow-1 border-top border-bottom py-3">
-                                                <li class="mb-2 d-flex align-items-center">
-                                                    <i class="bi bi-check-circle-fill text-warning me-2 fs-6"></i>
-                                                    <span><strong>{{ $pkg->memories_limit == -1 ? 'Unlimited' : $pkg->memories_limit }}</strong>
-                                                        Memorial Spaces</span>
-                                                </li>
-                                                <li class="mb-2 d-flex align-items-center">
-                                                    <i class="bi bi-check-circle-fill text-warning me-2 fs-6"></i>
-                                                    <span><strong>{{ $pkg->max_photos == -1 ? 'Unlimited' : $pkg->max_photos }}</strong>
-                                                        Photos</span>
-                                                </li>
-                                                <li class="mb-2 d-flex align-items-center">
-                                                    <i class="bi bi-check-circle-fill text-warning me-2 fs-6"></i>
-                                                    <span><strong>{{ $pkg->max_videos == -1 ? 'Unlimited' : $pkg->max_videos }}</strong>
-                                                        Videos</span>
-                                                </li>
-                                                <li class="mb-2 d-flex align-items-center">
-                                                    <i class="bi bi-check-circle-fill text-warning me-2 fs-6"></i>
-                                                    <span><strong>{{ $pkg->max_audios == -1 ? 'Unlimited' : $pkg->max_audios }}</strong>
-                                                        Audio Tracks</span>
-                                                </li>
-                                                @if ($pkg->events_limit)
-                                                    <li class="mb-1 d-flex align-items-center">
-                                                        <i class="bi bi-check-circle-fill text-warning me-2 fs-6"></i>
-                                                        <span><strong>{{ $pkg->events_limit == -1 ? 'Unlimited' : $pkg->events_limit }}</strong>
-                                                            Events</span>
-                                                    </li>
-                                                @endif
-                                            </ul>
-
-                                            <div class="mt-auto pt-3">
-                                                @if ($isFree)
-                                                    <button type="button"
-                                                        class="btn btn-outline-secondary w-100 py-2 fw-bold text-uppercase disabled">Downgrade
-                                                        Unavailable</button>
-                                                @else
-                                                    <form action="{{ route('billing.checkout') }}" method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="package_id"
-                                                            value="{{ $pkg->id }}">
-                                                        <input type="hidden" name="action" value="upgrade">
-                                                        <button type="submit"
-                                                            class="btn {{ $isFeatured ? 'btn-warning text-dark' : 'btn-outline-dark' }} w-100 py-2 fw-bold text-uppercase shadow-sm">Upgrade
-                                                            to {{ $pkg->name }}</button>
-                                                    </form>
-                                                    <span class="d-block text-muted small mt-2"><i
-                                                            class="bi bi-lock-fill text-success me-1"></i>Secure Stripe
-                                                        Checkout</span>
-                                                @endif
-                                            </div>
-                                        </div>
+                                            </span>
+                                        @endif
                                     </div>
-                                @endif
-                            @empty
-                                <div class="col-12 text-center py-4">
-                                    <p class="text-muted">No upgrade packages are currently available.</p>
+
+                                    <!-- Memory Quotas -->
+                                    <ul
+                                        class="list-unstyled text-start small text-muted my-3 px-2 flex-grow-1 border-top border-bottom py-3">
+                                        <li class="mb-2 d-flex align-items-center">
+                                            <i class="bi bi-check-circle-fill text-warning me-2 fs-6"></i>
+                                            <span><strong>{{ $pkg->memories_limit == -1 ? 'Unlimited' : $pkg->memories_limit }}</strong>
+                                                Memorial Spaces</span>
+                                        </li>
+                                        <li class="mb-2 d-flex align-items-center">
+                                            <i class="bi bi-check-circle-fill text-warning me-2 fs-6"></i>
+                                            <span><strong>{{ $pkg->max_photos == -1 ? 'Unlimited' : $pkg->max_photos }}</strong>
+                                                Photos</span>
+                                        </li>
+                                        <li class="mb-2 d-flex align-items-center">
+                                            <i class="bi bi-check-circle-fill text-warning me-2 fs-6"></i>
+                                            <span><strong>{{ $pkg->max_videos == -1 ? 'Unlimited' : $pkg->max_videos }}</strong>
+                                                Videos</span>
+                                        </li>
+                                        <li class="mb-2 d-flex align-items-center">
+                                            <i class="bi bi-check-circle-fill text-warning me-2 fs-6"></i>
+                                            <span><strong>{{ $pkg->max_audios == -1 ? 'Unlimited' : $pkg->max_audios }}</strong>
+                                                Audio Tracks</span>
+                                        </li>
+                                        @if ($pkg->events_limit)
+                                            <li class="mb-1 d-flex align-items-center">
+                                                <i class="bi bi-check-circle-fill text-warning me-2 fs-6"></i>
+                                                <span><strong>{{ $pkg->events_limit == -1 ? 'Unlimited' : $pkg->events_limit }}</strong>
+                                                    Events</span>
+                                            </li>
+                                        @endif
+                                    </ul>
+
+                                    <div class="mt-auto pt-3">
+                                        @if ($isFree)
+                                            <button type="button"
+                                                class="btn btn-outline-secondary w-100 py-2 fw-bold text-uppercase disabled">Downgrade
+                                                Unavailable</button>
+                                        @else
+                                            <form action="{{ route('billing.checkout') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="package_id" value="{{ $pkg->id }}">
+                                                <input type="hidden" name="action" value="upgrade">
+                                                <button type="submit"
+                                                    class="btn {{ $isFeatured ? 'btn-warning text-dark' : 'btn-outline-dark' }} w-100 py-2 fw-bold text-uppercase shadow-sm">Upgrade
+                                                    to {{ $pkg->name }}</button>
+                                            </form>
+                                            <span class="d-block text-muted small mt-2"><i
+                                                    class="bi bi-lock-fill text-success me-1"></i>Secure Stripe
+                                                Checkout</span>
+                                        @endif
+                                    </div>
                                 </div>
-                            @endforelse
+                            </div>
+                        @endif
+                    @empty
+                        <div class="col-12 text-center py-4">
+                            <p class="text-muted">No upgrade packages are currently available for your country.</p>
                         </div>
-                    </div>
-                </section>
+                    @endforelse
+                </div>
 
                 <!-- Footer within the container -->
                 <footer class="bg-memorial-dark text-white pt-5 pb-3 border-top border-secondary mt-5 rounded-4">

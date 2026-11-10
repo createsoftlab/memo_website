@@ -612,12 +612,13 @@
                         <div class="row g-3 mb-3">
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold small">Country</label>
+                                <!-- මෙහි value අගයන් සම්පූර්ණ නම් වලට වෙනස් කර ඇත -->
                                 <select name="country" id="modalItemCountry" class="form-select">
                                     <option value="all">Global</option>
-                                    <option value="lk">Sri Lanka (LK)</option>
-                                    <option value="us">United States (US)</option>
-                                    <option value="uk">United Kingdom (UK)</option>
-                                    <option value="au">Australia (AU)</option>
+                                    <option value="sri lanka">Sri Lanka (LK)</option>
+                                    <option value="united states">United States (US)</option>
+                                    <option value="united kingdem">United Kingdom (UK)</option>
+                                    <option value="australia">Australia (AU)</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
@@ -670,7 +671,6 @@
             </div>
         </div>
     </div>
-
     <!-- Bootstrap 5 Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 

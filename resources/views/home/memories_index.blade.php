@@ -16,22 +16,18 @@
 
     @php
 
-    // $coverImage = \App\Models\Image::where('profile_id', $memory->profile?->id)->where('type', 'cover')->first();
+        // $coverImage = \App\Models\Image::where('profile_id', $memory->profile?->id)->where('type', 'cover')->first();
 
-    $backgroundMusic = \App\Models\Music::where('profile_id', $memory->profile?->id)->first();
-    // Get profile image from images table
-    $profileImage = \App\Models\Image::where('profile_id', $memory->profile?->id)
-        ->where('type', 'profile')
-        ->first();
+        $backgroundMusic = \App\Models\Music::where('profile_id', $memory->profile?->id)->first();
+        // Get profile image from images table
+        $profileImage = \App\Models\Image::where('profile_id', $memory->profile?->id)
+            ->where('type', 'profile')
+            ->first();
 
-    $birthYear = $profile->date_of_birth
-        ? \Carbon\Carbon::parse($profile->date_of_birth)->format('Y')
-        : null;
+        $birthYear = $profile->date_of_birth ? \Carbon\Carbon::parse($profile->date_of_birth)->format('Y') : null;
 
-    $deathYear = $profile->date_of_death
-        ? \Carbon\Carbon::parse($profile->date_of_death)->format('Y')
-        : null;
-  @endphp
+        $deathYear = $profile->date_of_death ? \Carbon\Carbon::parse($profile->date_of_death)->format('Y') : null;
+    @endphp
 
     @include('home.header')
 
@@ -40,33 +36,34 @@
         <div class="container py-4">
             <div class="row align-items-center">
                 <div class="col-8">
-          <h1 class="memorial-title text-white mb-0">{{ $memory->profile?->first_name }} {{ $memory->profile?->last_name }}</h1>
-          @if ($birthYear || $deathYear)
-          <p class="fs-4 text-white-50 font-serif mb-0">
-            {{ collect([$birthYear, $deathYear])->filter()->implode(' - ') }}
-          </p>
-          @endif
+                    <h1 class="memorial-title text-white mb-0">{{ $memory->profile?->first_name }}
+                        {{ $memory->profile?->last_name }}</h1>
+                    @if ($birthYear || $deathYear)
+                        <p class="fs-4 text-white-50 font-serif mb-0">
+                            {{ collect([$birthYear, $deathYear])->filter()->implode(' - ') }}
+                        </p>
+                    @endif
                 </div>
                 <div class="col-4 text-end"><img
-                        src="{{ $profileImage? asset($profileImage->path): asset('images/profile_photo.png') }}"
+                        src="{{ $profileImage ? asset($profileImage->path) : asset('images/profile_photo.png') }}"
                         class="memorial-avatar rounded-3 shadow" alt="Profile"></div>
             </div>
         </div>
 
-        @if ($backgroundMusic?->path) 
-        <!-- Background Music Toggle Button -->
-        <button id="audioToggleBtn"
-            class="btn btn-outline-warning btn-sm rounded-pill px-3 py-1 d-flex align-items-center gap-2 bg-dark bg-opacity-50"
-            onclick="toggleBackgroundMusic()" title="Toggle Background Music">
-            <i id="audioIcon" class="bi bi-volume-up-fill fs-6 text-warning"></i>
-            <span id="audioText" class="small">Mute Music</span>
-        </button>
-                                                                                           
-        <!-- Hidden HTML5 Audio Element (Autoplay without muted) -->
-        <audio id="memorialAudio" autoplay loop>
-            <source src="{{ asset($backgroundMusic->path) }}" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
+        @if ($backgroundMusic?->path)
+            <!-- Background Music Toggle Button -->
+            <button id="audioToggleBtn"
+                class="btn btn-outline-warning btn-sm rounded-pill px-3 py-1 d-flex align-items-center gap-2 bg-dark bg-opacity-50"
+                onclick="toggleBackgroundMusic()" title="Toggle Background Music">
+                <i id="audioIcon" class="bi bi-volume-up-fill fs-6 text-warning"></i>
+                <span id="audioText" class="small">Mute Music</span>
+            </button>
+
+            <!-- Hidden HTML5 Audio Element (Autoplay without muted) -->
+            <audio id="memorialAudio" autoplay loop>
+                <source src="{{ asset($backgroundMusic->path) }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
         @endif
     </header>
 
@@ -104,32 +101,32 @@
 
                     <!-- Personal Details -->
                     @if ($memory->profile?->date_of_birth && $memory->profile?->date_of_death)
-                    <ul class="list-unstyled text-muted mb-3 reveal-left">
+                        <ul class="list-unstyled text-muted mb-3 reveal-left">
                             <li class="mb-1"><i class="bi bi-heart text-memorial me-2"></i>
                                 <strong>
                                     {{ (int) \Carbon\Carbon::parse($memory->profile->date_of_birth)->diffInYears(
                                         \Carbon\Carbon::parse($memory->profile->date_of_death),
                                     ) }}
                                     years old
-                            </strong>
-                        @endif
-                        </li>
-                        @if ($memory->profile?->date_of_birth && $memory->profile?->birth_location)
-                            <li class="mb-1"><i class="bi bi-calendar-event me-2 text-memorial"></i>Born on
-                                {{ \Carbon\Carbon::parse($memory->profile->date_of_birth)->format('F d, Y') }}
-                                in {{ $memory->profile->birth_location }}</li>
-                        @endif
-                        @if ($memory->profile?->date_of_death && $memory->profile?->death_location)
-                            <li class="mb-1"><i class="bi bi-calendar-x me-2 text-memorial"></i>Passed away
-                                {{ \Carbon\Carbon::parse($memory->profile->date_of_death)->format('F d, Y') }}
-                                in {{ $memory->profile->death_location }}</li>
-                        @endif
+                                </strong>
+                    @endif
+                    </li>
+                    @if ($memory->profile?->date_of_birth && $memory->profile?->birth_location)
+                        <li class="mb-1"><i class="bi bi-calendar-event me-2 text-memorial"></i>Born on
+                            {{ \Carbon\Carbon::parse($memory->profile->date_of_birth)->format('F d, Y') }}
+                            in {{ $memory->profile->birth_location }}</li>
+                    @endif
+                    @if ($memory->profile?->date_of_death && $memory->profile?->death_location)
+                        <li class="mb-1"><i class="bi bi-calendar-x me-2 text-memorial"></i>Passed away
+                            {{ \Carbon\Carbon::parse($memory->profile->date_of_death)->format('F d, Y') }}
+                            in {{ $memory->profile->death_location }}</li>
+                    @endif
                     </ul>
                     @if ($memory->about)
-                    <p class="text-muted mb-4 reveal-init">
-                        {{ $memory?->about }}
-                    </p>
-                    <hr class="my-4 text-muted">
+                        <p class="text-muted mb-4 reveal-init">
+                            {{ $memory?->about }}
+                        </p>
+                        <hr class="my-4 text-muted">
                     @endif
 
 
@@ -139,14 +136,15 @@
                             <div class="p-3 bg-light rounded border h-100 shadow-sm">
                                 <h5 class="fw-bold text-dark mb-2">
                                     @if ($memory?->funeral_location_name || $memory?->funeral_location_address)
-                                    <i class="bi bi-geo-alt-fill text-memorial me-2"></i>Funeral & Wake Location</h5>
-                                    <p class="mb-1 text-muted"><strong>Location Name:</strong>
+                                        <i class="bi bi-geo-alt-fill text-memorial me-2"></i>Funeral & Wake Location
+                                </h5>
+                                <p class="mb-1 text-muted"><strong>Location Name:</strong>
                                     {{ $memory?->funeral_location_name }}</p>
-                                    <p class="mb-0 text-muted"><strong>Address:</strong>
+                                <p class="mb-0 text-muted"><strong>Address:</strong>
                                     {{ $memory?->funeral_location_address }}</p>
-                                    @else
-                                    <i class="bi bi-geo-alt-fill text-memorial me-2"></i>No Details</h5>
-                                    @endif
+                            @else
+                                <i class="bi bi-geo-alt-fill text-memorial me-2"></i>No Details</h5>
+                                @endif
                             </div>
                         </div>
 
@@ -170,7 +168,6 @@
                                 @endphp
 
                                 @if ($phone)
-
                                     <div class="mt-2">
                                         <a href="https://wa.me/{{ $whatsappNumber }}?text={{ $message }}"
                                             target="_blank" rel="noopener noreferrer"
@@ -199,28 +196,29 @@
                     </div>
 
                     @if ($memory->broadcast_link)
-                    <!-- Live Streaming Section -->
-                    <div class="p-3 bg-light rounded border border-memorial text-center mb-4 reveal-zoom">
-                        <h5 class="fw-bold text-memorial mb-2">
-                            <i class="bi bi-broadcast me-2"></i>Live Streaming (Funeral Ceremony)
-                        </h5>
-                        <p class="small text-muted mb-3">You can watch the live ceremony stream directly below:</p>
+                        <!-- Live Streaming Section -->
+                        <div class="p-3 bg-light rounded border border-memorial text-center mb-4 reveal-zoom">
+                            <h5 class="fw-bold text-memorial mb-2">
+                                <i class="bi bi-broadcast me-2"></i>Live Streaming (Funeral Ceremony)
+                            </h5>
+                            <p class="small text-muted mb-3">You can watch the live ceremony stream directly below:</p>
 
-                        <a href="{{ $memory->broadcast_link }}" target="_blank" class="btn btn-danger btn-sm px-4 fw-bold">
-                            <i class="bi bi-play-circle-fill me-1"></i> Watch Live Stream
-                        </a>
-                    </div>
+                            <a href="{{ $memory->broadcast_link }}" target="_blank"
+                                class="btn btn-danger btn-sm px-4 fw-bold">
+                                <i class="bi bi-play-circle-fill me-1"></i> Watch Live Stream
+                            </a>
+                        </div>
                     @else
-                    <div class="p-3 bg-light rounded border border-memorial text-center mb-4 reveal-zoom">
-                        <h5 class="fw-bold text-memorial mb-2">
-                            <i class="bi bi-broadcast me-2"></i>Live Streaming (No Live Currently)
-                        </h5>
-                        <p class="small text-muted mb-3">You can watch the live ceremony stream directly below:</p>
+                        <div class="p-3 bg-light rounded border border-memorial text-center mb-4 reveal-zoom">
+                            <h5 class="fw-bold text-memorial mb-2">
+                                <i class="bi bi-broadcast me-2"></i>Live Streaming (No Live Currently)
+                            </h5>
+                            <p class="small text-muted mb-3">You can watch the live ceremony stream directly below:</p>
 
-                        <a href="" target="_blank" class="btn btn-danger btn-sm px-4 fw-bold">
-                            <i class="bi bi-play-circle-fill me-1"></i> Watch Live Stream
-                        </a>
-                    </div>
+                            <a href="" target="_blank" class="btn btn-danger btn-sm px-4 fw-bold">
+                                <i class="bi bi-play-circle-fill me-1"></i> Watch Live Stream
+                            </a>
+                        </div>
                     @endif
 
                     <div
@@ -233,12 +231,31 @@
                 </div>
 
                 <!-- Leave a Tribute Section -->
+                @php
+                    use App\Models\SingleItem;
+
+                    // යූසර්ගේ රට ලබා ගැනීම (Login වී ඇත්නම් ඔහුගේ රට, නැත්නම් default අගයක්)
+                    $visitorCountryCode = strtolower(Auth::user()->country ?? 'all');
+
+                    // Flowers ලබා ගැනීම
+                    $flowerPackages = SingleItem::where('type', 'flower')
+                        ->where('is_active', true)
+                        ->forCountry($visitorCountryCode)
+                        ->get();
+
+                    // Candles ලබා ගැනීම
+                    $candlePackages = SingleItem::where('type', 'candle')
+                        ->where('is_active', true)
+                        ->forCountry($visitorCountryCode)
+                        ->get();
+                @endphp
+
+                <!-- Leave a Tribute Section -->
                 <div class="tribute-card p-4 rounded-4 shadow-sm bg-white border border-light mb-4 reveal-init">
                     <h5 class="fw-bold mb-3 text-brown font-serif">Leave a Tribute</h5>
 
                     <ul class="nav nav-pills custom-tribute-tabs mb-4 gap-3 justify-content-center" id="tributeTab"
                         role="tablist">
-
                         <!-- Flower Tab -->
                         <li class="nav-item" role="presentation">
                             <button
@@ -255,7 +272,7 @@
                                 class="nav-link custom-tab-btn candle-tab-btn rounded-pill px-4 py-2.5 fw-bold d-flex align-items-center gap-2"
                                 id="candle-tab" data-bs-toggle="pill" data-bs-target="#candleTabContent"
                                 type="button" role="tab">
-                                <span class="fs-5 animated-flame-icon">🕯️️</span> Candle
+                                <span class="fs-5 animated-flame-icon">🕯</span> Candle
                             </button>
                         </li>
 
@@ -268,33 +285,34 @@
                                 <i class="bi bi-chat-heart fs-5"></i> Share a Memory
                             </button>
                         </li>
-
                     </ul>
 
                     <div class="tab-content" id="tributeTabContent">
+                        <!-- Flower Tab Content -->
                         <div class="tab-pane fade show active" id="flowerTabContent" role="tabpanel">
                             <form id="flowerTributeForm">
                                 <label class="form-label small fw-bold text-muted mb-2">Choose a flower bouquet
                                     :</label>
                                 <div class="d-flex gap-3 mb-3 fs-3">
-                                    <label class="flower-option cursor-pointer"><input type="radio"
-                                            name="flowerChoice" value="🌹" checked class="d-none"> <span
-                                            class="flower-icon p-2 rounded-circle border d-inline-block">🌹</span></label>
-                                    <!-- <label class="flower-option cursor-pointer"><input type="radio" name="flowerChoice" value="🌷" class="d-none"> <span class="flower-icon p-2 rounded-circle border d-inline-block">🌷</span></label>
-                    <label class="flower-option cursor-pointer"><input type="radio" name="flowerChoice" value="🌻" class="d-none"> <span class="flower-icon p-2 rounded-circle border d-inline-block">🌻</span></label>
-                    <label class="flower-option cursor-pointer"><input type="radio" name="flowerChoice" value="🪷" class="d-none"> <span class="flower-icon p-2 rounded-circle border d-inline-block">🪷</span></label>
-                    <label class="flower-option cursor-pointer"><input type="radio" name="flowerChoice" value="💐" class="d-none"> <span class="flower-icon p-2 rounded-circle border d-inline-block">💐</span></label> -->
+                                    <label class="flower-option cursor-pointer">
+                                        <input type="radio" name="flowerChoice" value="🌹" checked
+                                            class="d-none">
+                                        <span class="flower-icon p-2 rounded-circle border d-inline-block">🌹</span>
+                                    </label>
                                 </div>
 
                                 <div class="mb-3">
                                     <textarea class="form-control" id="flowerText" rows="2"
                                         placeholder="Add a short message with your flowers..."></textarea>
                                 </div>
-                                <button type="submit" class="btn btn-memorial px-4 py-2 fw-bold w-100">Send Flowers
-                                    💐</button>
+                                <button type="button" class="btn btn-memorial px-4 py-2 fw-bold w-100"
+                                    id="btnOpenFlowerModal">
+                                    Send Flowers 💐
+                                </button>
                             </form>
                         </div>
 
+                        <!-- Candle Tab Content -->
                         <div class="tab-pane fade" id="candleTabContent" role="tabpanel">
                             <form id="candleTributeForm">
                                 <div
@@ -313,19 +331,27 @@
                                     <input type="text" class="form-control py-2" id="candleName"
                                         placeholder="Your Name (e.g., Kasun)" required>
                                 </div>
-                                <button type="submit" class="btn btn-memorial px-4 py-2 fw-bold w-100 shadow-sm">
+                                <button type="button" class="btn btn-memorial px-4 py-2 fw-bold w-100 shadow-sm"
+                                    id="btnOpenCandleModal">
                                     <i class="bi bi-fire me-1"></i> Light Candle
                                 </button>
                             </form>
                         </div>
 
+                        <!-- Share a Memory Tab Content -->
                         <div class="tab-pane fade" id="memoryTabContent" role="tabpanel">
-                            <form id="memoryTributeForm">
+                            <form id="memoryTributeForm" action="{{ route('memory.message.store') }}"
+                                method="POST">
+                                @csrf
+                                <!-- Memory ID එක Database එකට pass කිරීමට -->
+                                <input type="hidden" name="memory_id" value="{{ $memory->id }}">
+
                                 <div class="mb-3">
                                     <label class="form-label small fw-bold text-muted">Write your memory or
                                         message:</label>
-                                    <textarea class="form-control mb-2" id="memoryText" rows="3"
-                                        placeholder="I remember the beautiful times we spent together..."></textarea>
+                                    <!-- name="message" එකතු කර ඇත -->
+                                    <textarea class="form-control mb-2" id="memoryText" name="message" rows="3"
+                                        placeholder="I remember the beautiful times we spent together..." required></textarea>
 
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="d-flex gap-2 flex-wrap">
@@ -338,19 +364,233 @@
                                             <button type="button"
                                                 class="btn btn-outline-secondary btn-sm rounded-pill px-3"
                                                 onclick="insertEmoji('🙏')">🙏</button>
-                                            <!-- <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3 d-flex align-items-center gap-1" id="voiceRecordBtn">
-                                <i class="bi bi-mic-fill"></i> Voice Message
-                            </button> -->
                                         </div>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-memorial px-4 py-2 fw-bold w-100">Publish
-                                    Memory</button>
+                                <button type="submit" class="btn btn-memorial px-4 py-2 fw-bold w-100">
+                                    Publish Memory
+                                </button>
                             </form>
                         </div>
                     </div>
                 </div>
 
+                @php
+                    // Logged-in user's country matching with single_items
+                    $userCountry = strtolower(trim(Auth::user()->country ?? 'all'));
+
+                    $dbFlower =
+                        \App\Models\SingleItem::where('type', 'flower')
+                            ->where('is_active', true)
+                            ->where(function ($q) use ($userCountry) {
+                                if ($userCountry !== 'all' && !empty($userCountry)) {
+                                    $q->where('country', $userCountry);
+                                } else {
+                                    $q->where('country', 'all');
+                                }
+                            })
+                            ->first() ??
+                        (\App\Models\SingleItem::where('type', 'flower')->where('country', 'all')->first() ??
+                            \App\Models\SingleItem::where('type', 'flower')->first());
+
+                    $dbCandle =
+                        \App\Models\SingleItem::where('type', 'candle')
+                            ->where('is_active', true)
+                            ->where(function ($q) use ($userCountry) {
+                                if ($userCountry !== 'all' && !empty($userCountry)) {
+                                    $q->where('country', $userCountry);
+                                } else {
+                                    $q->where('country', 'all');
+                                }
+                            })
+                            ->first() ??
+                        (\App\Models\SingleItem::where('type', 'candle')->where('country', 'all')->first() ??
+                            \App\Models\SingleItem::where('type', 'candle')->first());
+
+                    $flowerUnitPrice = (float) ($dbFlower->price ?? 9.99);
+                    $candleUnitPrice = (float) ($dbCandle->price ?? 4.99);
+
+                    $flowerCurrency = strtoupper($dbFlower->currency ?? 'USD');
+                    $candleCurrency = strtoupper($dbCandle->currency ?? 'USD');
+
+                    $getSymbol = function ($currency) {
+                        return match (strtoupper($currency)) {
+                            'USD' => '$',
+                            'LKR' => 'Rs. ',
+                            'EUR' => '€',
+                            'GBP' => '£',
+                            'AUD' => 'A$',
+                            default => $currency . ' ',
+                        };
+                    };
+
+                    $flowerSymbol = $getSymbol($flowerCurrency);
+                    $candleSymbol = $getSymbol($candleCurrency);
+                @endphp
+
+                <!-- ================= ORIGINAL TRIBUTE MODAL ================= -->
+                <div class="modal fade" id="originalTributeModal" tabindex="-1" aria-labelledby="tributeModalTitle"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" style="max-width: 480px;">
+                        <div class="modal-content rounded-4 border-0 shadow p-3">
+                            <form action="{{ route('tribute.checkout') }}" method="POST" id="originalTributeForm">
+                                @csrf
+                                <input type="hidden" name="memory_id" value="{{ $memory->id }}">
+                                <input type="hidden" name="package_id" id="tributePackageId"
+                                    value="{{ $dbFlower->id ?? 1 }}">
+                                <input type="hidden" name="tribute_type" id="tributeTypeInput" value="flower">
+                                <input type="hidden" name="message" id="tributeMessageInput">
+
+                                <!-- Modal Header -->
+                                <div class="modal-header border-0 pb-0 pt-2 px-2">
+                                    <h5 class="modal-title font-serif fw-bold" id="tributeModalTitle"
+                                        style="color: #5c3a21;">
+                                        Complete Your Flower Tribute
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+
+                                <!-- Modal Body -->
+                                <div class="modal-body px-2 py-3">
+                                    <!-- Your Name Input -->
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-bold text-dark mb-1">Your Name:</label>
+                                        <input type="text" name="donor_name" id="donorNameInput"
+                                            class="form-control py-2" placeholder="Enter your name (e.g., Nimal)"
+                                            required>
+                                    </div>
+
+                                    <!-- Quantity Input -->
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-bold text-dark mb-1" id="quantityLabel">
+                                            Quantity (Price:
+                                            {{ $flowerSymbol }}{{ number_format($flowerUnitPrice, 2) }} each):
+                                        </label>
+                                        <input type="number" name="quantity" id="tributeQuantity"
+                                            class="form-control py-2" value="1" min="1" required>
+                                    </div>
+
+                                    <!-- Summary Box (Selected Item & Total Price) -->
+                                    <div class="p-3 bg-light rounded-3 mb-2 border">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <span class="small fw-bold text-dark me-2" id="selectedItemLabel">Selected
+                                                Flower:</span>
+                                            <span id="selectedItemIcon" class="fs-5">🌹</span>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <span class="small fw-bold text-dark me-2">Total Price:</span>
+                                            <span class="fw-bold text-success fs-6"
+                                                id="totalPriceText">{{ $flowerSymbol }}{{ number_format($flowerUnitPrice, 2) }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Modal Footer -->
+                                <div class="modal-footer border-0 pt-0 pb-2 px-2 d-flex justify-content-end gap-2">
+                                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
+                                        data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn rounded-pill px-4 fw-bold text-white shadow-sm"
+                                        style="background-color: #5c3a21;">Confirm & Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const modalElement = document.getElementById('originalTributeModal');
+                        const tributeModal = new bootstrap.Modal(modalElement);
+
+                        // Country-specific prices and symbols
+                        const flowerPrice = {{ $flowerUnitPrice }};
+                        const candlePrice = {{ $candleUnitPrice }};
+
+                        const flowerSymbol = "{{ $flowerSymbol }}";
+                        const candleSymbol = "{{ $candleSymbol }}";
+
+                        const flowerPackageId = {{ $dbFlower->id ?? 1 }};
+                        const candlePackageId = {{ $dbCandle->id ?? 2 }};
+
+                        let currentUnitPrice = flowerPrice;
+                        let currentSymbol = flowerSymbol;
+
+                        function updateTotal() {
+                            const qty = parseInt(document.getElementById('tributeQuantity').value) || 1;
+                            const total = (currentUnitPrice * qty).toFixed(2);
+                            document.getElementById('totalPriceText').textContent = currentSymbol + total;
+                        }
+
+                        document.getElementById('tributeQuantity').addEventListener('input', updateTotal);
+
+                        // 1. Send Flowers Button Click
+                        const flowerBtn = document.getElementById('btnOpenFlowerModal');
+                        if (flowerBtn) {
+                            flowerBtn.addEventListener('click', function() {
+                                currentUnitPrice = flowerPrice;
+                                currentSymbol = flowerSymbol;
+
+                                document.getElementById('tributeModalTitle').textContent =
+                                    "Complete Your Flower Tribute";
+                                document.getElementById('quantityLabel').textContent =
+                                    `Quantity (Price: ${flowerSymbol}${flowerPrice.toFixed(2)} each):`;
+                                document.getElementById('selectedItemLabel').textContent = "Selected Flower:";
+                                document.getElementById('selectedItemIcon').textContent = "🌹";
+
+                                document.getElementById('tributeTypeInput').value = "flower";
+                                document.getElementById('tributePackageId').value = flowerPackageId;
+                                document.getElementById('tributeMessageInput').value = document.getElementById(
+                                    'flowerText')?.value || '';
+
+                                // Retain entered name if already typed
+                                const previousName = document.getElementById('donorNameInput').value;
+                                if (!previousName && document.getElementById('candleName')?.value) {
+                                    document.getElementById('donorNameInput').value = document.getElementById(
+                                        'candleName').value;
+                                }
+
+                                document.getElementById('tributeQuantity').value = 1;
+                                updateTotal();
+
+                                tributeModal.show();
+                            });
+                        }
+
+                        // 2. Light Candle Button Click
+                        const candleBtn = document.getElementById('btnOpenCandleModal');
+                        if (candleBtn) {
+                            candleBtn.addEventListener('click', function() {
+                                const candleName = document.getElementById('candleName')?.value || '';
+                                if (!candleName.trim()) {
+                                    alert('Please enter your name first.');
+                                    document.getElementById('candleName').focus();
+                                    return;
+                                }
+
+                                currentUnitPrice = candlePrice;
+                                currentSymbol = candleSymbol;
+
+                                document.getElementById('tributeModalTitle').textContent =
+                                    "Complete Your Candle Tribute";
+                                document.getElementById('quantityLabel').textContent =
+                                    `Quantity (Price: ${candleSymbol}${candlePrice.toFixed(2)} each):`;
+                                document.getElementById('selectedItemLabel').textContent = "Selected Candle:";
+                                document.getElementById('selectedItemIcon').textContent = "🕯️";
+
+                                document.getElementById('tributeTypeInput').value = "candle";
+                                document.getElementById('tributePackageId').value = candlePackageId;
+                                document.getElementById('donorNameInput').value = candleName;
+                                document.getElementById('tributeMessageInput').value = candleName;
+
+                                document.getElementById('tributeQuantity').value = 1;
+                                updateTotal();
+
+                                tributeModal.show();
+                            });
+                        }
+                    });
+                </script>
 
 
                 <!-- Recent Tributes Stream & Profile Stats Section -->
@@ -560,7 +800,7 @@
                 <div class="sidebar-card p-3 rounded">
                     <h6 class="fw-bold mb-3 text-dark">1 Photo</h6>
                     <div class="mb-3 rounded overflow-hidden">
-                        <img src="{{ $profileImage? asset($profileImage->path): asset('images/profile_photo.png') }}"
+                        <img src="{{ $profileImage ? asset($profileImage->path) : asset('images/profile_photo.png') }}"
                             class="img-fluid rounded w-100" alt="Lallan Writer">
                     </div>
                     <button class="btn btn-outline-memorial-dark w-100 py-2">
@@ -600,7 +840,7 @@
       <span class="badge bg-light text-muted border border-secondary-subtle font-monospace">HINDI</span>
     </div>
     <p class="small text-muted mb-3">Explore additional resources to help you remember your loved one.</p>
-    
+
     <div class="list-group list-group-flush rounded border border-secondary-subtle overflow-hidden">
       <a href="#" class="list-group-item list-group-item-action bg-transparent border-bottom d-flex align-items-center justify-content-between py-2 text-dark small">
         <span><i class="bi bi-journal-text me-2"></i> Read our blog</span>
@@ -756,14 +996,14 @@
         let selectedFlowerItem = '🌹';
         let finalFlowerMessage = '';
 
-        // 1. "Send Flowers" 
+        // 1. "Send Flowers"
         document.getElementById('flowerTributeForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
             selectedFlowerItem = document.querySelector('input[name="flowerChoice"]:checked').value;
             finalFlowerMessage = document.getElementById('flowerText').value;
 
-            // Modal 
+            // Modal
             document.getElementById('modalSelectedFlower').textContent = selectedFlowerItem;
             document.getElementById('modalFlowerCount').value = 1;
             document.getElementById('modalTotalPrice').textContent = '$5';

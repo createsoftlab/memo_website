@@ -11,12 +11,12 @@ return new class extends Migration {
             $table->id();
             $table->enum('type', ['candle', 'flower'])->index();
             $table->string('name');
-            $table->string('country', 10)->default('all')->index();
-            
+            $table->string('country', 50)->default('all')->index();
+
             // Pricing & Currency
             $table->decimal('price', 10, 2);
             $table->string('currency', 3)->default('usd')->index();
-            
+
             // Display Lifespan & Renewal Rates
             $table->integer('initial_duration_days')->default(7);
             $table->decimal('extend_price', 10, 2)->default(0.00);

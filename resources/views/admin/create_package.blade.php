@@ -360,17 +360,20 @@
                                     <div class="row g-3 mb-3">
                                         <div class="col-md-4">
                                             <label class="form-label fw-semibold small">Applicable Country</label>
-                                            <select name="country" class="form-select">
+                                            <!-- id="itemCountrySelect" සහ full country names යොදා ඇත -->
+                                            <select name="country" id="itemCountrySelect" class="form-select">
                                                 <option value="all">All Countries (Global)</option>
-                                                <option value="lk">Sri Lanka (LK)</option>
-                                                <option value="us">United States (US)</option>
-                                                <option value="uk">United Kingdom (UK)</option>
-                                                <option value="au">Australia (AU)</option>
+                                                <option value="sri lanka">Sri Lanka (LK)</option>
+                                                <option value="united states">United States (US)</option>
+                                                <option value="united kingdem">United Kingdom (UK)</option>
+                                                <option value="australia">Australia (AU)</option>
                                             </select>
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label fw-semibold small">Currency</label>
-                                            <select name="currency" class="form-select" required>
+                                            <!-- id="itemCurrencySelect" යොදා ඇත -->
+                                            <select name="currency" id="itemCurrencySelect" class="form-select"
+                                                required>
                                                 <option value="usd"
                                                     {{ old('currency', 'usd') == 'usd' ? 'selected' : '' }}>USD ($)
                                                 </option>
@@ -427,6 +430,35 @@
                                         class="btn btn-warning w-100 py-2 fw-bold text-uppercase text-dark">Save Single
                                         Item Pricing</button>
                                 </form>
+
+                                <!-- ======================================================== -->
+                                <!-- JAVASCRIPT FOR AUTO-SELECTING CURRENCY (SINGLE ITEMS)    -->
+                                <!-- ======================================================== -->
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        const itemCountrySelect = document.getElementById('itemCountrySelect');
+                                        const itemCurrencySelect = document.getElementById('itemCurrencySelect');
+
+                                        // රටවල් සහ ඒවාට අදාළ මුදල් වර්ග Mapping කිරීම
+                                        const itemCurrencyMap = {
+                                            'all': 'usd',
+                                            'sri lanka': 'lkr',
+                                            'united states': 'usd',
+                                            'united kingdem': 'gbp',
+                                            'australia': 'aud'
+                                        };
+
+                                        // රට වෙනස් කරන විට Currency එක ස්වයංක්‍රීයව මාරු කිරීම
+                                        if (itemCountrySelect && itemCurrencySelect) {
+                                            itemCountrySelect.addEventListener('change', function() {
+                                                const selectedCountry = this.value;
+                                                if (itemCurrencyMap[selectedCountry]) {
+                                                    itemCurrencySelect.value = itemCurrencyMap[selectedCountry];
+                                                }
+                                            });
+                                        }
+                                    });
+                                </script>
                             </div>
 
                         </div>

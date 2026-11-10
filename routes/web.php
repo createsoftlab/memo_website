@@ -7,9 +7,12 @@ use App\Http\Controllers\BillingController;
 use App\Http\Controllers\CaptchaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MemoryController;
+use App\Http\Controllers\MemoryMessageController;
 use App\Http\Controllers\MemoryUserController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TributeCheckoutController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -217,6 +220,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/billing/upgrade', [BillingController::class, 'index'])->name('billing.index');
     Route::post('/billing/checkout', [BillingController::class, 'checkout'])->name('billing.checkout');
     Route::get('/billing/success', [BillingController::class, 'success'])->name('billing.success');
+
+    Route::post('/tribute/checkout', [TributeCheckoutController::class, 'checkout'])->name('tribute.checkout');
+    Route::get('/tribute/checkout/success', [TributeCheckoutController::class, 'success'])->name('tribute.checkout.success');
+    Route::get('/tribute/checkout/cancel', [TributeCheckoutController::class, 'cancel'])->name('tribute.checkout.cancel');
+
+    Route::post('/memory-message/store', [MemoryMessageController::class, 'store'])->name('memory.message.store');
 });
 
 

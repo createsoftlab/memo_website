@@ -159,7 +159,7 @@ class PackageController extends Controller
         $validated = $request->validate([
             'type'                  => 'required|in:candle,flower',
             'name'                  => 'required|string|max:255',
-            'country'               => 'required|string|max:10',
+            'country'               => 'required|string|max:50',
             'price'                 => 'required|numeric|min:0',
             'currency'              => 'required|string|in:usd,lkr,eur,gbp,aud',
             'initial_duration_days' => 'required|integer|min:1',
@@ -202,7 +202,7 @@ class PackageController extends Controller
         $validated = $request->validate([
             'type'                  => 'required|in:candle,flower',
             'name'                  => 'required|string|max:255',
-            'country'               => 'required|string|max:10',
+            'country'               => 'required|string|max:50',
             'price'                 => 'required|numeric|min:0',
             'currency'              => 'required|string|in:usd,lkr,eur,gbp,aud',
             'initial_duration_days' => 'required|integer|min:1',
