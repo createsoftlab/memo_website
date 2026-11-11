@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
 use App\Models\Memory;
 use App\Models\Package;
 use App\Models\PackagePurchase;
 use App\Models\Profile;
+use App\Models\Tribute;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Illuminate\Validation\Rule;
@@ -1021,6 +1024,95 @@ class MemoryController extends Controller
             'profile',
             'memory',
             'storyComments'
+        ));
+    }
+
+    /**
+     * Display dynamic events associated with a specific memorial space.
+     */
+    public function showEvents(string $slug): View
+    {
+        $memoryQuery = Memory::with('profile');
+
+        if (Schema::hasColumn('memories', 'slug')) {
+            $memoryQuery->where('slug', $slug)
+                ->orWhereHas('profile', function ($q) use ($slug) {
+                    $q->where('slug', $slug);
+                });
+        } else {
+            $memoryQuery->whereHas('profile', function ($q) use ($slug) {
+                $q->where('slug', $slug);
+            });
+        }
+
+        $memory = $memoryQuery->firstOrFail();
+        $profile = $memory->profile;
+
+        $eventsQuery = Event::query();
+
+        if (Schema::hasColumn('events', 'memory_id')) {
+            $eventsQuery->where(function ($q) use ($memory) {
+                $q->where('memory_id', $memory->id);
+                if ($memory->user_id) {
+                    $q->orWhere(function ($sub) use ($memory) {
+                        $sub->whereNull('memory_id')
+                            ->where('user_id', $memory->user_id);
+                    });
+                }
+            });
+        } else {
+            $eventsQuery->where('user_id', $memory->user_id);
+        }
+
+        $canPreviewUnlisted = Auth::check() && (
+            (int) Auth::id() === (int) $memory->user_id
+            || in_array(Auth::user()->role, ['super_admin', 'admin'], true)
+        );
+
+        if (!$canPreviewUnlisted) {
+            $eventsQuery->where('status', 'approved')
+                ->where('is_private', false);
+        } else {
+            $eventsQuery->where('status', '!=', 'rejected');
+        }
+
+        $orderColumn = Schema::hasColumn('events', 'event_date') ? 'event_date' : 'start_date';
+
+        $events = $eventsQuery
+            ->orderBy($orderColumn, 'asc')
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        $eventPresentations = [];
+        foreach ($events as $event) {
+            $eventPresentations[$event->id] = EventController::buildPresentation($event);
+        }
+
+        $profileImage = Image::where('profile_id', $profile?->id)
+            ->where('type', 'profile')
+            ->first();
+        $backgroundMusic = Music::where('profile_id', $profile?->id)->first();
+
+        $tributes = Tribute::with('user')
+            ->where('memory_id', $memory->id)
+            ->where('status', 'active')
+            ->latest()
+            ->get();
+
+        $totalDonationAmount = (float) $tributes->sum('total_amount');
+        $donorCount = $tributes->count();
+        $recentTributes = $tributes->take(3);
+
+        return view('home.memories_event', compact(
+            'memory',
+            'profile',
+            'profileImage',
+            'backgroundMusic',
+            'events',
+            'eventPresentations',
+            'totalDonationAmount',
+            'donorCount',
+            'recentTributes'
         ));
     }
 }

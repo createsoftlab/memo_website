@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\CaptchaController;
+use App\Http\Controllers\DonationController;
+use App\Http\Controllers\EventController as PublicEventController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MemoryController;
 use App\Http\Controllers\MemoryMessageController;
@@ -164,6 +166,11 @@ Route::get('/contact', [HomeController::class, 'contact'])->name('home.contact')
 
 //view memory from all memories
 Route::get('/all_memories', [HomeController::class, 'allMemories'])->name('home.all_memories');
+
+// Public Global Events Stream & Details
+Route::get('/all-events', [PublicEventController::class, 'index'])->name('events.index');
+Route::get('/event/{id}', [PublicEventController::class, 'show'])->name('events.show');
+
 //homepage inside memory navigation pages
 Route::get('/memory_index/{slug}', [HomeController::class, 'memoryIndex'])->name('home.memory_index');
 //verify privacy
@@ -173,7 +180,7 @@ Route::get('/memories_stories/{slug}', [HomeController::class, 'memoriesStories'
 Route::get('/memories_timeline/{slug}', [HomeController::class, 'memoriesTimeline'])->name('home.memories_timeline');
 Route::get('/memories_gallery/{slug}', [HomeController::class, 'memoriesGallery'])->name('home.memories_gallery');
 Route::get('/memories_donation/{slug}', [HomeController::class, 'memoriesDonation'])->name('home.memories_donation');
-Route::get('/memories_event/{slug}', [HomeController::class, 'memoriesEvent'])->name('home.memories_event');
+Route::get('/memories_event/{slug}', [MemoryController::class, 'showEvents'])->name('memory.events');
 
 Route::get('/donation_form', [HomeController::class, 'donationForm'])->name('home.donation_form');
 
@@ -226,6 +233,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/tribute/checkout/cancel', [TributeCheckoutController::class, 'cancel'])->name('tribute.checkout.cancel');
 
     Route::post('/memory-message/store', [MemoryMessageController::class, 'store'])->name('memory.message.store');
+
+    // Donation Form එක පෙන්වීම
+Route::get('/memory/{slug}/donate', [DonationController::class, 'showForm'])->name('donation.form');
+
+// Stripe Checkout Session එක සෑදීම
+Route::post('/donation/checkout', [DonationController::class, 'checkout'])->name('donation.checkout');
+
+// Stripe සාර්ථක හා අවලංගු callbacks
+Route::get('/donation/checkout/success', [DonationController::class, 'success'])->name('donation.checkout.success');
+Route::get('/donation/checkout/cancel', [DonationController::class, 'cancel'])->name('donation.checkout.cancel');
 });
 
 
