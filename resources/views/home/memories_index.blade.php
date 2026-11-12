@@ -6,18 +6,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @php
-
-        // $coverImage = \App\Models\Image::where('profile_id', $memory->profile?->id)->where('type', 'cover')->first();
-
         $backgroundMusic = \App\Models\Music::where('profile_id', $memory->profile?->id)->first();
-        // Get profile image from images table
         $profileImage = \App\Models\Image::where('profile_id', $memory->profile?->id)
             ->where('type', 'profile')
             ->first();
 
-        $birthYear = $profile->date_of_birth ? \Carbon\Carbon::parse($profile->date_of_birth)->format('Y') : null;
-
-        $deathYear = $profile->date_of_death ? \Carbon\Carbon::parse($profile->date_of_death)->format('Y') : null;
+        $birthYear = $memory->profile?->date_of_birth
+            ? \Carbon\Carbon::parse($memory->profile->date_of_birth)->format('Y')
+            : null;
+        $deathYear = $memory->profile?->date_of_death
+            ? \Carbon\Carbon::parse($memory->profile->date_of_death)->format('Y')
+            : null;
     @endphp
     @php
         $shareUrl = url('/memory_index/' . $memory->profile->slug);
@@ -913,7 +912,6 @@
 
             <!-- Common Sidebar -->
             <div class="col-lg-4 d-flex flex-column gap-3">
-
                 <!-- Invite Card -->
                 <div class="sidebar-card p-3 rounded">
                     <div class="d-flex justify-content-between align-items-start mb-2">
