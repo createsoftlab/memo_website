@@ -406,6 +406,7 @@
                                             @enderror
                                         </div>
 
+
                                         <div class="col-md-6">
                                             <label class="form-label small fw-bold">Country *</label>
 
@@ -444,6 +445,7 @@
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
+
 
                                         <div class="col-md-6">
                                             <label class="form-label small fw-bold">City / Town *</label>
@@ -1048,7 +1050,7 @@
 
                                             <div class="row g-3" id="photoGridContainer">
 
-                                                @foreach ($memory->profile->photos as $photo)
+                                                @foreach ($memory->profile->photos->where('status', 1) as $photo)
                                                     <div class="col-md-4 col-sm-6 media-card-item"
                                                         data-media-id="{{ $photo->id }}">
 
@@ -1106,7 +1108,7 @@
 
                                             <div class="row g-3" id="movieGridContainer">
 
-                                                @foreach ($memory->profile->videos as $video)
+                                                @foreach ($memory->profile->videos->where('status', 1) as $video)
                                                     <div class="col-md-6 media-card-item"
                                                         data-media-id="{{ $video->id }}">
 
@@ -1171,7 +1173,7 @@
 
                                             <div class="row g-3" id="audioGridContainer">
 
-                                                @foreach ($memory->profile->audios as $audio)
+                                                @foreach ($memory->profile->audios->where('status', 1) as $audio)
                                                     <div class="col-md-6 media-card-item"
                                                         data-media-id="{{ $audio->id }}">
 
@@ -1242,8 +1244,8 @@
                                 <h6 class="fw-bold text-brown mb-3 border-bottom pb-2">
                                     <i class="bi bi-journal-richtext me-2 text-success"></i> Manage Stories & Tributes
                                 </h6>
-                                <p class="text-muted small mb-4">Review, approve, or reject user-submitted tributes
-                                    (flowers, candles, messages) and full life stories or eulogies.</p>
+                                <p class="text-muted small mb-4">Review user-submitted tributes (flowers, candles,
+                                    messages) and manage submitted life stories or eulogies.</p>
 
                                 <!-- Main Category Navigation Pills (Tributes vs Stories) -->
                                 <ul class="nav nav-pills mb-4 gap-2 bg-light p-2 rounded-4" id="manageSubTab"
@@ -1261,7 +1263,9 @@
                                             id="sub-stories-tab" data-bs-toggle="pill" data-bs-target="#sub-stories"
                                             type="button" role="tab">
                                             <i class="bi bi-journal-text me-1 text-success"></i> Stories & Eulogies
-                                            <span class="badge bg-success ms-1">2</span>
+                                            <span class="badge bg-success ms-1" id="pending-story-count">
+                                                {{ $storyComments->count() }}
+                                            </span>
                                         </button>
                                     </li>
                                 </ul>
@@ -1271,252 +1275,350 @@
 
                                     <!-- ================= 1. TRIBUTES SECTION (Candles, Flowers, Messages) ================= -->
                                     <div class="tab-pane fade show active" id="sub-tributes" role="tabpanel">
+
+                                        @php
+                                            // 1. මෙම Memory Post එකට ($memory->id) අදාළ status = 'active' Flowers සහ Candles පමණක් ලබා ගැනීම
+                                            $postTributes = \App\Models\Tribute::with('user')
+                                                ->where('memory_id', $memory->id)
+                                                ->where('status', 'active')
+                                                ->get()
+                                                ->map(function ($item) {
+                                                    $item->card_category = $item->tribute_type; // 'flower' හෝ 'candle'
+                                                    return $item;
+                                                });
+
+                                            // 2. මෙම Memory Post එකට ($memory->id) අදාළ status = 'active' Memory Messages පමණක් ලබා ගැනීම
+                                            $postMessages = \App\Models\MemoryMessage::with('user')
+                                                ->where('memory_id', $memory->id)
+                                                ->where('status', 'active')
+                                                ->get()
+                                                ->map(function ($item) {
+                                                    $item->card_category = 'message';
+                                                    return $item;
+                                                });
+
+                                            // 3. සියල්ල එකතු කර අලුත්ම ඒවා මුලට එන පරිදි Sort කිරීම
+                                            $dashboardTributes = $postTributes
+                                                ->concat($postMessages)
+                                                ->sortByDesc('created_at');
+                                        @endphp
+
                                         <div class="d-flex flex-column gap-3">
 
-                                            <!-- Flower Tribute Card (Updated Layout) -->
-                                            <div
-                                                class="card border-0 shadow-sm rounded-4 p-3 bg-white border-start border-4 border-danger tribute-card">
-                                                <div class="d-flex flex-column gap-3">
+                                            @forelse ($dashboardTributes as $item)
+                                                @php
+                                                    $senderName =
+                                                        $item->user->name ?? ($item->donor_name ?? 'Guest Contributor');
+                                                    $avatarPath =
+                                                        $item->user->profile_photo_path ??
+                                                        ($item->user->avatar ?? null);
+                                                    $initials = strtoupper(substr($senderName, 0, 2));
+                                                @endphp
 
-                                                    <!-- Top: Profile Info & Timestamp -->
-                                                    <div class="d-flex align-items-center justify-content-between">
-                                                        <div class="d-flex align-items-center gap-3">
-                                                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120"
-                                                                class="rounded-circle border border-2 border-warning shadow-sm flex-shrink-0 profile-img"
-                                                                width="45" height="45" alt="Nimal">
-                                                            <div>
-                                                                <h6 class="fw-bold mb-0 text-dark">Nimal</h6>
-                                                                <span
-                                                                    class="badge bg-danger-subtle text-danger px-2 py-1 rounded-pill mt-1"
-                                                                    style="font-size: 0.7rem;"><i
-                                                                        class="bi bi-flower1 me-1"></i> Flower
-                                                                    Tribute</span>
-                                                            </div>
-                                                        </div>
-                                                        <small class="text-muted tribute-time"
-                                                            style="font-size: 0.75rem;">10 mins ago</small>
-                                                    </div>
-
-                                                    <!-- Middle: Text Message Box with Margin/Background -->
-                                                    <div class="bg-light p-3 rounded-3 text-muted small">
-                                                        <p class="mb-0">“You will always be remembered in our
-                                                            prayers.You will always be remembered in our prayers.You
-                                                            will always be remembered in our prayers.You will always be
-                                                            remembered in our prayers.”</p>
-                                                    </div>
-
-                                                    <!-- Bottom: Approve & Reject Buttons (Aligned to the bottom right) -->
+                                                <!-- ================= FLOWER TRIBUTE CARD ================= -->
+                                                @if ($item->card_category === 'flower')
                                                     <div
-                                                        class="d-flex justify-content-end align-items-center gap-2 pt-1 border-top border-light action-btns">
-                                                        <button type="button"
-                                                            class="btn btn-outline-success btn-sm rounded-pill px-3 py-1">
-                                                            <i class="bi bi-check-lg me-1"></i> Approve
-                                                        </button>
-                                                        <button type="button"
-                                                            class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1">
-                                                            <i class="bi bi-x-lg me-1"></i> Reject
-                                                        </button>
+                                                        class="card border-0 shadow-sm rounded-4 p-3 bg-white border-start border-4 border-danger tribute-card">
+                                                        <div class="d-flex flex-column gap-3">
+
+                                                            <!-- Top: Profile Info & Timestamp -->
+                                                            <div
+                                                                class="d-flex align-items-center justify-content-between">
+                                                                <div class="d-flex align-items-center gap-3">
+                                                                    @if ($avatarPath)
+                                                                        <img src="{{ asset($avatarPath) }}"
+                                                                            class="rounded-circle border border-2 border-warning shadow-sm flex-shrink-0 profile-img"
+                                                                            width="45" height="45"
+                                                                            alt="{{ $senderName }}">
+                                                                    @else
+                                                                        <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center fw-bold flex-shrink-0 shadow-sm"
+                                                                            style="width: 45px; height: 45px; font-size: 0.9rem;">
+                                                                            {{ $initials }}
+                                                                        </div>
+                                                                    @endif
+                                                                    <div>
+                                                                        <h6 class="fw-bold mb-0 text-dark">
+                                                                            {{ $senderName }}</h6>
+                                                                        <span
+                                                                            class="badge bg-danger-subtle text-danger px-2 py-1 rounded-pill mt-1"
+                                                                            style="font-size: 0.7rem;">
+                                                                            <i class="bi bi-flower1 me-1"></i> Flower
+                                                                            Tribute
+                                                                            @if (($item->flower_count ?? 1) > 1)
+                                                                                (x{{ $item->flower_count }})
+                                                                            @endif
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                <small class="text-muted tribute-time"
+                                                                    style="font-size: 0.75rem;">
+                                                                    {{ $item->created_at->diffForHumans() }}
+                                                                </small>
+                                                            </div>
+
+                                                            <!-- Middle: Text Message Box -->
+                                                            <div class="bg-light p-3 rounded-3 text-muted small">
+                                                                <p class="mb-0">
+                                                                    “{{ $item->message ?: 'Sent flowers in loving memory.' }}”
+                                                                </p>
+                                                            </div>
+
+                                                            <!-- Bottom: Delete Button -->
+                                                            <div
+                                                                class="d-flex justify-content-end align-items-center gap-2 pt-1 border-top border-light action-btns">
+                                                                <button type="button"
+                                                                    class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#deleteTributeModal"
+                                                                    data-action="{{ route('dashboard.tribute.disable', ['category' => 'tribute', 'id' => $item->id]) }}">
+                                                                    <i class="bi bi-trash3 me-1"></i> Delete
+                                                                </button>
+                                                            </div>
+
+                                                        </div>
                                                     </div>
 
+                                                    <!-- ================= CANDLE TRIBUTE CARD ================= -->
+                                                @elseif ($item->card_category === 'candle')
+                                                    <div
+                                                        class="card border-0 shadow-sm rounded-4 p-3 bg-white border-start border-4 border-warning tribute-card">
+                                                        <div class="d-flex flex-column gap-3">
+
+                                                            <!-- Top: Profile Info & Timestamp -->
+                                                            <div
+                                                                class="d-flex align-items-center justify-content-between">
+                                                                <div class="d-flex align-items-center gap-3">
+                                                                    @if ($avatarPath)
+                                                                        <img src="{{ asset($avatarPath) }}"
+                                                                            class="rounded-circle border border-2 border-warning shadow-sm flex-shrink-0 profile-img"
+                                                                            width="45" height="45"
+                                                                            alt="{{ $senderName }}">
+                                                                    @else
+                                                                        <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center fw-bold flex-shrink-0 shadow-sm"
+                                                                            style="width: 45px; height: 45px; font-size: 0.9rem;">
+                                                                            {{ $initials }}
+                                                                        </div>
+                                                                    @endif
+                                                                    <div>
+                                                                        <h6 class="fw-bold mb-0 text-dark">
+                                                                            {{ $senderName }}</h6>
+                                                                        <span
+                                                                            class="badge bg-warning-subtle text-warning-emphasis px-2 py-1 rounded-pill mt-1"
+                                                                            style="font-size: 0.7rem;">
+                                                                            <i class="bi bi-fire me-1"></i> Candle
+                                                                            Tribute
+                                                                            @if (($item->candle_count ?? 1) > 1)
+                                                                                (x{{ $item->candle_count }})
+                                                                            @endif
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                <small class="text-muted tribute-time"
+                                                                    style="font-size: 0.75rem;">
+                                                                    {{ $item->created_at->diffForHumans() }}
+                                                                </small>
+                                                            </div>
+
+                                                            <!-- Middle: Text Message Box -->
+                                                            <div class="bg-light p-3 rounded-3 text-muted small">
+                                                                <p class="mb-0">
+                                                                    {{ $item->message ?: 'Candle lit in loving memory.' }}
+                                                                </p>
+                                                            </div>
+
+                                                            <!-- Bottom: Delete Button -->
+                                                            <div
+                                                                class="d-flex justify-content-end align-items-center gap-2 pt-1 border-top border-light action-btns">
+                                                                <button type="button"
+                                                                    class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#deleteTributeModal"
+                                                                    data-action="{{ route('dashboard.tribute.disable', ['category' => 'tribute', 'id' => $item->id]) }}">
+                                                                    <i class="bi bi-trash3 me-1"></i> Delete
+                                                                </button>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- ================= MEMORY MESSAGE TRIBUTE CARD ================= -->
+                                                @elseif ($item->card_category === 'message')
+                                                    <div
+                                                        class="card border-0 shadow-sm rounded-4 p-3 bg-white border-start border-4 border-success tribute-card">
+                                                        <div class="d-flex flex-column gap-3">
+
+                                                            <!-- Top: Profile Info & Timestamp -->
+                                                            <div
+                                                                class="d-flex align-items-center justify-content-between">
+                                                                <div class="d-flex align-items-center gap-3">
+                                                                    @if ($avatarPath)
+                                                                        <img src="{{ asset($avatarPath) }}"
+                                                                            class="rounded-circle border border-2 border-success shadow-sm flex-shrink-0 profile-img"
+                                                                            width="45" height="45"
+                                                                            alt="{{ $senderName }}">
+                                                                    @else
+                                                                        <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center fw-bold flex-shrink-0 shadow-sm"
+                                                                            style="width: 45px; height: 45px; font-size: 0.9rem;">
+                                                                            {{ $initials }}
+                                                                        </div>
+                                                                    @endif
+                                                                    <div>
+                                                                        <h6 class="fw-bold mb-0 text-dark">
+                                                                            {{ $senderName }}</h6>
+                                                                        <span
+                                                                            class="badge bg-success-subtle text-success px-2 py-1 rounded-pill mt-1"
+                                                                            style="font-size: 0.7rem;">
+                                                                            <i class="bi bi-chat-heart me-1"></i>
+                                                                            Memory Message
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                <small class="text-muted tribute-time"
+                                                                    style="font-size: 0.75rem;">
+                                                                    {{ $item->created_at->diffForHumans() }}
+                                                                </small>
+                                                            </div>
+
+                                                            <!-- Middle: Text Message Box -->
+                                                            <div class="bg-light p-3 rounded-3 text-muted small">
+                                                                <p class="mb-0">“{{ $item->message }}”</p>
+                                                            </div>
+
+                                                            <!-- Bottom: Delete Button -->
+                                                            <div
+                                                                class="d-flex justify-content-end align-items-center gap-2 pt-1 border-top border-light action-btns">
+                                                                <button type="button"
+                                                                    class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#deleteTributeModal"
+                                                                    data-action="{{ route('dashboard.tribute.disable', ['category' => 'message', 'id' => $item->id]) }}">
+                                                                    <i class="bi bi-trash3 me-1"></i> Delete
+                                                                </button>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                @endif
+
+                                            @empty
+                                                <div class="text-center py-5 bg-white rounded-4 shadow-sm border">
+                                                    <i class="bi bi-chat-heart text-muted fs-2 d-block mb-2"></i>
+                                                    <h6 class="fw-bold text-dark mb-1">No Active Tributes</h6>
+                                                    <p class="text-muted small mb-0">No active flowers, candles, or
+                                                        memory messages found for this memorial post.</p>
                                                 </div>
-                                            </div>
+                                            @endforelse
 
-                                            <!-- 1. Candle Tribute Card (Updated Layout) -->
-                                            <div
-                                                class="card border-0 shadow-sm rounded-4 p-3 bg-white border-start border-4 border-warning tribute-card mb-3">
-                                                <div class="d-flex flex-column gap-3">
+                                        </div>
+                                    </div>
 
-                                                    <!-- Top: Profile Info & Timestamp -->
-                                                    <div class="d-flex align-items-center justify-content-between">
-                                                        <div class="d-flex align-items-center gap-3">
-                                                            <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center fw-bold flex-shrink-0 shadow-sm"
-                                                                style="width: 45px; height: 45px; font-size: 0.9rem;">
-                                                                KA
-                                                            </div>
-                                                            <div>
-                                                                <h6 class="fw-bold mb-0 text-dark">Kasun</h6>
-                                                                <span
-                                                                    class="badge bg-warning-subtle text-warning-emphasis px-2 py-1 rounded-pill mt-1"
-                                                                    style="font-size: 0.7rem;"><i
-                                                                        class="bi bi-fire me-1"></i> Candle
-                                                                    Tribute</span>
-                                                            </div>
-                                                        </div>
-                                                        <small class="text-muted tribute-time"
-                                                            style="font-size: 0.75rem;">2 hours ago</small>
-                                                    </div>
-
-                                                    <!-- Middle: Text Message Box with Margin/Background -->
-                                                    <div class="bg-light p-3 rounded-3 text-muted small">
-                                                        <p class="mb-0">Candle lit in loving memory.</p>
-                                                    </div>
-
-                                                    <!-- Bottom: Approve & Reject Buttons -->
-                                                    <div
-                                                        class="d-flex justify-content-end align-items-center gap-2 pt-1 border-top border-light action-btns">
-                                                        <button type="button"
-                                                            class="btn btn-outline-success btn-sm rounded-pill px-3 py-1">
-                                                            <i class="bi bi-check-lg me-1"></i> Approve
-                                                        </button>
-                                                        <button type="button"
-                                                            class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1">
-                                                            <i class="bi bi-x-lg me-1"></i> Reject
-                                                        </button>
-                                                    </div>
-
+                                    <!-- ================= DELETE CONFIRMATION MODAL ================= -->
+                                    <div class="modal fade" id="deleteTributeModal" tabindex="-1"
+                                        aria-labelledby="deleteTributeModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-sm">
+                                            <div class="modal-content border-0 shadow rounded-4">
+                                                <div class="modal-header border-0 pb-0">
+                                                    <h6 class="modal-title fw-bold text-danger"
+                                                        id="deleteTributeModalLabel">
+                                                        <i class="bi bi-exclamation-triangle-fill me-1"></i> Confirm
+                                                        Delete
+                                                    </h6>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
                                                 </div>
-                                            </div>
-
-                                            <!-- 2. Memory Message Tribute Card (Updated Layout) -->
-                                            <div
-                                                class="card border-0 shadow-sm rounded-4 p-3 bg-white border-start border-4 border-success tribute-card">
-                                                <div class="d-flex flex-column gap-3">
-
-                                                    <!-- Top: Profile Info & Timestamp -->
-                                                    <div class="d-flex align-items-center justify-content-between">
-                                                        <div class="d-flex align-items-center gap-3">
-                                                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120"
-                                                                class="rounded-circle border border-2 border-success shadow-sm flex-shrink-0 profile-img"
-                                                                width="45" height="45" alt="Amal">
-                                                            <div>
-                                                                <h6 class="fw-bold mb-0 text-dark">Amal</h6>
-                                                                <span
-                                                                    class="badge bg-success-subtle text-success px-2 py-1 rounded-pill mt-1"
-                                                                    style="font-size: 0.7rem;"><i
-                                                                        class="bi bi-chat-heart me-1"></i> Memory
-                                                                    Message</span>
-                                                            </div>
-                                                        </div>
-                                                        <small class="text-muted tribute-time"
-                                                            style="font-size: 0.75rem;">Yesterday</small>
-                                                    </div>
-
-                                                    <!-- Middle: Text Message Box with Margin/Background -->
-                                                    <div class="bg-light p-3 rounded-3 text-muted small">
-                                                        <p class="mb-0">“I remember the beautiful times we spent
-                                                            together...”</p>
-                                                    </div>
-
-                                                    <!-- Bottom: Approve & Reject Buttons -->
-                                                    <div
-                                                        class="d-flex justify-content-end align-items-center gap-2 pt-1 border-top border-light action-btns">
-                                                        <button type="button"
-                                                            class="btn btn-outline-success btn-sm rounded-pill px-3 py-1">
-                                                            <i class="bi bi-check-lg me-1"></i> Approve
+                                                <div class="modal-body py-3 text-muted small">
+                                                    Are you sure you want to delete this tribute? Once deleted, it will
+                                                    be hidden from the memorial page.
+                                                </div>
+                                                <div
+                                                    class="modal-footer border-0 pt-0 d-flex justify-content-end gap-2">
+                                                    <button type="button"
+                                                        class="btn btn-light btn-sm rounded-pill px-3 border"
+                                                        data-bs-dismiss="modal">Cancel</button>
+                                                    <form id="deleteTributeForm" method="POST" action="">
+                                                        @csrf
+                                                        <button type="submit"
+                                                            class="btn btn-danger btn-sm rounded-pill px-3 fw-bold">
+                                                            Yes, Delete
                                                         </button>
-                                                        <button type="button"
-                                                            class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1">
-                                                            <i class="bi bi-x-lg me-1"></i> Reject
-                                                        </button>
-                                                    </div>
-
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <!-- Modal Form Action එක Dynamic ලෙස Set කරන Script එක -->
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            const deleteModal = document.getElementById('deleteTributeModal');
+                                            if (deleteModal) {
+                                                deleteModal.addEventListener('show.bs.modal', function(event) {
+                                                    const button = event.relatedTarget;
+                                                    const actionUrl = button.getAttribute('data-action');
+                                                    const form = document.getElementById('deleteTributeForm');
+                                                    if (form && actionUrl) {
+                                                        form.setAttribute('action', actionUrl);
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    </script>
+
                                     <!-- ================= 2. STORIES & EULOGIES SECTION ================= -->
                                     <div class="tab-pane fade" id="sub-stories" role="tabpanel">
-                                        <div class="d-flex flex-column gap-3">
-
-                                            <!-- Story Card 1 (Updated Layout) -->
-                                            <div
-                                                class="card border-0 shadow-sm rounded-4 p-3 bg-white border-start border-4 border-primary mb-3">
-                                                <div class="d-flex flex-column gap-3">
-
-                                                    <!-- Top: Profile Info & Timestamp -->
-                                                    <div class="d-flex align-items-center justify-content-between">
-                                                        <div class="d-flex align-items-center gap-3">
-                                                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120"
-                                                                class="rounded-circle border border-2 border-primary shadow-sm flex-shrink-0 profile-img"
-                                                                width="45" height="45" alt="Sunil">
-                                                            <div>
-                                                                <h6 class="fw-bold mb-0 text-dark">Sunil Perera</h6>
-                                                                <span
-                                                                    class="badge bg-primary-subtle text-primary px-2 py-1 rounded-pill mt-1"
-                                                                    style="font-size: 0.7rem;"><i
-                                                                        class="bi bi-journal-richtext me-1"></i> Life
-                                                                    Story / Eulogy</span>
+                                        <div class="d-flex flex-column gap-3" id="pending-stories-list">
+                                            @forelse ($storyComments as $story)
+                                                <div id="pending-story-card-{{ $story->id }}"
+                                                    class="card border-0 shadow-sm rounded-4 p-3 bg-white border-start border-4 border-primary mb-3">
+                                                    <div class="d-flex flex-column gap-3">
+                                                        <div
+                                                            class="d-flex justify-content-between align-items-center gap-2">
+                                                            <div class="d-flex align-items-center gap-3">
+                                                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold flex-shrink-0"
+                                                                    style="width:45px;height:45px;">
+                                                                    <i class="bi bi-person-fill"></i>
+                                                                </div>
+                                                                <div>
+                                                                    <h6 class="fw-bold mb-1 text-dark">
+                                                                        {{ $story->contributor_name ?: 'Guest Contributor' }}
+                                                                    </h6>
+                                                                    <span
+                                                                        class="badge bg-warning-subtle text-warning-emphasis rounded-pill">Pending
+                                                                        Approval</span>
+                                                                </div>
                                                             </div>
+                                                            <small
+                                                                class="text-muted">{{ $story->created_at?->diffForHumans() }}</small>
                                                         </div>
-                                                        <small class="text-muted tribute-time"
-                                                            style="font-size: 0.75rem;">3 days ago</small>
-                                                    </div>
 
-                                                    <!-- Middle: Title & Text Message Box with Margin/Background -->
-                                                    <div class="bg-light p-3 rounded-3 text-muted small">
-                                                        <h6 class="fw-bold text-dark small mb-1">A Loving Father and
-                                                            Mentor</h6>
-                                                        <p class="mb-0">"He was always there to guide us through
-                                                            difficult times with a calm smile. His dedication to the
-                                                            family and community will never be forgotten..."</p>
-                                                    </div>
-
-                                                    <!-- Bottom: Approve Story & Reject Buttons -->
-                                                    <div
-                                                        class="d-flex justify-content-end align-items-center gap-2 pt-1 border-top border-light action-btns">
-                                                        <button type="button"
-                                                            class="btn btn-outline-success btn-sm rounded-pill px-3 py-1">
-                                                            <i class="bi bi-check-lg me-1"></i> Approve Story
-                                                        </button>
-                                                        <button type="button"
-                                                            class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1">
-                                                            <i class="bi bi-x-lg me-1"></i> Reject
-                                                        </button>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-
-                                            <!-- Story Card 2 (Updated Layout) -->
-                                            <div
-                                                class="card border-0 shadow-sm rounded-4 p-3 bg-white border-start border-4 border-info">
-                                                <div class="d-flex flex-column gap-3">
-
-                                                    <!-- Top: Profile Info & Timestamp -->
-                                                    <div class="d-flex align-items-center justify-content-between">
-                                                        <div class="d-flex align-items-center gap-3">
-                                                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center fw-bold flex-shrink-0 shadow-sm"
-                                                                style="width: 45px; height: 45px; font-size: 0.9rem;">
-                                                                CH
-                                                            </div>
-                                                            <div>
-                                                                <h6 class="fw-bold mb-0 text-dark">Chandra Silva</h6>
-                                                                <span
-                                                                    class="badge bg-info-subtle text-info-emphasis px-2 py-1 rounded-pill mt-1"
-                                                                    style="font-size: 0.7rem;"><i
-                                                                        class="bi bi-journal-richtext me-1"></i>
-                                                                    Cherished Memory</span>
-                                                            </div>
+                                                        <div class="bg-light p-3 rounded-3">
+                                                            <h6 class="fw-bold text-dark mb-2">
+                                                                {{ $story->title ?: 'Untitled Story' }}</h6>
+                                                            <p class="mb-0 text-muted small"
+                                                                style="white-space:pre-wrap;overflow-wrap:anywhere;">
+                                                                {{ $story->content }}</p>
                                                         </div>
-                                                        <small class="text-muted tribute-time"
-                                                            style="font-size: 0.75rem;">5 days ago</small>
-                                                    </div>
 
-                                                    <!-- Middle: Title & Text Message Box with Margin/Background -->
-                                                    <div class="bg-light p-3 rounded-3 text-muted small">
-                                                        <h6 class="fw-bold text-dark small mb-1">The Days at School
-                                                        </h6>
-                                                        <p class="mb-0">"I still remember how we used to walk
-                                                            together after school hours. He always shared his lunch and
-                                                            treated everyone with absolute kindness..."</p>
+                                                        <div
+                                                            class="d-flex justify-content-end align-items-center gap-2 pt-2 border-top border-light action-btns">
+                                                            <button type="button"
+                                                                class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#storyDeleteConfirmModal"
+                                                                data-action-url="{{ route('memory_user.story_comments.reject', $story->id) }}"
+                                                                data-story-id="{{ $story->id }}">
+                                                                <i class="bi bi-trash me-1"></i> Delete
+                                                            </button>
+                                                        </div>
                                                     </div>
-
-                                                    <!-- Bottom: Approve Story & Reject Buttons -->
-                                                    <div
-                                                        class="d-flex justify-content-end align-items-center gap-2 pt-1 border-top border-light action-btns">
-                                                        <button type="button"
-                                                            class="btn btn-outline-success btn-sm rounded-pill px-3 py-1">
-                                                            <i class="bi bi-check-lg me-1"></i> Approve Story
-                                                        </button>
-                                                        <button type="button"
-                                                            class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1">
-                                                            <i class="bi bi-x-lg me-1"></i> Reject
-                                                        </button>
-                                                    </div>
-
                                                 </div>
-                                            </div>
+                                            @empty
+                                                <div id="no-pending-stories"
+                                                    class="alert alert-info text-center rounded-4 mb-0">
+                                                    <i class="bi bi-info-circle me-1"></i> No pending stories
+                                                    available.
+                                                </div>
+                                            @endforelse
                                         </div>
                                     </div>
 
@@ -1525,7 +1627,90 @@
 
 
 
+                            <!-- Confirmation modal: permanently delete story comment -->
+                            <div class="modal fade" id="storyDeleteConfirmModal" tabindex="-1"
+                                aria-labelledby="storyDeleteConfirmTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content rounded-4">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title fw-bold" id="storyDeleteConfirmTitle">Delete story?
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to permanently delete this story? This cannot be
+                                            undone.
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-secondary"
+                                                data-bs-dismiss="modal">No</button>
+                                            <button type="button" class="btn btn-danger"
+                                                id="storyDeleteConfirmYes">Yes, Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
+                            <script>
+                                // Delete story comments via AJAX; never submit or navigate to the JSON endpoint.
+                                (function() {
+                                    const modalElement = document.getElementById('storyDeleteConfirmModal');
+                                    const yesButton = document.getElementById('storyDeleteConfirmYes');
+                                    const list = document.getElementById('pending-stories-list');
+                                    const badge = document.getElementById('pending-story-count');
+                                    if (!modalElement || !yesButton || !list) return;
+
+                                    let selectedStoryId = null;
+                                    let selectedDeleteUrl = null;
+
+                                    modalElement.addEventListener('show.bs.modal', function(event) {
+                                        const trigger = event.relatedTarget;
+                                        selectedStoryId = trigger?.dataset.storyId || null;
+                                        selectedDeleteUrl = trigger?.dataset.actionUrl || null;
+                                    });
+
+                                    yesButton.addEventListener('click', async function(event) {
+                                        event.preventDefault();
+                                        if (yesButton.disabled || !selectedStoryId || !selectedDeleteUrl) return;
+
+                                        yesButton.disabled = true;
+                                        yesButton.textContent = 'Deleting...';
+                                        try {
+                                            const response = await fetch(selectedDeleteUrl, {
+                                                method: 'PATCH',
+                                                headers: {
+                                                    'X-CSRF-TOKEN': @json(csrf_token()),
+                                                    'Accept': 'application/json',
+                                                    'X-Requested-With': 'XMLHttpRequest'
+                                                },
+                                                credentials: 'same-origin'
+                                            });
+                                            const result = await response.json();
+                                            if (!response.ok || result.success !== true) {
+                                                throw new Error(result.message || 'Could not delete the story.');
+                                            }
+
+                                            document.getElementById('pending-story-card-' + selectedStoryId)?.remove();
+                                            const remaining = list.querySelectorAll('[id^="pending-story-card-"]').length;
+                                            if (badge) badge.textContent = remaining;
+                                            if (remaining === 0 && !document.getElementById('no-pending-stories')) {
+                                                const empty = document.createElement('div');
+                                                empty.id = 'no-pending-stories';
+                                                empty.className = 'alert alert-info text-center rounded-4 mb-0';
+                                                empty.textContent = 'No pending stories available.';
+                                                list.appendChild(empty);
+                                            }
+                                            bootstrap.Modal.getOrCreateInstance(modalElement).hide();
+                                        } catch (error) {
+                                            alert(error.message);
+                                        } finally {
+                                            yesButton.disabled = false;
+                                            yesButton.textContent = 'Yes, Delete';
+                                        }
+                                    });
+                                })();
+                            </script>
 
                             <!-- Tab 5: Timeline Events Tab -->
                             <!-- <div class="tab-pane fade" id="tab-timeline" role="tabpanel">
@@ -1843,6 +2028,176 @@
 
                                 </form>
 
+                                {{-- Saved timeline carousel: one milestone at a time --}}
+                                @php
+                                    $savedTimelineItems = \App\Models\Timeline::where('memory_id', $memory->id)
+                                        ->orderBy('sort_order')
+                                        ->orderBy('id')
+                                        ->get();
+                                @endphp
+                                <section class="mt-4 pt-3 border-top" aria-label="Saved timeline milestones">
+                                    <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
+                                        <h6 class="fw-bold text-brown mb-0"><i
+                                                class="bi bi-clock-history me-2"></i>Saved Timeline</h6>
+                                        <span class="badge bg-secondary"
+                                            id="savedTimelineCount">{{ $savedTimelineItems->count() }}
+                                            milestones</span>
+                                    </div>
+                                    <div id="savedTimelineCarousel" class="position-relative">
+                                        <div id="savedTimelineSlides" aria-live="polite">
+                                            @foreach ($savedTimelineItems as $milestone)
+                                                <article
+                                                    class="saved-timeline-slide card border-0 shadow-sm rounded-4 overflow-hidden"
+                                                    data-timeline-id="{{ $milestone->id }}"
+                                                    @if (!$loop->first) hidden @endif>
+                                                    @php
+                                                        // Handle legacy values stored as public/..., /uploads/..., storage/... or full URLs.
+                                                        $rawTimelinePath = trim((string) $milestone->image_path);
+                                                        $timelineImageUrl = null;
+                                                        if ($rawTimelinePath !== '') {
+                                                            if (filter_var($rawTimelinePath, FILTER_VALIDATE_URL)) {
+                                                                $timelineImageUrl = $rawTimelinePath;
+                                                            } else {
+                                                                $cleanPath = ltrim(
+                                                                    str_replace('\\', '/', $rawTimelinePath),
+                                                                    '/',
+                                                                );
+                                                                $cleanPath = preg_replace('#^public/#', '', $cleanPath);
+                                                                $candidates = [$cleanPath];
+                                                                if (str_starts_with($cleanPath, 'storage/')) {
+                                                                    $candidates[] = substr($cleanPath, 8);
+                                                                }
+                                                                $candidates[] =
+                                                                    'uploads/memorial/timelines/' .
+                                                                    basename($cleanPath);
+                                                                foreach (array_unique($candidates) as $candidate) {
+                                                                    if (is_file(public_path($candidate))) {
+                                                                        $timelineImageUrl = asset($candidate);
+                                                                        break;
+                                                                    }
+                                                                    if (
+                                                                        is_file(
+                                                                            storage_path(
+                                                                                'app/public/' .
+                                                                                    preg_replace(
+                                                                                        '#^storage/#',
+                                                                                        '',
+                                                                                        $candidate,
+                                                                                    ),
+                                                                            ),
+                                                                        )
+                                                                    ) {
+                                                                        $timelineImageUrl = asset(
+                                                                            'storage/' .
+                                                                                preg_replace(
+                                                                                    '#^storage/#',
+                                                                                    '',
+                                                                                    $candidate,
+                                                                                ),
+                                                                        );
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    @endphp
+                                                    @if ($timelineImageUrl)
+                                                        <img src="{{ $timelineImageUrl }}"
+                                                            alt="{{ $milestone->title }}"
+                                                            class="w-100 timeline-saved-image"
+                                                            style="height:220px;object-fit:contain;background:#f8f9fa;"
+                                                            onerror="this.hidden=true;this.nextElementSibling.hidden=false;">
+                                                        <div hidden
+                                                            class="timeline-image-fallback bg-light text-muted align-items-center justify-content-center"
+                                                            style="height:120px;text-align:center;padding:40px 10px;">
+                                                            <i class="bi bi-image me-2"></i>Image unavailable
+                                                        </div>
+                                                    @elseif ($rawTimelinePath !== '')
+                                                        <div class="bg-light text-muted text-center py-3 small"><i
+                                                                class="bi bi-image me-2"></i>Image file not found</div>
+                                                    @endif
+                                                    <div class="card-body p-4">
+                                                        <div class="d-flex justify-content-end mb-3">
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-outline-primary rounded-pill px-3 edit-saved-timeline me-2"
+                                                                data-id="{{ $milestone->id }}"
+                                                                data-url="{{ route('timelines.update', $milestone->id) }}"
+                                                                data-title="{{ $milestone->title }}"
+                                                                data-date="{{ $milestone->event_date }}"
+                                                                data-location="{{ $milestone->location }}"
+                                                                data-description="{{ $milestone->description }}"
+                                                                data-icon="{{ $milestone->icon }}"
+                                                                data-visibility="{{ $milestone->visibility }}"><i
+                                                                    class="bi bi-pencil-square me-1"></i>Edit</button>
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-outline-danger rounded-pill px-3 delete-saved-timeline"
+                                                                data-id="{{ $milestone->id }}"
+                                                                data-title="{{ $milestone->title }}"
+                                                                data-url="{{ route('timelines.destroy', $milestone->id) }}"><i
+                                                                    class="bi bi-trash3 me-1"></i>Delete</button>
+                                                        </div>
+                                                        @php
+                                                            $milestoneIconClass =
+                                                                $timelineIcons[$milestone->icon][0] ?? 'bi-star';
+                                                            $milestoneIconLabel = ucwords(
+                                                                str_replace('_', ' ', $milestone->icon ?? 'star'),
+                                                            );
+                                                        @endphp
+                                                        <div
+                                                            class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3 timeline-display-badges">
+                                                            <span class="badge bg-light text-dark border px-3 py-2"><i
+                                                                    class="bi {{ $milestoneIconClass }} text-warning me-2"></i>{{ $milestoneIconLabel }}</span>
+                                                            <span
+                                                                class="badge {{ $milestone->visibility === 'private' ? 'bg-secondary' : 'bg-success' }} px-3 py-2"><i
+                                                                    class="bi {{ $milestone->visibility === 'private' ? 'bi-lock-fill' : 'bi-globe' }} me-1"></i>{{ ucfirst($milestone->visibility) }}</span>
+                                                        </div>
+                                                        <h5 class="fw-bold text-brown mb-3 timeline-display-title"
+                                                            style="overflow-wrap:anywhere;">{{ $milestone->title }}
+                                                        </h5>
+                                                        <div
+                                                            class="d-flex align-items-start gap-2 mb-2 timeline-display-date">
+                                                            <i
+                                                                class="bi bi-calendar-event text-warning"></i><span>{{ $milestone->event_date }}</span>
+                                                        </div>
+                                                        @if ($milestone->location)
+                                                            <div
+                                                                class="d-flex align-items-start gap-2 mb-3 timeline-display-location">
+                                                                <i class="bi bi-geo-alt-fill text-danger"></i><span
+                                                                    style="overflow-wrap:anywhere;">{{ $milestone->location }}</span>
+                                                            </div>
+                                                        @endif
+                                                        @if ($milestone->description)
+                                                            <div
+                                                                class="bg-light rounded-3 p-3 mt-3 timeline-display-description">
+                                                                <h6 class="fw-bold mb-2"><i
+                                                                        class="bi bi-journal-text text-primary me-2"></i>Milestone
+                                                                    Description</h6>
+                                                                <p class="text-muted mb-0"
+                                                                    style="white-space:pre-wrap;overflow-wrap:anywhere;">
+                                                                    {{ $milestone->description }}</p>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </article>
+                                            @endforeach
+                                        </div>
+                                        <p id="savedTimelineEmpty" class="text-muted text-center py-4 mb-0"
+                                            @if ($savedTimelineItems->isNotEmpty()) hidden @endif>No timeline milestones
+                                            saved yet.</p>
+                                        <div class="d-flex justify-content-center align-items-center gap-3 mt-3"
+                                            id="savedTimelineControls"
+                                            @if ($savedTimelineItems->count() < 2) hidden @endif>
+                                            <button type="button" class="btn btn-outline-secondary rounded-circle"
+                                                id="savedTimelinePrev" aria-label="Previous milestone"><i
+                                                    class="bi bi-chevron-left"></i></button>
+                                            <span class="small fw-semibold" id="savedTimelinePosition">1 /
+                                                {{ $savedTimelineItems->count() }}</span>
+                                            <button type="button" class="btn btn-outline-secondary rounded-circle"
+                                                id="savedTimelineNext" aria-label="Next milestone"><i
+                                                    class="bi bi-chevron-right"></i></button>
+                                        </div>
+                                    </div>
+                                </section>
                             </div>
                             <!-- Tab 6: Upcoming Events Tab -->
                             <!-- <div class="tab-pane fade" id="tab-events" role="tabpanel">
@@ -1883,7 +2238,8 @@
                                         <div class="card border-0 shadow-sm bg-light p-3 mb-3 event-card-item">
                                             <div class="d-flex justify-content-between align-items-center mb-2">
                                                 <span class="badge bg-secondary">Event #1</span>
-                                                <button type="button" class="btn btn-sm text-danger delete-event-btn"
+                                                <button type="button"
+                                                    class="btn btn-sm text-danger delete-event-btn"
                                                     title="Delete Event">
                                                     <i class="bi bi-trash fs-6"></i>
                                                 </button>
@@ -2298,12 +2654,31 @@
 
                                 </a> -->
 
-                            <a href="{{ url('admin/create_my_event') }}"
-                                class="btn-outline-dark-custom btn-sm text-start text-decoration-none d-flex justify-content-between align-items-center p-2 rounded">
-                                <span><i class="bi bi-calendar-event me-2" style="color: #6f42c1;"></i>
-                                    Events</span>
-                                <i class="bi bi-plus-circle text-primary"></i>
-                            </a>
+                            @php
+                                $currentUser = Auth::user();
+                                $canCreateEvt = $currentUser?->canCreateEvent() ?? false;
+                            @endphp
+
+                            @if ($canCreateEvt)
+                                <a href="{{ route('memoryUser.create_event') }}"
+                                    class="btn-outline-dark-custom btn-sm text-start text-decoration-none d-flex justify-content-between align-items-center p-2 rounded">
+                                    <span>
+                                        <i class="bi bi-calendar-event me-2" style="color: #6f42c1;"></i> Events
+                                    </span>
+                                    <i class="bi bi-plus-circle text-primary"></i>
+                                </a>
+                            @else
+                                <a href="{{ route('billing.index') }}"
+                                    class="btn-outline-dark-custom btn-sm text-start text-decoration-none d-flex justify-content-between align-items-center p-2 rounded opacity-75"
+                                    title="Active package required to create events">
+                                    <span>
+                                        <i class="bi bi-lock-fill me-2 text-warning"></i> Events
+                                    </span>
+                                    <span class="badge bg-warning text-dark fw-bold" style="font-size: 0.65rem;">
+                                        Buy Package
+                                    </span>
+                                </a>
+                            @endif
 
 
                             <a href="#tab-donations" data-bs-toggle="tab" role="tab"
@@ -2314,17 +2689,142 @@
                         </div>
                     </div>
                     <div class="sidebar-card p-4 shadow-sm bg-white mb-4 text-center">
-                        <h6 class="fw-bold text-brown mb-3 font-serif">Profile Picture</h6>
-                        <div class="mb-3">
-                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120"
-                                class="rounded-circle border border-3 border-warning shadow-sm" width="90"
-                                height="90" alt="Profile">
-                        </div>
-                        <input type="file" class="form-control form-control-sm mb-2">
-                        <small class="text-muted" style="font-size: 0.75rem;">Upload main portrait photo for the
-                            memorial page header.</small>
-                    </div>
 
+                        <h6 class="fw-bold text-brown mb-3 font-serif">
+                            Memorial QR Code
+                        </h6>
+
+                        @if ($memory?->profile)
+
+                            @if ($qrImage && File::exists(public_path($qrImage->path)))
+                                <!-- QR Code Preview -->
+                                <div class="mb-3">
+                                    <img src="{{ asset($qrImage->path) }}"
+                                        class="img-fluid rounded border p-2 shadow-sm" width="180"
+                                        height="180" alt="Memorial QR Code">
+                                </div>
+
+                                <p class="text-muted small mb-3">
+                                    Scan this QR code to visit the memorial page.
+                                </p>
+
+                                <!-- Download QR Code -->
+                                <a href="{{ asset($qrImage->path) }}"
+                                    download="memorial_qr_{{ $memory->profile->id }}.png"
+                                    class="btn btn-success btn-sm w-100 mb-2">
+
+                                    <i class="bi bi-download me-1"></i>
+                                    Download QR Code
+                                </a>
+
+                                <!-- Regenerate QR Button -->
+                                <button type="button" class="btn btn-outline-warning btn-sm w-100"
+                                    data-bs-toggle="modal" data-bs-target="#regenerateQrModal">
+
+                                    <i class="bi bi-arrow-clockwise me-1"></i>
+                                    Regenerate QR Code
+                                </button>
+                            @else
+                                <!-- No QR Code -->
+                                <div class="mb-3">
+                                    <i class="bi bi-qr-code" style="font-size: 65px; color: #aaa;"></i>
+                                </div>
+
+                                <p class="text-muted small mb-3">
+                                    Generate a QR code to share this memorial page.
+                                </p>
+
+                                <!-- Generate QR Code -->
+                                <form action="{{ route('profile.generateQr', $memory->profile->id) }}"
+                                    method="POST">
+
+                                    @csrf
+
+                                    <button type="submit" class="btn btn-warning btn-sm w-100">
+
+                                        <i class="bi bi-qr-code me-1"></i>
+                                        Generate QR Code
+                                    </button>
+
+                                </form>
+                            @endif
+                        @else
+                            <p class="text-muted small mb-0">
+                                Please create your memorial profile before generating a QR code.
+                            </p>
+
+                        @endif
+
+                    </div>
+                    @if ($memory?->profile)
+                        <!-- Regenerate QR Confirmation Modal -->
+                        <div class="modal fade" id="regenerateQrModal" tabindex="-1"
+                            aria-labelledby="regenerateQrModalLabel" aria-hidden="true">
+
+                            <div class="modal-dialog modal-dialog-centered">
+
+                                <div class="modal-content border-0 shadow rounded-3">
+
+                                    <!-- Modal Header -->
+                                    <div class="modal-header border-0">
+
+                                        <h5 class="modal-title fw-bold" id="regenerateQrModalLabel">
+
+                                            <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+                                            Regenerate QR Code
+
+                                        </h5>
+
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal">
+                                        </button>
+
+                                    </div>
+
+                                    <!-- Modal Body -->
+                                    <div class="modal-body">
+
+                                        <span>
+                                            Are you sure you want to regenerate this QR code?
+                                        </span>
+
+                                        <p class="text-danger small mt-2 mb-0">
+                                            The existing QR code image will be replaced with a new one.
+                                        </p>
+
+                                    </div>
+
+                                    <!-- Modal Footer -->
+                                    <div class="modal-footer border-0">
+
+                                        <button type="button" class="btn btn-outline-secondary"
+                                            data-bs-dismiss="modal">
+
+                                            No
+
+                                        </button>
+
+                                        <form action="{{ route('profile.generateQr', $memory->profile->id) }}"
+                                            method="POST" class="m-0">
+
+                                            @csrf
+
+                                            <button type="submit" class="btn btn-warning">
+
+                                                <i class="bi bi-arrow-clockwise me-1"></i>
+                                                Yes, Regenerate
+
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    @endif
                 </div>
 
             </div>
@@ -2850,7 +3350,7 @@
                     if (!contentType.includes('application/json')) {
                         throw new Error(
                             'The server returned an unexpected response. Please check the Laravel log.'
-                            );
+                        );
                     }
                     const result = await response.json();
 
@@ -2882,6 +3382,9 @@
 
                     timelineToast(result.message || 'Timeline milestones saved successfully!',
                         'success');
+                    window.dispatchEvent(new CustomEvent('memorial:timelines-saved', {
+                        detail: result.timelines || []
+                    }));
 
                     // Clear submitted milestones so another click cannot create duplicates.
                     const cards = timelineContainer.querySelectorAll('.timeline-item');
@@ -4703,12 +5206,15 @@ Requirements:
                         });
                         syncInput(type);
                         (result.media || []).forEach(media => {
+                            // Only show approved media in the saved gallery.
+                            if (Number(media.status) !== 1) return;
                             if (!media.id || !media.url) return;
                             grid.append(makeCard(type, {
                                 id: media.id,
                                 url: media.url,
                                 name: media.file_name,
-                                mime: media.mime_type
+                                mime: media.mime_type,
+                                status: media.status
                             }));
                         });
                         toast(result.message || 'Media saved successfully.', 'success');
@@ -4783,6 +5289,423 @@ Requirements:
             @endif
         });
     </script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('savedTimelineSlides');
+            if (!container) return;
+            const empty = document.getElementById('savedTimelineEmpty');
+            const controls = document.getElementById('savedTimelineControls');
+            const position = document.getElementById('savedTimelinePosition');
+            const count = document.getElementById('savedTimelineCount');
+            const previous = document.getElementById('savedTimelinePrev');
+            const next = document.getElementById('savedTimelineNext');
+            let active = 0;
+            const slides = () => Array.from(container.querySelectorAll('.saved-timeline-slide'));
+
+            function render() {
+                const all = slides();
+                active = all.length ? Math.min(Math.max(active, 0), all.length - 1) : 0;
+                all.forEach((slide, index) => slide.hidden = index !== active);
+                empty.hidden = all.length !== 0;
+                controls.hidden = all.length < 2;
+                count.textContent = `${all.length} milestone${all.length === 1 ? '' : 's'}`;
+                position.textContent = all.length ? `${active + 1} / ${all.length}` : '0 / 0';
+            }
+            previous.addEventListener('click', () => {
+                const n = slides().length;
+                if (n) {
+                    active = (active - 1 + n) % n;
+                    render();
+                }
+            });
+            next.addEventListener('click', () => {
+                const n = slides().length;
+                if (n) {
+                    active = (active + 1) % n;
+                    render();
+                }
+            });
+            const iconClasses = {
+                star: 'bi-star',
+                birth: 'bi-balloon-heart',
+                education: 'bi-mortarboard',
+                career: 'bi-briefcase',
+                meeting: 'bi-people',
+                marriage: 'bi-heart',
+                home: 'bi-house',
+                retired: 'bi-tree',
+                passed_away: 'bi-flag'
+            };
+            const el = (tag, className, value) => {
+                const node = document.createElement(tag);
+                if (className) node.className = className;
+                if (value != null) node.textContent = value;
+                return node;
+            };
+            window.addEventListener('memorial:timelines-saved', event => {
+                const items = Array.isArray(event.detail) ? event.detail : [];
+                items.forEach(item => {
+                    if (slides().some(s => s.dataset.timelineId === String(item.id))) return;
+                    const article = el('article',
+                        'saved-timeline-slide card border-0 shadow-sm rounded-4 overflow-hidden'
+                    );
+                    article.dataset.timelineId = String(item.id);
+                    article.hidden = true;
+                    if (item.image_url) {
+                        const img = el('img', 'w-100');
+                        img.src = item.image_url;
+                        img.alt = 'Timeline milestone image';
+                        img.style.cssText = 'height:220px;object-fit:contain;background:#f8f9fa;';
+                        img.addEventListener('error', () => {
+                            img.remove();
+                            const placeholder = el('div',
+                                'bg-light text-muted text-center py-3 small',
+                                'Image unavailable');
+                            article.prepend(placeholder);
+                        }, {
+                            once: true
+                        });
+                        article.appendChild(img);
+                    }
+                    const body = el('div', 'card-body p-4');
+                    const deleteWrapper = el('div', 'd-flex justify-content-end mb-3');
+                    const deleteButton = el('button',
+                        'btn btn-sm btn-outline-danger rounded-pill px-3 delete-saved-timeline');
+                    deleteButton.type = 'button';
+                    deleteButton.dataset.id = String(item.id);
+                    deleteButton.dataset.title = item.title || '';
+                    deleteButton.dataset.url = @json(route('timelines.destroy', ['timeline' => '__ID__'])).replace('__ID__',
+                        encodeURIComponent(item.id));
+                    deleteButton.innerHTML = '<i class="bi bi-trash3 me-1"></i>Delete';
+                    const editButton = el('button',
+                        'btn btn-sm btn-outline-primary rounded-pill px-3 edit-saved-timeline me-2'
+                    );
+                    editButton.type = 'button';
+                    editButton.dataset.id = String(item.id);
+                    editButton.dataset.url = @json(route('timelines.update', ['timeline' => '__ID__'])).replace('__ID__',
+                        encodeURIComponent(item.id));
+                    editButton.dataset.title = item.title || '';
+                    editButton.dataset.date = item.event_date || '';
+                    editButton.dataset.location = item.location || '';
+                    editButton.dataset.description = item.description || '';
+                    editButton.dataset.icon = item.icon || 'star';
+                    editButton.dataset.visibility = item.visibility || 'public';
+                    editButton.innerHTML = '<i class="bi bi-pencil-square me-1"></i>Edit';
+                    deleteWrapper.appendChild(editButton);
+                    deleteWrapper.appendChild(deleteButton);
+                    body.appendChild(deleteWrapper);
+                    const badges = el('div',
+                        'd-flex justify-content-between align-items-center flex-wrap gap-2 mb-3 timeline-display-badges'
+                    );
+                    const iconName = item.icon || 'star';
+                    const iconLabel = iconName.replace(/_/g, ' ').replace(/\b\w/g, c => c
+                        .toUpperCase());
+                    const category = el('span', 'badge bg-light text-dark border px-3 py-2',
+                        iconLabel);
+                    category.prepend(el('i',
+                        `bi ${iconClasses[iconName] || 'bi-star'} text-warning me-2`));
+                    badges.appendChild(category);
+                    const privateItem = item.visibility === 'private';
+                    const visibility = el('span',
+                        `badge ${privateItem ? 'bg-secondary' : 'bg-success'} px-3 py-2`,
+                        privateItem ? 'Private' : 'Public');
+                    visibility.prepend(el('i',
+                        `bi ${privateItem ? 'bi-lock-fill' : 'bi-globe'} me-1`));
+                    badges.appendChild(visibility);
+                    body.appendChild(badges);
+                    const title = el('h5', 'fw-bold text-brown mb-3 timeline-display-title', item
+                        .title || 'Untitled milestone');
+                    title.style.overflowWrap = 'anywhere';
+                    body.appendChild(title);
+                    const dateRow = el('div',
+                        'd-flex align-items-start gap-2 mb-2 timeline-display-date');
+                    dateRow.appendChild(el('i', 'bi bi-calendar-event text-warning'));
+                    dateRow.appendChild(el('span', '', item.event_date || 'Date not specified'));
+                    body.appendChild(dateRow);
+                    if (item.location) {
+                        const locationRow = el('div',
+                            'd-flex align-items-start gap-2 mb-3 timeline-display-location');
+                        locationRow.appendChild(el('i', 'bi bi-geo-alt-fill text-danger'));
+                        const locationText = el('span', '', item.location);
+                        locationText.style.overflowWrap = 'anywhere';
+                        locationRow.appendChild(locationText);
+                        body.appendChild(locationRow);
+                    }
+                    if (item.description) {
+                        const descriptionBox = el('div',
+                            'bg-light rounded-3 p-3 mt-3 timeline-display-description');
+                        const heading = el('h6', 'fw-bold mb-2', 'Milestone Description');
+                        heading.prepend(el('i', 'bi bi-journal-text text-primary me-2'));
+                        descriptionBox.appendChild(heading);
+                        const description = el('p', 'text-muted mb-0', item.description);
+                        description.style.cssText = 'white-space:pre-wrap;overflow-wrap:anywhere;';
+                        descriptionBox.appendChild(description);
+                        body.appendChild(descriptionBox);
+                    }
+                    article.appendChild(body);
+                    container.appendChild(article);
+                });
+                if (items.length) active = slides().length - items.length;
+                render();
+            });
+            const deleteModalElement = document.getElementById('deleteTimelineModal');
+            const deleteModal = bootstrap.Modal.getOrCreateInstance(deleteModalElement);
+            const confirmDeleteBtn = document.getElementById('confirmDeleteTimeline');
+            let selectedTimeline = null;
+
+            container.addEventListener('click', event => {
+                const button = event.target.closest('.delete-saved-timeline');
+                if (!button) return;
+                selectedTimeline = {
+                    url: button.dataset.url,
+                    slide: button.closest('.saved-timeline-slide')
+                };
+                document.getElementById('deleteTimelineTitle').textContent = button.dataset.title ||
+                    'this milestone';
+                deleteModal.show();
+            });
+
+            confirmDeleteBtn.addEventListener('click', async () => {
+                if (!selectedTimeline) return;
+                const target = selectedTimeline;
+                confirmDeleteBtn.disabled = true;
+                confirmDeleteBtn.innerHTML =
+                    '<span class="spinner-border spinner-border-sm me-2"></span>Deleting...';
+                try {
+                    const response = await fetch(target.url, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': @json(csrf_token()),
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+                    const data = await response.json();
+                    if (!response.ok || !data.success) throw new Error(data.message ||
+                        'Failed to delete timeline.');
+                    target.slide?.remove();
+                    render();
+                    deleteModal.hide();
+                    selectedTimeline = null;
+                    if (typeof showSessionToast === 'function') showSessionToast(data.message ||
+                        'Timeline deleted successfully!', 'success');
+                } catch (error) {
+                    if (typeof showSessionToast === 'function') showSessionToast(error.message,
+                        'error');
+                    else alert(error.message);
+                } finally {
+                    confirmDeleteBtn.disabled = false;
+                    confirmDeleteBtn.innerHTML = '<i class="bi bi-trash me-1"></i>Yes, Delete';
+                }
+            });
+            // Edit a saved timeline milestone without reloading the page.
+            const editTimelineModal = bootstrap.Modal.getOrCreateInstance(document.getElementById(
+                'editTimelineModal'));
+            const editTimelineForm = document.getElementById('editTimelineForm');
+            let editingSlide = null;
+            container.addEventListener('click', event => {
+                const button = event.target.closest('.edit-saved-timeline');
+                if (!button) return;
+                editingSlide = button.closest('.saved-timeline-slide');
+                editTimelineForm.action = button.dataset.url;
+                for (const [field, key] of Object.entries({
+                        title: 'title',
+                        event_date: 'date',
+                        location: 'location',
+                        description: 'description',
+                        icon: 'icon',
+                        visibility: 'visibility'
+                    })) editTimelineForm.elements[field].value = button.dataset[key] || '';
+                editTimelineForm.elements.image.value = '';
+                document.getElementById('editTimelineError').textContent = '';
+                editTimelineModal.show();
+            });
+            editTimelineForm.addEventListener('submit', async event => {
+                event.preventDefault();
+                if (!editingSlide || !editTimelineForm.reportValidity()) return;
+                const save = document.getElementById('saveEditedTimeline');
+                save.disabled = true;
+                const original = save.innerHTML;
+                save.textContent = 'Saving...';
+                const errorBox = document.getElementById('editTimelineError');
+                errorBox.textContent = '';
+                try {
+                    const payload = new FormData(editTimelineForm);
+                    payload.set('_method', 'PUT');
+                    const response = await fetch(editTimelineForm.action, {
+                        method: 'POST',
+                        body: payload,
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': @json(csrf_token())
+                        }
+                    });
+                    const result = await response.json();
+                    if (!response.ok || !result.success) {
+                        const validation = result.errors ? Object.values(result.errors).flat().join(
+                            ' ') : '';
+                        throw new Error(validation || result.message || 'Unable to update timeline.');
+                    }
+                    const item = result.timeline;
+                    const editButton = editingSlide.querySelector('.edit-saved-timeline');
+                    Object.assign(editButton.dataset, {
+                        title: item.title,
+                        date: item.event_date,
+                        location: item.location || '',
+                        description: item.description || '',
+                        icon: item.icon,
+                        visibility: item.visibility
+                    });
+                    editingSlide.querySelector('.delete-saved-timeline').dataset.title = item.title;
+                    editingSlide.querySelector('.timeline-display-title').textContent = item.title;
+                    editingSlide.querySelector('.timeline-display-date span').textContent = item
+                        .event_date;
+                    const body = editingSlide.querySelector('.card-body');
+                    const oldLocation = body.querySelector('.timeline-display-location');
+                    if (oldLocation) oldLocation.remove();
+                    if (item.location) {
+                        const loc = el('div',
+                            'd-flex align-items-start gap-2 mb-3 timeline-display-location');
+                        loc.appendChild(el('i', 'bi bi-geo-alt-fill text-danger'));
+                        const span = el('span', '', item.location);
+                        span.style.overflowWrap = 'anywhere';
+                        loc.appendChild(span);
+                        body.querySelector('.timeline-display-date').after(loc);
+                    }
+                    const oldDescription = body.querySelector('.timeline-display-description');
+                    if (oldDescription) oldDescription.remove();
+                    if (item.description) {
+                        const box = el('div',
+                            'bg-light rounded-3 p-3 mt-3 timeline-display-description');
+                        const heading = el('h6', 'fw-bold mb-2', 'Milestone Description');
+                        heading.prepend(el('i', 'bi bi-journal-text text-primary me-2'));
+                        box.appendChild(heading);
+                        const paragraph = el('p', 'text-muted mb-0', item.description);
+                        paragraph.style.cssText = 'white-space:pre-wrap;overflow-wrap:anywhere;';
+                        box.appendChild(paragraph);
+                        body.appendChild(box);
+                    }
+                    const badges = body.querySelector('.timeline-display-badges');
+                    const category = badges.children[0];
+                    category.textContent = item.icon.replace(/_/g, ' ').replace(/\b\w/g, c => c
+                        .toUpperCase());
+                    category.prepend(el('i',
+                        `bi ${iconClasses[item.icon] || 'bi-star'} text-warning me-2`));
+                    const visibility = badges.children[1];
+                    const privateItem = item.visibility === 'private';
+                    visibility.className =
+                        `badge ${privateItem ? 'bg-secondary' : 'bg-success'} px-3 py-2`;
+                    visibility.textContent = privateItem ? 'Private' : 'Public';
+                    visibility.prepend(el('i', `bi ${privateItem ? 'bi-lock-fill' : 'bi-globe'} me-1`));
+                    if (item.image_url) {
+                        let img = editingSlide.querySelector('.timeline-saved-image, img.w-100');
+                        if (!img) {
+                            img = el('img', 'w-100 timeline-saved-image');
+                            img.style.cssText = 'height:220px;object-fit:contain;background:#f8f9fa;';
+                            editingSlide.prepend(img);
+                        }
+                        img.src = item.image_url;
+                        img.alt = item.title;
+                        editingSlide.querySelectorAll('.timeline-image-fallback').forEach(node => node
+                            .remove());
+                    }
+                    editTimelineModal.hide();
+                    if (typeof timelineToast === 'function') timelineToast(
+                        'Timeline updated successfully!', 'success');
+                } catch (error) {
+                    errorBox.textContent = error.message;
+                } finally {
+                    save.disabled = false;
+                    save.innerHTML = original;
+                }
+            });
+            render();
+        });
+    </script>
+
+    <div class="modal fade" id="deleteTimelineModal" tabindex="-1" aria-labelledby="deleteTimelineModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold text-danger" id="deleteTimelineModalLabel"><i
+                            class="bi bi-exclamation-triangle me-2"></i>Delete Timeline</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="bi bi-trash3 text-danger" style="font-size:45px;"></i>
+                    <h6 class="fw-bold mt-3">Are you sure?</h6>
+                    <p class="text-muted small">Do you want to permanently delete <strong
+                            id="deleteTimelineTitle"></strong>?</p>
+                    <p class="text-danger small mb-0">This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="btn btn-light border rounded-pill px-4"
+                        data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger rounded-pill px-4" id="confirmDeleteTimeline"><i
+                            class="bi bi-trash me-1"></i>Yes, Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editTimelineModal" tabindex="-1" aria-labelledby="editTimelineModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold text-brown" id="editTimelineModalLabel"><i
+                            class="bi bi-pencil-square me-2"></i>Edit Timeline Milestone</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <form id="editTimelineForm" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6"><label class="form-label fw-semibold">Title *</label><input
+                                    class="form-control" name="title" required maxlength="255"></div>
+                            <div class="col-md-6"><label class="form-label fw-semibold">Event Date *</label><input
+                                    class="form-control" name="event_date" required maxlength="100"
+                                    type="text"></div>
+                            <div class="col-12"><label class="form-label fw-semibold">Location</label><input
+                                    class="form-control" name="location" maxlength="255"></div>
+                            <div class="col-12"><label class="form-label fw-semibold">Description</label>
+                                <textarea class="form-control" name="description" rows="4" maxlength="5000"></textarea>
+                            </div>
+                            <div class="col-md-6"><label class="form-label fw-semibold">Milestone Icon
+                                    *</label><select class="form-select" name="icon" required>
+                                    @foreach (['star', 'birth', 'education', 'career', 'meeting', 'marriage', 'home', 'retired', 'passed_away'] as $icon)
+                                        <option value="{{ $icon }}">
+                                            {{ ucwords(str_replace('_', ' ', $icon)) }}</option>
+                                    @endforeach
+                                </select></div>
+                            <div class="col-md-6"><label class="form-label fw-semibold">Visibility *</label><select
+                                    class="form-select" name="visibility" required>
+                                    <option value="public">Public</option>
+                                    <option value="private">Private</option>
+                                </select></div>
+                            <div class="col-12"><label class="form-label fw-semibold">Replace Image
+                                    (optional)</label><input class="form-control" name="image" type="file"
+                                    accept="image/jpeg,image/png,image/webp">
+                                <div class="form-text">Leave empty to keep the current image. Maximum 5 MB.</div>
+                            </div>
+                        </div>
+                        <div id="editTimelineError" class="text-danger small mt-3" role="alert"></div>
+                    </div>
+                    <div class="modal-footer border-0"><button type="button"
+                            class="btn btn-light border rounded-pill px-4"
+                            data-bs-dismiss="modal">Cancel</button><button type="submit"
+                            class="btn btn-warning rounded-pill px-4 fw-bold" id="saveEditedTimeline"><i
+                                class="bi bi-check2-circle me-1"></i>Save Changes</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 </body>
 

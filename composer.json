@@ -10,6 +10,7 @@
         "laravel/cashier": "^16.9",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
+        "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-permission": "^6.25",
         "stevebauman/location": "^7.7"
     },

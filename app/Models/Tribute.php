@@ -12,7 +12,7 @@ class Tribute extends Model
     protected $fillable = [
         'memory_id',
         'user_id',
-        'single_item_id', // හෝ package_id
+        'package_id',
         'tribute_type',
         'flower_count',
         'candle_count',
@@ -30,15 +30,19 @@ class Tribute extends Model
         'total_amount' => 'float',
     ];
 
-    // Single Item එක සමඟ සම්බන්ධය
-    public function singleItem()
+    // මෙම relationship එක Model එකට එකතු කරන්න
+    public function user()
     {
-        return $this->belongsTo(SingleItem::class, 'single_item_id');
+        return $this->belongsTo(User::class);
     }
 
-    // අදාළ Memory එක සමඟ සම්බන්ධය
     public function memory()
     {
         return $this->belongsTo(Memory::class);
+    }
+
+    public function singleItem()
+    {
+        return $this->belongsTo(SingleItem::class, 'package_id');
     }
 }

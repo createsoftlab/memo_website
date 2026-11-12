@@ -2,18 +2,9 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - Lallan Writer Memorial</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('memo_website_dev_frontend/assets/css/main.css') }}">
-    <link rel="stylesheet" href="{{ asset('memo_website_dev_frontend/assets/css/tribute.css') }}">
-
-</head>
-
-<body>
-
     @php
 
         // $coverImage = \App\Models\Image::where('profile_id', $memory->profile?->id)->where('type', 'cover')->first();
@@ -28,6 +19,60 @@
 
         $deathYear = $profile->date_of_death ? \Carbon\Carbon::parse($profile->date_of_death)->format('Y') : null;
     @endphp
+    @php
+        $shareUrl = url('/memory_index/' . $memory->profile->slug);
+
+        $shareImage = $profileImage ? asset($profileImage->path) : asset('images/profile_photo.png');
+
+        $shareTitle = trim(
+            ($memory->profile->first_name ?? '') .
+                ' ' .
+                ($memory->profile->middle_name ?? '') .
+                ' ' .
+                ($memory->profile->last_name ?? ''),
+        );
+
+        $shareDescription = $memory->tribute_quote ?: 'Remembering a beautiful life on Forever Missed.';
+    @endphp
+    <!-- Page Title -->
+    <title>{{ $shareTitle }} | Forever Missed</title>
+
+    <!-- SEO -->
+    <meta name="description" content="{{ $shareDescription }}">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Forever Missed">
+
+    <meta property="og:title" content="{{ $shareTitle }} | Forever Missed">
+
+    <meta property="og:description" content="{{ $shareDescription }}">
+
+    <meta property="og:url" content="{{ $shareUrl }}">
+
+    <meta property="og:image" content="{{ $shareImage }}">
+
+    <meta property="og:image:secure_url" content="{{ $shareImage }}">
+
+    <meta property="og:image:alt" content="{{ $shareTitle }} Memorial Photo">
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta name="twitter:title" content="{{ $shareTitle }} | Forever Missed">
+
+    <meta name="twitter:description" content="{{ $shareDescription }}">
+
+    <meta name="twitter:image" content="{{ $shareImage }}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('memo_website_dev_frontend/assets/css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('memo_website_dev_frontend/assets/css/tribute.css') }}">
+
+</head>
+
+<body>
 
     @include('home.header')
 
@@ -36,17 +81,19 @@
         <div class="container py-4">
             <div class="row align-items-center">
                 <div class="col-8">
-                    <h1 class="memorial-title text-white mb-0">{{ $memory->profile?->first_name }}
-                        {{ $memory->profile?->last_name }}</h1>
+                    <h1 class="memorial-title text-white mb-0">
+                        {{ $memory->profile?->first_name }} {{ $memory->profile?->last_name }}
+                    </h1>
                     @if ($birthYear || $deathYear)
                         <p class="fs-4 text-white-50 font-serif mb-0">
                             {{ collect([$birthYear, $deathYear])->filter()->implode(' - ') }}
                         </p>
                     @endif
                 </div>
-                <div class="col-4 text-end"><img
-                        src="{{ $profileImage ? asset($profileImage->path) : asset('images/profile_photo.png') }}"
-                        class="memorial-avatar rounded-3 shadow" alt="Profile"></div>
+                <div class="col-4 text-end">
+                    <img src="{{ $profileImage ? asset($profileImage->path) : asset('images/profile_photo.png') }}"
+                        class="memorial-avatar rounded-3 shadow" alt="Profile">
+                </div>
             </div>
         </div>
 
@@ -59,7 +106,6 @@
                 <span id="audioText" class="small">Mute Music</span>
             </button>
 
-            <!-- Hidden HTML5 Audio Element (Autoplay without muted) -->
             <audio id="memorialAudio" autoplay loop>
                 <source src="{{ asset($backgroundMusic->path) }}" type="audio/mpeg">
                 Your browser does not support the audio element.
@@ -80,9 +126,9 @@
                         href="{{ url('/memories_stories/' . $memory->profile->slug) }}">STORIES</a></li>
                 <li class="nav-item"><a class="nav-link"
                         href="{{ url('/memories_timeline/' . $memory->profile->slug) }}">TIMELINE</a></li>
-                <li class="nav-item"><a class="nav-link "
+                <li class="nav-item"><a class="nav-link"
                         href="{{ url('/memories_event/' . $memory->profile->slug) }}">EVENTS</a></li>
-                <li class="nav-item"><a class="nav-link "
+                <li class="nav-item"><a class="nav-link"
                         href="{{ url('/memories_donation/' . $memory->profile->slug) }}">DONATIONS</a></li>
             </ul>
         </div>
@@ -90,7 +136,6 @@
 
     <!-- Main Content -->
     <main class="container my-4">
-
         <div class="row g-4">
             <div class="col-lg-8">
                 <div class="p-4 bg-white rounded shadow-sm mb-4 reveal-init">
@@ -102,33 +147,36 @@
                     <!-- Personal Details -->
                     @if ($memory->profile?->date_of_birth && $memory->profile?->date_of_death)
                         <ul class="list-unstyled text-muted mb-3 reveal-left">
-                            <li class="mb-1"><i class="bi bi-heart text-memorial me-2"></i>
+                            <li class="mb-1">
+                                <i class="bi bi-heart text-memorial me-2"></i>
                                 <strong>
-                                    {{ (int) \Carbon\Carbon::parse($memory->profile->date_of_birth)->diffInYears(
-                                        \Carbon\Carbon::parse($memory->profile->date_of_death),
-                                    ) }}
+                                    {{ (int) \Carbon\Carbon::parse($memory->profile->date_of_birth)->diffInYears(\Carbon\Carbon::parse($memory->profile->date_of_death)) }}
                                     years old
                                 </strong>
+                            </li>
                     @endif
-                    </li>
                     @if ($memory->profile?->date_of_birth && $memory->profile?->birth_location)
-                        <li class="mb-1"><i class="bi bi-calendar-event me-2 text-memorial"></i>Born on
+                        <li class="mb-1">
+                            <i class="bi bi-calendar-event me-2 text-memorial"></i>Born on
                             {{ \Carbon\Carbon::parse($memory->profile->date_of_birth)->format('F d, Y') }}
-                            in {{ $memory->profile->birth_location }}</li>
+                            in {{ $memory->profile->birth_location }}
+                        </li>
                     @endif
                     @if ($memory->profile?->date_of_death && $memory->profile?->death_location)
-                        <li class="mb-1"><i class="bi bi-calendar-x me-2 text-memorial"></i>Passed away
+                        <li class="mb-1">
+                            <i class="bi bi-calendar-x me-2 text-memorial"></i>Passed away
                             {{ \Carbon\Carbon::parse($memory->profile->date_of_death)->format('F d, Y') }}
-                            in {{ $memory->profile->death_location }}</li>
+                            in {{ $memory->profile->death_location }}
+                        </li>
                     @endif
                     </ul>
+
                     @if ($memory->about)
                         <p class="text-muted mb-4 reveal-init">
                             {{ $memory?->about }}
                         </p>
                         <hr class="my-4 text-muted">
                     @endif
-
 
                     <!-- Funeral Location & Contact Information -->
                     <div class="row g-3 mb-4">
@@ -150,9 +198,9 @@
 
                         <div class="col-md-6 reveal-right">
                             <div class="p-3 bg-light rounded border h-100 shadow-sm">
-                                <h5 class="fw-bold text-dark mb-2"><i
-                                        class="bi bi-telephone-fill text-memorial me-2"></i>Contact Numbers</h5>
-
+                                <h5 class="fw-bold text-dark mb-2">
+                                    <i class="bi bi-telephone-fill text-memorial me-2"></i>Contact Numbers
+                                </h5>
                                 <p class="mb-1 text-dark">
                                     <strong>Family Contact:</strong>
                                     <span class="text-memorial fw-bold">{{ $memory?->family_contact_no }}</span>
@@ -160,10 +208,7 @@
 
                                 @php
                                     $phone = $memory?->family_contact_no;
-
-                                    // Remove +, spaces, brackets and hyphens
                                     $whatsappNumber = preg_replace('/\D/', '', $phone ?? '');
-
                                     $message = urlencode('Hello, I would like to get details about the funeral.');
                                 @endphp
 
@@ -172,9 +217,7 @@
                                         <a href="https://wa.me/{{ $whatsappNumber }}?text={{ $message }}"
                                             target="_blank" rel="noopener noreferrer"
                                             class="btn btn-success btn-sm fw-bold px-3 py-1">
-
-                                            <i class="bi bi-whatsapp me-1"></i>
-                                            Chat on WhatsApp
+                                            <i class="bi bi-whatsapp me-1"></i> Chat on WhatsApp
                                         </a>
                                     </div>
                                 @endif
@@ -196,13 +239,11 @@
                     </div>
 
                     @if ($memory->broadcast_link)
-                        <!-- Live Streaming Section -->
                         <div class="p-3 bg-light rounded border border-memorial text-center mb-4 reveal-zoom">
                             <h5 class="fw-bold text-memorial mb-2">
                                 <i class="bi bi-broadcast me-2"></i>Live Streaming (Funeral Ceremony)
                             </h5>
                             <p class="small text-muted mb-3">You can watch the live ceremony stream directly below:</p>
-
                             <a href="{{ $memory->broadcast_link }}" target="_blank"
                                 class="btn btn-danger btn-sm px-4 fw-bold">
                                 <i class="bi bi-play-circle-fill me-1"></i> Watch Live Stream
@@ -214,8 +255,7 @@
                                 <i class="bi bi-broadcast me-2"></i>Live Streaming (No Live Currently)
                             </h5>
                             <p class="small text-muted mb-3">You can watch the live ceremony stream directly below:</p>
-
-                            <a href="" target="_blank" class="btn btn-danger btn-sm px-4 fw-bold">
+                            <a href="#" class="btn btn-danger btn-sm px-4 fw-bold disabled">
                                 <i class="bi bi-play-circle-fill me-1"></i> Watch Live Stream
                             </a>
                         </div>
@@ -230,27 +270,7 @@
                     </div>
                 </div>
 
-                <!-- Leave a Tribute Section -->
-                @php
-                    use App\Models\SingleItem;
-
-                    // යූසර්ගේ රට ලබා ගැනීම (Login වී ඇත්නම් ඔහුගේ රට, නැත්නම් default අගයක්)
-                    $visitorCountryCode = strtolower(Auth::user()->country ?? 'all');
-
-                    // Flowers ලබා ගැනීම
-                    $flowerPackages = SingleItem::where('type', 'flower')
-                        ->where('is_active', true)
-                        ->forCountry($visitorCountryCode)
-                        ->get();
-
-                    // Candles ලබා ගැනීම
-                    $candlePackages = SingleItem::where('type', 'candle')
-                        ->where('is_active', true)
-                        ->forCountry($visitorCountryCode)
-                        ->get();
-                @endphp
-
-                <!-- Leave a Tribute Section -->
+                <!-- ================= LEAVE A TRIBUTE SECTION ================= -->
                 <div class="tribute-card p-4 rounded-4 shadow-sm bg-white border border-light mb-4 reveal-init">
                     <h5 class="fw-bold mb-3 text-brown font-serif">Leave a Tribute</h5>
 
@@ -343,13 +363,11 @@
                             <form id="memoryTributeForm" action="{{ route('memory.message.store') }}"
                                 method="POST">
                                 @csrf
-                                <!-- Memory ID එක Database එකට pass කිරීමට -->
                                 <input type="hidden" name="memory_id" value="{{ $memory->id }}">
 
                                 <div class="mb-3">
                                     <label class="form-label small fw-bold text-muted">Write your memory or
                                         message:</label>
-                                    <!-- name="message" එකතු කර ඇත -->
                                     <textarea class="form-control mb-2" id="memoryText" name="message" rows="3"
                                         placeholder="I remember the beautiful times we spent together..." required></textarea>
 
@@ -503,7 +521,6 @@
                         const modalElement = document.getElementById('originalTributeModal');
                         const tributeModal = new bootstrap.Modal(modalElement);
 
-                        // Country-specific prices and symbols
                         const flowerPrice = {{ $flowerUnitPrice }};
                         const candlePrice = {{ $candleUnitPrice }};
 
@@ -543,7 +560,6 @@
                                 document.getElementById('tributeMessageInput').value = document.getElementById(
                                     'flowerText')?.value || '';
 
-                                // Retain entered name if already typed
                                 const previousName = document.getElementById('donorNameInput').value;
                                 if (!previousName && document.getElementById('candleName')?.value) {
                                     document.getElementById('donorNameInput').value = document.getElementById(
@@ -592,166 +608,308 @@
                     });
                 </script>
 
-
-                <!-- Recent Tributes Stream & Profile Stats Section -->
+                <!-- ================= RECENT TRIBUTES STREAM & PROFILE STATS SECTION ================= -->
                 <div id="tributesStream" class="mt-4">
+
+                    @php
+                        // 1. Active සහ Expire නොවූ Flowers සහ Candles ලබා ගැනීම
+                        $paidTributes = \App\Models\Tribute::with('user')
+                            ->where('memory_id', $memory->id)
+                            ->where('status', 'active')
+                            ->where(function ($q) {
+                                $q->whereNull('expire_date')->orWhere('expire_date', '>', now());
+                            })
+                            ->get()
+                            ->map(function ($item) {
+                                $item->feed_type = $item->tribute_type;
+                                return $item;
+                            });
+
+                        // 2. Share a Memory (Thoughts) ලබා ගැනීම
+                        $memoryMessages = \App\Models\MemoryMessage::with('user')
+                            ->where('memory_id', $memory->id)
+                            ->where('status', 'active')
+                            ->get()
+                            ->map(function ($item) {
+                                $item->feed_type = 'thought';
+                                return $item;
+                            });
+
+                        // 3. සියල්ල එකතු කර අලුත්ම ඒවා මුලට එන පරිදි Sort කිරීම
+                        $allTributes = $paidTributes->concat($memoryMessages)->sortByDesc('created_at');
+                    @endphp
 
                     <!-- Profile Stats / Followers & Tributes Header Card -->
                     <div
                         class="profile-stats-card p-3 rounded-4 shadow-sm bg-white mb-4 d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center gap-3">
                             <div class="profile-main-avatar">
-                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop"
+                                <img src="{{ $profileImage ? asset($profileImage->path) : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop' }}"
                                     alt="Profile">
                             </div>
                             <div>
-                                <h6 class="fw-bold text-dark mb-0">Memorial Space</h6>
-                                <span class="text-muted" style="font-size: 0.75rem;"><i
-                                        class="bi bi-people-fill me-1"></i> 142 Followers / Contributors</span>
+                                <h6 class="fw-bold text-dark mb-0">{{ $memory->profile?->first_name }}
+                                    {{ $memory->profile?->last_name }}</h6>
+                                <span class="text-muted" style="font-size: 0.75rem;">
+                                    <i class="bi bi-heart-fill text-danger me-1"></i> {{ $allTributes->count() }}
+                                    Tributes & Memories
+                                </span>
                             </div>
                         </div>
                         <div class="text-end">
                             <span class="badge px-2.5 py-1.5 fw-semibold"
-                                style="background-color: #854d0e; color: #fff; font-size: 0.75rem;">Active
-                                Memorial</span>
+                                style="background-color: #854d0e; color: #fff; font-size: 0.75rem;">
+                                Active Memorial
+                            </span>
                         </div>
                     </div>
 
                     <!-- Section Title & Pagination -->
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="fw-bold mb-0 text-brown font-serif reveal-left">Recent Tributes</h5>
-                        <div class="tribute-pagination-btns d-flex gap-1">
-                            <button type="button" class="btn btn-sm tribute-nav-btn" id="prevTribute"><i
-                                    class="bi bi-chevron-left"></i></button>
-                            <button type="button" class="btn btn-sm tribute-nav-btn" id="nextTribute"><i
-                                    class="bi bi-chevron-right"></i></button>
+                        <div class="tribute-pagination-btns d-flex gap-1" id="tributeNavGroup">
+                            <button type="button" class="btn btn-sm tribute-nav-btn" id="prevTribute">
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm tribute-nav-btn" id="nextTribute">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
                         </div>
                     </div>
 
                     <!-- Tributes Cards Container -->
-                    <div class="tributes-container d-flex flex-column gap-3">
+                    <div class="tributes-container d-flex flex-column gap-3" id="tributeCardsList">
 
-                        <!-- Tribute Card 1 (Large Highlighted Rose Tribute) -->
-                        <div class="card border-0 shadow-sm p-3 rounded-4 bg-white modern-tribute-card">
-                            <div class="d-flex align-items-start gap-3">
-                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop"
-                                    alt="Nimal" class="tribute-user-avatar">
+                        @forelse($allTributes as $tribute)
+                            @php
+                                $donorName = $tribute->user->name ?? ($tribute->donor_name ?? 'Kind Contributor');
+                                $userAvatar = $tribute->user->profile_photo_path ?? ($tribute->user->avatar ?? null);
+                                $initials = strtoupper(substr($donorName, 0, 2));
 
-                                <div class="flex-grow-1">
-                                    <div class="d-flex justify-content-between align-items-center mb-1">
-                                        <span class="fw-bold text-dark small">Nimal</span>
-                                        <span class="text-muted tiny-time">• 10 mins ago</span>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-3">
-                                        <!-- Enlarged & Highlighted Animated Flower Icon -->
-                                        <div class="highlighted-icon-box flower-glow-bg">
-                                            <span class="fs-2 animated-flower-item">🌹</span>
-                                        </div>
-                                        <p class="mb-0 text-dark fw-medium tribute-text">“You will always be remembered
-                                            in our prayers.”</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                $flowerCount = max(1, (int) ($tribute->flower_count ?? 1));
+                                $candleCount = max(1, (int) ($tribute->candle_count ?? 1));
+                            @endphp
 
-                        <!-- Tribute Card 2 (Large Highlighted Candle Tribute) -->
-                        <div class="card border-0 shadow-sm p-3 rounded-4 bg-white modern-tribute-card">
-                            <div class="d-flex align-items-start gap-3">
-                                <div class="tribute-user-initials" style="background-color: #854d0e;">KA</div>
+                            <!-- ================= 1. FLOWER TRIBUTE CARD ================= -->
+                            @if ($tribute->feed_type === 'flower')
+                                <div class="card border-0 shadow-sm p-3 rounded-4 bg-white modern-tribute-card">
+                                    <div class="d-flex align-items-start gap-3">
+                                        @if ($userAvatar)
+                                            <img src="{{ asset($userAvatar) }}" alt="{{ $donorName }}"
+                                                class="tribute-user-avatar">
+                                        @else
+                                            <div class="tribute-user-initials" style="background-color: #854d0e;">
+                                                {{ $initials }}
+                                            </div>
+                                        @endif
 
-                                <div class="flex-grow-1">
-                                    <div class="d-flex justify-content-between align-items-center mb-1">
-                                        <span class="fw-bold text-dark small">Kasun</span>
-                                        <span class="text-muted tiny-time">• 2 hours ago</span>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-3">
-                                        <!-- Enlarged & Highlighted Animated Candle Icon -->
-                                        <div class="highlighted-icon-box candle-glow-bg">
-                                            <div class="user-candle-icon-wrapper">
-                                                <div class="mini-flame"></div>
-                                                <div class="mini-body"></div>
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <span class="fw-bold text-dark small">{{ $donorName }}</span>
+                                                <span
+                                                    class="text-muted tiny-time">{{ $tribute->created_at->diffForHumans() }}</span>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <!-- Quantity එක අනුව මල් ගණන පෙන්වීම -->
+                                                <div class="highlighted-icon-box flower-glow-bg d-inline-flex align-items-center justify-content-center gap-1 flex-wrap p-2"
+                                                    style="width: auto; min-width: 48px;">
+                                                    @for ($i = 0; $i < $flowerCount; $i++)
+                                                        <span class="fs-2 animated-flower-item">🌹</span>
+                                                    @endfor
+                                                </div>
+                                                <p class="mb-0 text-dark fw-medium tribute-text">
+                                                    “{{ $tribute->message ?: 'Sent flowers in loving memory.' }}”
+                                                </p>
                                             </div>
                                         </div>
-                                        <p class="mb-0 text-dark fw-medium tribute-text">Candle lit in loving memory.
-                                        </p>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <!-- Tribute Card 3 (Thought / Message Tribute) -->
-                        <div class="card border-0 shadow-sm p-3 rounded-4 bg-white modern-tribute-card">
-                            <div class="d-flex align-items-start gap-3">
-                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop"
-                                    alt="Amal" class="tribute-user-avatar">
+                                <!-- ================= 2. CANDLE TRIBUTE CARD ================= -->
+                            @elseif($tribute->feed_type === 'candle')
+                                <div class="card border-0 shadow-sm p-3 rounded-4 bg-white modern-tribute-card">
+                                    <div class="d-flex align-items-start gap-3">
+                                        @if ($userAvatar)
+                                            <img src="{{ asset($userAvatar) }}" alt="{{ $donorName }}"
+                                                class="tribute-user-avatar">
+                                        @else
+                                            <div class="tribute-user-initials" style="background-color: #854d0e;">
+                                                {{ $initials }}
+                                            </div>
+                                        @endif
 
-                                <div class="flex-grow-1">
-                                    <div class="d-flex justify-content-between align-items-center mb-1">
-                                        <span class="fw-bold text-dark small">Amal</span>
-                                        <span class="text-muted tiny-time">• Yesterday</span>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div class="highlighted-icon-box thought-glow-bg">
-                                            <span class="fs-3">💭</span>
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <span class="fw-bold text-dark small">{{ $donorName }}</span>
+                                                <span
+                                                    class="text-muted tiny-time">{{ $tribute->created_at->diffForHumans() }}</span>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <!-- Quantity එක අනුව ඉටිපන්දම් ගණන පෙන්වීම -->
+                                                <div class="highlighted-icon-box candle-glow-bg d-inline-flex align-items-center justify-content-center gap-2 flex-wrap p-2"
+                                                    style="width: auto; min-width: 48px;">
+                                                    @for ($i = 0; $i < $candleCount; $i++)
+                                                        <div class="user-candle-icon-wrapper">
+                                                            <div class="mini-flame"></div>
+                                                            <div class="mini-body"></div>
+                                                        </div>
+                                                    @endfor
+                                                </div>
+                                                <p class="mb-0 text-dark fw-medium tribute-text">
+                                                    {{ $tribute->message ?: 'Candle lit in loving memory.' }}
+                                                </p>
+                                            </div>
                                         </div>
-                                        <p class="mb-0 text-dark fw-medium tribute-text">“I remember the beautiful
-                                            times we spent together...”</p>
                                     </div>
                                 </div>
+
+                                <!-- ================= 3. THOUGHT / MEMORY CARD ================= -->
+                            @elseif($tribute->feed_type === 'thought')
+                                <div class="card border-0 shadow-sm p-3 rounded-4 bg-white modern-tribute-card">
+                                    <div class="d-flex align-items-start gap-3">
+                                        @if ($userAvatar)
+                                            <img src="{{ asset($userAvatar) }}" alt="{{ $donorName }}"
+                                                class="tribute-user-avatar">
+                                        @else
+                                            <div class="tribute-user-initials" style="background-color: #5c3a21;">
+                                                {{ $initials }}
+                                            </div>
+                                        @endif
+
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <span class="fw-bold text-dark small">{{ $donorName }}</span>
+                                                <span
+                                                    class="text-muted tiny-time">{{ $tribute->created_at->diffForHumans() }}</span>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="highlighted-icon-box thought-glow-bg">
+                                                    <span class="fs-3">💭</span>
+                                                </div>
+                                                <p class="mb-0 text-dark fw-medium tribute-text">
+                                                    “{{ $tribute->message }}”
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                        @empty
+                            <div class="text-center py-4 bg-white rounded-4 border border-dashed">
+                                <i class="bi bi-heart text-muted fs-3 d-block mb-1"></i>
+                                <p class="text-muted mb-0 small">No tributes yet. Be the first to leave a tribute in
+                                    loving memory.</p>
                             </div>
-                        </div>
+                        @endforelse
 
                     </div>
 
-                    <!-- Pagination Dots Indicator -->
-                    <div class="tribute-dots-container d-flex justify-content-center gap-2 mt-3">
-                        <span class="tribute-dot active" data-page="1"></span>
-                        <span class="tribute-dot" data-page="2"></span>
-                    </div>
+                    <!-- Dynamic Pagination Dots Indicator -->
+                    <div class="tribute-dots-container d-flex justify-content-center gap-2 mt-3"
+                        id="tributeDotsContainer"></div>
                 </div>
 
+                <!-- Pagination Script -->
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const cards = document.querySelectorAll('#tributeCardsList .modern-tribute-card');
+                        const prevBtn = document.getElementById('prevTribute');
+                        const nextBtn = document.getElementById('nextTribute');
+                        const dotsContainer = document.getElementById('tributeDotsContainer');
+                        const navGroup = document.getElementById('tributeNavGroup');
 
+                        const itemsPerPage = 3;
+                        let currentPage = 1;
+                        const totalPages = Math.ceil(cards.length / itemsPerPage);
 
-                <!-- Flower Tribute Modal -->
-                <div class="modal fade" id="flowerModal" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content border-0 shadow-lg rounded-4">
-                            <div class="modal-header border-bottom-0 pb-0">
-                                <h5 class="modal-title font-serif fw-bold text-memorial">Complete Your Flower Tribute
-                                </h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body py-4">
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold text-muted">Your Name:</label>
-                                    <input type="text" class="form-control" id="modalFlowerName"
-                                        placeholder="Enter your name (e.g., Nimal)" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold text-muted">Quantity (Price: $5
-                                        each):</label>
-                                    <input type="number" class="form-control" id="modalFlowerCount" min="1"
-                                        value="1" required>
-                                </div>
-                                <div class="p-3 bg-light rounded-3 border">
-                                    <p class="small text-muted mb-1"><strong>Selected Flower:</strong> <span
-                                            id="modalSelectedFlower" class="fs-4"></span></p>
-                                    <p class="small text-muted mb-0"><strong>Total Price:</strong> <span
-                                            id="modalTotalPrice" class="text-success fw-bold">$5</span></p>
-                                </div>
-                            </div>
-                            <div class="modal-footer border-top-0 pt-0">
-                                <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3"
-                                    data-bs-dismiss="modal">Cancel</button>
-                                <button type="button" class="btn btn-memorial btn-sm rounded-pill px-4 fw-bold"
-                                    id="confirmFlowerBtn">Confirm & Submit</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        if (cards.length === 0) {
+                            if (dotsContainer) dotsContainer.style.display = 'none';
+                            if (navGroup) navGroup.style.display = 'none';
+                            return;
+                        }
+
+                        function buildDots() {
+                            if (!dotsContainer) return;
+                            dotsContainer.innerHTML = '';
+
+                            if (totalPages <= 1) {
+                                dotsContainer.style.display = 'none';
+                                if (navGroup) navGroup.style.display = 'none';
+                                return;
+                            }
+
+                            dotsContainer.style.display = 'flex';
+                            if (navGroup) navGroup.style.display = 'flex';
+
+                            for (let i = 1; i <= totalPages; i++) {
+                                const dot = document.createElement('span');
+                                dot.className = `tribute-dot ${i === currentPage ? 'active' : ''}`;
+                                dot.style.cursor = 'pointer';
+                                dot.dataset.page = i;
+
+                                dot.addEventListener('click', function() {
+                                    goToPage(i);
+                                });
+
+                                dotsContainer.appendChild(dot);
+                            }
+                        }
+
+                        function showPage(page) {
+                            currentPage = page;
+                            const startIndex = (page - 1) * itemsPerPage;
+                            const endIndex = startIndex + itemsPerPage;
+
+                            cards.forEach((card, index) => {
+                                if (index >= startIndex && index < endIndex) {
+                                    card.style.display = 'block';
+                                } else {
+                                    card.style.display = 'none';
+                                }
+                            });
+
+                            if (dotsContainer) {
+                                dotsContainer.querySelectorAll('.tribute-dot').forEach(dot => {
+                                    if (parseInt(dot.dataset.page) === currentPage) {
+                                        dot.classList.add('active');
+                                    } else {
+                                        dot.classList.remove('active');
+                                    }
+                                });
+                            }
+
+                            if (prevBtn) prevBtn.disabled = (currentPage === 1);
+                            if (nextBtn) nextBtn.disabled = (currentPage === totalPages);
+                        }
+
+                        function goToPage(page) {
+                            if (page >= 1 && page <= totalPages) {
+                                showPage(page);
+                            }
+                        }
+
+                        if (prevBtn) {
+                            prevBtn.addEventListener('click', function() {
+                                if (currentPage > 1) {
+                                    goToPage(currentPage - 1);
+                                }
+                            });
+                        }
+
+                        if (nextBtn) {
+                            nextBtn.addEventListener('click', function() {
+                                if (currentPage < totalPages) {
+                                    goToPage(currentPage + 1);
+                                }
+                            });
+                        }
+
+                        buildDots();
+                        showPage(1);
+                    });
+                </script>
             </div>
-
 
             <!-- Common Sidebar -->
             <div class="col-lg-4 d-flex flex-column gap-3">
@@ -759,60 +917,80 @@
                 <!-- Invite Card -->
                 <div class="sidebar-card p-3 rounded">
                     <div class="d-flex justify-content-between align-items-start mb-2">
-                        <h6 class="fw-bold mb-0 me-2 text-dark">Invite Lallan's family and friends</h6>
+                        <h6 class="fw-bold mb-0 me-2 text-dark">Invite {{ $memory->profile?->first_name }}'s family
+                            and friends</h6>
                         <i class="bi bi-person-add fs-4 text-muted"></i>
                     </div>
 
                     <!-- Invite Button -->
-                    <button class="btn btn-invite w-100 py-2 mb-2">
+                    <button type="button" class="btn btn-invite w-100 py-2 mb-2" id="inviteBtn">
                         <i class="bi bi-person-plus me-1"></i> Invite now
                     </button>
 
-                    <!-- Donate Button -->
-                    <button class="btn btn-donate w-100 py-2 mb-2">
-                        <i class="bi bi-heart-fill me-1"></i> Donate now
-                    </button>
+                    <!-- Social Share Icons -->
+                    <div id="socialShareIcons" class="social-share-container mb-3" style="display: none;">
 
-                    <!-- Add Tribute Button -->
+                        <p class="text-center mb-2">Share this Memory</p>
+
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+
+                            <button type="button" class="social-icon facebook" onclick="shareMemory('facebook')">
+                                <i class="bi bi-facebook"></i>
+                            </button>
+
+                            <button type="button" class="social-icon whatsapp" onclick="shareMemory('whatsapp')">
+                                <i class="bi bi-whatsapp"></i>
+                            </button>
+
+                            <button type="button" class="social-icon twitter" onclick="shareMemory('twitter')">
+                                <i class="bi bi-twitter-x"></i>
+                            </button>
+
+                            <button type="button" class="social-icon linkedin" onclick="shareMemory('linkedin')">
+                                <i class="bi bi-linkedin"></i>
+                            </button>
+
+                            <button type="button" class="social-icon telegram" onclick="shareMemory('telegram')">
+                                <i class="bi bi-telegram"></i>
+                            </button>
+
+                            <button type="button" class="social-icon copy-link" onclick="shareMemory('copy')">
+                                <i class="bi bi-link-45deg"></i>
+                            </button>
+
+                        </div>
+                    </div>
+
+                    <a href="{{ route('donation.form', $memory->profile?->slug ?? $memory->slug) }}"
+                        class="btn btn-memorial-submit w-100 py-2 text-white fw-bold mb-3 text-decoration-none text-center d-block shadow-sm">
+                        <i class="bi bi-gift me-1"></i> Make a Donation / Tribute
+                    </a>
+
                     <button class="btn btn-tribute w-100 py-2"
                         onclick="document.getElementById('tributeTabContent').scrollIntoView({behavior: 'smooth'});">
                         <i class="bi bi-chat-heart-fill me-1"></i> Add Tribute
                     </button>
                 </div>
 
-
-
-                <!-- Share on Facebook Button -->
+                {{-- <!-- Share on Facebook Button -->
                 <button class="btn btn-facebook w-100 py-2 d-flex align-items-center justify-content-center gap-2"
                     id="shareFbBtn">
                     <i class="bi bi-facebook fs-5 text-primary"></i>
                     <span>Share on Facebook</span>
-                </button>
-
-                <!-- Notification Preferences Card -->
-                <!-- <div class="sidebar-card p-3 rounded">
-    <h6 class="fw-bold mb-1 text-dark">Notification preferences</h6>
-    <p class="small text-muted mb-3" id="subStatus">You are not subscribed</p>
-    <button class="btn btn-outline-memorial-dark w-100 py-2" id="subscribeBtn">Subscribe</button>
-  </div> -->
+                </button> --}}
 
                 <!-- Photo Section Card -->
                 <div class="sidebar-card p-3 rounded">
-                    <h6 class="fw-bold mb-3 text-dark">1 Photo</h6>
+                    <h6 class="fw-bold mb-3 text-dark">Photos</h6>
                     <div class="mb-3 rounded overflow-hidden">
+
                         <img src="{{ $profileImage ? asset($profileImage->path) : asset('images/profile_photo.png') }}"
-                            class="img-fluid rounded w-100" alt="Lallan Writer">
+                            class="img-fluid rounded w-100" alt="{{ $memory->profile?->first_name }}">
                     </div>
                     <button class="btn btn-outline-memorial-dark w-100 py-2">
                         <i class="bi bi-plus-square me-1"></i> Add photos
                     </button>
                 </div>
-
-                <!-- Recent Updates Card -->
-                <!-- <div class="sidebar-card p-3 rounded">
-    <h6 class="fw-bold mb-1 text-dark">Recent updates</h6>
-    <p class="small text-muted mb-0">No recent activity</p>
-  </div> -->
 
                 <!-- Website Admin Info Card -->
                 <div class="sidebar-card p-3 rounded">
@@ -832,38 +1010,9 @@
                         <span>Open access</span>
                     </div>
                 </div>
-
-                <!-- Helpful Resources Card -->
-                <!-- <div class="sidebar-card p-3 rounded">
-    <div class="d-flex justify-content-between align-items-center mb-1">
-      <h6 class="fw-bold mb-0 text-dark">Helpful resources</h6>
-      <span class="badge bg-light text-muted border border-secondary-subtle font-monospace">HINDI</span>
-    </div>
-    <p class="small text-muted mb-3">Explore additional resources to help you remember your loved one.</p>
-
-    <div class="list-group list-group-flush rounded border border-secondary-subtle overflow-hidden">
-      <a href="#" class="list-group-item list-group-item-action bg-transparent border-bottom d-flex align-items-center justify-content-between py-2 text-dark small">
-        <span><i class="bi bi-journal-text me-2"></i> Read our blog</span>
-        <i class="bi bi-chevron-right text-muted"></i>
-      </a>
-      <a href="#" class="list-group-item list-group-item-action bg-transparent d-flex align-items-center justify-content-between py-2 text-dark small">
-        <span><i class="bi bi-heart me-2"></i> Helpful resources</span>
-        <i class="bi bi-chevron-right text-muted"></i>
-      </a>
-    </div>
-  </div> -->
-
-                <!-- Suggestion Card -->
-                <!-- <div class="sidebar-card p-3 rounded text-center">
-    <p class="small fw-semibold text-dark mb-1">Have a suggestion?</p>
-    <a href="#" class="small text-memorial-accent text-decoration-none fw-bold">Contact us &rarr;</a>
-  </div> -->
-
             </div>
-
+        </div>
     </main>
-
-
 
     <!-- Footer -->
     <footer class="bg-memorial-dark text-white pt-5 pb-3 border-top border-secondary">
@@ -920,140 +1069,18 @@
         </div>
     </footer>
 
-
+    <!-- Global Helper Scripts -->
     <script>
         function insertEmoji(emoji) {
             const memoryText = document.getElementById('memoryText');
-            memoryText.value += emoji;
-            memoryText.focus();
+            if (memoryText) {
+                memoryText.value += emoji;
+                memoryText.focus();
+            }
         }
-
-        // Voice recording simulated interaction
-        document.getElementById('voiceRecordBtn').addEventListener('click', function() {
-            this.classList.toggle('btn-outline-danger');
-            this.classList.toggle('btn-danger');
-            if (this.classList.contains('btn-danger')) {
-                this.innerHTML = '<i class="bi bi-stop-fill"></i> Recording... (Tap to stop)';
-            } else {
-                this.innerHTML = '<i class="bi bi-mic-fill"></i> Voice Message Recorded ✓';
-            }
-        });
     </script>
 
-
-    <script>
-        // Handle Flower Form Submission
-        document.getElementById('flowerTributeForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const selectedFlower = document.querySelector('input[name="flowerChoice"]:checked').value;
-            const message = this.querySelector('textarea').value.trim() || "Sent flowers with loving memory.";
-
-            const tributesStream = document.getElementById('tributesStream');
-            const newCard = document.createElement('div');
-            newCard.className = 'card border-0 shadow-sm p-3 mb-2 rounded-3 bg-white tribute-item';
-            newCard.innerHTML = `
-        <div class="d-flex align-items-start gap-3">
-            <span class="fs-3 animated-flower-item">${selectedFlower}</span>
-            <div>
-                <p class="mb-1 text-dark fst-italic">“${message}”</p>
-                <small class="text-muted">— Guest <span class="ms-2 text-secondary">• Just now</span></small>
-            </div>
-        </div>
-    `;
-            tributesStream.insertBefore(newCard, tributesStream.children[1]);
-            this.reset();
-        });
-    </script>
-
-    <!-- <script>
-        // Handle Candle Form Submission
-        document.getElementById('candleTributeForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const userName = document.getElementById('candleName').value.trim() || 'Anonymous';
-
-            const tributesStream = document.getElementById('tributesStream');
-            const newCard = document.createElement('div');
-            newCard.className = 'card border-0 shadow-sm p-3 mb-2 rounded-3 bg-white tribute-item';
-            newCard.innerHTML = `
-        <div class="d-flex align-items-center gap-3">
-            <div class="user-candle-icon">
-                <div class="mini-flame"></div>
-                <div class="mini-body"></div>
-            </div>
-            <div>
-                <p class="mb-1 text-dark fw-medium">Candle lit in loving memory.</p>
-                <small class="text-muted">— ${userName} <span class="ms-2 text-secondary">• Just now</span></small>
-            </div>
-        </div>
-    `;
-            tributesStream.insertBefore(newCard, tributesStream.children[1]);
-            this.reset();
-        });
-    </script> -->
-
-
-    <script>
-        let selectedFlowerItem = '🌹';
-        let finalFlowerMessage = '';
-
-        // 1. "Send Flowers"
-        document.getElementById('flowerTributeForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            selectedFlowerItem = document.querySelector('input[name="flowerChoice"]:checked').value;
-            finalFlowerMessage = document.getElementById('flowerText').value;
-
-            // Modal
-            document.getElementById('modalSelectedFlower').textContent = selectedFlowerItem;
-            document.getElementById('modalFlowerCount').value = 1;
-            document.getElementById('modalTotalPrice').textContent = '$5';
-            document.getElementById('modalFlowerName').value = '';
-
-            // Bootstrap Modal
-            var myModal = new bootstrap.Modal(document.getElementById('flowerModal'));
-            myModal.show();
-        });
-
-        // 2. Modal Quantity change
-        document.getElementById('modalFlowerCount').addEventListener('input', function() {
-            let qty = parseInt(this.value) || 1;
-            let totalPrice = qty * 5;
-            document.getElementById('modalTotalPrice').textContent = `$${totalPrice}`;
-        });
-
-        document.getElementById('confirmFlowerBtn').addEventListener('click', function() {
-            const name = document.getElementById('modalFlowerName').value;
-            const qty = document.getElementById('modalFlowerCount').value;
-
-            if (!name.trim()) {
-                alert("Please Enter Your Name ");
-                return;
-            }
-
-            const totalPrice = qty * 5;
-            console.log({
-                type: 'flower',
-                name: name,
-                qty: qty,
-                item: selectedFlowerItem,
-                message: finalFlowerMessage,
-                totalPrice: totalPrice
-            });
-
-            alert("Sucessfully submited ");
-
-            let modalElement = document.getElementById('flowerModal');
-            let modalInstance = bootstrap.Modal.getInstance(modalElement);
-            modalInstance.hide();
-
-            document.getElementById('flowerTributeForm').reset();
-        });
-    </script>
-
-
-
-
-    <!-- JavaScript youtube -->
+    <!-- YouTube Live Streaming Script -->
     <script>
         let backendLiveLink = "https://www.youtube.com/watch?v=rtw9hQWOfaI&list=RDrtw9hQWOfaI&start_radio=1";
 
@@ -1061,12 +1088,6 @@
             if (!url || url.trim() === "") return;
 
             const iframe = document.getElementById('liveStreamIframe');
-            const directBtn = document.getElementById('youtubeDirectBtn');
-
-
-            //  directBtn.href = url;
-
-
             let videoId = "";
             if (url.includes("watch?v=")) {
                 videoId = url.split("watch?v=")[1].split("&")[0];
@@ -1074,100 +1095,133 @@
                 videoId = url.split("youtu.be/")[1].split("?")[0];
             }
 
-
-            if (videoId) {
+            if (videoId && iframe) {
                 iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0`;
             }
         }
 
-
         setupLiveStreaming(backendLiveLink);
     </script>
 
-
-
+    <!-- Background Music Controller Script -->
     <script>
         window.addEventListener('DOMContentLoaded', (event) => {
             const audio = document.getElementById('memorialAudio');
             const audioIcon = document.getElementById('audioIcon');
             const audioText = document.getElementById('audioText');
 
+            if (!audio) return;
+
             const isMuted = localStorage.getItem('memorialAudioMuted');
 
             if (isMuted === 'false') {
-
                 audio.muted = false;
                 audio.play().catch(error => console.log("Autoplay restricted"));
-                audioIcon.className = "bi bi-volume-up-fill fs-6 text-warning";
-                audioText.innerText = "Mute Music";
+                if (audioIcon) audioIcon.className = "bi bi-volume-up-fill fs-6 text-warning";
+                if (audioText) audioText.innerText = "Mute Music";
             } else {
-
                 audio.muted = true;
                 audio.play().catch(error => console.log("Autoplay restricted"));
-                audioIcon.className = "bi bi-volume-mute-fill fs-6";
-                audioText.innerText = "Play Music";
+                if (audioIcon) audioIcon.className = "bi bi-volume-mute-fill fs-6";
+                if (audioText) audioText.innerText = "Play Music";
             }
         });
-
 
         function toggleBackgroundMusic() {
             const audio = document.getElementById('memorialAudio');
             const audioIcon = document.getElementById('audioIcon');
             const audioText = document.getElementById('audioText');
 
+            if (!audio) return;
+
             if (audio.muted) {
                 audio.muted = false;
                 audio.play();
-                audioIcon.className = "bi bi-volume-up-fill fs-6 text-warning";
-                audioText.innerText = "Mute Music";
+                if (audioIcon) audioIcon.className = "bi bi-volume-up-fill fs-6 text-warning";
+                if (audioText) audioText.innerText = "Mute Music";
                 localStorage.setItem('memorialAudioMuted', 'false');
             } else {
                 audio.muted = true;
-                audioIcon.className = "bi bi-volume-mute-fill fs-6";
-                audioText.innerText = "Play Music";
+                if (audioIcon) audioIcon.className = "bi bi-volume-mute-fill fs-6";
+                if (audioText) audioText.innerText = "Play Music";
                 localStorage.setItem('memorialAudioMuted', 'true');
             }
         }
     </script>
 
-
-
-    <script>
-        // Option: Optional JavaScript to ensure full width is captured dynamically based on text length
-        document.addEventListener("DOMContentLoaded", function() {
-            const el = document.getElementById("typewriterHeading");
-            if (el) {
-                // මෙහි steps ගණන text එකේ අකුරු ගණනට සමාන කළ හැක (optional)
-            }
-        });
-    </script>
-
-
-
-
+    <!-- Reveal on Scroll Observer -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const observerOptions = {
                 root: null,
                 rootMargin: '0px',
-                threshold: 0.15 // Element eken 15% k screen ekata aawama trigger wei
+                threshold: 0.15
             };
 
             const observer = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('active');
-                        // Animation eka eka parak witharak run wenna oone nam uncomment karanna:
-                        // observer.unobserve(entry.target);
                     }
                 });
             }, observerOptions);
 
-            // Select all elements with reveal classes
             const animatedElements = document.querySelectorAll(
                 '.reveal-init, .reveal-left, .reveal-right, .reveal-zoom');
             animatedElements.forEach(el => observer.observe(el));
         });
+    </script>
+
+    <!-- Share -->
+    <script>
+        const memoryUrl = @json(url('/memory_index/' . $memory->profile->slug));
+        const memoryQuote = @json($memory?->tribute_quote ?? '');
+
+        document.getElementById('inviteBtn').addEventListener('click', function() {
+            const icons = document.getElementById('socialShareIcons');
+
+            icons.style.display =
+                getComputedStyle(icons).display === 'none' ? 'block' : 'none';
+        });
+
+        function shareMemory(platform) {
+            const url = encodeURIComponent(memoryUrl);
+            const quote = encodeURIComponent(memoryQuote);
+
+            let shareUrl = '';
+
+            switch (platform) {
+                case 'facebook':
+                    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+                    break;
+
+                case 'whatsapp':
+                    shareUrl = `https://api.whatsapp.com/send?text=${quote}%0A${url}`;
+                    break;
+
+                case 'twitter':
+                    shareUrl = `https://twitter.com/intent/tweet?text=${quote}&url=${url}`;
+                    break;
+
+                case 'linkedin':
+                    shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+                    break;
+
+                case 'telegram':
+                    shareUrl = `https://t.me/share/url?url=${url}&text=${quote}`;
+                    break;
+
+                case 'copy':
+                    navigator.clipboard.writeText(memoryUrl)
+                        .then(() => alert('Memory link copied!'))
+                        .catch(() => alert('Unable to copy link.'));
+                    return;
+            }
+
+            if (shareUrl) {
+                window.open(shareUrl, '_blank', 'noopener,noreferrer');
+            }
+        }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

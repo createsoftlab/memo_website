@@ -48,7 +48,7 @@
 
     </div>
 
-       @include('home.header')
+    @include('home.header')
 
     <!-- ==========================================================================
        FULL BACKGROUND HERO HEADER WITH PLAY BUTTON & SLIDESHOW
@@ -299,16 +299,54 @@
                                     </div>
                                 </div>
                             </div>
+                            @if ($user)
+                                @if ($user->role === 'general_user')
+                                    <!-- Create Memory CTA Button -->
+                                    <div class="mt-4 text-center text-lg-start">
+                                        <a href="{{ url('/create_memory') }}"
+                                            class="btn btn-create-memory py-3 px-4 fw-bold shadow-sm d-inline-flex align-items-center justify-content-center gap-2 magnetic-btn">
+                                            <i class="bi bi-heart-fill fs-5" style="color: #1a1a1a;"></i>
+                                            <span>Create Your Memory With Your Loved One</span>
+                                            <i class="bi bi-arrow-right ms-1"></i>
+                                        </a>
+                                    </div>
+                                @elseif ($user->role === 'memory_user')
+                                    <div class="mt-4 text-center text-lg-start">
+                                        <a href="{{ route('memoryUser.dashboard') }}"
+                                            class="btn btn-create-memory py-3 px-4 fw-bold shadow-sm d-inline-flex align-items-center justify-content-center gap-2 magnetic-btn">
+                                            <i class="bi bi-heart-fill fs-5" style="color: #1a1a1a;"></i>
+                                            <span>Create Your Memory With Your Loved One</span>
+                                            <i class="bi bi-arrow-right ms-1"></i>
+                                        </a>
+                                    </div>
+                                @else
+                                    <!-- Other Roles: Disabled Button -->
+                                    <div class="mt-4 text-center text-lg-start">
+                                        <button type="button"
+                                            class="btn btn-create-memory py-3 px-4 fw-bold shadow-sm d-inline-flex align-items-center justify-content-center gap-2"
+                                            disabled style="opacity: 0.5; cursor: not-allowed;">
 
-                            <!-- Create Memory CTA Button -->
-                            <div class="mt-4 text-center text-lg-start">
-                                <a href="#create"
-                                    class="btn btn-create-memory py-3 px-4 fw-bold shadow-sm d-inline-flex align-items-center justify-content-center gap-2 magnetic-btn">
-                                    <i class="bi bi-heart-fill fs-5" style="color: #1a1a1a;"></i>
-                                    <span>Create Your Memory With Your Loved One</span>
-                                    <i class="bi bi-arrow-right ms-1"></i>
-                                </a>
-                            </div>
+                                            <i class="bi bi-heart-fill fs-5" style="color: #1a1a1a;"></i>
+
+                                            <span>Create Your Memory With Your Loved One</span>
+
+                                            <i class="bi bi-arrow-right ms-1"></i>
+
+                                        </button>
+                                    </div>
+                                @endif
+                            @else
+                                <!-- Create Memory CTA Button -->
+                                <div class="mt-4 text-center text-lg-start">
+                                    <a href="{{ url('/create_memory') }}"
+                                        class="btn btn-create-memory py-3 px-4 fw-bold shadow-sm d-inline-flex align-items-center justify-content-center gap-2 magnetic-btn">
+                                        <i class="bi bi-heart-fill fs-5" style="color: #1a1a1a;"></i>
+                                        <span>Create Your Memory With Your Loved One</span>
+                                        <i class="bi bi-arrow-right ms-1"></i>
+                                    </a>
+                                </div>
+                            @endif
+
 
                         </div>
                     </div>
@@ -439,12 +477,33 @@
 
                 <!-- Section Bottom Action Buttons -->
                 <div class="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-3 mt-5">
-                    <a href="#" class="btn btn-outline-dark px-4 py-2 fw-bold text-uppercase rounded-3">
-                        <i class="bi bi-grid-3x3-gap-fill me-2"></i>View All Memorials
-                    </a>
-                    <a href="#" class="btn btn-warning px-4 py-2 fw-bold text-uppercase rounded-3 shadow-sm">
-                        <i class="bi bi-plus-circle-fill me-2"></i>Create a Memorial
-                    </a>
+                    @if ($user)
+                        @if ($user->role === 'general_user')
+                            <a href="{{ url('/all_memories') }}"
+                                class="btn btn-outline-dark px-4 py-2 fw-bold text-uppercase rounded-3">
+                                <i class="bi bi-grid-3x3-gap-fill me-2"></i>View All Memorials
+                            </a>
+                            <a href="{{ url('/create_memory') }}"
+                                class="btn btn-warning px-4 py-2 fw-bold text-uppercase rounded-3 shadow-sm">
+                                <i class="bi bi-plus-circle-fill me-2"></i>Create a Memorial
+                            </a>
+                        @else
+                            <a href="{{ url('/all_memories') }}"
+                                class="btn btn-outline-dark px-4 py-2 fw-bold text-uppercase rounded-3">
+                                <i class="bi bi-grid-3x3-gap-fill me-2"></i>View All Memorials
+                            </a>
+                        @endif
+                    @else
+                        <a href="{{ url('/all_memories') }}"
+                            class="btn btn-outline-dark px-4 py-2 fw-bold text-uppercase rounded-3">
+                            <i class="bi bi-grid-3x3-gap-fill me-2"></i>View All Memorials
+                        </a>
+                        <a href="{{ url('/create_memory') }}"
+                            class="btn btn-warning px-4 py-2 fw-bold text-uppercase rounded-3 shadow-sm">
+                            <i class="bi bi-plus-circle-fill me-2"></i>Create a Memorial
+                        </a>
+                    @endif
+
                 </div>
 
             </div>
@@ -452,299 +511,99 @@
 
 
 
-
-
-
-
-
-
-
-        <!-- ==========================================================================
-     SEARCH & DIRECTORY FILTER SECTION (WIDE CONTAINER)
-     ========================================================================== -->
-        <section class="search-filter-section py-5 scroll-animate" id="searchsection">
-            <div class="container-fluid px-md-5 px-3">
-                <div class="row justify-content-center">
-
-                    <div class="col-12 col-xl-12">
-
-                        <div class="filter-card shadow-lg p-3 p-sm-4 p-md-5 text-center">
-
-                            <h2 class="font-serif text-brown fw-bold display-5 mb-2">Search Memorial Directory</h2>
-                            <p class="text-memorial-accent tracking-wide uppercase fw-bold mb-4">
-                                PRESERVE AND SHARE MEMORIES OF YOUR LOVED ONE
-                            </p>
-
-                            <form action="#" method="GET">
-                                <label class="form-label text-brown fw-semibold small mb-3 d-block text-center">
-                                    I want to search memories of:
-                                </label>
-
-                                <div class="row g-2 g-md-3 align-items-center justify-content-center">
-
-
-                                    <div class="col-12 col-sm-6 col-lg-3">
-                                        <input type="text" class="form-control custom-filter-input"
-                                            placeholder="First Name" name="firstname">
-                                    </div>
-
-                                    <div class="col-12 col-sm-6 col-lg-3">
-                                        <input type="text" class="form-control custom-filter-input"
-                                            placeholder="Last Name" name="lastname">
-                                    </div>
-
-                                    <!-- <div class="col-12 col-sm-6 col-lg-2">
-                <select class="form-select custom-filter-input" name="category">
-                  <option value="" selected>Category</option>
-                  <option value="crime-victims">Crime Victims</option>
-                  <option value="family">Family & Relatives</option>
-                  <option value="friends">Friends</option>
-                  <option value="community">Community Leaders</option>
-                  <option value="veterans">Military & Veterans</option>
-                </select>
-              </div> -->
-
-                                    <div class="col-12 col-sm-6 col-lg-2">
-                                        <div class="dropdown w-100">
-                                            <button
-                                                class="btn custom-filter-input text-start d-flex justify-content-between align-items-center w-100"
-                                                type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <span>Category</span>
-                                                <i class="bi bi-chevron-down small text-brown"></i>
-                                            </button>
-                                            <ul class="dropdown-menu w-100 shadow-sm border-card bg-white">
-                                                <li><a class="dropdown-item" href="#">Crime Victims</a></li>
-                                                <li><a class="dropdown-item" href="#">Family & Relatives</a>
-                                                </li>
-                                                <li><a class="dropdown-item" href="#">Friends</a></li>
-                                                <li><a class="dropdown-item" href="#">Military & Veterans</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <!-- <div class="col-12 col-sm-6 col-lg-2">
-                <select class="form-select custom-filter-input" name="country">
-                  <option value="" selected>Country</option>
-                  <option value="sl">Sri Lanka</option>
-                  <option value="us">United States</option>
-                  <option value="uk">United Kingdom</option>
-                  <option value="au">Australia</option>
-                  <option value="ca">Canada</option>
-                </select>
-              </div> -->
-                                    <!-- Country Custom Dropdown -->
-                                    <div class="col-12 col-sm-6 col-lg-2">
-                                        <div class="dropdown custom-dropdown-wrapper w-100">
-
-                                            <!-- Dropdown Button -->
-                                            <button
-                                                class="btn custom-filter-input text-start d-flex justify-content-between align-items-center w-100"
-                                                type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                                id="countryDropdownBtn">
-                                                <span class="dropdown-selected-text">Country</span>
-                                                <i class="bi bi-chevron-down small text-brown ms-2"></i>
-                                            </button>
-
-                                            <!-- Hidden input to hold the selected value for form submit -->
-                                            <input type="hidden" name="country" id="selectedCountryInput"
-                                                value="">
-
-                                            <!-- Custom Dropdown Menu -->
-                                            <ul class="dropdown-menu custom-dropdown-menu w-100 shadow border-card">
-                                                <li><a class="dropdown-item custom-dropdown-item active"
-                                                        href="#" data-value="">Country</a></li>
-                                                <li><a class="dropdown-item custom-dropdown-item" href="#"
-                                                        data-value="sl">Sri Lanka</a></li>
-                                                <li><a class="dropdown-item custom-dropdown-item" href="#"
-                                                        data-value="us">United States</a></li>
-                                                <li><a class="dropdown-item custom-dropdown-item" href="#"
-                                                        data-value="uk">United Kingdom</a></li>
-                                                <li><a class="dropdown-item custom-dropdown-item" href="#"
-                                                        data-value="au">Australia</a></li>
-                                                <li><a class="dropdown-item custom-dropdown-item" href="#"
-                                                        data-value="ca">Canada</a></li>
-                                            </ul>
-
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-lg-2">
-                                        <button type="submit" class="btn btn-filter-submit w-100 fw-bold uppercase">
-                                            SEARCH
-                                        </button>
-                                    </div>
-
-                                </div>
-                            </form>
-
-                            <div class="filter-divider mt-5 position-relative">
-                                <hr class="border-secondary-subtle">
-                                <a href="#"
-                                    class="btn btn-pill-info position-absolute top-50 start-50 translate-middle">
-                                    About online memorials <i class="bi bi-chevron-right ms-1"></i>
-                                </a>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-
-
-        </section>
-
-
-
-
-
-
-        <!-- Featured Categories Section with Multiple 3D Floating Flowers Effect -->
+        <!-- Featured Categories Section -->
         <section class="featured-categories-section py-5 my-lg-5 scroll-animate position-relative overflow-hidden"
             id="categoriesSection">
+
             <!-- Ambient Background Glowing Orbs -->
-            <div class="ambient-glow" style="top: -50px; left: -50px;"></div>
+            <div class="ambient-glow" style="top: -50px; left: -50px;">
+            </div>
+
             <div class="ambient-glow"
                 style="bottom: -50px; right: -50px; background: radial-gradient(circle, rgba(255,192,203,0.08) 0%, rgba(244,240,234,0) 70%);">
             </div>
 
             <div class="container-fluid px-md-4 px-2 position-relative z-1">
+
                 <div class="row justify-content-center align-items-center g-5">
 
-                    <!-- Left Side: Categories Grid (Categories 9) -->
+                    <!-- LEFT SIDE: CATEGORIES -->
                     <div class="col-12 col-lg-7">
 
                         <!-- Section Title -->
                         <div class="section-title text-center text-lg-start mb-4">
-                            <span class="text-memorial-accent fw-bold text-uppercase tracking-wide small">Our Special
-                                Tributes</span>
-                            <h2 class="font-serif text-dark fw-bold display-6 mb-2 text-uppercase">Featured Categories
+
+                            <span class="text-memorial-accent fw-bold text-uppercase tracking-wide small">
+                                Our Special Tributes
+                            </span>
+
+                            <h2 class="font-serif text-dark fw-bold display-6 mb-2 text-uppercase">
+                                Featured Categories
                             </h2>
-                            <p class="text-muted small uppercase tracking-wide">Honoring and remembering through shared
-                                stories</p>
+
+                            <p class="text-muted small uppercase tracking-wide">
+                                Honoring and remembering through shared stories
+                            </p>
+
                         </div>
 
                         <!-- Categories Grid -->
                         <div class="row g-3">
 
-                            <!-- Category 1 -->
-                            <div class="col-12 col-md-6 category-item" style="--i: 1;">
-                                <a href="#"
-                                    class="category-card d-flex align-items-center justify-content-between text-decoration-none p-3 rounded-4 shadow-sm bg-white border border-light">
-                                    <span class="category-title fw-semibold text-dark">COVID-19 victims</span>
-                                    <div class="category-icon-wrapper text-memorial-accent fs-5">
-                                        <i class="bi bi-heart-pulse"></i>
-                                    </div>
-                                </a>
-                            </div>
+                            @php
+                                $categories = [
+                                    ['name' => 'Natural Causes', 'icon' => 'bi-tree'],
+                                    ['name' => 'Old Age', 'icon' => 'bi-hourglass-split'],
+                                    ['name' => 'Cancer', 'icon' => 'bi-heart-pulse'],
+                                    ['name' => 'Heart Attack', 'icon' => 'bi-heartbreak'],
+                                    ['name' => 'Other Illness', 'icon' => 'bi-bandaid'],
+                                    ['name' => 'Road Accident', 'icon' => 'bi-car-front'],
+                                    ['name' => 'Suicide', 'icon' => 'bi-flower1'],
+                                    ['name' => 'Prefer Not to Disclose', 'icon' => 'bi-shield-lock'],
+                                ];
+                            @endphp
 
-                            <!-- Category 2 -->
-                            <div class="col-12 col-md-6 category-item" style="--i: 2;">
-                                <a href="#"
-                                    class="category-card d-flex align-items-center justify-content-between text-decoration-none p-3 rounded-4 shadow-sm bg-white border border-light">
-                                    <span class="category-title fw-semibold text-dark">Veterans</span>
-                                    <div class="category-icon-wrapper text-memorial-accent fs-5">
-                                        <i class="bi bi-award"></i>
-                                    </div>
-                                </a>
-                            </div>
+                            @foreach ($categories as $index => $category)
+                                <div class="col-12 col-md-6 category-item" style="--i: {{ $index + 1 }};">
 
-                            <!-- Category 3 -->
-                            <div class="col-12 col-md-6 category-item" style="--i: 3;">
-                                <a href="#"
-                                    class="category-card d-flex align-items-center justify-content-between text-decoration-none p-3 rounded-4 shadow-sm bg-white border border-light">
-                                    <span class="category-title fw-semibold text-dark">First responders</span>
-                                    <div class="category-icon-wrapper text-memorial-accent fs-5">
-                                        <i class="bi bi-shield-check"></i>
-                                    </div>
-                                </a>
-                            </div>
+                                    <!-- CLICKABLE CATEGORY -->
+                                    <a href="#searchsection"
+                                        class="category-card featured-reason-link d-flex align-items-center justify-content-between text-decoration-none p-3 rounded-4 shadow-sm bg-white border border-light"
+                                        data-reason="{{ $category['name'] }}">
 
-                            <!-- Category 4 -->
-                            <div class="col-12 col-md-6 category-item" style="--i: 4;">
-                                <a href="#"
-                                    class="category-card d-flex align-items-center justify-content-between text-decoration-none p-3 rounded-4 shadow-sm bg-white border border-light">
-                                    <span class="category-title fw-semibold text-dark">Substance abuse victims</span>
-                                    <div class="category-icon-wrapper text-memorial-accent fs-5">
-                                        <i class="bi bi-flower1"></i>
-                                    </div>
-                                </a>
-                            </div>
+                                        <span class="category-title fw-semibold text-dark">
+                                            {{ $category['name'] }}
+                                        </span>
 
-                            <!-- Category 5 -->
-                            <div class="col-12 col-md-6 category-item" style="--i: 5;">
-                                <a href="#"
-                                    class="category-card d-flex align-items-center justify-content-between text-decoration-none p-3 rounded-4 shadow-sm bg-white border border-light">
-                                    <span class="category-title fw-semibold text-dark">Cancer victims</span>
-                                    <div class="category-icon-wrapper text-memorial-accent fs-5">
-                                        <i class="bi bi-ribbon"></i>
-                                    </div>
-                                </a>
-                            </div>
+                                        <div class="category-icon-wrapper text-memorial-accent fs-5">
+                                            <i class="bi {{ $category['icon'] }}"></i>
+                                        </div>
 
-                            <!-- Category 6 -->
-                            <div class="col-12 col-md-6 category-item" style="--i: 6;">
-                                <a href="#"
-                                    class="category-card d-flex align-items-center justify-content-between text-decoration-none p-3 rounded-4 shadow-sm bg-white border border-light">
-                                    <span class="category-title fw-semibold text-dark">Victims of an accident</span>
-                                    <div class="category-icon-wrapper text-memorial-accent fs-5">
-                                        <i class="bi bi-brightness-high"></i>
-                                    </div>
-                                </a>
-                            </div>
+                                    </a>
 
-                            <!-- Category 7 -->
-                            <div class="col-12 col-md-6 category-item" style="--i: 7;">
-                                <a href="#"
-                                    class="category-card d-flex align-items-center justify-content-between text-decoration-none p-3 rounded-4 shadow-sm bg-white border border-light">
-                                    <span class="category-title fw-semibold text-dark">Crime victims</span>
-                                    <div class="category-icon-wrapper text-memorial-accent fs-5">
-                                        <i class="bi bi-peace"></i>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <!-- Category 8 -->
-                            <div class="col-12 col-md-6 category-item" style="--i: 8;">
-                                <a href="#"
-                                    class="category-card d-flex align-items-center justify-content-between text-decoration-none p-3 rounded-4 shadow-sm bg-white border border-light">
-                                    <span class="category-title fw-semibold text-dark">Miscarriage, stillborn &
-                                        infant</span>
-                                    <div class="category-icon-wrapper text-memorial-accent fs-5">
-                                        <i class="bi bi-feather"></i>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <!-- Category 9 -->
-                            <div class="col-12 col-md-6 category-item" style="--i: 9;">
-                                <a href="#"
-                                    class="category-card d-flex align-items-center justify-content-between text-decoration-none p-3 rounded-4 shadow-sm bg-white border border-light">
-                                    <span class="category-title fw-semibold text-dark">Child loss</span>
-                                    <div class="category-icon-wrapper text-memorial-accent fs-5">
-                                        <i class="bi bi-heart"></i>
-                                    </div>
-                                </a>
-                            </div>
+                                </div>
+                            @endforeach
 
                         </div>
+
                     </div>
 
+                    <!-- RIGHT SIDE: 3D FLOATING FLOWERS -->
                     <div class="col-12 col-lg-5 position-relative">
+
                         <div class="relative w-full h-[450px] md:h-[520px] rounded-3xl overflow-hidden border-0 shadow-none"
                             style="background: url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=800&q=80') center/cover no-repeat;">
 
-                            <!-- Dark Overlay to make 3D Doves stand out clearly -->
+                            <!-- Dark Overlay -->
                             <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px] z-0"></div>
 
                             <!-- Top Status Badge -->
                             <div class="absolute top-2 left-2 z-10 flex items-center space-x-2 pointer-events-none">
+
                                 <div
                                     class="px-3 py-1 rounded-xl flex items-center space-x-2 text-xs font-medium text-pink-300 bg-black/40 backdrop-blur-sm border border-white/10">
-
-
                                 </div>
+
                             </div>
 
                             <!-- 3D Canvas Target -->
@@ -752,212 +611,428 @@
                             </div>
 
                         </div>
+
                     </div>
 
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- SEARCH & MEMORIAL DIRECTORY SECTION -->
+        <section class="search-filter-section py-5 scroll-animate" id="searchsection">
+            <div class="container-fluid px-md-5 px-3">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-xl-12">
+
+                        <div class="filter-card shadow-lg p-3 p-sm-4 p-md-5 text-center">
+
+                            <h2 class="font-serif text-brown fw-bold display-5 mb-2">
+                                Search Memorial Directory
+                            </h2>
+
+                            <p class="text-memorial-accent tracking-wide uppercase fw-bold mb-4">
+                                PRESERVE AND SHARE MEMORIES OF YOUR LOVED ONE
+                            </p>
+
+                            <!-- SEARCH FILTERS -->
+                            <form id="memorialFilterForm" autocomplete="off">
+                                <label class="form-label text-brown fw-semibold small mb-3 d-block text-center">
+                                    I want to search memories of:
+                                </label>
+
+                                <div class="row g-2 g-md-3 align-items-center justify-content-center">
+
+                                    <!-- First Name -->
+                                    <div class="col-12 col-sm-6 col-lg-3">
+                                        <input type="text" id="memorialFirstName"
+                                            class="form-control custom-filter-input" placeholder="First Name"
+                                            name="firstname">
+                                    </div>
+
+                                    <!-- Last Name -->
+                                    <div class="col-12 col-sm-6 col-lg-3">
+                                        <input type="text" id="memorialLastName"
+                                            class="form-control custom-filter-input" placeholder="Last Name"
+                                            name="lastname">
+                                    </div>
+
+                                    <!-- REASON DROPDOWN -->
+                                    <div class="col-12 col-sm-6 col-lg-3">
+                                        <div class="dropdown w-100">
+
+                                            <button
+                                                class="btn custom-filter-input text-start d-flex justify-content-between align-items-center w-100"
+                                                type="button" data-bs-toggle="dropdown" aria-expanded="false">
+
+                                                <span id="selectedReason">All Reasons</span>
+
+                                                <i class="bi bi-chevron-down small text-brown"></i>
+                                            </button>
+
+
+                                            <ul class="dropdown-menu w-100 shadow-sm border-card bg-white"
+                                                id="reasonDropdown">
+
+                                                <li>
+                                                    <button type="button" class="dropdown-item reason-option active"
+                                                        data-value="">
+                                                        All Reasons
+                                                    </button>
+                                                </li>
+
+                                                @foreach (['Natural Causes', 'Old Age', 'Cancer', 'Heart Disease', 'Heart Attack', 'Stroke', 'COVID-19', 'Other Illness', 'Accident', 'Road Accident', 'Natural Disaster', 'Suicide', 'Homicide', 'Other', 'Unknown', 'Prefer Not to Disclose'] as $reason)
+                                                    <li>
+                                                        <button type="button" class="dropdown-item reason-option"
+                                                            data-value="{{ $reason }}">
+                                                            {{ $reason }}
+                                                        </button>
+                                                    </li>
+                                                @endforeach
+
+                                            </ul>
+
+                                        </div>
+                                    </div>
+
+                                    <!-- COUNTRY DROPDOWN -->
+                                    <div class="col-12 col-sm-6 col-lg-3">
+                                        <div class="dropdown custom-dropdown-wrapper w-100">
+
+                                            <button
+                                                class="btn custom-filter-input text-start d-flex justify-content-between align-items-center w-100"
+                                                type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                                id="countryDropdownBtn">
+
+                                                <span class="dropdown-selected-text" id="selectedCountry">
+                                                    All Countries
+                                                </span>
+
+                                                <i class="bi bi-chevron-down small text-brown ms-2"></i>
+                                            </button>
+
+                                            <input type="hidden" name="country" id="selectedCountryInput"
+                                                value="">
+
+                                            <ul class="dropdown-menu custom-dropdown-menu w-100 shadow border-card"
+                                                id="countryDropdown">
+                                            </ul>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+
+                            <div class="filter-divider mt-5 position-relative"></div>
+
+                            <!-- MEMORIAL CARDS -->
+                            <div class="row g-4 memorial-cards-section" id="memorialCardsContainer">
+
+                                @foreach ($memories as $memory)
+                                    @php
+                                        $profile = $memory->profile;
+
+                                        $fullName = trim(
+                                            implode(
+                                                ' ',
+                                                array_filter([
+                                                    $profile?->first_name,
+                                                    $profile?->middle_name,
+                                                    $profile?->last_name,
+                                                ]),
+                                            ),
+                                        );
+                                    @endphp
+
+                                    @if ($profile)
+                                        <div class="col-lg-3 col-md-6 memorial-item" data-name="{{ $fullName }}"
+                                            data-first-name="{{ $profile->first_name }}"
+                                            data-last-name="{{ $profile->last_name }}"
+                                            data-category="{{ $profile->passed_away_reason }}"
+                                            data-country="{{ $profile->country }}">
+
+                                            <div class="card h-100 border-0 shadow-sm memorial-grid-card">
+
+                                                <!-- PROFILE IMAGE -->
+                                                <div class="position-relative overflow-hidden rounded-top bg-light">
+
+                                                    @if ($profile->privacy === 'public')
+                                                        <img src="{{ asset($profile->images->first()?->path ?? 'images/profile_photo.png') }}"
+                                                            class="card-img-top memorial-grid-img"
+                                                            alt="Memorial Profile"
+                                                            style="width: 100%; height: 220px; object-fit: contain; object-position: center; background-color: #f5f5f5;">
+                                                    @else
+                                                        <img src="{{ asset('images/profile_photo.png') }}"
+                                                            class="card-img-top memorial-grid-img"
+                                                            alt="Private Memorial"
+                                                            style="width: 100%; height: 220px; object-fit: contain; object-position: center; background-color: #f5f5f5;">
+                                                    @endif
+
+                                                    @if ($profile->passed_away_reason)
+                                                        <span
+                                                            class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2">
+                                                            {{ $profile->passed_away_reason }}
+                                                        </span>
+                                                    @endif
+
+                                                </div>
+
+                                                <!-- CARD CONTENT -->
+                                                <div class="card-body p-3 d-flex flex-column">
+
+                                                    @if ($profile->privacy === 'private')
+                                                        <h6 class="fw-bold text-dark mb-1 text-truncate">
+                                                            {{ $profile->access_username }}
+                                                        </h6>
+                                                    @else
+                                                        <h6 class="fw-bold text-dark mb-1 text-truncate">
+                                                            {{ $fullName }}
+                                                        </h6>
+                                                    @endif
+
+                                                    <!-- DATES AND COUNTRY -->
+                                                    <p class="small text-muted mb-2">
+
+                                                        @if ($profile->date_of_birth && $profile->date_of_death)
+                                                            {{ $profile->date_of_birth }}
+                                                            -
+                                                            {{ $profile->date_of_death }}
+
+                                                            @if ($profile->country)
+                                                                •
+                                                            @endif
+                                                        @endif
+
+                                                        {{ $profile->country }}
+
+                                                    </p>
+
+                                                    <!-- DESCRIPTION -->
+                                                    @if ($profile->privacy === 'public')
+                                                        <p class="small text-secondary mb-3 text-truncate-3">
+                                                            {{ Str::limit($memory->about, 100) }}
+                                                        </p>
+                                                    @endif
+
+                                                    <!-- VIEW MEMORIAL -->
+                                                    @if ($profile->privacy === 'private')
+                                                        <button type="button"
+                                                            class="btn btn-outline-memorial btn-sm mt-auto w-100 fw-semibold"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#privateMemorialModal"
+                                                            data-memorial-slug="{{ $profile->slug }}"
+                                                            data-memorial-name="{{ $fullName }}">
+
+                                                            <i class="bi bi-lock-fill me-1"></i>
+                                                            View Memorial
+                                                        </button>
+                                                    @else
+                                                        <a href="{{ url('/memory_index/' . $profile->slug) }}"
+                                                            class="btn btn-outline-memorial btn-sm mt-auto w-100 fw-semibold">
+
+                                                            View Memorial
+                                                        </a>
+                                                    @endif
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                @endforeach
+
+                                <!-- NO RESULTS MESSAGE -->
+                                <div id="noMemoriesMessage" class="col-12 text-center py-5 d-none">
+
+                                    <i class="bi bi-journal-x display-4 text-muted"></i>
+
+                                    <h5 class="mt-3 text-muted">
+                                        No Memories Found
+                                    </h5>
+
+                                    <p class="small text-muted">
+                                        No memorials match your selected filters.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                            <!-- PAGINATION -->
+                            <nav id="memorialPagination"
+                                class="d-flex flex-column flex-sm-row justify-content-between align-items-center mt-5 pt-3 border-top gap-3"
+                                aria-label="Memorial Directory Pagination">
+
+                                <span class="small text-muted" id="paginationInfo">
+                                </span>
+
+                                <ul class="pagination pagination-sm mb-0" id="paginationLinks">
+                                </ul>
+
+                            </nav>
+
+                            <!-- BOTTOM SECTION -->
+                            <div class="filter-divider mt-5 position-relative">
+
+                                <hr class="border-secondary-subtle">
+
+                                <a href="#"
+                                    class="btn btn-pill-info position-absolute top-50 start-50 translate-middle">
+
+                                    About online memorials
+
+                                    <i class="bi bi-chevron-right ms-1"></i>
+
+                                </a>
+
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Latest Listings Section (4 Cards per Row) -->
-        <section class="latest-listings-section py-5">
-            <div class="container-fluid px-md-4 px-2">
-                <div class="row justify-content-center">
 
-                    <!-- Full Width Grid Wrapper -->
-                    <div class="col-12 col-xl-12">
+        <!-- Private Memorial Modal -->
+        <div class="modal fade" id="privateMemorialModal" tabindex="-1" aria-labelledby="privateMemorialModalLabel"
+            aria-hidden="true">
 
-                        <!-- Section Header -->
-                        <div class="section-title text-center mb-4">
-                            <h2 class="font-serif text-dark fw-bold display-6 mb-1">Latest Listings</h2>
-                            <p class="text-muted small uppercase tracking-wide">Explore recently added online memorials
-                            </p>
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow">
+
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title fw-bold text-dark" id="privateMemorialModalLabel">
+                            <i class="bi bi-shield-lock text-warning me-2"></i>
+                            Private Access Required
+                        </h5>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body text-center py-4">
+
+                        <div class="mb-3">
+                            <i class="bi bi-lock text-warning display-4"></i>
                         </div>
 
-                        <!-- Cards Row -->
-                        <div class="row g-4  memorial-cards-section">
+                        <h6 class="fw-bold mb-1" id="privateMemorialName"></h6>
 
-                            <!-- Card 1 -->
-                            <div class="col-lg-3 col-md-6">
-                                <div class="card h-100 border-0 shadow-sm memorial-grid-card">
-                                    <div class="position-relative overflow-hidden rounded-top">
-                                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?fit=crop&w=500&h=300"
-                                            class="card-img-top memorial-grid-img" alt="Ivan E Ramirez">
-                                        <span
-                                            class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2">Crime
-                                            Victims</span>
-                                    </div>
-                                    <div class="card-body p-3 d-flex flex-column">
-                                        <h6 class="fw-bold text-dark mb-1 text-truncate">Ivan E Ramirez</h6>
-                                        <p class="small text-muted mb-2">1952 - 2026 • United States</p>
-                                        <a href="#"
-                                            class="small text-warning text-decoration-none text-truncate mb-2">
-                                            <i class="bi bi-link-45deg"></i> ivan-e-ramirez.forevermissed.com
-                                        </a>
-                                        <p class="small text-secondary mb-3 text-truncate-3">
-                                            Online memorial was created in memory of our loved one. Always cherished and
-                                            remembered...
-                                        </p>
-                                        <a href="{{ url('/memories_index') }}"
-                                            class="btn btn-outline-memorial btn-sm mt-auto w-100 fw-semibold">View
-                                            Memorial</a>
-                                    </div>
+                        <p class="small text-muted mb-4">
+                            Do you have permission to view this memorial?
+                        </p>
+
+                        <form id="privateAccessForm">
+
+                            @csrf
+
+                            <input type="hidden" id="privateMemorialSlug" name="slug">
+
+                            <div class="mb-3 text-start">
+
+                                <label for="memorialPassword" class="form-label small fw-semibold text-secondary">
+                                    Enter Passcode
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text bg-light">
+                                        <i class="bi bi-key"></i>
+                                    </span>
+
+                                    <input type="password" class="form-control" id="memorialPassword"
+                                        name="password" placeholder="Enter password..." required>
+
+                                    <button type="button" class="btn btn-outline-secondary"
+                                        id="toggleMemorialPassword">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+
                                 </div>
+
+                                <div id="passwordError" class="form-text text-danger d-none">
+                                    Incorrect password. Please try again.
+                                </div>
+
                             </div>
 
-                            <!-- Card 2 -->
-                            <div class="col-lg-3 col-md-6">
-                                <div class="card h-100 border-0 shadow-sm memorial-grid-card">
-                                    <div class="position-relative overflow-hidden rounded-top">
-                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=500&h=300"
-                                            class="card-img-top memorial-grid-img" alt="Joshua Brian">
-                                        <span
-                                            class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2">Military</span>
-                                    </div>
-                                    <div class="card-body p-3 d-flex flex-column">
-                                        <h6 class="fw-bold text-dark mb-1 text-truncate">Joshua Brian Griener</h6>
-                                        <p class="small text-muted mb-2">1999 - 2020 • United States</p>
-                                        <a href="#"
-                                            class="small text-warning text-decoration-none text-truncate mb-2">
-                                            <i class="bi bi-link-45deg"></i> joshua-brian.forevermissed.com
-                                        </a>
-                                        <p class="small text-secondary mb-3 text-truncate-3">
-                                            Joshua passed away peacefully. Honoring his courage and service to the
-                                            country...
-                                        </p>
-                                        <a href="#"
-                                            class="btn btn-outline-memorial btn-sm mt-auto w-100 fw-semibold">View
-                                            Memorial</a>
-                                    </div>
-                                </div>
-                            </div>
+                            <button type="submit" class="btn btn-warning w-100 fw-bold py-2 mt-2"
+                                id="accessMemorialBtn">
 
-                            <!-- Card 3 -->
-                            <div class="col-lg-3 col-md-6">
-                                <div class="card h-100 border-0 shadow-sm memorial-grid-card">
-                                    <div class="position-relative overflow-hidden rounded-top">
-                                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?fit=crop&w=500&h=300"
-                                            class="card-img-top memorial-grid-img" alt="Tonya Lynn">
-                                        <span
-                                            class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2">Accidents</span>
-                                    </div>
-                                    <div class="card-body p-3 d-flex flex-column">
-                                        <h6 class="fw-bold text-dark mb-1 text-truncate">Tonya Lynn Swink</h6>
-                                        <p class="small text-muted mb-2">1985 - 2020 • Canada</p>
-                                        <a href="#"
-                                            class="small text-warning text-decoration-none text-truncate mb-2">
-                                            <i class="bi bi-link-45deg"></i> tonya-lynn.forevermissed.com
-                                        </a>
-                                        <p class="small text-secondary mb-3 text-truncate-3">
-                                            A loving mother and sister whose kindness and larger-than-life personality
-                                            touched everyone...
-                                        </p>
-                                        <a href="#"
-                                            class="btn btn-outline-memorial btn-sm mt-auto w-100 fw-semibold">View
-                                            Memorial</a>
-                                    </div>
-                                </div>
-                            </div>
+                                Access Memorial
+                                <i class="bi bi-arrow-right-short"></i>
 
-                            <!-- Card 4 (Private Card) -->
-                            <div class="col-lg-3 col-md-6">
-                                <div class="card h-100 border-0 shadow-sm memorial-grid-card">
+                            </button>
 
-                                    <div class="position-relative overflow-hidden rounded-top bg-secondary bg-opacity-10 d-flex flex-column align-items-center justify-content-center border-bottom memorial-grid-img"
-                                        style="height: 180px;">
-                                        <div class="bg-white rounded-circle p-3 shadow-sm mb-2">
-                                            <i class="bi bi-lock-fill text-warning fs-3"></i>
-                                        </div>
-                                        <span class="badge bg-dark bg-opacity-75">Private Memorial</span>
-                                    </div>
-
-                                    <div class="card-body p-3 d-flex flex-column">
-                                        <h6 class="fw-bold text-dark mb-1 text-truncate">
-                                            <i class="bi bi-shield-lock-fill me-1 text-warning"></i> David Arthur Smith
-                                        </h6>
-                                        <p class="small text-muted mb-2">Private Access • Restricted</p>
-
-                                        <a href="#"
-                                            class="small text-muted text-decoration-none text-truncate mb-2">
-                                            <i class="bi bi-link-45deg"></i> david-smith.forevermissed.com
-                                        </a>
-
-                                        <p class="small text-secondary mb-3 text-truncate-3 opacity-75">
-                                            This memorial is password protected by the family. Please enter the passcode
-                                            to view details.
-                                        </p>
-
-                                        <!-- Target corrected to #privateMemorialModal -->
-                                        <button type="button"
-                                            class="btn btn-outline-memorial btn-sm mt-auto w-100 fw-semibold d-flex align-items-center justify-content-center gap-2"
-                                            data-bs-toggle="modal" data-bs-target="#privateMemorialModal">
-                                            <i class="bi bi-key-fill"></i> View Memorial
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
+                        </form>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Single Clean Password Access Modal -->
-            <div class="modal fade" id="privateMemorialModal" tabindex="-1"
-                aria-labelledby="privateMemorialModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content border-0 shadow">
 
-                        <div class="modal-header border-0 pb-0">
-                            <h5 class="modal-title fw-bold text-dark" id="privateMemorialModalLabel">
-                                <i class="bi bi-shield-lock text-warning me-2"></i>Private Access Required
-                            </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
+
+        <!-- Single Clean Password Access Modal -->
+        <div class="modal fade" id="privateMemorialModal" tabindex="-1" aria-labelledby="privateMemorialModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow">
+
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title fw-bold text-dark" id="privateMemorialModalLabel">
+                            <i class="bi bi-shield-lock text-warning me-2"></i>Private Access Required
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body text-center py-4">
+                        <div class="mb-3">
+                            <i class="bi bi-lock text-warning display-4"></i>
                         </div>
+                        <h6 class="fw-bold mb-1">David Arthur Smith</h6>
+                        <p class="small text-muted mb-4">Do you have permission to view this memorial?</p>
 
-                        <div class="modal-body text-center py-4">
-                            <div class="mb-3">
-                                <i class="bi bi-lock text-warning display-4"></i>
-                            </div>
-                            <h6 class="fw-bold mb-1">David Arthur Smith</h6>
-                            <p class="small text-muted mb-4">Do you have permission to view this memorial?</p>
+                        <form id="privateAccessForm" onsubmit="event.preventDefault(); accessMemorial();">
+                            <div class="mb-3 text-start">
+                                <label for="memorialPassword"
+                                    class="form-label small fw-semibold text-secondary">Enter Passcode</label>
 
-                            <form id="privateAccessForm" onsubmit="event.preventDefault(); accessMemorial();">
-                                <div class="mb-3 text-start">
-                                    <label for="memorialPassword"
-                                        class="form-label small fw-semibold text-secondary">Enter Passcode</label>
+                                <div class="input-group">
+                                    <!-- Key Icon (Left) -->
+                                    <span class="input-group-text bg-light"><i class="bi bi-key"></i></span>
 
-                                    <div class="input-group">
-                                        <!-- Key Icon (Left) -->
-                                        <span class="input-group-text bg-light"><i class="bi bi-key"></i></span>
+                                    <!-- Password Field -->
+                                    <input type="password" class="form-control border-end-0" id="memorialPassword"
+                                        placeholder="Enter password (Try: 1234)" required>
 
-                                        <!-- Password Field -->
-                                        <input type="password" class="form-control border-end-0"
-                                            id="memorialPassword" placeholder="Enter password (Try: 1234)" required>
-
-                                        <!-- Eye Icon Button (Right) -->
-                                        <button class="btn btn-outline-secondary bg-white border-start-0 text-muted"
-                                            type="button" onclick="togglePasswordVisibility()">
-                                            <i class="bi bi-eye-slash" id="toggleIcon"></i>
-                                        </button>
-                                    </div>
-
-                                    <div id="passwordError" class="form-text text-danger d-none">Incorrect password.
-                                        Try "1234" for demo.</div>
+                                    <!-- Eye Icon Button (Right) -->
+                                    <button class="btn btn-outline-secondary bg-white border-start-0 text-muted"
+                                        type="button" onclick="togglePasswordVisibility()">
+                                        <i class="bi bi-eye-slash" id="toggleIcon"></i>
+                                    </button>
                                 </div>
 
-                                <button type="submit" class="btn btn-warning w-100 fw-bold py-2 mt-2">
-                                    Access Memorial <i class="bi bi-arrow-right-short"></i>
-                                </button>
-                            </form>
-                        </div>
+                                <div id="passwordError" class="form-text text-danger d-none">Incorrect password.
+                                    Try "1234" for demo.</div>
+                            </div>
 
+                            <button type="submit" class="btn btn-warning w-100 fw-bold py-2 mt-2">
+                                Access Memorial <i class="bi bi-arrow-right-short"></i>
+                            </button>
+                        </form>
                     </div>
+
                 </div>
             </div>
+        </div>
 
-            <!-- Section Bottom Action Buttons -->
+        {{-- <!-- Section Bottom Action Buttons -->
             <div class="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-3 mt-5">
                 <a href="#" class="btn btn-outline-dark px-4 py-2 fw-bold text-uppercase rounded-3">
                     <i class="bi bi-grid-3x3-gap-fill me-2"></i>View All Memorials
@@ -965,7 +1040,7 @@
                 <a href="#" class="btn btn-warning px-4 py-2 fw-bold text-uppercase rounded-3 shadow-sm">
                     <i class="bi bi-plus-circle-fill me-2"></i>Create a Memorial
                 </a>
-            </div>
+            </div> --}}
 
         </section>
 
@@ -1414,7 +1489,7 @@
                     if (entry.isIntersecting) {
                         entry.target.classList.add("active");
                         observer.unobserve(entry
-                        .target); // Ekaparak animate unata passe eka nawaththanawa
+                            .target); // Ekaparak animate unata passe eka nawaththanawa
                     }
                 });
             }, observerOptions);
@@ -1626,7 +1701,7 @@
 
                 wrapper.addEventListener("mouseenter", () => {
                     card.style.transition =
-                    "none"; // Remove transition on move for instant tracking
+                        "none"; // Remove transition on move for instant tracking
                 });
             });
         });
@@ -1891,6 +1966,654 @@
             }
         });
     </script>
+
+
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // ==========================================
+            // CONFIGURATION
+            // ==========================================
+
+            const ITEMS_PER_PAGE = 8;
+            const SCROLL_OFFSET = 100;
+
+            const visitorCountry = @json($visitorCountry ?? '');
+
+            const ALL_REASONS = [
+                'Natural Causes',
+                'Old Age',
+                'Cancer',
+                'Heart Disease',
+                'Heart Attack',
+                'Stroke',
+                'COVID-19',
+                'Other Illness',
+                'Accident',
+                'Road Accident',
+                'Natural Disaster',
+                'Suicide',
+                'Homicide',
+                'Other',
+                'Unknown',
+                'Prefer Not to Disclose'
+            ];
+
+            // ==========================================
+            // ELEMENTS
+            // ==========================================
+
+            const firstNameInput =
+                document.getElementById('memorialFirstName');
+
+            const lastNameInput =
+                document.getElementById('memorialLastName');
+
+            const selectedReasonText =
+                document.getElementById('selectedReason');
+
+            const selectedCountryText =
+                document.getElementById('selectedCountry');
+
+            const reasonDropdown =
+                document.getElementById('reasonDropdown');
+
+            const countryDropdown =
+                document.getElementById('countryDropdown');
+
+            const selectedCountryInput =
+                document.getElementById('selectedCountryInput');
+
+            const paginationLinks =
+                document.getElementById('paginationLinks');
+
+            const paginationInfo =
+                document.getElementById('paginationInfo');
+
+            const paginationNav =
+                document.getElementById('memorialPagination');
+
+            const noMemoriesMessage =
+                document.getElementById('noMemoriesMessage');
+
+            const filterForm =
+                document.getElementById('memorialFilterForm');
+
+            const memorialCardsContainer =
+                document.getElementById('memorialCardsContainer');
+
+            const searchSection =
+                document.getElementById('searchsection');
+
+            const featuredCategoryLinks =
+                document.querySelectorAll(
+                    '#categoriesSection .featured-reason-link'
+                );
+
+            if (
+                !firstNameInput ||
+                !lastNameInput ||
+                !selectedReasonText ||
+                !selectedCountryText ||
+                !reasonDropdown ||
+                !countryDropdown ||
+                !selectedCountryInput ||
+                !paginationLinks ||
+                !paginationInfo ||
+                !paginationNav ||
+                !noMemoriesMessage ||
+                !filterForm ||
+                !memorialCardsContainer
+            ) {
+                console.warn('Memorial directory elements are missing.');
+                return;
+            }
+
+            const allMemories = Array.from(
+                memorialCardsContainer.querySelectorAll('.memorial-item')
+            );
+
+            // ==========================================
+            // STATE
+            // ==========================================
+
+            let currentPage = 1;
+            let selectedReason = '';
+            let selectedCountry = String(visitorCountry || '').trim();
+
+            // ==========================================
+            // NORMALIZE TEXT
+            // ==========================================
+
+            function normalize(value) {
+                return String(value || '')
+                    .trim()
+                    .toLowerCase();
+            }
+
+            // ==========================================
+            // CREATE DROPDOWN OPTION
+            // ==========================================
+
+            function createDropdownOption(value, label, className) {
+
+                const li = document.createElement('li');
+                const button = document.createElement('button');
+
+                button.type = 'button';
+                button.className = 'dropdown-item ' + className;
+                button.dataset.value = value;
+                button.textContent = label;
+
+                li.appendChild(button);
+
+                return li;
+            }
+
+            // ==========================================
+            // GENERATE ALL REASONS
+            // ==========================================
+
+            function generateReasonDropdown() {
+
+                reasonDropdown.innerHTML = '';
+
+                reasonDropdown.appendChild(
+                    createDropdownOption(
+                        '',
+                        'All Reasons',
+                        'reason-option'
+                    )
+                );
+
+                ALL_REASONS.forEach(reason => {
+
+                    reasonDropdown.appendChild(
+                        createDropdownOption(
+                            reason,
+                            reason,
+                            'reason-option'
+                        )
+                    );
+
+                });
+            }
+
+            // ==========================================
+            // GENERATE COUNTRY DROPDOWN
+            // ==========================================
+
+            function generateCountryDropdown() {
+
+                const countries = [...new Set(
+                    allMemories
+                    .map(item => item.dataset.country?.trim())
+                    .filter(Boolean)
+                )].sort((a, b) => a.localeCompare(b));
+
+                countryDropdown.innerHTML = '';
+
+                countryDropdown.appendChild(
+                    createDropdownOption(
+                        '',
+                        'All Countries',
+                        'country-option'
+                    )
+                );
+
+                countries.forEach(country => {
+
+                    countryDropdown.appendChild(
+                        createDropdownOption(
+                            country,
+                            country,
+                            'country-option'
+                        )
+                    );
+
+                });
+
+                if (
+                    selectedCountry &&
+                    !countries.some(country =>
+                        normalize(country) === normalize(selectedCountry)
+                    )
+                ) {
+
+                    countryDropdown.appendChild(
+                        createDropdownOption(
+                            selectedCountry,
+                            selectedCountry,
+                            'country-option'
+                        )
+                    );
+
+                }
+            }
+
+            // ==========================================
+            // UPDATE DROPDOWN LABELS
+            // ==========================================
+
+            function updateDropdownLabels() {
+
+                selectedReasonText.textContent =
+                    selectedReason || 'All Reasons';
+
+                selectedCountryText.textContent =
+                    selectedCountry || 'All Countries';
+
+                selectedCountryInput.value = selectedCountry;
+
+                // Active reason
+                reasonDropdown
+                    .querySelectorAll('.reason-option')
+                    .forEach(option => {
+
+                        option.classList.toggle(
+                            'active',
+                            normalize(option.dataset.value) ===
+                            normalize(selectedReason)
+                        );
+
+                    });
+
+                // Active country
+                countryDropdown
+                    .querySelectorAll('.country-option')
+                    .forEach(option => {
+
+                        option.classList.toggle(
+                            'active',
+                            normalize(option.dataset.value) ===
+                            normalize(selectedCountry)
+                        );
+
+                    });
+            }
+
+            // ==========================================
+            // FILTER MEMORIALS
+            // ==========================================
+
+            function getFilteredMemories() {
+
+                const firstName = normalize(firstNameInput.value);
+                const lastName = normalize(lastNameInput.value);
+
+                return allMemories.filter(item => {
+
+                    const itemFirstName =
+                        normalize(item.dataset.firstName);
+
+                    const itemLastName =
+                        normalize(item.dataset.lastName);
+
+                    const itemReason =
+                        normalize(item.dataset.category);
+
+                    const itemCountry =
+                        normalize(item.dataset.country);
+
+                    const matchesFirstName =
+                        firstName === '' ||
+                        itemFirstName.includes(firstName);
+
+                    const matchesLastName =
+                        lastName === '' ||
+                        itemLastName.includes(lastName);
+
+                    const matchesReason =
+                        selectedReason === '' ||
+                        itemReason === normalize(selectedReason);
+
+                    const matchesCountry =
+                        selectedCountry === '' ||
+                        itemCountry === normalize(selectedCountry);
+
+                    return (
+                        matchesFirstName &&
+                        matchesLastName &&
+                        matchesReason &&
+                        matchesCountry
+                    );
+
+                });
+            }
+
+            // ==========================================
+            // SCROLL TO SECTION
+            // ==========================================
+
+            function scrollToSection(element) {
+
+                if (!element) return;
+
+                const topPosition =
+                    element.getBoundingClientRect().top +
+                    window.scrollY -
+                    SCROLL_OFFSET;
+
+                window.scrollTo({
+                    top: Math.max(0, topPosition),
+                    behavior: 'smooth'
+                });
+            }
+
+            // ==========================================
+            // PAGINATION
+            // ==========================================
+
+            function renderPagination(totalItems, totalPages) {
+
+                paginationLinks.innerHTML = '';
+
+                if (totalItems === 0) {
+
+                    paginationInfo.textContent =
+                        'Showing 0 of 0 Memorials';
+
+                    paginationNav.classList.add('d-none');
+
+                    return;
+                }
+
+                paginationNav.classList.toggle(
+                    'd-none',
+                    totalPages <= 1
+                );
+
+                const start =
+                    (currentPage - 1) * ITEMS_PER_PAGE + 1;
+
+                const end = Math.min(
+                    currentPage * ITEMS_PER_PAGE,
+                    totalItems
+                );
+
+                paginationInfo.innerHTML =
+                    `Showing <strong>${start} - ${end}</strong> of ` +
+                    `<strong>${totalItems}</strong> Memorials`;
+
+                function addPage(
+                    label,
+                    page,
+                    disabled = false,
+                    active = false
+                ) {
+
+                    const li = document.createElement('li');
+                    li.className = 'page-item';
+
+                    if (disabled) li.classList.add('disabled');
+                    if (active) li.classList.add('active');
+
+                    const button = document.createElement('button');
+
+                    button.type = 'button';
+                    button.className = 'page-link';
+                    button.textContent = label;
+                    button.disabled = disabled;
+
+                    if (active) {
+                        button.setAttribute('aria-current', 'page');
+                    }
+
+                    button.addEventListener('click', function() {
+
+                        if (disabled || active) return;
+
+                        currentPage = page;
+
+                        renderMemories();
+
+                        // Scroll to top of memorial cards
+                        scrollToSection(memorialCardsContainer);
+
+                    });
+
+                    li.appendChild(button);
+                    paginationLinks.appendChild(li);
+                }
+
+                // Previous
+                addPage(
+                    '«',
+                    currentPage - 1,
+                    currentPage === 1
+                );
+
+                // Numbered pages
+                for (let page = 1; page <= totalPages; page++) {
+
+                    addPage(
+                        page,
+                        page,
+                        false,
+                        page === currentPage
+                    );
+
+                }
+
+                // Next
+                addPage(
+                    '»',
+                    currentPage + 1,
+                    currentPage === totalPages
+                );
+            }
+
+            // ==========================================
+            // RENDER MEMORIAL CARDS
+            // ==========================================
+
+            function renderMemories() {
+
+                const filteredMemories = getFilteredMemories();
+
+                const totalItems = filteredMemories.length;
+
+                const totalPages = Math.max(
+                    1,
+                    Math.ceil(totalItems / ITEMS_PER_PAGE)
+                );
+
+                if (currentPage > totalPages) {
+                    currentPage = totalPages;
+                }
+
+                const startIndex =
+                    (currentPage - 1) * ITEMS_PER_PAGE;
+
+                const endIndex =
+                    startIndex + ITEMS_PER_PAGE;
+
+                allMemories.forEach(item => {
+                    item.classList.add('d-none');
+                });
+
+                filteredMemories
+                    .slice(startIndex, endIndex)
+                    .forEach(item => {
+                        item.classList.remove('d-none');
+                    });
+
+                noMemoriesMessage.classList.toggle(
+                    'd-none',
+                    totalItems !== 0
+                );
+
+                renderPagination(totalItems, totalPages);
+
+                updateDropdownLabels();
+            }
+
+            // ==========================================
+            // FIRST NAME SEARCH
+            // ==========================================
+
+            firstNameInput.addEventListener('input', function() {
+
+                currentPage = 1;
+                renderMemories();
+
+            });
+
+            // ==========================================
+            // LAST NAME SEARCH
+            // ==========================================
+
+            lastNameInput.addEventListener('input', function() {
+
+                currentPage = 1;
+                renderMemories();
+
+            });
+
+            // ==========================================
+            // REASON FILTER
+            // ==========================================
+
+            reasonDropdown.addEventListener('click', function(event) {
+
+                const option = event.target.closest('.reason-option');
+
+                if (!option) return;
+
+                selectedReason = option.dataset.value || '';
+
+                currentPage = 1;
+
+                renderMemories();
+
+            });
+
+            // ==========================================
+            // COUNTRY FILTER
+            // ==========================================
+
+            countryDropdown.addEventListener('click', function(event) {
+
+                const option = event.target.closest('.country-option');
+
+                if (!option) return;
+
+                selectedCountry = option.dataset.value || '';
+
+                currentPage = 1;
+
+                renderMemories();
+
+            });
+
+            // ==========================================
+            // FEATURED CATEGORY FILTER
+            // ==========================================
+
+            featuredCategoryLinks.forEach(link => {
+
+                link.addEventListener('click', function(event) {
+
+                    event.preventDefault();
+
+                    // Get selected featured reason
+                    const reason = this.dataset.reason || '';
+
+                    // Find the corresponding dropdown option
+                    const matchingOption = Array.from(
+                        reasonDropdown.querySelectorAll('.reason-option')
+                    ).find(option =>
+                        normalize(option.dataset.value) === normalize(reason)
+                    );
+
+                    if (!matchingOption) {
+                        console.warn('Memorial reason not found:', reason);
+                        return;
+                    }
+
+                    // Trigger existing reason filter
+                    matchingOption.click();
+
+                    // Scroll to the memorial directory
+                    scrollToSection(searchSection || memorialCardsContainer);
+
+                });
+
+            });
+
+            // ==========================================
+            // PREVENT FORM SUBMISSION
+            // ==========================================
+
+            filterForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+            });
+
+            // ==========================================
+            // INITIALIZE
+            // ==========================================
+
+            generateReasonDropdown();
+            generateCountryDropdown();
+            renderMemories();
+
+        });
+    </script>
+
+    <!-- Share -->
+    <script>
+    const memoryUrl = @json(url('/memory_index/' . $memory->profile->slug));
+    const memoryQuote = @json($memory?->tribute_quote ?? '');
+
+    document.getElementById('inviteBtn').addEventListener('click', function () {
+        const icons = document.getElementById('socialShareIcons');
+
+        icons.style.display =
+            getComputedStyle(icons).display === 'none' ? 'block' : 'none';
+    });
+
+    function shareMemory(platform) {
+        const url = encodeURIComponent(memoryUrl);
+        const quote = encodeURIComponent(memoryQuote);
+
+        let shareUrl = '';
+
+        switch (platform) {
+            case 'facebook':
+                shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+                break;
+
+            case 'whatsapp':
+                shareUrl = `https://api.whatsapp.com/send?text=${quote}%0A${url}`;
+                break;
+
+            case 'twitter':
+                shareUrl = `https://twitter.com/intent/tweet?text=${quote}&url=${url}`;
+                break;
+
+            case 'linkedin':
+                shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+                break;
+
+            case 'telegram':
+                shareUrl = `https://t.me/share/url?url=${url}&text=${quote}`;
+                break;
+
+            case 'copy':
+                navigator.clipboard.writeText(memoryUrl)
+                    .then(() => alert('Memory link copied!'))
+                    .catch(() => alert('Unable to copy link.'));
+                return;
+        }
+
+        if (shareUrl) {
+            window.open(shareUrl, '_blank', 'noopener,noreferrer');
+        }
+    }
+</script>
 
 
 

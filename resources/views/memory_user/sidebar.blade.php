@@ -8,14 +8,16 @@
 
         @php
             $currentUser = Auth::user() ?? ($user ?? null);
-            $profileImage = \App\Models\Image::where('user_id', $currentUser->id)->first();
+            $profileImage = \App\Models\Image::where('user_id', $currentUser->id)
+                ->where('type', 'userProfile')
+                ->first();
             $hasActivePlan = $currentUser?->hasActivePackage() ?? false;
             $canCreateMem = $currentUser?->canCreateMemory() ?? false;
             $canCreateEvt = $currentUser?->canCreateEvent() ?? false;
             $daysLeft = $currentUser?->remainingDays() ?? 0;
             $memoriesLeft = $currentUser?->remainingMemoriesQuota() ?? 0;
             $eventsLeft = $currentUser?->remainingEventsQuota() ?? 0;
-            $upgradeUrl = route('packages.index', ['country' => strtolower($currentUser?->country ?? 'all')]);
+            $upgradeUrl = route('billing.index'); // Upgrade / Billing URL
 
             $avatarUrl =
                 $currentUser?->avatar_url ??
@@ -34,7 +36,7 @@
         <!-- Sidebar Profile -->
         <div class="sidebar-profile p-3">
             <div class="d-flex align-items-center gap-3">
-                <img src="{{ $currentUser ? asset($profileImage?->path) : asset('images/profile_photo.png') }}"
+                <img src="{{ $profileImage?->path ? asset($profileImage->path) : asset('images/profile_photo.png') }}"
                     class="rounded-circle object-fit-cover border border-warning border-opacity-25 flex-shrink-0"
                     width="45" height="45" alt="Profile">
 
@@ -53,8 +55,8 @@
 
             <!-- Active Package Summary Card / Quota Badge -->
             <div
-                class="mt-3 p-2 rounded-3 border {{ $hasActivePlan ? 'border-warning border-opacity-25 bg-black bg-opacity-25' : 'border-danger border-opacity-25 bg-black bg-opacity-25' }}">
-                @if ($hasActivePlan)
+                class="mt-3 p-2 rounded-3 border {{ $hasActivePlan && $daysLeft > 0 ? 'border-warning border-opacity-25 bg-black bg-opacity-25' : 'border-danger border-opacity-25 bg-black bg-opacity-25' }}">
+                @if ($hasActivePlan && $daysLeft > 0)
                     <div class="d-flex align-items-center justify-content-between mb-1">
                         <span
                             class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-25"
@@ -73,7 +75,7 @@
 
                     <!-- Renew or Upgrade Link -->
                     <div class="text-center mt-2 border-top border-warning border-opacity-25 pt-2">
-                        <a href="{{ route('billing.index') }}" class="text-warning text-decoration-none fw-bold"
+                        <a href="{{ $upgradeUrl }}" class="text-warning text-decoration-none fw-bold"
                             style="font-size: 0.75rem;">
                             <i class="bi bi-arrow-clockwise me-1"></i> Renew / Upgrade
                         </a>
@@ -96,7 +98,7 @@
 
         <ul class="nav flex-column py-3">
 
-            <!-- Dashboard -->
+            <!-- Dashboard (සැමවිටම විවෘතව පවතී) -->
             @php
                 $dashboardActive = request()->routeIs('memoryUser.dashboard') || request()->is('memory_user/dashboard');
             @endphp
@@ -109,17 +111,53 @@
                 </a>
             </li>
 
-            <!-- Dashboard -->
+            <!-- My Memory -->
             @php
                 $myMemoriesActive = request()->routeIs('my_memories') || request()->is('memory_user/my_memories');
             @endphp
             <li class="nav-item">
-                <a href="{{ route('my_memories') }}" class="nav-link {{ $myMemoriesActive ? 'active' : '' }}">
-                    <span>
-                        <i class="bi bi-speedometer2 me-2"></i>
-                        My Memory
-                    </span>
-                </a>
+                @if ($hasActivePlan && $daysLeft > 0)
+                    <a href="{{ route('my_memories') }}" class="nav-link {{ $myMemoriesActive ? 'active' : '' }}">
+                        <span>
+                            <i class="bi-heart-pulse me-2"></i>
+                            My Memory
+                        </span>
+                    </a>
+                @else
+                    <a href="{{ $upgradeUrl }}" class="nav-link opacity-50 text-decoration-none"
+                        title="Package expired. Please renew to access My Memory.">
+                        <span>
+                            <i class="bi bi-lock-fill me-2 text-warning"></i>
+                            My Memory
+                        </span>
+                        <span class="badge bg-danger ms-2" style="font-size: 0.6rem;">Locked</span>
+                    </a>
+                @endif
+            </li>
+
+            <!-- Community Uploads -->
+            @php
+                $communityUploadsActive = request()->routeIs('communityUploadsMedia*');
+            @endphp
+            <li class="nav-item">
+                @if ($hasActivePlan && $daysLeft > 0)
+                    <a href="{{ url('memory_user/my_memories/communityUploadsMedia') }}"
+                        class="nav-link {{ $communityUploadsActive ? 'active' : '' }}">
+                        <span>
+                            <i class="bi bi-cloud-arrow-up me-2"></i>
+                            Community Uploads
+                        </span>
+                    </a>
+                @else
+                    <a href="{{ $upgradeUrl }}" class="nav-link opacity-50 text-decoration-none"
+                        title="Package expired. Please renew to access Community Uploads.">
+                        <span>
+                            <i class="bi bi-lock-fill me-2 text-warning"></i>
+                            Community Uploads
+                        </span>
+                        <span class="badge bg-danger ms-2" style="font-size: 0.6rem;">Locked</span>
+                    </a>
+                @endif
             </li>
 
             <!-- Events Dropdown -->
@@ -157,108 +195,82 @@
             @endphp
 
             <li class="nav-item">
-                <a href="#eventSubmenu" data-bs-toggle="collapse" role="button"
-                    aria-expanded="{{ $eventsActive ? 'true' : 'false' }}" aria-controls="eventSubmenu"
-                    class="nav-link dropdown-toggle d-flex justify-content-between align-items-center {{ $eventsActive ? 'active' : '' }}">
+                @if ($hasActivePlan && $daysLeft > 0)
+                    <a href="#eventSubmenu" data-bs-toggle="collapse" role="button"
+                        aria-expanded="{{ $eventsActive ? 'true' : 'false' }}" aria-controls="eventSubmenu"
+                        class="nav-link dropdown-toggle d-flex justify-content-between align-items-center {{ $eventsActive ? 'active' : '' }}">
 
-                    <span>
-                        <i class="bi bi-calendar-event me-2"></i>
-                        Events
-                    </span>
+                        <span>
+                            <i class="bi bi-calendar-event me-2"></i>
+                            Events
+                        </span>
 
-                    <i class="bi bi-chevron-down small dropdown-arrow transition-icon"></i>
-                </a>
+                        <i class="bi bi-chevron-down small dropdown-arrow transition-icon"></i>
+                    </a>
 
-                <div class="collapse submenu-collapse {{ $eventsActive ? 'show' : '' }}" id="eventSubmenu">
-                    <ul class="collapse list-unstyled submenu show py-1 m-0">
+                    <div class="collapse submenu-collapse {{ $eventsActive ? 'show' : '' }}" id="eventSubmenu">
+                        <ul class="collapse list-unstyled submenu show py-1 m-0">
 
-                        <li>
-                            <a href="{{ route('memoryUser.my_events') }}"
-                                class="nav-link sub-link {{ $myEventsActive ? 'active' : '' }}">
-                                <i class="bi bi-calendar-check me-2 opacity-75"></i> My Events
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="{{ route('memoryUser.all_events') }}"
-                                class="nav-link sub-link {{ $allEventsActive ? 'active' : '' }}">
-                                <i class="bi bi-calendar3 me-2 opacity-75"></i> All Events
-                            </a>
-                        </li>
-
-                        {{-- Dynamic Package-Gated Create Event Link --}}
-                        @if ($canCreateEvt)
                             <li>
-                                <a href="{{ route('memoryUser.create_event') }}"
-                                    class="nav-link sub-link d-flex align-items-center justify-content-between {{ $createEventActive ? 'active' : '' }}">
-                                    <span>
-                                        <i class="bi bi-calendar-plus-fill me-2 text-warning"></i> Create Event
-                                    </span>
-                                    <span class="badge bg-warning bg-opacity-25 text-warning"
-                                        style="font-size: 0.65rem;">
-                                        {{ $eventsLeft > 999 ? 'New' : $eventsLeft . ' left' }}
-                                    </span>
+                                <a href="{{ route('memoryUser.my_events') }}"
+                                    class="nav-link sub-link {{ $myEventsActive ? 'active' : '' }}">
+                                    <i class="bi bi-calendar-check me-2 opacity-75"></i> My Events
                                 </a>
                             </li>
-                        @else
+
                             <li>
-                                <a href="{{ $upgradeUrl }}"
-                                    class="nav-link sub-link d-flex align-items-center justify-content-between text-white-50 opacity-75 text-decoration-none"
-                                    title="Active package required to create events">
-                                    <span>
-                                        <i class="bi bi-lock-fill me-2 text-warning"></i> Create Event
-                                    </span>
-                                    <span class="badge bg-warning text-dark fw-bold" style="font-size: 0.65rem;">
-                                        Buy Package
-                                    </span>
+                                <a href="{{ route('memoryUser.all_events') }}"
+                                    class="nav-link sub-link {{ $allEventsActive ? 'active' : '' }}">
+                                    <i class="bi bi-calendar3 me-2 opacity-75"></i> All Events
                                 </a>
                             </li>
-                        @endif
 
-                    </ul>
-                </div>
+                            {{-- Dynamic Package-Gated Create Event Link --}}
+                            @if ($canCreateEvt)
+                                <li>
+                                    <a href="{{ route('memoryUser.create_event') }}"
+                                        class="nav-link sub-link d-flex align-items-center justify-content-between {{ $createEventActive ? 'active' : '' }}">
+                                        <span>
+                                            <i class="bi bi-calendar-plus-fill me-2 text-warning"></i> Create Event
+                                        </span>
+                                        <span class="badge bg-warning bg-opacity-25 text-warning"
+                                            style="font-size: 0.65rem;">
+                                            {{ $eventsLeft > 999 ? 'New' : $eventsLeft . ' left' }}
+                                        </span>
+                                    </a>
+                                </li>
+                            @else
+                                <li>
+                                    <a href="{{ $upgradeUrl }}"
+                                        class="nav-link sub-link d-flex align-items-center justify-content-between text-white-50 opacity-75 text-decoration-none"
+                                        title="Active package required to create events">
+                                        <span>
+                                            <i class="bi bi-lock-fill me-2 text-warning"></i> Create Event
+                                        </span>
+                                        <span class="badge bg-warning text-dark fw-bold" style="font-size: 0.65rem;">
+                                            Buy Package
+                                        </span>
+                                    </a>
+                                </li>
+                            @endif
+
+                        </ul>
+                    </div>
+                @else
+                    <a href="{{ $upgradeUrl }}" class="nav-link opacity-50 text-decoration-none"
+                        title="Package expired. Please renew to access Events.">
+                        <span>
+                            <i class="bi bi-lock-fill me-2 text-warning"></i>
+                            Events
+                        </span>
+                        <span class="badge bg-danger ms-2" style="font-size: 0.6rem;">Locked</span>
+                    </a>
+                @endif
             </li>
 
-            {{-- <!-- Quick Action Buttons -->
-            <!-- <li class="nav-item px-3 my-3">
-                <div class="p-2 rounded-3 border border-warning border-opacity-25 bg-black bg-opacity-25 text-center">
-                    <small class="text-warning text-uppercase fw-bold d-block mb-2" style="font-size: 0.68rem; letter-spacing: 0.5px;">
-                        Quick Actions
-                    </small>
-                    <div class="d-grid gap-2">
-                        @if ($canCreateMem)
-<a href="{{ route('memoryUser.create_memory') }}"
-                                class="btn btn-warning btn-sm fw-bold text-dark d-flex align-items-center justify-content-center gap-1 shadow-sm">
-                                <i class="bi bi-plus-lg"></i> Create Memory
-                            </a>
-@else
-<a href="{{ $upgradeUrl }}"
-                                class="btn btn-outline-warning btn-sm fw-bold d-flex align-items-center justify-content-center gap-1"
-                                title="Buy package to create memories">
-                                <i class="bi bi-lock-fill"></i> Unlock Memory (Buy Package)
-                            </a>
-@endif
-
-                        @if ($canCreateEvt)
-<a href="{{ route('memoryUser.create_event') }}"
-                                class="btn btn-outline-warning btn-sm fw-bold d-flex align-items-center justify-content-center gap-1">
-                                <i class="bi bi-calendar-plus"></i> Create Event
-                            </a>
-@else
-<a href="{{ $upgradeUrl }}"
-                                class="btn btn-outline-secondary btn-sm fw-bold text-light d-flex align-items-center justify-content-center gap-1"
-                                title="Buy package to create events">
-                                <i class="bi bi-lock-fill text-warning"></i> Unlock Event (Buy Package)
-                            </a>
-@endif
-                    </div>
-                </div>
-            </li> --> --}}
-
-            <!-- Settings -->
+            <!-- Settings (සැමවිටම විවෘතව පවතී) -->
             @php
-                $settingsActive =
-                    request()->routeIs('userProfile_settings') || request()->is('memory_user/profile_settings*');
+                $settingsActive = request()->routeIs('userProfile_settings*');
             @endphp
             <li class="nav-item">
                 <a href="{{ url('memory_user/profile_settings') }}"
@@ -270,7 +282,7 @@
                 </a>
             </li>
 
-            <!-- Back to Home -->
+            <!-- Back to Home (සැමවිටම විවෘතව පවතී) -->
             @php
                 $homeActive =
                     request()->routeIs('home') ||

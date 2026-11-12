@@ -856,7 +856,7 @@
     </script>
 
     <!-- AJAX gallery uploads: preserves the existing three preview sections -->
-    @if ($canUpload)
+    @if (!$canUpload)
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const uploadUrl = @json(route('gallery.media.store', $profile->id));

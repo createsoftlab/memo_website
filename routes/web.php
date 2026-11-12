@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\CaptchaController;
+use App\Http\Controllers\DonationController;
+use App\Http\Controllers\EventController as PublicEventController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MemoryController;
 use App\Http\Controllers\MemoryMessageController;
@@ -12,6 +14,7 @@ use App\Http\Controllers\MemoryUserController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TributeCheckoutController;
+use App\Http\Controllers\TributeModerationController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -164,6 +167,11 @@ Route::get('/contact', [HomeController::class, 'contact'])->name('home.contact')
 
 //view memory from all memories
 Route::get('/all_memories', [HomeController::class, 'allMemories'])->name('home.all_memories');
+
+// Public Global Events Stream & Details
+Route::get('/all-events', [PublicEventController::class, 'index'])->name('events.index');
+Route::get('/event/{id}', [PublicEventController::class, 'show'])->name('events.show');
+
 //homepage inside memory navigation pages
 Route::get('/memory_index/{slug}', [HomeController::class, 'memoryIndex'])->name('home.memory_index');
 //verify privacy
@@ -173,7 +181,7 @@ Route::get('/memories_stories/{slug}', [HomeController::class, 'memoriesStories'
 Route::get('/memories_timeline/{slug}', [HomeController::class, 'memoriesTimeline'])->name('home.memories_timeline');
 Route::get('/memories_gallery/{slug}', [HomeController::class, 'memoriesGallery'])->name('home.memories_gallery');
 Route::get('/memories_donation/{slug}', [HomeController::class, 'memoriesDonation'])->name('home.memories_donation');
-Route::get('/memories_event/{slug}', [HomeController::class, 'memoriesEvent'])->name('home.memories_event');
+Route::get('/memories_event/{slug}', [MemoryController::class, 'showEvents'])->name('memory.events');
 
 Route::get('/donation_form', [HomeController::class, 'donationForm'])->name('home.donation_form');
 
@@ -199,6 +207,12 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPackageExpiry::class])->gro
     Route::get('memory_user/dashboard', [MemoryUserController::class, 'dashboard'])->name('memoryUser.dashboard');
     Route::get('memory_user/my_memories', [MemoryController::class, 'myMemories'])->name('my_memories');
     Route::post('memory_user/my_memories/update', [MemoryController::class, 'updateMemory'])->name('update_my_memory');
+    Route::post('memory_user/profile/{id}/generate-qr', [MemoryController::class, 'generateQr'])->name('profile.generateQr');
+
+    //Community Uploads media view and approval
+    Route::get('memory_user/my_memories/communityUploadsMedia', [MemoryController::class, 'communityUploadsMedia'])->name('communityUploadsMedia');
+    Route::post('memory_user/community-media/{type}/{id}/approve', [MemoryController::class, 'approveCommunityMedia'])->name('communityMedia.approve');
+    Route::post('memory_user/community-media/{type}/{id}/delete', [MemoryController::class, 'deleteCommunityMedia'])->name('communityMedia.delete');
 
     Route::get('memory_user/profile_settings', [MemoryUserController::class, 'profileSettings'])->name('userProfile_settings');
     Route::post('memory_user/profile_settings', [MemoryUserController::class, 'profileImageSettings'])->name('userProfile_imageSettings');
@@ -213,6 +227,23 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPackageExpiry::class])->gro
     Route::get('/events/create', [EventController::class, 'create'])->name('events.create')->middleware(['prevent_admin_creation', 'active_package:event']);
     Route::post('/events/store', [EventController::class, 'store'])->name('events.store')->middleware(['prevent_admin_creation', 'active_package:event']);
     Route::get('/memories/create', [AdminController::class, 'createMemory'])->name('memories.create')->middleware(['prevent_admin_creation', 'active_package:memory']);
+
+    // Timeline Crud
+    Route::delete('memory_user/timelines/{timeline}', [MemoryController::class, 'deleteTimeline'])->name('timelines.destroy');
+    Route::put('memory_user/timelines/{timeline}', [MemoryController::class, 'updateTimeline'])->name('timelines.update');
+    Route::post('/timelines/store', [MemoryController::class, 'storeTimeline'])->name('timelines.store');
+
+    // Stories Crud(Memory User Posting)
+    Route::post('/profiles/{profile}/stories', [MemoryController::class, 'storeStories'])->name('stories.store');
+    Route::patch('/stories/{story}', [MemoryController::class, 'updateStory'])->name('stories.update');
+    Route::delete('/stories/{story}', [MemoryController::class, 'deleteStory'])->name('stories.destroy');
+
+    // Image/Videos/Audios(Memory User Posting Media)
+    Route::post('/profiles/{profile}/media', [MemoryController::class, 'mediaStore'])->name('media.store');
+    Route::delete('/profiles/{profile}/media/{media}', [MemoryController::class, 'mediaDestroy'])->name('media.destroy');
+
+    //Community Posts Stories delete
+    Route::patch('/memory_user/story-comments/{storyComment}/reject', [MemoryController::class, 'rejectStoryComment'])->name('memory_user.story_comments.reject');
 });
 
 Route::middleware('auth')->group(function () {
@@ -226,40 +257,21 @@ Route::middleware('auth')->group(function () {
     Route::get('/tribute/checkout/cancel', [TributeCheckoutController::class, 'cancel'])->name('tribute.checkout.cancel');
 
     Route::post('/memory-message/store', [MemoryMessageController::class, 'store'])->name('memory.message.store');
+
+    // Donation Form එක පෙන්වීම
+    Route::get('/memory/{slug}/donate', [DonationController::class, 'showForm'])->name('donation.form');
+
+    // Stripe Checkout Session එක සෑදීම
+    Route::post('/donation/checkout', [DonationController::class, 'checkout'])->name('donation.checkout');
+
+    // Stripe සාර්ථක හා අවලංගු callbacks
+    Route::get('/donation/checkout/success', [DonationController::class, 'success'])->name('donation.checkout.success');
+    Route::get('/donation/checkout/cancel', [DonationController::class, 'cancel'])->name('donation.checkout.cancel');
+
+    Route::post('/dashboard/tribute/{category}/{id}/disable', [TributeModerationController::class, 'disable'])->name('dashboard.tribute.disable');
 });
 
 
-Route::middleware('auth')->group(function () {
-
-    // Store multiple stories
-    Route::post(
-        '/profiles/{profile}/stories',
-        [MemoryController::class, 'storeStories']
-    )->name('stories.store');
-
-    // Update an existing story
-    Route::patch(
-        '/stories/{story}',
-        [MemoryController::class, 'updateStory']
-    )->name('stories.update');
-
-    // Delete an existing story
-    Route::delete(
-        '/stories/{story}',
-        [MemoryController::class, 'deleteStory']
-    )->name('stories.destroy');
-
-    // Store photos, videos and audio
-    Route::post(
-        '/profiles/{profile}/media',
-        [MemoryController::class, 'mediaStore']
-    )->name('media.store');
-
-    Route::delete(
-        '/profiles/{profile}/media/{media}',
-        [MemoryController::class, 'mediaDestroy']
-    )->name('media.destroy');
-});
 
 /*
 |--------------------------------------------------------------------------
@@ -288,27 +300,25 @@ Route::get('/test-gd', function () {
     ]);
 });
 
+
+// General User Or another memory user posting stories(Memory owner not posting from here)
 Route::middleware('auth')->group(function () {
+
+    // Display memorial stories page
+    Route::get(
+        '/memories_stories/{slug}',
+        [MemoryController::class, 'memoriesStories']
+    )->name('memories.stories');
+
+    // Save a new story comment
     Route::post(
-        '/timelines/store',
-        [MemoryController::class, 'storeTimeline']
-    )->name('timelines.store');
+        '/profiles/{profile}/story-comments',
+        [MemoryController::class, 'storeStoryComment']
+    )->middleware('throttle:5,1')
+        ->name('story-comments.store');
 });
 
-// Display memorial stories page
-Route::get(
-    '/memories_stories/{slug}',
-    [MemoryController::class, 'memoriesStories']
-)->name('memories.stories');
-
-// Save a new story comment
-Route::post(
-    '/profiles/{profile}/story-comments',
-    [MemoryController::class, 'storeStoryComment']
-)->middleware('throttle:5,1')
-    ->name('story-comments.store');
-
-
+// General User Or another memory user posting Media(Memory owner not posting from here)
 Route::middleware('auth')->group(function () {
 
     Route::post(

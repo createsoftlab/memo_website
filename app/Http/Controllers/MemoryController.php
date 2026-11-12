@@ -2,25 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
+use App\Models\Image;
+use App\Models\Media;
 use App\Models\Memory;
+use App\Models\Music;
 use App\Models\Package;
 use App\Models\PackagePurchase;
 use App\Models\Profile;
+use App\Models\Story;
+use App\Models\Timeline;
+use App\Models\Tribute;
 use App\Models\User;
+use App\Models\StoryComment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Illuminate\View\View;
-use Illuminate\Validation\Rule;
-use App\Models\Story;
 use Illuminate\Support\Facades\File;
-use App\Models\Media;
-use App\Models\Image;
-use App\Models\Music;
-use App\Models\Timeline;
-use App\Models\StoryComments;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Illuminate\View\View;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Stripe\Checkout\Session;
+use Stripe\Stripe;
 
 class MemoryController extends Controller
 {
@@ -43,31 +50,31 @@ class MemoryController extends Controller
     /**
      * Process Step 3 submission & complete memory purchase lifecycle.
      */
-    public function completeMemoryPurchase(Request $request): \Illuminate\Http\RedirectResponse
+    public function completeMemoryPurchase(Request $request): RedirectResponse
     {
         // 1. Validation for Step 1, 2, and 3
         $rules = [
-            'first_name'   => 'nullable|string|max:150',
-            'middle_name'  => 'nullable|string|max:150',
-            'last_name'    => 'nullable|string|max:150',
-            'gender'       => 'nullable|string',
-            'country'      => 'nullable|string',
-            'city'         => 'nullable|string|max:150',
+            'first_name' => 'nullable|string|max:150',
+            'middle_name' => 'nullable|string|max:150',
+            'last_name' => 'nullable|string|max:150',
+            'gender' => 'nullable|string',
+            'country' => 'nullable|string',
+            'city' => 'nullable|string|max:150',
             'relationship' => 'nullable|string',
-            'designation'  => 'nullable|string',
-            'privacy'      => 'nullable|string',
-            'status'       => 'nullable|string',
-            'package_id'   => 'required|exists:packages,id',
+            'designation' => 'nullable|string',
+            'privacy' => 'nullable|string',
+            'status' => 'nullable|string',
+            'package_id' => 'required|exists:packages,id',
         ];
 
         // If not already existing memory, validate required Step 1 & 2 fields
-        if (!$request->filled('memory_id') && !session()->has('memory_id')) {
+        if (! $request->filled('memory_id') && ! session()->has('memory_id')) {
             $rules['first_name'] = 'required|string|max:150';
-            $rules['last_name']  = 'required|string|max:150';
-            $rules['gender']     = 'required';
-            $rules['country']    = 'required';
-            $rules['privacy']    = 'required';
-            $rules['status']     = 'required';
+            $rules['last_name'] = 'required|string|max:150';
+            $rules['gender'] = 'required';
+            $rules['country'] = 'required';
+            $rules['privacy'] = 'required';
+            $rules['status'] = 'required';
         }
 
         $request->validate($rules);
@@ -114,7 +121,7 @@ class MemoryController extends Controller
             // Convert LKR to USD for Stripe
             if ($packageCurrency === 'LKR') {
                 try {
-                    $response = \Illuminate\Support\Facades\Http::timeout(5)->get('https://open.er-api.com/v6/latest/LKR');
+                    $response = Http::timeout(5)->get('https://open.er-api.com/v6/latest/LKR');
                     if ($response->successful()) {
                         $usdRate = $response->json('rates')['USD'];
                         $chargeAmountInCents = intval(round(($amountPaid * $usdRate) * 100));
@@ -122,7 +129,7 @@ class MemoryController extends Controller
                         return back()->withInput()->with('error', 'Currency conversion service is currently unavailable.');
                     }
                 } catch (\Exception $e) {
-                    return back()->withInput()->with('error', 'Failed to fetch live exchange rates: ' . $e->getMessage());
+                    return back()->withInput()->with('error', 'Failed to fetch live exchange rates: '.$e->getMessage());
                 }
             } else {
                 $chargeAmountInCents = intval(round($amountPaid * 100));
@@ -130,29 +137,29 @@ class MemoryController extends Controller
             }
 
             try {
-                \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+                Stripe::setApiKey(env('STRIPE_SECRET'));
 
-                $checkout_session = \Stripe\Checkout\Session::create([
+                $checkout_session = Session::create([
                     'payment_method_types' => ['card'],
                     'line_items' => [[
                         'price_data' => [
                             'currency' => $chargeCurrency,
                             'product_data' => [
-                                'name' => 'Memory Package: ' . $package->name,
-                                'description' => 'Original Price: ' . number_format($amountPaid, 2) . ' ' . $packageCurrency,
+                                'name' => 'Memory Package: '.$package->name,
+                                'description' => 'Original Price: '.number_format($amountPaid, 2).' '.$packageCurrency,
                             ],
                             'unit_amount' => $chargeAmountInCents,
                         ],
                         'quantity' => 1,
                     ]],
                     'mode' => 'payment',
-                    'success_url' => route('dashboard') . '?payment_status=success',
-                    'cancel_url' => url()->previous() . '?payment_status=cancelled',
+                    'success_url' => route('dashboard').'?payment_status=success',
+                    'cancel_url' => url()->previous().'?payment_status=cancelled',
                 ]);
 
                 $transactionId = $checkout_session->id;
             } catch (\Exception $e) {
-                return back()->withInput()->with('error', 'Stripe Checkout Error: ' . $e->getMessage());
+                return back()->withInput()->with('error', 'Stripe Checkout Error: '.$e->getMessage());
             }
         } else {
             // Free plan
@@ -177,12 +184,12 @@ class MemoryController extends Controller
             if ($memoryId) {
                 $memory = Memory::findOrFail($memoryId);
             } else {
-                $memory = new Memory();
+                $memory = new Memory;
                 $memory->user_id = Auth::id();
                 $memory->status = $request->status ?? 'published';
                 $memory->save();
 
-                $profile = new Profile();
+                $profile = new Profile;
                 $profile->memory_id = $memory->id;
                 $profile->user_id = Auth::id();
                 $profile->memorial_status = $request->memorial_status ?? 'passed_away';
@@ -198,7 +205,7 @@ class MemoryController extends Controller
 
                 // Birth Date
                 $dob = $request->date_of_birth;
-                if (!$dob && $request->filled('birth_year') && $request->filled('birth_month') && $request->filled('birth_day')) {
+                if (! $dob && $request->filled('birth_year') && $request->filled('birth_month') && $request->filled('birth_day')) {
                     $dob = sprintf('%04d-%02d-%02d', $request->birth_year, $request->birth_month, $request->birth_day);
                 }
                 $profile->date_of_birth = $dob;
@@ -206,7 +213,7 @@ class MemoryController extends Controller
 
                 // Death Date
                 $dod = $request->date_of_death;
-                if (!$dod && $request->filled('passed_year') && $request->filled('passed_month') && $request->filled('passed_day')) {
+                if (! $dod && $request->filled('passed_year') && $request->filled('passed_month') && $request->filled('passed_day')) {
                     $dod = sprintf('%04d-%02d-%02d', $request->passed_year, $request->passed_month, $request->passed_day);
                 }
                 $profile->date_of_death = $dod;
@@ -220,13 +227,13 @@ class MemoryController extends Controller
                 // Slug
                 $rawSlug = $request->web_address
                     ? Str::slug($request->web_address)
-                    : Str::slug(trim($request->first_name . ' ' . $request->last_name));
-                $slug = $rawSlug ?: 'memorial-' . $memory->id;
+                    : Str::slug(trim($request->first_name.' '.$request->last_name));
+                $slug = $rawSlug ?: 'memorial-'.$memory->id;
                 $originalSlug = $slug;
                 $count = 1;
 
                 while (Profile::where('slug', $slug)->exists()) {
-                    $slug = $originalSlug . '-' . $count;
+                    $slug = $originalSlug.'-'.$count;
                     $count++;
                 }
                 $profile->slug = $slug;
@@ -235,16 +242,16 @@ class MemoryController extends Controller
 
             // Create record in package_purchases
             $purchase = PackagePurchase::create([
-                'user_id'        => Auth::id(),
-                'package_id'     => $package->id,
-                'amount_paid'    => $amountPaid,
-                'currency'       => strtoupper($package->currency ?? 'USD'),
+                'user_id' => Auth::id(),
+                'package_id' => $package->id,
+                'amount_paid' => $amountPaid,
+                'currency' => strtoupper($package->currency ?? 'USD'),
                 'payment_method' => $paymentMethod,
                 'transaction_id' => $transactionId,
-                'status'         => 'active',
-                'starts_at'      => now(),
-                'expires_at'     => $expiresAt,
-                'trial_ends_at'  => $trialEndsAt,
+                'status' => 'active',
+                'starts_at' => now(),
+                'expires_at' => $expiresAt,
+                'trial_ends_at' => $trialEndsAt,
             ]);
 
             // Update user active package and role
@@ -271,7 +278,8 @@ class MemoryController extends Controller
                 ->with('success', 'Memory created and plan activated successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withInput()->with('error', 'Error completing purchase: ' . $e->getMessage());
+
+            return back()->withInput()->with('error', 'Error completing purchase: '.$e->getMessage());
         }
     }
 
@@ -282,8 +290,12 @@ class MemoryController extends Controller
 
         $coverImage = Image::where('profile_id', $memory->profile?->id)->where('type', 'cover')->first();
         $backgroundMusic = Music::where('profile_id', $memory->profile?->id)->first();
+        $qrImage = Image::where('profile_id', $memory->profile?->id)->where('type', 'qr')->first();
 
-        return view('memory_user.edit_memory', compact('memory', 'profileImage', 'coverImage', 'backgroundMusic'));
+        // Retrieve pending stories for approval
+        $storyComments = StoryComment::latest()->get();
+
+        return view('memory_user.edit_memory', compact('memory', 'qrImage', 'profileImage', 'coverImage', 'backgroundMusic', 'storyComments'));
     }
 
     public function updateMemory(Request $request)
@@ -328,11 +340,11 @@ class MemoryController extends Controller
 
             $file = $request->file('profile_image');
 
-            $filename = uniqid() . '.' . $file->extension();
+            $filename = uniqid().'.'.$file->extension();
 
             $file->move(public_path('uploads/memorial/profile'), $filename);
 
-            $path = 'uploads/memorial/profile/' . $filename;
+            $path = 'uploads/memorial/profile/'.$filename;
 
             Image::updateOrCreate(
                 [
@@ -354,7 +366,6 @@ class MemoryController extends Controller
             }
         }
 
-
         // Update or create cover image
         if ($request->hasFile('cover_image')) {
 
@@ -364,11 +375,11 @@ class MemoryController extends Controller
 
             $file = $request->file('cover_image');
 
-            $filename = uniqid() . '.' . $file->extension();
+            $filename = uniqid().'.'.$file->extension();
 
             $file->move(public_path('uploads/memorial/cover'), $filename);
 
-            $path = 'uploads/memorial/cover/' . $filename;
+            $path = 'uploads/memorial/cover/'.$filename;
 
             Image::updateOrCreate(
                 [
@@ -397,11 +408,11 @@ class MemoryController extends Controller
 
             $file = $request->file('music');
 
-            $filename = uniqid() . '.' . $file->extension();
+            $filename = uniqid().'.'.$file->extension();
 
             $file->move(public_path('uploads/memorial/music'), $filename);
 
-            $path = 'uploads/memorial/music/' . $filename;
+            $path = 'uploads/memorial/music/'.$filename;
 
             Music::updateOrCreate(
                 [
@@ -423,7 +434,6 @@ class MemoryController extends Controller
             }
         }
 
-
         return back()->with('success', 'Memory updated successfully.');
     }
 
@@ -435,8 +445,7 @@ class MemoryController extends Controller
         return $this->completeMemoryPurchase($request);
     }
 
-
-    //store stories
+    // store stories
 
     public function storeStories(Request $request, Profile $profile)
     {
@@ -505,7 +514,7 @@ class MemoryController extends Controller
             ->with('success', 'Stories saved successfully!');
     }
 
-    //delete stories
+    // delete stories
     public function deleteStory(Story $story)
     {
         abort_unless(
@@ -518,12 +527,11 @@ class MemoryController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Story deleted successfully!'
+            'message' => 'Story deleted successfully!',
         ]);
     }
 
-
-    //update stories
+    // update stories
     public function updateStory(Request $request, Story $story)
     {
         abort_unless(
@@ -541,7 +549,7 @@ class MemoryController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Story updated successfully!'
+            'message' => 'Story updated successfully!',
         ]);
     }
 
@@ -599,8 +607,8 @@ class MemoryController extends Controller
             'files.*' => [
                 'required',
                 'file',
-                'mimes:' . $selected['mimes'],
-                'max:' . $selected['max'],
+                'mimes:'.$selected['mimes'],
+                'max:'.$selected['max'],
             ],
         ]);
 
@@ -615,11 +623,11 @@ class MemoryController extends Controller
         // 6. CREATE UPLOAD DIRECTORY
         // ==========================================
         $folder = 'uploads/memorial/gallery/'
-            . $selected['folder'];
+            .$selected['folder'];
 
         $destination = public_path($folder);
 
-        if (!File::isDirectory($destination)) {
+        if (! File::isDirectory($destination)) {
             File::makeDirectory($destination, 0755, true);
         }
 
@@ -630,8 +638,8 @@ class MemoryController extends Controller
         // ==========================================
         foreach ($request->file('files') as $file) {
 
-            $filename = Str::uuid() . '.'
-                . $file->extension();
+            $filename = Str::uuid().'.'
+                .$file->extension();
 
             $originalName = $file->getClientOriginalName();
 
@@ -642,7 +650,7 @@ class MemoryController extends Controller
             // Move file to public directory
             $file->move($destination, $filename);
 
-            $path = $folder . '/' . $filename;
+            $path = $folder.'/'.$filename;
 
             try {
 
@@ -687,7 +695,7 @@ class MemoryController extends Controller
         // ==========================================
         return response()->json([
             'success' => true,
-            'message' => ucfirst($type) . ' files saved successfully.',
+            'message' => ucfirst($type).' files saved successfully.',
             'media' => $savedMedia,
         ]);
     }
@@ -714,12 +722,11 @@ class MemoryController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Media deleted successfully.'
+            'message' => 'Media deleted successfully.',
         ]);
     }
 
-
-    //timeline
+    // timeline
 
     public function storeTimeline(Request $request)
     {
@@ -802,7 +809,7 @@ class MemoryController extends Controller
 
         $profile = $memory->profile;
 
-        if (!$profile) {
+        if (! $profile) {
 
             $message = 'Memorial profile not found.';
 
@@ -853,18 +860,18 @@ class MemoryController extends Controller
                     // ==========================================
                     // 4. UPLOAD IMAGE
                     // ==========================================
-                    if (!empty($item['image'])) {
+                    if (! empty($item['image'])) {
 
                         $file = $item['image'];
 
                         $filename = Str::uuid()->toString()
-                            . '.' . $file->extension();
+                            .'.'.$file->extension();
 
                         $folder = 'uploads/memorial/timelines';
 
                         $directory = public_path($folder);
 
-                        if (!File::isDirectory($directory)) {
+                        if (! File::isDirectory($directory)) {
 
                             File::makeDirectory(
                                 $directory,
@@ -875,7 +882,7 @@ class MemoryController extends Controller
 
                         $file->move($directory, $filename);
 
-                        $imagePath = $folder . '/' . $filename;
+                        $imagePath = $folder.'/'.$filename;
 
                         $uploadedPaths[] = $imagePath;
                     }
@@ -921,7 +928,7 @@ class MemoryController extends Controller
 
             $message = $count === 1
                 ? 'Timeline milestone added successfully!'
-                : $count . ' timeline milestones added successfully!';
+                : $count.' timeline milestones added successfully!';
 
             // AJAX response: no page reload
             if ($request->expectsJson()) {
@@ -973,8 +980,167 @@ class MemoryController extends Controller
         }
     }
 
+    // delete timeline
+    public function deleteTimeline(Timeline $timeline)
+    {
+        // Verify that this timeline belongs to
+        // a memorial owned by the logged-in user.
+        $memory = Memory::where('id', $timeline->memory_id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
 
-    //save comments
+        // Confirm the timeline belongs to the correct profile.
+        abort_unless(
+            (int) $timeline->profile_id === (int) $memory->profile?->id,
+            403
+        );
+
+        // Save image path before deleting the record.
+        $imagePath = $timeline->image_path;
+
+        // Permanently delete the database record.
+        $timeline->delete();
+
+        // Delete the associated image from the server.
+        if ($imagePath) {
+            $cleanPath = ltrim(
+                str_replace('\\', '/', $imagePath),
+                '/'
+            );
+
+            $cleanPath = preg_replace(
+                '#^public/#',
+                '',
+                $cleanPath
+            );
+
+            // Only delete files inside the timeline upload folder.
+            if (str_starts_with(
+                $cleanPath,
+                'uploads/memorial/timelines/'
+            )) {
+                $fullPath = public_path($cleanPath);
+
+                if (File::isFile($fullPath)) {
+                    File::delete($fullPath);
+                }
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Timeline deleted successfully!',
+            'timeline_id' => $timeline->id,
+        ]);
+    }
+
+    // update timeline
+    public function updateTimeline(Request $request, Timeline $timeline)
+    {
+        // Verify ownership
+        $memory = Memory::with('profile')
+            ->where('id', $timeline->memory_id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        abort_unless(
+            $memory->profile &&
+            (int) $timeline->profile_id === (int) $memory->profile->id,
+            403
+        );
+
+        // Validate fields
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'event_date' => 'required|string|max:100',
+            'location' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:5000',
+            'icon' => [
+                'required',
+                Rule::in([
+                    'star', 'birth', 'education',
+                    'career', 'meeting', 'marriage',
+                    'home', 'retired', 'passed_away',
+                ]),
+            ],
+            'visibility' => [
+                'required',
+                Rule::in(['public', 'private']),
+            ],
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+        ]);
+
+        $oldImage = $timeline->image_path;
+        $newImage = null;
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+
+            $folder = 'uploads/memorial/timelines';
+
+            $fileName = Str::uuid().'.'.$file->extension();
+
+            $file->move(public_path($folder), $fileName);
+
+            $newImage = $folder.'/'.$fileName;
+        }
+
+        try {
+            $data = collect($validated)
+                ->except('image')
+                ->all();
+
+            if ($newImage) {
+                $data['image_path'] = $newImage;
+            }
+
+            $timeline->update($data);
+
+        } catch (\Throwable $e) {
+
+            if ($newImage && File::exists(public_path($newImage))) {
+                File::delete(public_path($newImage));
+            }
+
+            throw $e;
+        }
+
+        // Delete previous image after successful update
+        if ($newImage && $oldImage) {
+            $cleanPath = ltrim(
+                str_replace('\\', '/', $oldImage),
+                '/'
+            );
+
+            $cleanPath = preg_replace('#^public/#', '', $cleanPath);
+
+            if (str_starts_with(
+                $cleanPath,
+                'uploads/memorial/timelines/'
+            ) && File::exists(public_path($cleanPath))) {
+                File::delete(public_path($cleanPath));
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Timeline updated successfully!',
+            'timeline' => [
+                'id' => $timeline->id,
+                'title' => $timeline->title,
+                'event_date' => $timeline->event_date,
+                'location' => $timeline->location,
+                'description' => $timeline->description,
+                'icon' => $timeline->icon,
+                'visibility' => $timeline->visibility,
+                'image_url' => $timeline->image_path
+                    ? asset($timeline->image_path)
+                    : null,
+            ],
+        ]);
+    }
+
+    // save comments
 
     public function storeStoryComment(Request $request, Profile $profile)
     {
@@ -1021,6 +1187,319 @@ class MemoryController extends Controller
             'profile',
             'memory',
             'storyComments'
+        ));
+    }
+
+    // generate qr code
+
+    public function generateQr($id)
+    {
+        $profile = Profile::findOrFail($id);
+
+        // Check existing QR code
+        $existingQr = Image::where('profile_id', $profile->id)
+            ->where('type', 'qr')
+            ->first();
+
+        // Memorial public URL
+        $qrData = url('/memory_index/'.$profile->slug);
+
+        // Generate QR code as PNG
+        $qrCode = QrCode::format('png')
+            ->size(300)
+            ->margin(2)
+            ->generate($qrData);
+
+        // Public folder
+        $directory = public_path('uploads/memorial/qr');
+
+        // Create folder if it doesn't exist
+        if (! File::exists($directory)) {
+            File::makeDirectory($directory, 0755, true);
+        }
+
+        // Generate unique filename
+        $filename = 'qr_'.$profile->id.'_'.uniqid().'.png';
+
+        // Relative path
+        $path = 'uploads/memorial/qr/'.$filename;
+
+        // Save new QR code to public folder
+        File::put(public_path($path), $qrCode);
+
+        // Update or create QR record
+        Image::updateOrCreate(
+            [
+                'profile_id' => $profile->id,
+                'type' => 'qr',
+            ],
+            [
+                'path' => $path,
+            ]
+        );
+
+        // Delete previous QR image
+        if ($existingQr && $existingQr->path !== $path) {
+
+            $oldPath = public_path($existingQr->path);
+
+            if (File::exists($oldPath)) {
+                File::delete($oldPath);
+            }
+        }
+
+        return back()->with(
+            'success',
+            $existingQr
+                ? 'QR code regenerated successfully.'
+                : 'QR code generated successfully.'
+        );
+    }
+
+    // story delete
+    public function rejectStoryComment($id)
+    {
+        $storyComment = StoryComment::findOrFail($id);
+
+        $storyComment->forceDelete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Story deleted successfully.',
+            'deleted_id' => $id,
+        ]);
+    }
+
+    // Community Uploads Media View
+
+    public function communityUploadsMedia()
+    {
+
+        $profile = Profile::with([
+            'photos' => function ($query) {
+                $query->where('status', 0);
+            },
+            'videos' => function ($query) {
+                $query->where('status', 0);
+            },
+            'audios' => function ($query) {
+                $query->where('status', 0);
+            },
+        ])
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        $memory = Memory::with('profile')->where('id', $profile->memory_id)->firstOrFail();
+
+        $photos = $profile->photos;
+        $videos = $profile->videos;
+        $audios = $profile->audios;
+
+        return view('memory_user.communityUploadsMedia', compact('memory', 'photos', 'profile', 'videos', 'audios'));
+    }
+
+    // Community Uploads Media Approve
+
+    public function approveCommunityMedia($type, $id)
+    {
+        // Validate media type
+        if (! in_array($type, ['image', 'video', 'audio'], true)) {
+            abort(404);
+        }
+
+        // Get logged-in user's memorial profile
+        $profile = Profile::where('user_id', Auth::id())
+            ->firstOrFail();
+
+        // Find pending media belonging to this memorial
+        $media = Media::where('id', $id)
+            ->where('profile_id', $profile->id)
+            ->where('type', $type)
+            ->where('status', 0)
+            ->firstOrFail();
+
+        // Approve media
+        $media->status = 1;
+        $media->save();
+
+        $message = 'Media approved successfully.';
+
+        if (request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+            ]);
+        }
+
+        return redirect()
+            ->route('communityUploadsMedia')
+            ->with('success', $message);
+    }
+
+    // Community Uploads Media Approve
+
+    public function deleteCommunityMedia($type, $id)
+    {
+        // Validate media type
+        if (! in_array($type, ['image', 'video', 'audio'], true)) {
+            abort(404);
+        }
+
+        // Get logged-in user's memorial profile
+        $profile = Profile::where('user_id', Auth::id())
+            ->firstOrFail();
+
+        // Find pending media belonging to this memorial
+        $media = Media::where('id', $id)
+            ->where('profile_id', $profile->id)
+            ->where('type', $type)
+            ->where('status', 0)
+            ->firstOrFail();
+
+        // Get stored file path
+        $filePath = $media->file_path;
+
+        if (! empty($filePath)) {
+
+            // Files are expected under public/
+            $relativePath = ltrim(
+                str_replace('\\', '/', $filePath),
+                '/'
+            );
+
+            $fullPath = public_path($relativePath);
+
+            // Prevent deletion outside the public directory
+            $publicRoot = realpath(public_path());
+            $realFile = realpath($fullPath);
+
+            if ($realFile !== false) {
+
+                $insidePublic = str_starts_with(
+                    $realFile,
+                    $publicRoot.DIRECTORY_SEPARATOR
+                );
+
+                if (! $insidePublic || ! is_file($realFile)) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Invalid media file path.',
+                    ], 422);
+                }
+
+                // Delete physical file
+                if (! File::delete($realFile)) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Unable to delete the physical file.',
+                    ], 500);
+                }
+            }
+        }
+
+        // Delete database record
+        $media->delete();
+
+        $message = 'Media deleted successfully.';
+
+        if (request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+            ]);
+        }
+
+        return redirect()
+            ->route('communityUploadsMedia')
+            ->with('success', $message);
+    }
+
+    /**
+     * Display dynamic events associated with a specific memorial space.
+     */
+    public function showEvents(string $slug): View
+    {
+        $memoryQuery = Memory::with('profile');
+
+        if (Schema::hasColumn('memories', 'slug')) {
+            $memoryQuery->where('slug', $slug)
+                ->orWhereHas('profile', function ($q) use ($slug) {
+                    $q->where('slug', $slug);
+                });
+        } else {
+            $memoryQuery->whereHas('profile', function ($q) use ($slug) {
+                $q->where('slug', $slug);
+            });
+        }
+
+        $memory = $memoryQuery->firstOrFail();
+        $profile = $memory->profile;
+
+        $eventsQuery = Event::query();
+
+        if (Schema::hasColumn('events', 'memory_id')) {
+            $eventsQuery->where(function ($q) use ($memory) {
+                $q->where('memory_id', $memory->id);
+                if ($memory->user_id) {
+                    $q->orWhere(function ($sub) use ($memory) {
+                        $sub->whereNull('memory_id')
+                            ->where('user_id', $memory->user_id);
+                    });
+                }
+            });
+        } else {
+            $eventsQuery->where('user_id', $memory->user_id);
+        }
+
+        $canPreviewUnlisted = Auth::check() && (
+            (int) Auth::id() === (int) $memory->user_id
+            || in_array(Auth::user()->role, ['super_admin', 'admin'], true)
+        );
+
+        if (! $canPreviewUnlisted) {
+            $eventsQuery->where('status', 'approved')
+                ->where('is_private', false);
+        } else {
+            $eventsQuery->where('status', '!=', 'rejected');
+        }
+
+        $orderColumn = Schema::hasColumn('events', 'event_date') ? 'event_date' : 'start_date';
+
+        $events = $eventsQuery
+            ->orderBy($orderColumn, 'asc')
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        $eventPresentations = [];
+        foreach ($events as $event) {
+            $eventPresentations[$event->id] = EventController::buildPresentation($event);
+        }
+
+        $profileImage = Image::where('profile_id', $profile?->id)
+            ->where('type', 'profile')
+            ->first();
+        $backgroundMusic = Music::where('profile_id', $profile?->id)->first();
+
+        $tributes = Tribute::with('user')
+            ->where('memory_id', $memory->id)
+            ->where('status', 'active')
+            ->latest()
+            ->get();
+
+        $totalDonationAmount = (float) $tributes->sum('total_amount');
+        $donorCount = $tributes->count();
+        $recentTributes = $tributes->take(3);
+
+        return view('home.memories_event', compact(
+            'memory',
+            'profile',
+            'profileImage',
+            'backgroundMusic',
+            'events',
+            'eventPresentations',
+            'totalDonationAmount',
+            'donorCount',
+            'recentTributes'
         ));
     }
 }

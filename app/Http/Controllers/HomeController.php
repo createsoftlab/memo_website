@@ -20,7 +20,18 @@ class HomeController extends Controller
      */
     public function index(): View
     {
-        return view('home.index');
+        $memories = Memory::with([
+            'profile',
+            'profile.images' => function ($query) {
+                $query->where('type', 'profile');
+            },
+        ])
+            ->where('approval', 1)
+            ->where('status', 'published')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return view('home.index',compact('memories'));
     }
 
     /**
@@ -247,13 +258,7 @@ class HomeController extends Controller
     //media store
     public function mediaStore(Request $request, Profile $profile)
     {
-        // ==========================================
-        // 1. CHECK PROFILE OWNERSHIP
-        // ==========================================
-        abort_unless(
-            (int) $profile->user_id === (int) Auth::id(),
-            403
-        );
+
 
         // ==========================================
         // 2. VALIDATE MEDIA TYPE
@@ -380,4 +385,6 @@ class HomeController extends Controller
             'media' => $savedMedia,
         ]);
     }
+
+    
 }
